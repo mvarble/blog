@@ -1,0 +1,7 @@
+---
+title: Bar
+slug: bar
+katex_macros:
+  \w: '\int_0^z f(t) {\rm d}t'
+---
+Foo-Bar, $\y$, $\z$, $\w$.

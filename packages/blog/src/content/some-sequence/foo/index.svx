@@ -1,0 +1,11 @@
+---
+title: Foo
+slug: foo
+katex_macros:
+  \z: '15'
+---
+Foo, $\y$, $\z$.
+
+[bar](./bar)
+
+<a href="../blah">blah</a>

@@ -1,0 +1,22 @@
+---
+type: post
+title: Some Other Post
+slug: other-post
+katex_macros:
+  \x: '\mathbb{Y}'
+---
+
+<script>
+  import Remark from './other-remark.svx';
+</script>
+
+Hi there.
+
+$$
+  \x
+$$
+
+
+[post](../post)
+
+<a href="/statements/my-cool-remark4">remark</a>

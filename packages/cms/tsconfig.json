@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "lib": [
+            "esnext"
+        ],
+        "types": [
+            "node"
+        ],
+        "moduleResolution": "bundler",
+        "target": "es2015",
+        "module": "esnext",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "sourceMap": true,
+        "outDir": "dist"
+    },
+    "include": [
+        "./**/*"
+    ]
+}

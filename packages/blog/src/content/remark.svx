@@ -1,0 +1,11 @@
+---
+type: statement
+kind: remark
+slug: my-cool-remark4
+katex_macros:
+  \hang: '10'
+  \p: '\int_0^x f(r) {\rm d}r'
+  \x: '81'
+---
+
+$\p$, $\x$; hang-$\hang$.

@@ -1,0 +1,10 @@
+---
+type: statement
+kind: remark
+slug: some-remark
+katex_macros:
+  \hi: '5'
+dependencies: [my-cool-remark4]
+---
+
+hi $\hi$
