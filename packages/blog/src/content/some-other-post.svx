@@ -10,13 +10,14 @@ katex_macros:
   import Remark from './other-remark.svx';
 </script>
 
-Hi there.
+Hi there. hi!
 
 $$
   \x
 $$
 
 
-[post](../post)
+[%title](../post)
 
-<a href="/statements/my-cool-remark4">remark</a>
+[%label](/statements/my-cool-remark4)
+hi

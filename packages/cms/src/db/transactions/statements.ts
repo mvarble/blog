@@ -1,5 +1,4 @@
-import { type Database } from 'better-sqlite3';
-
+import { type Database } from '..';
 import { type KatexMacros } from '.';
 import { hasNumberField, hasStringField } from '../../plugin/typechecks';
 
@@ -107,3 +106,49 @@ export function getStatement(db: Database, slug: string): Statement | undefined 
         };
     }
 }
+
+export interface StatementReference {
+    pageId: number;
+    pathname: string;
+    item: string;
+    kind: string;
+    label: string;
+}
+
+export function getStatementReferences(
+    db: Database,
+    parentId: number,
+    childIds: number[],
+): StatementReference[] {
+    interface S {
+        pageId: number;
+        pathname: string;
+        item_prefix?: number;
+        item: number;
+        kind: string;
+    }
+    const output = db
+        .prepare(
+            `SELECT s.page_id as pageId, p.pathname, s.item_prefix, s.item, s.kind
+            FROM statements s INNER JOIN pages p INNER JOIN page_references pr
+            ON s.page_id = p.id AND pr.parent_id = ? AND pr.child_id = p.id AND pr.child_id IN (${childIds.map(() => '?').join(', ')});`,
+        )
+        .all(parentId, ...childIds) as S[];
+    return output.map(({ pageId, pathname, ...rest }) => {
+        const item = rest.item_prefix ? `${rest.item_prefix}.${rest.item}` : String(rest.item);
+        const kind = rest.kind
+            .split(' ')
+            .map((str) => `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`)
+            .join(' ');
+        const label = `${kind} ${item}`;
+        return {
+            pageId,
+            pathname,
+            item,
+            kind,
+            label,
+        };
+    });
+}
+
+// TODO: getStatementData (like getPostData)

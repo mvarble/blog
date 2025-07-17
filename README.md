@@ -110,15 +110,15 @@ Here are some examples.
 
 The link text is a format string with the following possible arguments.
 
-| formatter   | data                                                         | example(s)                    |
-| ----------- | ------------------------------------------------------------ | ----------------------------- |
-| `%title`    | Title, if a post or sequence page.                           | `My cool post`                |
-| `%item`     | Item of a page within a sequence or statement within a page. | `1`, `3.2`                    |
-| `%kind`     | The kind of statement (if a statement), capitalized.         | `Proposition`                 |
-| `%sequence` | If sequence page, the title of the sequence.                 | `My cool sequence`            |
-| `%label`    | If post or page in unenumerated sequence, `%title`.          | `My cool post`                |
-|             | If page in enumerated sequence, `%index. %title`             | `1. Introduction`             |
-|             | If statement, `%kind %index`                                 | `Proposition 1`, `Remark 3.2` |
+| formatter   | data                                                                    | example(s)                    |
+| ----------- | ----------------------------------------------------------------------- | ----------------------------- |
+| `%title`    | Title, if a post or sequence page.                                      | `My cool post`                |
+| `%item`     | Item of a page within a enumerated sequence or statement within a page. | `1`, `3.2`                    |
+| `%kind`     | The kind of statement (if a statement), capitalized.                    | `Proposition`                 |
+| `%sequence` | If sequence page, the title of the sequence.                            | `My cool sequence`            |
+| `%label`    | If post or page in unenumerated sequence, `%title`.                     | `My cool post`                |
+|             | If page in enumerated sequence, `%item. %title`                         | `1. Introduction`             |
+|             | If statement, `%kind %item`                                             | `Proposition 1`, `Remark 3.2` |
 
 In addition to parsing these format strings, the content layer will build a dependency graph of the various pages in the site for ease-of-browsing.
 

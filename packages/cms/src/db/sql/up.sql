@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS sequence_pages (
     parent_id INTEGER REFERENCES pages(id),
     title TEXT NOT NULL,
     slug TEXT NOT NULL,
-    item INTEGER NOT NULL
+    item INTEGER NOT NULL,
+    location TEXT
 );
 
 -- A statement encapsulates information which I would like to deductively

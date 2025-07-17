@@ -1,28 +1,15 @@
 import path from 'path';
-import { type Database } from 'better-sqlite3';
-import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
-import rehypeParse from 'rehype-parse';
-import { type Root } from 'mdast';
+import { type Root, type Link } from 'mdast';
 
-import { hasStringField } from './typechecks';
-import { Page, touchPageReference } from '../db';
+import { type Database, type Page, touchPageReference } from '../db';
 
 export function findReferences(db: Database, page: Page, mdast: Root) {
-	const rehypeParser = unified().use(rehypeParse);
-	visit(mdast, (node) => {
-		if (node.type == 'html') {
-			const hast = rehypeParser.parse(node.value);
-			visit(hast, { tagName: 'a' }, (node) => {
-				if (hasStringField(node.properties, 'href')) {
-					maybeTouchPageReference(db, page, node.properties.href);
-				}
-			});
-		}
-		if (node.type == 'link') {
-			maybeTouchPageReference(db, page, node.url);
-		}
-	});
+	visitReferences(mdast, (node) => maybeTouchPageReference(db, page, node.url));
+}
+
+export function visitReferences(mdast: Root, visitor: (node: Link) => void) {
+	visit(mdast, 'link', visitor);
 }
 
 export function resolvePathname(base: string, rel: string): string | undefined {

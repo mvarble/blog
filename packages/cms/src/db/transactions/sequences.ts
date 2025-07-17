@@ -1,5 +1,4 @@
-import { type Database } from 'better-sqlite3';
-
+import { type Database } from '..';
 import { type KatexMacros } from '.';
 import { hasNumberField, hasStringField } from '../../plugin/typechecks';
 
@@ -23,6 +22,7 @@ export interface SequenceChild {
 	filename: string;
 	katexMacros: KatexMacros;
 	children?: SequenceChild[];
+	location?: string;
 }
 
 export interface Sequence extends SequenceChild {
@@ -66,7 +66,9 @@ export function touchSequence(db: Database, input: TouchSequenceInput): Sequence
 	}
 	if (input.children) {
 		input.children.forEach((child, i) => {
-			children.push(touchSequenceChild(db, id, pageId, pathname, i, child));
+			children.push(
+				touchSequenceChild(db, id, input.enumerate, pageId, pathname, i, String(i), child),
+			);
 		});
 	}
 	return {
@@ -81,9 +83,11 @@ export function touchSequence(db: Database, input: TouchSequenceInput): Sequence
 export function touchSequenceChild(
 	db: Database,
 	sequenceId: number,
+	enumerate: boolean,
 	parentId: number,
 	parentPathname: string,
 	item: number,
+	location: string,
 	input: TouchSequenceChildInput,
 ): SequenceChild {
 	let pageId: number;
@@ -97,8 +101,8 @@ export function touchSequenceChild(
 			.get(pathname, input.filename, JSON.stringify(input.katexMacros));
 		pageId = (out as { id: number }).id;
 		db.prepare(
-			'INSERT INTO sequence_pages (page_id, sequence_id, parent_id, title, slug, item) VALUES (?, ?, ?, ?, ?, ?);',
-		).run(pageId, sequenceId, parentId, input.title, input.slug, item);
+			'INSERT INTO sequence_pages (page_id, sequence_id, parent_id, title, slug, item, location) VALUES (?, ?, ?, ?, ?, ?, ?);',
+		).run(pageId, sequenceId, parentId, input.title, input.slug, item, enumerate ? location : null);
 	} catch (e) {
 		if (typeof e == 'object' && e && 'code' in e && e.code == 'SQLITE_CONSTRAINT_UNIQUE') {
 			const out = db
@@ -106,15 +110,35 @@ export function touchSequenceChild(
 				.get(pathname, JSON.stringify(input.katexMacros), input.filename);
 			pageId = (out as { id: number }).id;
 			db.prepare(
-				'UPDATE sequence_pages SET sequence_id = ?, parent_id = ?, title = ?, slug = ?, item = ? WHERE page_id = ?;',
-			).run(sequenceId, parentId, input.title, input.slug, item, pageId);
+				'UPDATE sequence_pages SET sequence_id = ?, parent_id = ?, title = ?, slug = ?, item = ?, location = ? WHERE page_id = ?;',
+			).run(
+				sequenceId,
+				parentId,
+				enumerate,
+				input.title,
+				input.slug,
+				item,
+				enumerate ? location : null,
+				pageId,
+			);
 		} else {
 			throw e;
 		}
 	}
 	if (input.children) {
 		input.children.forEach((child, i) => {
-			children.push(touchSequenceChild(db, sequenceId, pageId, pathname, i, child));
+			children.push(
+				touchSequenceChild(
+					db,
+					sequenceId,
+					enumerate,
+					pageId,
+					pathname,
+					i,
+					`${location}.${i}`,
+					child,
+				),
+			);
 		});
 	}
 	return {
@@ -159,7 +183,7 @@ export function getSequence(db: Database, filename: string): Sequence | undefine
 	) {
 		const sequencePages = db
 			.prepare(
-				'SELECT sp.page_id, sp.parent_id, sp.title, sp.slug, sp.item, p.pathname, p.filename, p.katex_macros FROM sequence_pages sp INNER JOIN pages p ON sp.page_id = p.id WHERE sp.sequence_id = ?;',
+				'SELECT sp.page_id, sp.parent_id, sp.title, sp.slug, sp.item, sp.location, p.pathname, p.filename, p.katex_macros FROM sequence_pages sp INNER JOIN pages p ON sp.page_id = p.id WHERE sp.sequence_id = ?;',
 			)
 			.all(sequenceRes.id) as IntermediateSequenceChild[];
 
@@ -183,6 +207,7 @@ interface IntermediateSequenceChild {
 	title: string;
 	slug: string;
 	item: number;
+	location?: string;
 	pathname: string;
 	filename: string;
 	katex_macros: string;
@@ -208,6 +233,7 @@ function buildTree(items: IntermediateSequenceChild[], rootId: number): Sequence
 				slug: child.slug,
 				pathname: child.pathname,
 				filename: child.filename,
+				location: child.location,
 				katexMacros: JSON.parse(child.katex_macros),
 				children: buildChildren(child.page_id),
 			});
@@ -217,4 +243,48 @@ function buildTree(items: IntermediateSequenceChild[], rootId: number): Sequence
 
 	// Step 3: Build tree from the given rootId
 	return buildChildren(rootId);
+}
+
+export interface SequenceChildReference {
+	pageId: number;
+	pathname: string;
+	title: string;
+	item: string;
+	sequence: string;
+	label: string;
+}
+
+export function getSequenceChildReferences(
+	db: Database,
+	parentId: number,
+	childIds: number[],
+): SequenceChildReference[] {
+	interface SCRNoLabel {
+		pageId: number;
+		pathname: string;
+		title: string;
+		item: string;
+		sequence: string;
+	}
+	const out = db
+		.prepare(
+			`SELECT pr.child_id as pageId, p.pathname, sp.title, sp.location as item, s.title as sequence
+            FROM sequences s INNER JOIN sequence_pages sp INNER JOIN pages p INNER JOIN page_references pr
+            WHERE s.id = sp.sequence_id AND sp.page_id = pr.child_id AND sp.page_id = p.id AND pr.parent_id = ?
+            AND pr.child_id IN (${childIds.map(() => '?').join(', ')});`,
+		)
+		.all(parentId, ...childIds) as SCRNoLabel[];
+
+	out.push(
+		...(db
+			.prepare(
+				`SELECT pr.child_id as pageId, p.pathname, s.title, '' as item, s.title as sequence
+                FROM sequences s INNER JOIN pages p INNER JOIN page_references pr
+                WHERE s.page_id = pr.child_id AND s.page_id = p.id AND pr.parent_id = ?
+                AND pr.child_id IN (${childIds.map(() => '?').join(', ')});`,
+			)
+			.all(parentId, ...childIds) as SCRNoLabel[]),
+	);
+
+	return out.map((obj) => ({ ...obj, label: obj.item ? `${obj.item}. ${obj.title}` : obj.title }));
 }

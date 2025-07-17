@@ -1,8 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import matter from 'gray-matter';
-import { type Database } from 'better-sqlite3';
-
+import { type Database } from '../db';
 import { mdastParser, type FileHooks } from '.';
 import { hasArrayField, hasBooleanField, hasObjectField, hasStringField } from './typechecks';
 import { getStatements } from './statements';

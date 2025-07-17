@@ -1,7 +1,7 @@
 import { Plugin } from 'vite';
 import path from 'path';
 import fs from 'fs';
-import sqlite3, { type Database } from 'better-sqlite3';
+import sqlite3 from 'better-sqlite3';
 import glob from 'fast-glob';
 import matter from 'gray-matter';
 import { unified } from 'unified';
@@ -9,29 +9,24 @@ import remarkParse from 'remark-parse';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkMath from 'remark-math';
 
-import { getParentSequence, getStatementParent, prepareDb } from '../db';
+import { getParentSequence, getStatementParent, prepareDb, connect, cacheDir } from '../db';
 import { hasStringField } from './typechecks';
 import post from './posts';
 import sequence from './sequences';
 import statement from './statements';
 
-// Options for our CMS Vite plugin
-export interface CmsOptions {
-    cacheDir?: string;
-}
-
 // Database callbacks on visits to each file.
 export interface FileHooks {
-    // First hook: "node" data which does not include any cross-referencing.
+    // First hook: "node" data which does not include any cross-re:erencing.
     initialize?(
-        db: Database,
+        db: sqlite3.Database,
         filename: string,
         frontmatter: { type: string;[key: string]: unknown },
         contents: string,
     ): Promise<void>;
     // Second hook: "edge" data which assumes nodes have already been populated in DB.
     crossReference?(
-        db: Database,
+        db: sqlite3.Database,
         filename: string,
         frontmatter: { type: string;[key: string]: unknown },
         contents: string,
@@ -47,15 +42,12 @@ export const mdastParser = unified().use(remarkParse).use([remarkFrontmatter, re
 // Vite plugin which exposes a virtual module for access to a database that is populated from
 // project files. These files are watched in development mode to hot-update the database, which
 // is why need a Vite Plugin.
-export default function cmsPlugin(options: CmsOptions = {}): Plugin {
-    // parse the options
-    const cacheDir = options.cacheDir || '.cms';
-
+export default function cmsPlugin(): Plugin {
     // make the CMS cache directory
     fs.mkdirSync(path.resolve(cacheDir), { recursive: true });
 
     // prepare an empty database for all of the data of the site
-    const db = sqlite3(path.join(cacheDir, 'cache.db'));
+    const db = connect();
     prepareDb(db);
 
     // helper function called on each file during first-pass of adding "nodes"

@@ -1,5 +1,12 @@
-import { type Database } from 'better-sqlite3';
-
+import {
+	getPostReferences,
+	getSequenceChildReferences,
+	getStatementReferences,
+	PostReference,
+	SequenceChildReference,
+	StatementReference,
+	type Database,
+} from '..';
 import { hasNumberField } from '../../plugin/typechecks';
 
 export interface PageReference {
@@ -32,4 +39,18 @@ export function touchPageReference(
 			throw e;
 		}
 	}
+}
+
+export type AnyReference = PostReference | SequenceChildReference | StatementReference;
+
+export function getReferences(db: Database, parentId: number): Record<string, AnyReference> {
+	const output = db
+		.prepare('SELECT child_id FROM page_references WHERE parent_id = ?;')
+		.all(parentId) as { child_id: number }[];
+	const childIds = output.map(({ child_id }) => child_id);
+	const references: AnyReference[] = [];
+	references.push(...getPostReferences(db, parentId, childIds));
+	references.push(...getSequenceChildReferences(db, parentId, childIds));
+	references.push(...getStatementReferences(db, parentId, childIds));
+	return Object.fromEntries(references.map((ref) => [ref.pathname, ref]));
 }

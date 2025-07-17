@@ -5,11 +5,18 @@
   "main": "dist/index.js",
   "type": "module",
   "exports": {
+    ".": {
+      "import": "./dist/lib.js",
+      "types": "./dist/lib.d.ts"
+    },
     "./plugin": {
       "import": "./dist/plugin.js",
       "types": "./dist/plugin.d.ts"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -w -c"

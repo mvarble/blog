@@ -1,7 +1,5 @@
-import { type Database } from 'better-sqlite3';
-
+import { type Database } from '..';
 import { type KatexMacros } from '.';
-import { hasNumberField, hasStringField } from '../../plugin/typechecks';
 
 export interface TouchPostInput {
 	title: string;
@@ -56,28 +54,32 @@ export function touchPost(db: Database, input: TouchPostInput): Post {
 	};
 }
 
-export function getPost(db: Database, slug: string): Post | undefined {
-	const output = db
+export interface PostReference {
+	pageId: number;
+	pathname: string;
+	title: string;
+	label: string;
+}
+
+export function getPostReferences(
+	db: Database,
+	parentId: number,
+	childIds: number[],
+): PostReference[] {
+	const outputs = db
 		.prepare(
-			'SELECT posts.page_id, posts.title, posts.slug, pages.pathname, pages.filename, pages.katex_macros FROM posts INNER JOIN pages WHERE pages.id = posts.page_id AND posts.slug = ?;',
+			`SELECT child.page_id, childp.pathname, child.title
+            FROM posts child INNER JOIN pages childp INNER JOIN page_references pr
+            ON pr.parent_id = ? AND child.page_id = childp.id AND childp.id = pr.child_id
+            AND pr.child_id IN (${childIds.map(() => '?').join(', ')});`,
 		)
-		.get(slug);
-	if (
-		output &&
-		hasNumberField(output, 'page_id') &&
-		hasStringField(output, 'title') &&
-		hasStringField(output, 'slug') &&
-		hasStringField(output, 'pathname') &&
-		hasStringField(output, 'filename') &&
-		hasStringField(output, 'katex_macros')
-	) {
-		return {
-			pageId: output.page_id,
-			title: output.title,
-			slug: output.slug,
-			pathname: output.pathname,
-			filename: output.filename,
-			katexMacros: JSON.parse(output.katex_macros),
-		};
-	}
+		.all(parentId, ...childIds);
+	return (outputs as { page_id: number; pathname: string; title: string }[]).map(
+		({ page_id, pathname, title }) => ({
+			pageId: page_id,
+			pathname,
+			title,
+			label: title,
+		}),
+	);
 }
