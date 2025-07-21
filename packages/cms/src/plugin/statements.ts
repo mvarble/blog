@@ -76,19 +76,29 @@ export async function getStatements(
                             promises.push(() =>
                                 fs.promises.readFile(filename).then((file) => {
                                     const frontmatter = matter(file).data;
-                                    if (!hasStringField(frontmatter, 'type') || frontmatter.type != 'statement') {
+                                    if (
+                                        !hasStringField(frontmatter, 'type') ||
+                                        frontmatter.type != 'statement'
+                                    ) {
                                         return undefined;
                                     }
                                     if (!hasStringField(frontmatter, 'kind') || !frontmatter.kind) {
-                                        console.error('Statements must have a string-field `kind`.');
+                                        console.error(
+                                            'Statements must have a string-field `kind`.',
+                                        );
                                         return undefined;
                                     }
                                     if (!hasStringField(frontmatter, 'slug') || !frontmatter.slug) {
-                                        console.error('Statements must have a string-field `slug`.');
+                                        console.error(
+                                            'Statements must have a string-field `slug`.',
+                                        );
                                         return undefined;
                                     }
                                     let katexMacros = {};
-                                    if (hasObjectField(frontmatter, 'katex_macros') && frontmatter.katex_macros) {
+                                    if (
+                                        hasObjectField(frontmatter, 'katex_macros') &&
+                                        frontmatter.katex_macros
+                                    ) {
                                         katexMacros = frontmatter.katex_macros;
                                     }
 

@@ -38,7 +38,9 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
     } catch (e) {
         if (typeof e == 'object' && e && 'code' in e && e.code == 'SQLITE_CONSTRAINT_UNIQUE') {
             let out = db
-                .prepare('UPDATE pages SET pathname = ?, katex_macros = ? WHERE filename = ? RETURNING id;')
+                .prepare(
+                    'UPDATE pages SET pathname = ?, katex_macros = ? WHERE filename = ? RETURNING id;',
+                )
                 .get(pathname, JSON.stringify(input.katexMacros), input.filename);
             pageId = (out as { id: number }).id;
             out = db
@@ -66,7 +68,9 @@ export function getStatementParent(db: Database, filename: string): string | und
         )
         .get(filename);
     if (output && hasNumberField(output, 'parent_id')) {
-        output = db.prepare('SELECT filename FROM pages WHERE pages.id = = ?;').get(output.parent_id);
+        output = db
+            .prepare('SELECT filename FROM pages WHERE pages.id = = ?;')
+            .get(output.parent_id);
         if (output && hasStringField(output, 'filename')) {
             return output.filename;
         }

@@ -1,57 +1,57 @@
 {
-  "name": "cms",
-  "version": "0.0.1",
-  "description": "A package which manages blog content based off of an additional layer of remark parsing.",
-  "main": "dist/index.js",
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/lib.js",
-      "types": "./dist/lib.d.ts"
+    "name": "cms",
+    "version": "0.0.1",
+    "description": "A package which manages blog content based off of an additional layer of remark parsing.",
+    "main": "dist/index.js",
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": "./dist/lib.js",
+            "types": "./dist/lib.d.ts"
+        },
+        "./plugin": {
+            "import": "./dist/plugin.js",
+            "types": "./dist/plugin.d.ts"
+        }
     },
-    "./plugin": {
-      "import": "./dist/plugin.js",
-      "types": "./dist/plugin.d.ts"
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -w -c"
+    },
+    "dependencies": {
+        "better-sqlite3": "^12.2.0",
+        "esast-util-from-js": "^2.0.1",
+        "fast-glob": "^3.3.3",
+        "gray-matter": "^4.0.3",
+        "js-yaml": "^4.1.0",
+        "katex": "^0.16.22",
+        "minimatch": "^10.0.1",
+        "rehype-katex-svelte": "^1.2.0",
+        "rehype-parse": "^9.0.1",
+        "remark-frontmatter": "^5.0.0",
+        "remark-math": "^3.0.1",
+        "remark-parse": "^11.0.0",
+        "unified": "^11.0.5",
+        "unist-util-visit": "^5.0.0"
+    },
+    "devDependencies": {
+        "@rollup/plugin-node-resolve": "^16.0.1",
+        "@rollup/plugin-typescript": "^12.1.2",
+        "@types/better-sqlite3": "^7.6.13",
+        "@types/hast": "^3.0.4",
+        "@types/js-yaml": "^4.0.9",
+        "@types/katex": "^0.16.7",
+        "@types/mdast": "^4.0.4",
+        "@types/node": "^22.14.0",
+        "bibtex": "^0.9.0",
+        "rollup": "^4.37.0",
+        "rollup-plugin-dts": "^6.2.1",
+        "rollup-plugin-string": "^3.0.0",
+        "tslib": "^2.8.1",
+        "vfile": "^6.0.3",
+        "vite": "^6.2.6"
     }
-  },
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -w -c"
-  },
-  "dependencies": {
-    "better-sqlite3": "^12.2.0",
-    "esast-util-from-js": "^2.0.1",
-    "fast-glob": "^3.3.3",
-    "gray-matter": "^4.0.3",
-    "js-yaml": "^4.1.0",
-    "katex": "^0.16.22",
-    "minimatch": "^10.0.1",
-    "rehype-katex-svelte": "^1.2.0",
-    "rehype-parse": "^9.0.1",
-    "remark-frontmatter": "^5.0.0",
-    "remark-math": "^3.0.1",
-    "remark-parse": "^11.0.0",
-    "unified": "^11.0.5",
-    "unist-util-visit": "^5.0.0"
-  },
-  "devDependencies": {
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "@rollup/plugin-typescript": "^12.1.2",
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/hast": "^3.0.4",
-    "@types/js-yaml": "^4.0.9",
-    "@types/katex": "^0.16.7",
-    "@types/mdast": "^4.0.4",
-    "@types/node": "^22.14.0",
-    "bibtex": "^0.9.0",
-    "rollup": "^4.37.0",
-    "rollup-plugin-dts": "^6.2.1",
-    "rollup-plugin-string": "^3.0.0",
-    "tslib": "^2.8.1",
-    "vfile": "^6.0.3",
-    "vite": "^6.2.6"
-  }
 }

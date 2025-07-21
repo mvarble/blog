@@ -8,17 +8,17 @@ import { remarkCms, rehypeCms } from 'cms';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	preprocess: [
-		vitePreprocess(),
-		mdsvex({
-			remarkPlugins: [remarkFrontmatter, remarkMath, remarkCms],
-			rehypePlugins: [rehypeCms],
-		}),
-	],
-	kit: {
-		adapter: adapter(),
-	},
-	extensions: ['.svelte', '.svx'],
+    preprocess: [
+        vitePreprocess(),
+        mdsvex({
+            remarkPlugins: [remarkFrontmatter, remarkMath, remarkCms],
+            rehypePlugins: [rehypeCms],
+        }),
+    ],
+    kit: {
+        adapter: adapter(),
+    },
+    extensions: ['.svelte', '.svx'],
 };
 
 export default config;

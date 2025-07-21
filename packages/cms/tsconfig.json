@@ -1,11 +1,7 @@
 {
     "compilerOptions": {
-        "lib": [
-            "esnext"
-        ],
-        "types": [
-            "node"
-        ],
+        "lib": ["esnext"],
+        "types": ["node"],
         "moduleResolution": "bundler",
         "target": "es2020",
         "module": "esnext",
@@ -16,7 +12,5 @@
         "sourceMap": true,
         "outDir": "dist"
     },
-    "include": [
-        "./**/*"
-    ]
+    "include": ["./**/*"]
 }

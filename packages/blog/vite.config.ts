@@ -4,8 +4,8 @@ import { defineConfig } from 'vite';
 import cms from 'cms/plugin';
 
 export default defineConfig({
-	plugins: [cms(), sveltekit()],
-	optimizeDeps: {
-		exclude: ['cms'],
-	},
+    plugins: [cms(), sveltekit()],
+    optimizeDeps: {
+        exclude: ['cms'],
+    },
 });

@@ -92,7 +92,11 @@ export interface Database {
     exec(source: string): this;
     pragma(source: string, options?: PragmaOptions): unknown;
     function(name: string, cb: (...params: unknown[]) => unknown): this;
-    function(name: string, options: RegistrationOptions, cb: (...params: unknown[]) => unknown): this;
+    function(
+        name: string,
+        options: RegistrationOptions,
+        cb: (...params: unknown[]) => unknown,
+    ): this;
     aggregate<T>(
         name: string,
         options: RegistrationOptions & {

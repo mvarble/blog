@@ -21,14 +21,14 @@ export interface FileHooks {
     initialize?(
         db: sqlite3.Database,
         filename: string,
-        frontmatter: { type: string;[key: string]: unknown },
+        frontmatter: { type: string; [key: string]: unknown },
         contents: string,
     ): Promise<void>;
     // Second hook: "edge" data which assumes nodes have already been populated in DB.
     crossReference?(
         db: sqlite3.Database,
         filename: string,
-        frontmatter: { type: string;[key: string]: unknown },
+        frontmatter: { type: string; [key: string]: unknown },
         contents: string,
     ): Promise<void>;
 }
