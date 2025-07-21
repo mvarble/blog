@@ -23,7 +23,7 @@ export function resolvePathname(base: string, rel: string): string | undefined {
 
 export function maybeTouchPageReference(db: Database, page: Page, url: string) {
     const pathname = resolvePathname(page.pathname, url);
-    if (pathname) {
+    if (pathname && !pathname.startsWith('citations')) {
         touchPageReference(db, page.id, pathname);
     }
 }

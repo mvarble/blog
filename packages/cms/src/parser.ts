@@ -5,7 +5,7 @@ import { type VFile } from 'vfile';
 import type { KatexOptions } from 'katex';
 
 import { hasStringField } from './plugin/typechecks';
-import { connect, getPage, getReferences, foldKatexMacros } from './db';
+import { connect, getPage, getReferences, foldKatexMacros, getCitations } from './db';
 import { visitReferences, resolvePathname } from './plugin/page_references';
 import rehypeKatexSvelte from 'rehype-katex-svelte';
 
@@ -21,17 +21,36 @@ export const remarkCms: Plugin<[undefined], Root, Root> = () => {
         const page = getPage(db, filename);
         if (!page) return;
         const references = getReferences(db, page.id);
+        const citations = Object.fromEntries(
+            getCitations(db).map((citation) => [citation.key, citation]),
+        );
         visitReferences(mdast, (node) => {
+            // if we have `/citations#key`, we try to resolve as a citation
+            if (node.url.startsWith('/citations#')) {
+                const key = node.url.slice('/citations#'.length);
+                const citation = citations[key];
+                if (!citation) return;
+                if (node.children.length == 1 && node.children[0].type == 'text') {
+                    node.children[0].value = `${key}, ${node.children[0].value}`;
+                } else if (!node.children.length) {
+                    node.children = [{ type: 'text', value: key }];
+                }
+                return;
+            }
+
             // make sure there is some text to potentially replace
             if (node.children.length != 1 || node.children[0].type != 'text') return;
+            const child = node.children[0];
 
+            // resolve the pathname in the way it is shoved into the database
             const pathname = resolvePathname(page.pathname, node.url);
             if (!pathname) return;
+
+            // otherwise, we try to resolve as a page
             const ref = references[pathname];
             if (!ref) return;
 
             // perform replacement
-            const child = node.children[0];
             if (hasStringField(ref, 'title')) {
                 child.value = child.value.replaceAll('%title', ref.title);
             }

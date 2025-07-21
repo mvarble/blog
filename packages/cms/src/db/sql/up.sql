@@ -61,3 +61,28 @@ CREATE TABLE IF NOT EXISTS statement_dependencies (
     child_id INTEGER NOT NULL REFERENCES statements(id),
     UNIQUE(parent_id, child_id)
 );
+
+-- A bibtex reference.
+CREATE TABLE IF NOT EXISTS citations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    key TEXT UNIQUE NOT NULL,
+    kind TEXT NOT NULL,
+    title TEXT NOT NULL,
+    year TEXT NOT NULL,
+    doi TEXT,
+    publisher TEXT,
+    issn TEXT,
+    isbn TEXT,
+    journal TEXT,
+    number TEXT,
+    pages TEXT,
+    volume TEXT,
+    institution TEXT
+);
+
+CREATE TABLE IF NOT EXISTS citation_authors (
+    citation_id INTEGER NOT NULL REFERENCES citations(id),
+    item INTEGER NOT NULL,
+    lastname TEXT NOT NULL,
+    fullname TEXT NOT NULL
+);

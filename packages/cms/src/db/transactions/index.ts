@@ -8,3 +8,4 @@ export * from './posts';
 export * from './sequences';
 export * from './statement_dependencies';
 export * from './statements';
+export * from './citations';

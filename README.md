@@ -134,3 +134,16 @@ This field is an array of statement slugs corresponding to the statements on whi
 dependencies:
   - some-other-statement
 ```
+
+### Creating a citation
+
+In addition to "statements" on the site, the content layer also keeps track of BibTeX citations.
+Any `.bib` file in the content directory will be parsed into the database (least some subset of the fields).
+To reference a citation, use markdown links like so.
+
+```md
+[](/citations#key)
+[Theorem 21](/citations#key)
+```
+
+This will work like LaTeX when using `\cite{key}` or `\cite[Theorem 21]{key}`, where the link text will render as some tag like `Lastname25` and `Theorem 21, Lastname25`, respectively.

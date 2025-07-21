@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS citation_authors;
+DROP TABLE IF EXISTS citations;
 DROP TABLE IF EXISTS statement_dependencies;
 DROP TABLE IF EXISTS statements;
 DROP TABLE IF EXISTS sequence_pages;

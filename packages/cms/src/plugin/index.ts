@@ -14,6 +14,7 @@ import { hasStringField } from './typechecks';
 import post from './posts';
 import sequence from './sequences';
 import statement from './statements';
+import citation from './citations';
 
 // Database callbacks on visits to each file.
 export interface FileHooks {
@@ -21,20 +22,26 @@ export interface FileHooks {
     initialize?(
         db: sqlite3.Database,
         filename: string,
-        frontmatter: { type: string; [key: string]: unknown },
+        frontmatter: {
+            type: string;
+            [key: string]: unknown;
+        },
         contents: string,
     ): Promise<void>;
     // Second hook: "edge" data which assumes nodes have already been populated in DB.
     crossReference?(
         db: sqlite3.Database,
         filename: string,
-        frontmatter: { type: string; [key: string]: unknown },
+        frontmatter: {
+            type: string;
+            [key: string]: unknown;
+        },
         contents: string,
     ): Promise<void>;
 }
 
 // CMS DB hooks
-const HOOKS: { [key: string]: FileHooks } = { post, sequence, statement };
+const HOOKS: { [key: string]: FileHooks } = { post, sequence, statement, citation };
 
 // base parser used throughout
 export const mdastParser = unified().use(remarkParse).use([remarkFrontmatter, remarkMath]);
@@ -117,13 +124,18 @@ export default function cmsPlugin(): Plugin {
         version: '0.0.1',
 
         async buildStart() {
-            // all of the files
+            // all of the SVX/bibtex files
             const svxFilenames = await glob('src/content/**/*.svx');
+            const bibFilenames = await glob('src/content/**/*.bib');
 
             // first pass
             for (const svxFilename of svxFilenames) {
                 const svxFile = await fs.promises.readFile(svxFilename, 'utf8');
                 await initializeFile(svxFilename, matter(svxFile).data, svxFile);
+            }
+            for (const bibFilename of bibFilenames) {
+                const bibFile = await fs.promises.readFile(bibFilename, 'utf8');
+                await initializeFile(bibFilename, { type: 'citation' }, bibFile);
             }
 
             // second pass
