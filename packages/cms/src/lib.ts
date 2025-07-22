@@ -1,2 +1,21 @@
 export * from './parser';
 export * as db from './db';
+export type {
+    CitationAuthor,
+    TouchCitation,
+    Citation,
+    KatexMacros,
+    PageReference,
+    AnyReference,
+    Page,
+    TouchPostInput,
+    Post,
+    PostReference,
+    TouchSequenceChildInput,
+    TouchSequenceInput,
+    SequenceChild,
+    Sequence,
+    SequenceChildReference,
+    TouchStatementInput,
+    Statement,
+} from './db';

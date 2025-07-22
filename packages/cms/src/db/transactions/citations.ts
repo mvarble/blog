@@ -19,6 +19,9 @@ export interface TouchCitation {
     pages?: string;
     volume?: string;
     institution?: string;
+    edition?: string;
+    url?: string;
+    series?: string;
     authors: CitationAuthor[];
 }
 
@@ -41,6 +44,9 @@ export function touchCitation(db: Database, citation: TouchCitation): Citation {
         'pages',
         'volume',
         'institution',
+        'edition',
+        'url',
+        'series',
     ];
     let id: number;
     try {
@@ -70,7 +76,7 @@ export function touchCitation(db: Database, citation: TouchCitation): Citation {
                 )
                 .get(...fields.slice(1).map((field) => citation[field]), citation.key);
             id = (out as { id: number }).id;
-            db.prepare('DELETE FROM citation_authors citation_id = ?').run(id);
+            db.prepare('DELETE FROM citation_authors WHERE citation_id = ?').run(id);
             db.prepare(
                 `INSERT INTO citation_authors (citation_id, item, lastname, fullname)
                 VALUES ${citation.authors.map(() => '(?, ?, ?, ?)').join(', ')};`,

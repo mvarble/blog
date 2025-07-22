@@ -77,7 +77,10 @@ CREATE TABLE IF NOT EXISTS citations (
     number TEXT,
     pages TEXT,
     volume TEXT,
-    institution TEXT
+    institution TEXT,
+    edition TEXT,
+    url TEXT,
+    series TEXT
 );
 
 CREATE TABLE IF NOT EXISTS citation_authors (

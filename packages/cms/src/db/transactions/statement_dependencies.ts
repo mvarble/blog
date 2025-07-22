@@ -1,10 +1,5 @@
 import { type Database } from '..';
 
-export interface StatementDependency {
-    parentId: number;
-    childId: number;
-}
-
 export function touchStatementDependency(db: Database, parentId: number, childId: number) {
     try {
         db.prepare('INSERT INTO statement_dependencies (parent_id, child_id) VALUES (?, ?);').run(

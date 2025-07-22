@@ -20,6 +20,9 @@ const hooks: FileHooks = {
                 pages: entry.getFieldAsString('pages') as string | undefined,
                 volume: entry.getFieldAsString('volume') as string | undefined,
                 institution: entry.getFieldAsString('institution') as string | undefined,
+                edition: entry.getFieldAsString('edition') as string | undefined,
+                url: entry.getFieldAsString('url') as string | undefined,
+                series: entry.getFieldAsString('series') as string | undefined,
                 authors: entry.getAuthors()!.authors$.map((author) => ({
                     lastname: String(author.lastNames$.at(-1)),
                     fullname: fullname(author),

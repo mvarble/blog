@@ -148,11 +148,16 @@ export default function cmsPlugin(): Plugin {
 
         async handleHotUpdate({ file }) {
             const filename = path.relative(path.resolve('.'), file);
-            if (filename.startsWith('src/content') && filename.endsWith('.svx')) {
-                const svxFile = await fs.promises.readFile(filename, 'utf8');
-                const frontmatter = matter(svxFile).data;
-                await updateFile(filename, frontmatter, svxFile);
-                await crossReferenceFile(filename, frontmatter, svxFile);
+            const inContent = filename.startsWith('src/content');
+            const isSvx = filename.endsWith('.svx');
+            const isBib = filename.endsWith('.bib');
+            if (inContent && (isSvx || isBib)) {
+                const file = await fs.promises.readFile(filename, 'utf8');
+                const frontmatter = isSvx ? matter(file).data : { type: 'citation' };
+                await updateFile(filename, frontmatter, file);
+                if (isSvx) {
+                    await crossReferenceFile(filename, frontmatter, file);
+                }
             }
         },
     };
