@@ -1,6 +1,5 @@
 import { type Database } from '..';
-import { type KatexMacros } from '.';
-import { hasNumberField, hasStringField } from '../../plugin/typechecks';
+import { PostInfo, type KatexMacros } from '.';
 
 export interface TouchSequenceChildInput {
     title: string;
@@ -11,6 +10,8 @@ export interface TouchSequenceChildInput {
 }
 
 export interface TouchSequenceInput extends TouchSequenceChildInput {
+    created: Date;
+    edited: Date;
     enumerate: boolean;
 }
 
@@ -27,6 +28,8 @@ export interface SequenceChild {
 
 export interface Sequence extends SequenceChild {
     id: number;
+    created: Date;
+    edited: Date;
     enumerate: boolean;
 }
 
@@ -44,9 +47,16 @@ export function touchSequence(db: Database, input: TouchSequenceInput): Sequence
         pageId = (out as { id: number }).id;
         out = db
             .prepare(
-                'INSERT INTO sequences (page_id, title, slug, enumerate) VALUES (?, ?, ?, ?) RETURNING id;',
+                'INSERT INTO sequences (page_id, title, slug, created, edited, enumerate) VALUES (?, ?, ?, ?, ?, ?) RETURNING id;',
             )
-            .get(pageId, input.title, input.slug, input.enumerate ? 1 : 0);
+            .get(
+                pageId,
+                input.title,
+                input.slug,
+                input.created.toISOString(),
+                input.edited.toISOString(),
+                input.enumerate ? 1 : 0,
+            );
         id = (out as { id: number }).id;
     } catch (e) {
         if (typeof e == 'object' && e && 'code' in e && e.code == 'SQLITE_CONSTRAINT_UNIQUE') {
@@ -58,9 +68,16 @@ export function touchSequence(db: Database, input: TouchSequenceInput): Sequence
             pageId = (out as { id: number }).id;
             out = db
                 .prepare(
-                    'UPDATE sequences SET title = ?, slug = ?, enumerate = ? WHERE page_id = ? RETURNING id;',
+                    'UPDATE sequences SET title = ?, slug = ?, created = ?, edited = ?, enumerate = ? WHERE page_id = ? RETURNING id;',
                 )
-                .get(input.title, input.slug, input.enumerate ? 1 : 0, pageId);
+                .get(
+                    input.title,
+                    input.slug,
+                    input.created.toISOString(),
+                    input.edited.toISOString(),
+                    input.enumerate ? 1 : 0,
+                    pageId,
+                );
             id = (out as { id: number }).id;
         } else {
             throw e;
@@ -126,7 +143,6 @@ export function touchSequenceChild(
             ).run(
                 sequenceId,
                 parentId,
-                enumerate,
                 input.title,
                 input.slug,
                 item,
@@ -165,13 +181,13 @@ export function getParentSequence(db: Database, filename: string): string | unde
     const output = db
         .prepare(
             'SELECT parent_pages.filename ' +
-                'FROM pages parent_pages INNER JOIN sequences INNER JOIN sequence_pages INNER JOIN pages ' +
-                'WHERE pages.filename = ? AND pages.id = sequence_pages.page_id ' +
-                'AND sequence_pages.sequence_id = sequences.id ' +
-                'AND parent_pages.id = sequences.page_id;',
+            'FROM pages parent_pages INNER JOIN sequences INNER JOIN sequence_pages INNER JOIN pages ' +
+            'WHERE pages.filename = ? AND pages.id = sequence_pages.page_id ' +
+            'AND sequence_pages.sequence_id = sequences.id ' +
+            'AND parent_pages.id = sequences.page_id;',
         )
-        .get(filename);
-    if (output && hasStringField(output, 'filename')) {
+        .get(filename) as { filename: string } | undefined;
+    if (output) {
         return output.filename;
     }
 }
@@ -179,26 +195,32 @@ export function getParentSequence(db: Database, filename: string): string | unde
 export function getSequence(db: Database, filename: string): Sequence | undefined {
     const sequenceRes = db
         .prepare(
-            'SELECT s.id, s.page_id, s.title, s.slug, s.enumerate, p.pathname, p.filename, p.katex_macros  FROM sequences s INNER JOIN sequence_pages sp INNER JOIN pages p WHERE p.filename = ? AND (p.id = sp.page_id AND sp.sequence_id = s.id) OR p.id = s.page_id;',
+            `SELECT s.id, s.page_id, s.title, s.slug, s.created, s.edited, s.enumerate, pp.pathname, pp.filename, pp.katex_macros
+            FROM sequences s INNER JOIN sequence_pages sp INNER JOIN pages p INNER JOIN pages pp
+            WHERE p.filename = ?
+            AND ((p.id = sp.page_id AND sp.sequence_id = s.id) OR p.id = s.page_id)
+            AND s.page_id = pp.id;`,
         )
-        .get(filename);
-    if (
-        sequenceRes &&
-        hasNumberField(sequenceRes, 'id') &&
-        hasNumberField(sequenceRes, 'page_id') &&
-        hasStringField(sequenceRes, 'slug') &&
-        hasStringField(sequenceRes, 'title') &&
-        hasNumberField(sequenceRes, 'enumerate') &&
-        hasStringField(sequenceRes, 'pathname') &&
-        hasStringField(sequenceRes, 'filename') &&
-        hasStringField(sequenceRes, 'katex_macros')
-    ) {
+        .get(filename) as
+        | {
+            id: number;
+            page_id: number;
+            title: string;
+            slug: string;
+            created: string;
+            edited: string;
+            enumerate: number;
+            pathname: string;
+            filename: string;
+            katex_macros: string;
+        }
+        | undefined;
+    if (sequenceRes) {
         const sequencePages = db
             .prepare(
                 'SELECT sp.page_id, sp.parent_id, sp.title, sp.slug, sp.item, sp.location, p.pathname, p.filename, p.katex_macros FROM sequence_pages sp INNER JOIN pages p ON sp.page_id = p.id WHERE sp.sequence_id = ?;',
             )
             .all(sequenceRes.id) as IntermediateSequenceChild[];
-
         return {
             id: sequenceRes.id,
             pageId: sequenceRes.page_id,
@@ -207,6 +229,8 @@ export function getSequence(db: Database, filename: string): Sequence | undefine
             enumerate: sequenceRes.enumerate == 0 ? false : true,
             pathname: sequenceRes.pathname,
             filename: sequenceRes.filename,
+            created: new Date(sequenceRes.created),
+            edited: new Date(sequenceRes.edited),
             katexMacros: JSON.parse(sequenceRes.katex_macros),
             children: buildTree(sequencePages, sequenceRes.page_id),
         };
@@ -301,5 +325,24 @@ export function getSequenceChildReferences(
     return out.map((obj) => ({
         ...obj,
         label: obj.item ? `${obj.item}. ${obj.title}` : obj.title,
+    }));
+}
+
+export function getSequenceInfos(db: Database): PostInfo[] {
+    const outputs = db
+        .prepare(
+            `SELECT b.title, b.created, b.edited, a.pathname
+            FROM pages a INNER JOIN sequences b ON a.id = b.page_id ORDER BY b.edited DESC;`,
+        )
+        .all() as {
+            title: string;
+            created: string;
+            edited: string;
+            pathname: string;
+        }[];
+    return outputs.map(({ created, edited, ...post }) => ({
+        ...post,
+        created: new Date(created),
+        edited: new Date(edited),
     }));
 }

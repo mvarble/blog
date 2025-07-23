@@ -37,3 +37,16 @@ export function hasArrayField<Obj extends object & {}, K extends PropertyKey>(
     // @ts-expect-error: cannot narrow variable to have key K
     return Array.isArray(obj[key]);
 }
+
+export function hasDateField<Obj extends object & {}, K extends PropertyKey>(
+    obj: Obj,
+    key: K,
+): obj is Obj & Record<K, Date> {
+    return (
+        // @ts-expect-error: cannot narrow variable to have key K
+        typeof obj[key] == 'object' &&
+        // @ts-expect-error: cannot narrow variable to have key K
+        'toISOString' in obj[key] &&
+        typeof obj[key].toISOString == 'function'
+    );
+}

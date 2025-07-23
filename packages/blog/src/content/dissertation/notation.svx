@@ -1,0 +1,100 @@
+---
+title: Notation
+slug: notation
+---
+
+Throughout, unless specifically referenced elsewhere, all notions of this text are formally defined and explored in [](/citations#kallenberg2002) or [](/citations#jacod2003).
+Most of our notation will coincide with these texts (as well as most other literature), except in regards to some particular conventions.
+Let us establish some of these here.
+A stochastic process $\X$ with a marginal-index-set $I$ and state space $(\stateSpace, \stateAlg)$ will be indifferently recognized as:
+
+- a collection $\X=(\X_t)_{t\in I}$ of marginals $\X_t: \Omega \rightarrow \stateSpace$,
+- a map $\X: \Omega \times I \rightarrow \stateSpace$,
+- or its curried version $\X: \Omega \rightarrow \stateSpace^I$.
+
+With this convention, we find it appropriate to denote filtrations $\scrF=(\scrF_t)_{t\geq0}$ of increasing $\sigma$-algebras $\scrF_t$.
+Seeing as $\scrF$ denotes the actual family of $\sigma$-algebras, we denote the joined algebra with infinity subscript, $\scrF_\infty \defeq \bigvee_{t\geq0} \scrF_t$.
+The blackboard notation will generally correspond to a topological space, including those objects we typically introduce in analysis.
+
+- The real $\bbR$, the complex $\bbC = \bbR \oplus \im\bbR$, the and non-negative $\bbR_+ = [0,\infty)$ numbers with the usual Euclidean topologies.
+- For real normed vector spaces $\vecSpace$, $\bbW$, the space $\bbL(\vecSpace,\bbW)$ of real linear maps $\vecSpace \rightarrow \bbW$, equipped with operator norm.
+    $$
+      |T| \defeq \sup_{|\vecVar|=1} |Tv|
+    $$
+    We also concisely denote $\bbL(\vecSpace) \defeq \bbL(\vecSpace, \vecSpace)$.
+- For the a separable metric space $\stateSpace$ and an interval $I \subseteq \bbR_+$, the space $\pathSpace{I}{\stateSpace}$ of c\`adl\`ag functions, equipped with the Skorokhod J1 topology.
+- For topological spaces $\stateSpace, \bbY$, the space $\cpathSpace{\stateSpace}{\bbY}$ of continuous functions, equipped with the supremum norm.
+- For finite-dimensional normed vector spaces $\vecSpace, \bbW$ and open $\bbU \subseteq \vecSpace$, the subspace $\ccpathSpace{1}{\bbU}{\bbW}$ of functions $f \in \cpathSpace{\bbU}{\bbW}$ in which there is a derivative map $\Der f \in \cpathSpace{\bbU}{\bbL(\vecSpace,\bbW)}$.
+  $$
+    \lim_{|\vecVar|\rightarrow0} \frac{\big| f(\momentVar + \vecVar) - f(\momentVar) - \Der f(\momentVar) \cdot \vecVar\big|}{|\vecVar|} = 0
+  $$
+  For $f \in \ccpathSpace{1}{\bbU}{\bbR}$, we denote $\nabla f \in \cpathSpace{\bbU}{\vecSpace}$ the gradient,
+  $$
+    \bprj{\vecVar}{\nabla f(\momentVar)} \defeq \Der f(\momentVar) \cdot \vecVar,
+  $$
+  If there is some canonical, ordered basis $(\basisVec_1, \ldots, \basisVec_{\operatorname{dim}\vecSpace})$ of $\vecSpace$, denote the $i$-th partial derivative by $\Der_i f \in \cpathSpace{\bbU}{\bbR}$.
+  $$
+    \Der_i f(\momentVar) \defeq \Der f(\momentVar) \cdot \basisVec_i, \quad i = 1,\ldots, \operatorname{dim}\vecSpace
+  $$
+  Lastly, for functions of the form $f: \bbR_+ \times \vecSpace \rightarrow \bbW$, we specifically denote partial in the first coordinate with a dot, to indicate derivatives in _time_.
+  $$
+    \dot f(t, \momentVar) \defeq \frac{\partial}{\partial t} f(t, \momentVar) \defeq \lim_{\delta\rightarrow0} \frac{f(t+\delta, \momentVar)-f(t,\momentVar)}{\delta}
+  $$
+- For finite-dimensional normed vector space $\vecSpace$ and open $\bbU \subseteq \vecSpace$, the subspace $\ccpathSpace{2}{\bbU}{\bbR}$ of $f \in \ccpathSpace{1}{\bbU}{\bbR}$ in which we also have $\nabla f \in \ccpathSpace{1}{\bbU}{\vecSpace}$.
+  In such a case, we denote $\Hess f \in \cpathSpace{\bbU}{\bbL(\vecSpace)}$ the Hessian.
+  $$
+    \Hess f(\momentVar) \defeq \Der\big( \nabla f(u) \big)
+  $$
+  If there is some canonical, ordered basis $(\basisVec_1, \ldots, \basisVec_{\operatorname{dim}\vecSpace})$ of $\vecSpace$, denote the second-order $ij$-th partial derivative $\Der_{ij} f \in \cpathSpace{\bbU}{\bbR}$.
+  $$
+    \Der_{ij} f(\momentVar) \defeq \bprj{\basisVec_i}{\Hess f(\momentVar) \cdot \basisVec_j}, \quad i,j = 1, \ldots, \operatorname{dim}\vecSpace
+  $$
+
+For any topological space $\stateSpace$ and subset $A \subseteq \stateSpace$, we denote $A^\circ$ and $\overline A$ its interior and closure, respectively.
+In the case that this topology on $\stateSpace$ is induced by some metric $d$, we denote $\ball{\stateVar}{\delta}, \closedBall{\stateVar}{\delta} \subseteq \stateSpace$ the respectively open and closed balls centered at $\stateVar \in \stateSpace$ with radius $\delta > 0$.
+$$
+  \ball{\stateVar}{\delta} \defeq \Big\{ \stateVar' \in \stateSpace : d(\stateVar', \stateVar) < \delta \Big\}, \quad
+  \closedBall{\stateVar}{\delta} \defeq \Big\{ \stateVar' \in \stateSpace : d(\stateVar', \stateVar) \leq \delta \Big\}
+$$
+When the topology on $\stateSpace$ is canonical, we will denote the associated Borel algebra $\scrB(\stateSpace)$.
+Particular examples of this convention are:
+- the Borel algebra $\scrB(\vecSpace)$ associated to the topology induced from a canonical inner-product $\prj\cdot\cdot$ on a vector space $\vecSpace$.
+- the Borel algebra $\scrB(\stateSpace)$ associated to the relative topology of some subset $\stateSpace$ of a space $\vecSpace$ with itself some canonical topology.
+In the case that we are dealing with a finite-dimensional real vector space $\vecSpace$ with inner-product $\prj\cdot\cdot$, we fix an orthonormal basis $\basisVec_1, \ldots, \basisVec_{\operatorname{dim}\vecSpace} \in \vecSpace$ and establish the associated isometric isomorphism $\vecSpace \equiv \bbR^d$.
+$$
+  \vecVar \in \vecSpace \quad\longleftrightarrow\quad \big(\vecVar^1, \ldots, \vecVar^{\operatorname{dim}\vecSpace}\big); \qquad \vecVar^i \defeq \prj{\vecVar}{\basisVec_i}, \quad i = 1, \ldots, \operatorname{dim}\vecSpace
+$$
+Similarly identify any map $f: \bbA \rightarrow \vecSpace$ with its respective component maps $f_1, \ldots, f_d: \bbA \rightarrow \bbR$.
+$$
+  f: \bbA \rightarrow \vecSpace \quad\longleftrightarrow\quad \big(f_1,\ldots, f_d\big): \bbA \rightarrow \bbR^d; \qquad f_i(a) \defeq \prj{f(a)}{\basisVec_i}
+$$
+Extend the inner-product symmetrically to a bilinear form on $\vecSpace\oplus\im\vecSpace$,
+$$
+  \bprj{\vecVar_1+\im w_1}{\vecVar_2 + \im w_2} = \big(\prj{\vecVar_1}{\vecVar_2} - \prj{w_1}{w_2}\big) + \im\big(\prj{\vecVar_1}{w_2} + \prj{w_1}{\vecVar_2}\big),
+$$
+and define the trace of an operator $T \in \bbL(\vecSpace)$, as follows.
+$$
+  \tr(T) = \sum_{i=1}^d \prj{\basisVec_i}{T\basisVec_i}
+$$
+
+We adopt that $(\Omega, \Sigma, \Prb)$ is an abstract probability space that--through the process of enlargement via Kolmogorov's extension theorem--we without loss of generality assume it is equipped with identifications of various quantities $\X: \Omega \rightarrow \stateSpace$ into measurable spaces $(\stateSpace, \stateAlg)$ associated with distributions $\mu$ on $(\stateSpace, \stateAlg)$.
+We typically presume such maps $\X$ to be measurable without mention and will otherwise specify this fact explicitly by using the notation $\X \in \Sigma/\stateAlg$.
+For each probability measure $\Prb$ on $(\Omega, \Sigma)$, we denote the $\Prb$-distribution of such $\X$ by $\Prb_\X$ or pushfoward notation, $\push{\Prb}{\X}$.
+$$
+  \Prb_\X\Gamma \defeq (\push{\Prb}{\X})(\Gamma) \defeq \Prb(\X \in \Gamma) \defeq \Prb\big(X^{-1}\Gamma\big), \quad \Gamma \in \stateAlg
+$$
+For intuition, we will also denote integration against this distribution as follows.
+$$
+  \int_\stateSpace \Prb(\X \in \rmd\stateVar)f(\stateVar)  \defeq \int_\stateSpace \Prb_\X(\rmd\stateVar) f(\stateVar) = \int_\Omega \Prb(\rmd\omega) f\big(\X(\omega)\big) \eqdef \Exp_\Prb f(\X)
+$$
+Just as $\Exp_\Prb$ denotes the expectation operator of the measure $\Prb$, we will denote $\Exp_\Prb(\cdot|\scrG)$ the conditional expectation operator of $\Prb$ associated with a filtration $\scrG$.
+Should we choose a target space $(\bbY, \scrY)$ and a natural $\sigma$-algebra $Y^{-1}\scrY$ from some quantity $Y \in \Sigma/\scrY$, we denote $\Exp_\Prb(\cdot|Y=\cdot)$ the factoring of $\Exp_\Prb(\cdot|Y^{-1}\scrY)$ through $Y$.
+$$
+  \Exp_\Prb(\X | Y=y) = \Exp_\Prb\big(\X | Y^{-1}\scrY \big) \Big|_{Y=y}
+$$
+
+Also, any quantity $\X: \Omega \rightarrow \stateSpace$ will be identified with the identity map on its codomain, so that we may abusingly use the convenient expectation notation.
+$$
+  \Exp_{\Prb_\X} f(\X) \defeq \Exp_{\Prb_\X} f = \int_\stateSpace f(\stateVar) \Prb_\X(\rmd\stateVar) = \int_\Omega f\big(\X(\omega)\big) \Prb(\rmd\omega) = \Exp_\Prb f(\X)
+$$
+This will particularly be useful for when we discuss Markov processes and their associated identities.

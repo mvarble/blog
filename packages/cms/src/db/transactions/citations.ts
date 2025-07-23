@@ -112,9 +112,9 @@ export function getCitations(db: Database): Citation[] {
     const authors = db
         .prepare('SELECT * from citation_authors ORDER BY item DESC;')
         .all() as (CitationAuthor & {
-        item: number;
-        citation_id: number;
-    })[];
+            item: number;
+            citation_id: number;
+        })[];
     while (authors.length) {
         const author = authors.pop()!;
         citations[author.citation_id].authors.push({

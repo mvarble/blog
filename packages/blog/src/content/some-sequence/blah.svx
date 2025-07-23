@@ -1,7 +1,0 @@
----
-title: Blah
-slug: blah
-katex_macros:
-  \z: Z
----
-Blah, $\y$, $\z$.

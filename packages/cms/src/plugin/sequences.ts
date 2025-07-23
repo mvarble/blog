@@ -3,7 +3,13 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import { type Database } from '../db';
 import { mdastParser, type FileHooks } from '.';
-import { hasArrayField, hasBooleanField, hasObjectField, hasStringField } from './typechecks';
+import {
+    hasArrayField,
+    hasBooleanField,
+    hasDateField,
+    hasObjectField,
+    hasStringField,
+} from './typechecks';
 import { getStatements } from './statements';
 import {
     touchStatement,
@@ -28,6 +34,15 @@ const hooks: FileHooks = {
             return;
         }
 
+        if (!hasDateField(frontmatter, 'created')) {
+            console.error('Sequences must have a `created` date-field.');
+            return;
+        }
+        let edited: Date = frontmatter.created;
+        if (hasDateField(frontmatter, 'edited')) {
+            edited = frontmatter.edited;
+        }
+
         // check frontmatter for enumerate (optional or boolean)
         if ('enumerate' in frontmatter && !hasBooleanField(frontmatter, 'enumerate')) {
             console.error('Sequences field `enumerate` must be boolean.');
@@ -49,6 +64,8 @@ const hooks: FileHooks = {
             const sequence = touchSequence(db, {
                 title: frontmatter.title,
                 slug: frontmatter.slug,
+                created: frontmatter.created,
+                edited,
                 filename,
                 enumerate,
                 katexMacros,
@@ -74,6 +91,8 @@ const hooks: FileHooks = {
         const sequence = touchSequence(db, {
             title: frontmatter.title,
             slug: frontmatter.slug,
+            created: frontmatter.created,
+            edited,
             filename,
             enumerate,
             katexMacros,

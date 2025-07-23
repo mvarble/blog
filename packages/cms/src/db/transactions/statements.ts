@@ -1,6 +1,5 @@
 import { type Database } from '..';
 import { type KatexMacros } from '.';
-import { hasNumberField, hasStringField } from '../../plugin/typechecks';
 
 export interface TouchStatementInput {
     parentId: number;
@@ -62,17 +61,17 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
 }
 
 export function getStatementParent(db: Database, filename: string): string | undefined {
-    let output = db
+    const out0 = db
         .prepare(
             'SELECT statements.parent_id FROM pages INNER JOIN statements WHERE pages.id = statements.page_id AND pages.filename = ?;',
         )
-        .get(filename);
-    if (output && hasNumberField(output, 'parent_id')) {
-        output = db
+        .get(filename) as { parent_id: number } | undefined;
+    if (out0) {
+        const out1 = db
             .prepare('SELECT filename FROM pages WHERE pages.id = = ?;')
-            .get(output.parent_id);
-        if (output && hasStringField(output, 'filename')) {
-            return output.filename;
+            .get(out0.parent_id) as { filename: string } | undefined;
+        if (out1) {
+            return out1.filename;
         }
     }
 }
@@ -82,20 +81,21 @@ export function getStatement(db: Database, slug: string): Statement | undefined 
         .prepare(
             'SELECT s.id, s.page_id, s.parent_id, s.kind, s.slug, s.item, s.item_prefix, p.pathname, p.filename, p.katex_macros FROM statements s INNER JOIN pages p WHERE p.id = s.page_id AND s.slug = ?;',
         )
-        .get(slug);
-    if (
-        output &&
-        hasNumberField(output, 'id') &&
-        hasNumberField(output, 'page_id') &&
-        hasNumberField(output, 'parent_id') &&
-        hasStringField(output, 'kind') &&
-        hasStringField(output, 'slug') &&
-        hasNumberField(output, 'item') &&
-        'item_prefix' in output &&
-        hasStringField(output, 'pathname') &&
-        hasStringField(output, 'filename') &&
-        hasStringField(output, 'katex_macros')
-    ) {
+        .get(slug) as
+        | {
+            id: number;
+            page_id: number;
+            parent_id: number;
+            kind: string;
+            slug: string;
+            item: number;
+            item_prefix?: number;
+            pathname: string;
+            filename: string;
+            katex_macros: string;
+        }
+        | undefined;
+    if (output) {
         return {
             id: output.id,
             pageId: output.page_id,
@@ -154,5 +154,3 @@ export function getStatementReferences(
         };
     });
 }
-
-// TODO: getStatementData (like getPostData)

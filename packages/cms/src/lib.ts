@@ -11,6 +11,7 @@ export type {
     TouchPostInput,
     Post,
     PostReference,
+    PostInfo,
     TouchSequenceChildInput,
     TouchSequenceInput,
     SequenceChild,

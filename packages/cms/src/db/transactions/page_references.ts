@@ -7,7 +7,6 @@ import {
     StatementReference,
     type Database,
 } from '..';
-import { hasNumberField } from '../../plugin/typechecks';
 
 export interface PageReference {
     parentId: number;
@@ -21,8 +20,10 @@ export function touchPageReference(
 ): PageReference | undefined {
     let childId: number;
     try {
-        const child = db.prepare('SELECT id FROM pages WHERE pathname = ?;').get(childPathname);
-        if (!child || !hasNumberField(child, 'id')) {
+        const child = db.prepare('SELECT id FROM pages WHERE pathname = ?;').get(childPathname) as
+            | { id: number }
+            | undefined;
+        if (!child) {
             console.error(
                 `The pathname '${childPathname}' does not resolve to a page in the site.`,
             );

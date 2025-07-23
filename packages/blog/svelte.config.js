@@ -6,13 +6,15 @@ import remarkMath from 'remark-math';
 import remarkFrontmatter from 'remark-frontmatter';
 import { remarkCms, rehypeCms } from 'cms';
 
+import katex from './katex.js';
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
     preprocess: [
         vitePreprocess(),
         mdsvex({
             remarkPlugins: [remarkFrontmatter, remarkMath, remarkCms],
-            rehypePlugins: [rehypeCms],
+            rehypePlugins: [[rehypeCms, katex]],
         }),
     ],
     kit: {

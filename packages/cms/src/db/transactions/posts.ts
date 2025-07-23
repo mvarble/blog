@@ -3,18 +3,16 @@ import { type KatexMacros } from '.';
 
 export interface TouchPostInput {
     title: string;
+    created: Date;
+    edited: Date;
     slug: string;
     filename: string;
     katexMacros: KatexMacros;
 }
 
-export interface Post {
+export interface Post extends TouchPostInput {
     pageId: number;
-    title: string;
-    slug: string;
     pathname: string;
-    filename: string;
-    katexMacros: KatexMacros;
 }
 
 export function touchPost(db: Database, input: TouchPostInput): Post {
@@ -27,10 +25,14 @@ export function touchPost(db: Database, input: TouchPostInput): Post {
             )
             .get(pathname, input.filename, JSON.stringify(input.katexMacros));
         pageId = (out as { id: number }).id;
-        db.prepare('INSERT INTO posts (page_id, title, slug) VALUES (?, ?, ?);').run(
+        db.prepare(
+            'INSERT INTO posts (page_id, title, slug, created, edited) VALUES (?, ?, ?, ?, ?);',
+        ).run(
             pageId,
             input.title,
             input.slug,
+            input.created.toISOString(),
+            input.edited.toISOString(),
         );
     } catch (e) {
         if (typeof e == 'object' && e && 'code' in e && e.code == 'SQLITE_CONSTRAINT_UNIQUE') {
@@ -40,9 +42,13 @@ export function touchPost(db: Database, input: TouchPostInput): Post {
                 )
                 .get(pathname, JSON.stringify(input.katexMacros), input.filename);
             pageId = (out as { id: number }).id;
-            db.prepare('UPDATE posts SET title = ?, slug = ? WHERE page_id = ?;').run(
+            db.prepare(
+                'UPDATE posts SET title = ?, slug = ?, created = ?, edited = ? WHERE page_id = ?;',
+            ).run(
                 input.title,
                 input.slug,
+                input.created.toISOString(),
+                input.edited.toISOString(),
                 pageId,
             );
         } else {
@@ -84,4 +90,30 @@ export function getPostReferences(
             label: title,
         }),
     );
+}
+
+export interface PostInfo {
+    title: string;
+    created: Date;
+    edited: Date;
+    pathname: string;
+}
+
+export function getPostInfos(db: Database): PostInfo[] {
+    const outputs = db
+        .prepare(
+            `SELECT b.title, b.created, b.edited, a.pathname
+            FROM pages a INNER JOIN posts b ON a.id = b.page_id ORDER BY b.edited DESC;`,
+        )
+        .all() as {
+            title: string;
+            created: string;
+            edited: string;
+            pathname: string;
+        }[];
+    return outputs.map(({ created, edited, ...post }) => ({
+        ...post,
+        created: new Date(created),
+        edited: new Date(edited),
+    }));
 }

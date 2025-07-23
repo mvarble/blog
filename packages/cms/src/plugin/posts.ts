@@ -1,6 +1,6 @@
 import { getPage, touchPost, touchStatement } from '../db';
 import { mdastParser, type FileHooks } from '.';
-import { hasObjectField, hasStringField } from './typechecks';
+import { hasDateField, hasObjectField, hasStringField } from './typechecks';
 import { getStatements } from './statements';
 import { findReferences } from './page_references';
 
@@ -19,9 +19,20 @@ const hooks: FileHooks = {
         if (hasObjectField(frontmatter, 'katex_macros') && frontmatter.katex_macros) {
             katexMacros = frontmatter.katex_macros;
         }
+        if (!hasDateField(frontmatter, 'created')) {
+            console.error('Posts must have a `created` date-field.');
+            return;
+        }
+        let edited: Date = frontmatter.created;
+        if (hasDateField(frontmatter, 'edited')) {
+            edited = frontmatter.edited;
+        }
+
         const post = touchPost(db, {
             title: frontmatter.title,
             slug: frontmatter.slug,
+            created: frontmatter.created,
+            edited,
             filename,
             katexMacros,
         });

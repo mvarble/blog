@@ -31,9 +31,9 @@ export const remarkCms: Plugin<[undefined], Root, Root> = () => {
                 const citation = citations[key];
                 if (!citation) return;
                 if (node.children.length == 1 && node.children[0].type == 'text') {
-                    node.children[0].value = `${key}, ${node.children[0].value}`;
+                    node.children[0].value = `[${key}, ${node.children[0].value}]`;
                 } else if (!node.children.length) {
-                    node.children = [{ type: 'text', value: key }];
+                    node.children = [{ type: 'text', value: `[${key}]` }];
                 }
                 return;
             }
