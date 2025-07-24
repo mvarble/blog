@@ -3,7 +3,8 @@ import path from 'path';
 
 import { connect, getStatementFromFilename } from '../db';
 
-export default function cmsInjectionPlugin(): Plugin {
+// TODO: get all tag data
+export function cmsInjection(): Plugin {
     const db = connect();
     return {
         name: 'cms-injection',

@@ -30,7 +30,6 @@ export const load: Load = async ({ url }) => {
     const parentPathname = db.getStatementParentPathname(conn, filename);
     if (!parentPathname) {
         if (dev) {
-            console.log(statement, filename, parentPathname);
             error(500, {
                 message: `Page found for ${pathname} but no matching parent. This should never happen.`,
             });

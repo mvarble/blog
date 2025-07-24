@@ -2,15 +2,30 @@
 -- content on the website.
 CREATE TABLE IF NOT EXISTS pages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    pathname TEXT UNIQUE NOT NULL,
     filename TEXT UNIQUE NOT NULL,
+    pathname TEXT UNIQUE NOT NULL,
     katex_macros TEXT NOT NULL
 );
 
 -- Any time a page links to another, we add an edge between them.
 CREATE TABLE IF NOT EXISTS page_references (
     parent_id INTEGER NOT NULL REFERENCES pages(id),
-    child_id INTEGER NOT NULL REFERENCES pages(id)
+    child_id INTEGER NOT NULL REFERENCES pages(id),
+    UNIQUE (parent_id, child_id)
+);
+
+-- An item worth numbering for reference within a document
+CREATE TABLE IF NOT EXISTS tags (
+    parent_id INTEGER NOT NULL REFERENCES pages(id),
+    slug TEXT UNIQUE NOT NULL,
+    label TEXT NOT NULL
+);
+
+-- Any time a file links to another, we add an edge between them.
+CREATE TABLE IF NOT EXISTS tag_references (
+    parent_id TEXT NOT NULL REFERENCES pages(id),
+    child_slug TEXT NOT NULL REFERENCES tags(slug),
+    UNIQUE (parent_id, child_slug)
 );
 
 -- A post encapsulates a self-contained page on the site.
@@ -42,7 +57,7 @@ CREATE TABLE IF NOT EXISTS sequence_pages (
     title TEXT NOT NULL,
     slug TEXT NOT NULL,
     item INTEGER NOT NULL,
-    location TEXT
+    label TEXT
 );
 
 -- A statement encapsulates information which I would like to deductively
@@ -55,8 +70,7 @@ CREATE TABLE IF NOT EXISTS statements (
     parent_id INTEGER NOT NULL REFERENCES pages(id),
     kind TEXT NOT NULL,
     slug TEXT UNIQUE NOT NULL,
-    item INTEGER NOT NULL,
-    item_prefix INTEGER
+    label TEXT UNIQUE NOT NULL
 );
 
 -- A statement may depend on another one, indicating the deductive flow.
@@ -87,6 +101,7 @@ CREATE TABLE IF NOT EXISTS citations (
     series TEXT
 );
 
+-- Authors within a bibtex reference.
 CREATE TABLE IF NOT EXISTS citation_authors (
     citation_id INTEGER NOT NULL REFERENCES citations(id),
     item INTEGER NOT NULL,

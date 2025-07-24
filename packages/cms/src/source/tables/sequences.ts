@@ -1,25 +1,23 @@
 import path from 'path';
 import fs from 'fs';
 import matter from 'gray-matter';
-import { type Database } from '../db';
-import { mdastParser, type FileHooks } from './cms';
+
+import {
+    type SequenceChild,
+    type TouchSequenceChildInput,
+    touchSequence,
+    getSequence,
+} from '../../db';
 import {
     hasArrayField,
     hasBooleanField,
     hasDateField,
     hasObjectField,
     hasStringField,
-} from './typechecks';
-import { getStatements } from './statements';
-import {
-    touchStatement,
-    SequenceChild,
-    touchSequence,
-    TouchSequenceChildInput,
-    getSequence,
-} from '../db';
-import { findReferences } from './page_references';
-import { slugFromFilename } from './slug';
+    slugFromFilename,
+} from '../../util';
+import { edgeParser, nodeParser } from '../parsers';
+import { type FileHooks } from '..';
 
 const hooks: FileHooks = {
     async initialize(db, filename, frontmatter, contents) {
@@ -70,9 +68,14 @@ const hooks: FileHooks = {
                 katexMacros,
             });
 
-            // get statements from content
-            const statements = await getStatements(sequence.pageId, filename, contents, 0);
-            statements.forEach((statement) => touchStatement(db, statement));
+            await nodeParser(
+                db,
+                { id: sequence.pageId, pathname: sequence.pathname, filename: sequence.filename },
+                contents,
+                0,
+                enumerate ? 0 : undefined,
+            );
+
             return;
         }
 
@@ -98,40 +101,63 @@ const hooks: FileHooks = {
             children,
         });
 
-        // get statements from content
-        const statements = await getStatements(
-            sequence.pageId,
-            filename,
+        let currentItemPrefix = enumerate ? 0 : undefined;
+        let currentItem = await nodeParser(
+            db,
+            { id: sequence.pageId, pathname: sequence.pathname, filename: sequence.filename },
             contents,
             0,
-            enumerate ? 0 : undefined,
+            currentItemPrefix,
         );
-        statements.forEach((statement) => touchStatement(db, statement));
 
-        // get statements recursively
-        let i = 0;
-        for (const child of sequence.children!) {
-            await recurseGetStatements(db, child, 0, enumerate ? i++ : undefined);
+        const descendants: { data: SequenceChild; itemPrefix?: number }[] = sequence
+            .children!.map((data, i) => ({
+                data,
+                itemPrefix: sequence.enumerate ? i : undefined,
+            }))
+            .toReversed();
+        while (descendants.length > 0) {
+            const descendant = descendants.pop()!;
+            if (
+                typeof descendant.itemPrefix == 'number' &&
+                descendant.itemPrefix != currentItemPrefix
+            ) {
+                currentItem = 0;
+                currentItemPrefix = descendant.itemPrefix;
+            }
+            const contents = await fs.promises.readFile(descendant.data.filename, 'utf8');
+            currentItem += await nodeParser(
+                db,
+                {
+                    id: descendant.data.pageId,
+                    pathname: descendant.data.pathname,
+                    filename: descendant.data.filename,
+                },
+                contents,
+                currentItem,
+                currentItemPrefix,
+            );
+            if (descendant.data.children) {
+                descendants.push(
+                    ...descendant.data.children
+                        .map((data) => ({ data, itemPrefix: currentItemPrefix }))
+                        .toReversed(),
+                );
+            }
         }
     },
 
     async crossReference(db, filename, _frontmatter, contents) {
         const sequence = getSequence(db, filename);
         if (sequence) {
-            async function recurseFile(child: SequenceChild, file: string) {
-                const mdast = mdastParser.parse(file);
-                findReferences(
+            async function recurseFile(child: SequenceChild, contents: string) {
+                edgeParser(
                     db,
-                    {
-                        id: child.pageId,
-                        pathname: child.pathname,
-                        filename: child.filename,
-                        katexMacros: child.katexMacros,
-                    },
-                    mdast,
+                    { id: child.pageId, pathname: child.pathname, filename: child.filename },
+                    contents,
                 );
                 if (child.children) {
-                    await Promise.all(child.children.map(recurse));
+                    child.children.forEach(recurse);
                 }
             }
 
@@ -144,26 +170,6 @@ const hooks: FileHooks = {
         }
     },
 };
-
-async function recurseGetStatements(
-    db: Database,
-    child: SequenceChild,
-    startItem: number,
-    itemPrefix: number | undefined,
-) {
-    const statements = await getStatements(
-        child.pageId,
-        child.filename,
-        await fs.promises.readFile(child.filename, 'utf8'),
-        startItem,
-        itemPrefix,
-    );
-    statements.forEach((statement) => touchStatement(db, statement));
-    if (child.children) {
-        const newStartItem = startItem + statements.length;
-        child.children.forEach((c) => recurseGetStatements(db, c, newStartItem, itemPrefix));
-    }
-}
 
 async function buildChildren(
     rootFilename: string,

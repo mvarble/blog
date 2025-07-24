@@ -25,4 +25,8 @@ export function connect(): Database {
     return new sqlite3(`${cacheDir}/cache.db`);
 }
 
+export function isUniqueConstraintError(e: unknown): boolean {
+    return typeof e == 'object' && e != null && 'code' in e && e.code == 'SQLITE_CONSTRAINT_UNIQUE';
+}
+
 export * from './transactions';

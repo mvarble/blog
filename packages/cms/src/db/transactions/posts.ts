@@ -1,4 +1,4 @@
-import { type Database } from '..';
+import { isUniqueConstraintError, type Database } from '..';
 import { type KatexMacros } from '.';
 
 export interface TouchPostInput {
@@ -35,7 +35,7 @@ export function touchPost(db: Database, input: TouchPostInput): Post {
             input.edited.toISOString(),
         );
     } catch (e) {
-        if (typeof e == 'object' && e && 'code' in e && e.code == 'SQLITE_CONSTRAINT_UNIQUE') {
+        if (isUniqueConstraintError(e)) {
             const out = db
                 .prepare(
                     'UPDATE pages SET pathname = ?, katex_macros = ? WHERE filename = ? RETURNING id;',
@@ -66,7 +66,7 @@ export interface PostReference {
     pageId: number;
     pathname: string;
     title: string;
-    label: string;
+    full: string;
 }
 
 export function getPostReferences(
@@ -87,7 +87,7 @@ export function getPostReferences(
             pageId: page_id,
             pathname,
             title,
-            label: title,
+            full: title,
         }),
     );
 }

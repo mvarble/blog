@@ -1,9 +1,7 @@
-import { getPage, touchPost, touchStatement } from '../db';
-import { mdastParser, type FileHooks } from './cms';
-import { hasDateField, hasObjectField, hasStringField } from './typechecks';
-import { getStatements } from './statements';
-import { findReferences } from './page_references';
-import { slugFromFilename } from './slug';
+import { getPage, touchPost } from '../../db';
+import { hasDateField, hasObjectField, hasStringField, slugFromFilename } from '../../util';
+import { nodeParser, edgeParser } from '../parsers';
+import { type FileHooks } from '..';
 
 const hooks: FileHooks = {
     async initialize(db, filename, frontmatter, contents) {
@@ -38,16 +36,20 @@ const hooks: FileHooks = {
             katexMacros,
         });
 
-        // get statements from content
-        const statements = await getStatements(post.pageId, filename, contents, 0);
-        statements.forEach((statement) => touchStatement(db, statement));
+        // parse the mdast
+        await nodeParser(
+            db,
+            { id: post.pageId, pathname: post.pathname, filename },
+            contents,
+            post.pageId,
+            0,
+        );
     },
 
     async crossReference(db, filename, _frontmatter, contents) {
         const page = getPage(db, filename);
         if (page) {
-            const mdast = mdastParser.parse(contents);
-            findReferences(db, page, mdast);
+            edgeParser(db, page, contents);
         }
     },
 };

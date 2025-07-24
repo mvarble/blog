@@ -1,12 +1,11 @@
-import { type Database } from '..';
+import { isUniqueConstraintError, type Database } from '..';
 import { type KatexMacros } from '.';
 
 export interface TouchStatementInput {
     parentId: number;
     kind: string;
     slug: string;
-    item: number;
-    itemPrefix?: number;
+    label: string;
     filename: string;
     katexMacros: KatexMacros;
 }
@@ -30,12 +29,12 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
         pageId = (out as { id: number }).id;
         out = db
             .prepare(
-                'INSERT INTO statements (page_id, parent_id, kind, slug, item, item_prefix) VALUES (?, ?, ?, ?, ?, ?) RETURNING id;',
+                'INSERT INTO statements (page_id, parent_id, kind, slug, label) VALUES (?, ?, ?, ?, ?) RETURNING id;',
             )
-            .get(pageId, input.parentId, input.kind, input.slug, input.item, input.itemPrefix);
+            .get(pageId, input.parentId, input.kind, input.slug, input.label);
         id = (out as { id: number }).id;
     } catch (e) {
-        if (typeof e == 'object' && e && 'code' in e && e.code == 'SQLITE_CONSTRAINT_UNIQUE') {
+        if (isUniqueConstraintError(e)) {
             let out = db
                 .prepare(
                     'UPDATE pages SET pathname = ?, katex_macros = ? WHERE filename = ? RETURNING id;',
@@ -44,9 +43,9 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
             pageId = (out as { id: number }).id;
             out = db
                 .prepare(
-                    'UPDATE statements SET parent_id = ?, kind = ?, slug = ?, item = ?, item_prefix = ? WHERE page_id = ? RETURNING id;',
+                    'UPDATE statements SET parent_id = ?, kind = ?, slug = ?, label = ? WHERE page_id = ? RETURNING id;',
                 )
-                .run(input.parentId, input.kind, input.slug, input.item, input.itemPrefix, pageId);
+                .run(input.parentId, input.kind, input.slug, input.label, pageId);
             id = (out as { id: number }).id;
         } else {
             throw e;
@@ -88,7 +87,7 @@ function getStatementFrom(db: Database, key: string, value: string): Statement |
     const output = db
         .prepare(
             `SELECT
-                s.id, s.page_id, s.parent_id, s.kind, s.slug, s.item, s.item_prefix, p.pathname,
+                s.id, s.page_id, s.parent_id, s.kind, s.slug, s.label, p.pathname,
                 p.filename, p.katex_macros
             FROM statements s INNER JOIN pages p WHERE p.id = s.page_id AND ${key} = ?;`,
         )
@@ -99,8 +98,7 @@ function getStatementFrom(db: Database, key: string, value: string): Statement |
             parent_id: number;
             kind: string;
             slug: string;
-            item: number;
-            item_prefix?: number;
+            label: string;
             pathname: string;
             filename: string;
             katex_macros: string;
@@ -113,8 +111,7 @@ function getStatementFrom(db: Database, key: string, value: string): Statement |
             parentId: output.parent_id,
             kind: output.kind,
             slug: output.slug,
-            item: output.item,
-            itemPrefix: typeof output.item_prefix == 'number' ? output.item_prefix : undefined,
+            label: output.label,
             pathname: output.pathname,
             filename: output.filename,
             katexMacros: JSON.parse(output.katex_macros),
@@ -133,9 +130,9 @@ export function getStatementFromSlug(db: Database, slug: string): Statement | un
 export interface StatementReference {
     pageId: number;
     pathname: string;
-    item: string;
     kind: string;
     label: string;
+    full: string;
 }
 
 export function getStatementReferences(
@@ -146,30 +143,28 @@ export function getStatementReferences(
     interface S {
         pageId: number;
         pathname: string;
-        item_prefix?: number;
-        item: number;
+        label: string;
         kind: string;
     }
     const output = db
         .prepare(
-            `SELECT s.page_id as pageId, p.pathname, s.item_prefix, s.item, s.kind
+            `SELECT s.page_id as pageId, p.pathname, s.label, s.kind
             FROM statements s INNER JOIN pages p INNER JOIN page_references pr
             ON s.page_id = p.id AND pr.parent_id = ? AND pr.child_id = p.id AND pr.child_id IN (${childIds.map(() => '?').join(', ')});`,
         )
         .all(parentId, ...childIds) as S[];
-    return output.map(({ pageId, pathname, ...rest }) => {
-        const item = rest.item_prefix ? `${rest.item_prefix}.${rest.item}` : String(rest.item);
+    return output.map(({ pageId, pathname, label, ...rest }) => {
         const kind = rest.kind
             .split(' ')
             .map((str) => `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`)
             .join(' ');
-        const label = `${kind} ${item}`;
+        const full = `${kind} ${label}`;
         return {
             pageId,
             pathname,
-            item,
             kind,
             label,
+            full,
         };
     });
 }

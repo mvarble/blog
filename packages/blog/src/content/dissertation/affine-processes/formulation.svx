@@ -27,7 +27,7 @@ We may now define the notion of an affine process on $\stateSpace$.
 
 In [Theorem 1.2.7](/citations#cuchiero2011), it is shown that, without loss of generality on conditional distributions $(\Prb_\stateVar)_{\stateVar\in\stateSpace}$, an affine process $\X$ can be chosen to have càdlàg paths.
 Thus, each distribution $\Prb_\stateVar$ may be recognized as a measure on the Borel algebra associated with the space $\pathSpace{[0,\infty)}{\stateSpace}$ of càdlàg functions equipped with the Skorokhod topology.
-By imposing this regularity, the following theorem tells us that an affine process $\X$ as in [%label](/statements/affine-process-definition) is a $(\Prb_\stateVar, \scrF)$ jump-diffusion for each $\stateVar \in \stateSpace$.
+By imposing this regularity, the following theorem tells us that an affine process $\X$ as in [%full](/statements/affine-process-definition) is a $(\Prb_\stateVar, \scrF)$ jump-diffusion for each $\stateVar \in \stateSpace$.
 For relevant definitions and results pertaining to jump-diffusions, we refer the reader to [Appendix %item](/sequences/dissertation/jump-diffusions).
 
 <!-- state the existence of \ode, \affDrift, \affDiff, \affJump -->
@@ -35,5 +35,5 @@ For relevant definitions and results pertaining to jump-diffusions, we refer the
 <Statement {...riccatiAffineFormulation} />
 
 <!-- fix our "base" affine process -->
-Henceforth, we fix $\X$ a càdlàg affine process with conditional distributions $(\Prb_\stateVar)_{\stateVar\in\stateSpace}$ on $\pathSpace{[0,\infty)}{\stateSpace}$, induced filtration $\scrF=(\scrF_t)_{t\geq0}$, and moment function $\aff$ as in [%label](/statements/affine-process-definition).
-We will use the truncation function $\trunc(\markVar) = \markVar 1_{|\markVar|\leq 1}$ and fix the differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$ and Lévy-Khintchine map $\ode$ as in [%label](/statements/affine-process-regularity).
+Henceforth, we fix $\X$ a càdlàg affine process with conditional distributions $(\Prb_\stateVar)_{\stateVar\in\stateSpace}$ on $\pathSpace{[0,\infty)}{\stateSpace}$, induced filtration $\scrF=(\scrF_t)_{t\geq0}$, and moment function $\aff$ as in [%full](/statements/affine-process-definition).
+We will use the truncation function $\trunc(\markVar) = \markVar 1_{|\markVar|\leq 1}$ and fix the differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$ and Lévy-Khintchine map $\ode$ as in [%full](/statements/affine-process-regularity).

@@ -1,5 +1,4 @@
-export * from './parser';
-export * as db from './db';
+export * as db from '../db';
 export type {
     CitationAuthor,
     TouchCitation,
@@ -19,4 +18,4 @@ export type {
     SequenceChildReference,
     TouchStatementInput,
     Statement,
-} from './db';
+} from '../db';

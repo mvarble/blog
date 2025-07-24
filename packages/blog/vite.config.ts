@@ -1,10 +1,10 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
-import { cms, cmsInjection } from 'cms/plugin';
+import { cmsSource, cmsInjection } from 'cms/vite';
 
 export default defineConfig({
-    plugins: [cms(), sveltekit(), cmsInjection()],
+    plugins: [cmsSource(), sveltekit(), cmsInjection()],
     optimizeDeps: {
         exclude: ['cms'],
     },

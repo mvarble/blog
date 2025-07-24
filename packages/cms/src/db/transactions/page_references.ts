@@ -2,6 +2,7 @@ import {
     getPostReferences,
     getSequenceChildReferences,
     getStatementReferences,
+    isUniqueConstraintError,
     PostReference,
     SequenceChildReference,
     StatementReference,
@@ -23,12 +24,7 @@ export function touchPageReference(
         const child = db.prepare('SELECT id FROM pages WHERE pathname = ?;').get(childPathname) as
             | { id: number }
             | undefined;
-        if (!child) {
-            console.error(
-                `The pathname '${childPathname}' does not resolve to a page in the site.`,
-            );
-            return;
-        }
+        if (!child) return;
         childId = child.id;
         db.prepare('INSERT INTO page_references (parent_id, child_id) VALUES (?, ?);').run(
             parentId,
@@ -36,7 +32,7 @@ export function touchPageReference(
         );
         return { parentId, childId };
     } catch (e) {
-        if (typeof e == 'object' && e && 'code' in e && e.code == 'SQLITE_CONSTRAINT_UNIQUE') {
+        if (isUniqueConstraintError(e)) {
             return { parentId, childId: childId! };
         } else {
             throw e;
@@ -46,7 +42,7 @@ export function touchPageReference(
 
 export type AnyReference = PostReference | SequenceChildReference | StatementReference;
 
-export function getReferences(db: Database, parentId: number): Record<string, AnyReference> {
+export function getPageReferences(db: Database, parentId: number): Record<string, AnyReference> {
     const output = db
         .prepare('SELECT child_id FROM page_references WHERE parent_id = ?;')
         .all(parentId) as { child_id: number }[];

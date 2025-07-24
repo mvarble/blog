@@ -1,4 +1,4 @@
-import { type Database } from '..';
+import { isUniqueConstraintError, type Database } from '..';
 
 export function touchStatementDependency(db: Database, parentId: number, childId: number) {
     try {
@@ -7,7 +7,7 @@ export function touchStatementDependency(db: Database, parentId: number, childId
             childId,
         );
     } catch (e) {
-        if (typeof e == 'object' && e && 'code' in e && e.code == 'SQLITE_CONSTRAINT_UNIQUE') {
+        if (isUniqueConstraintError(e)) {
             return;
         } else {
             throw e;

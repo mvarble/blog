@@ -1,0 +1,35 @@
+---
+type: post
+title: Test post
+created: 2025-07-26T05:59:34
+---
+
+<script>
+  import Statement from '../lib/components/statement.svelte';
+</script>
+
+<Foo></Foo>
+
+
+1. @tag(fjisd) Hi
+2. Hello
+3. Hey
+
+Some text
+$$
+  @tag(sdflkjsdflkj)
+$$
+$$
+  hi
+$$
+hi
+
+```math
+hi
+```
+
+$@tag(sdflkj)$
+
+$$
+  hello
+$$

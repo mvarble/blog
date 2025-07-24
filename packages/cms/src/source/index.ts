@@ -1,13 +1,8 @@
 import { Plugin } from 'vite';
 import path from 'path';
 import fs from 'fs';
-import sqlite3 from 'better-sqlite3';
 import glob from 'fast-glob';
 import matter from 'gray-matter';
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import remarkFrontmatter from 'remark-frontmatter';
-import remarkMath from 'remark-math';
 
 import {
     getParentSequenceFilename,
@@ -16,17 +11,19 @@ import {
     connect,
     cacheDir,
 } from '../db';
-import { hasStringField } from './typechecks';
-import post from './posts';
-import sequence from './sequences';
-import statement from './statements';
-import citation from './citations';
+import { hasStringField } from '../util';
 
-// Database callbacks on visits to each file.
+import post from './tables/posts';
+import sequence from './tables/sequences';
+import statement from './tables/statements';
+import citation from './tables/citations';
+
+import { type Database } from '../db';
+
 export interface FileHooks {
     // First hook: "node" data which does not include any cross-re:erencing.
     initialize?(
-        db: sqlite3.Database,
+        db: Database,
         filename: string,
         frontmatter: {
             type: string;
@@ -36,7 +33,7 @@ export interface FileHooks {
     ): Promise<void>;
     // Second hook: "edge" data which assumes nodes have already been populated in DB.
     crossReference?(
-        db: sqlite3.Database,
+        db: Database,
         filename: string,
         frontmatter: {
             type: string;
@@ -49,13 +46,10 @@ export interface FileHooks {
 // CMS DB hooks
 const HOOKS: { [key: string]: FileHooks } = { post, sequence, statement, citation };
 
-// base parser used throughout
-export const mdastParser = unified().use(remarkParse).use([remarkFrontmatter, remarkMath]);
-
 // Vite plugin which exposes a virtual module for access to a database that is populated from
 // project files. These files are watched in development mode to hot-update the database, which
 // is why need a Vite Plugin.
-export default function cmsPlugin(): Plugin {
+export function cmsSource(): Plugin {
     // make the CMS cache directory
     fs.mkdirSync(path.resolve(cacheDir), { recursive: true });
 

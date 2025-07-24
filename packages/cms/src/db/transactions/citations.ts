@@ -1,4 +1,4 @@
-import { type Database } from '..';
+import { type Database, isUniqueConstraintError } from '..';
 
 export interface CitationAuthor {
     lastname: string;
@@ -64,7 +64,7 @@ export function touchCitation(db: Database, citation: TouchCitation): Citation {
             ...citation.authors.flatMap((author, i) => [id, i, author.lastname, author.fullname]),
         );
     } catch (e) {
-        if (typeof e == 'object' && e && 'code' in e && e.code == 'SQLITE_CONSTRAINT_UNIQUE') {
+        if (isUniqueConstraintError(e)) {
             const out = db
                 .prepare(
                     `UPDATE citations SET

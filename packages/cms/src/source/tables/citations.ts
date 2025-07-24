@@ -1,6 +1,7 @@
-import { type FileHooks } from './cms';
 import bibtex from 'bibtex';
-import { touchCitation } from '../db';
+
+import { type FileHooks } from '..';
+import { touchCitation } from '../../db';
 
 const hooks: FileHooks = {
     async initialize(db, _filename, _frontmatter, contents) {

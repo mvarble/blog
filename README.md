@@ -129,10 +129,10 @@ The link text is a format string with the following possible arguments.
 | formatter   | data                                                                    | example(s)                    |
 | ----------- | ----------------------------------------------------------------------- | ----------------------------- |
 | `%title`    | Title, if a post or sequence page.                                      | `My cool post`                |
-| `%item`     | Item of a page within a enumerated sequence or statement within a page. | `1`, `3.2`                    |
+| `%label`    | Item of a page within a enumerated sequence or statement within a page. | `1`, `3.2`                    |
 | `%kind`     | The kind of statement (if a statement), capitalized.                    | `Proposition`                 |
 | `%sequence` | If sequence page, the title of the sequence.                            | `My cool sequence`            |
-| `%label`    | If post or page in unenumerated sequence, `%title`.                     | `My cool post`                |
+| `%full`     | If post or page in unenumerated sequence, `%title`.                     | `My cool post`                |
 |             | If page in enumerated sequence, `%item. %title`                         | `1. Introduction`             |
 |             | If statement, `%kind %item`                                             | `Proposition 1`, `Remark 3.2` |
 
