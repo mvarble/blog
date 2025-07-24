@@ -1,0 +1,7 @@
+---
+type: statement
+kind: definition
+slug: affine-process-definition
+---
+
+hi

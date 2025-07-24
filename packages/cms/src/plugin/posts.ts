@@ -1,8 +1,9 @@
 import { getPage, touchPost, touchStatement } from '../db';
-import { mdastParser, type FileHooks } from '.';
+import { mdastParser, type FileHooks } from './cms';
 import { hasDateField, hasObjectField, hasStringField } from './typechecks';
 import { getStatements } from './statements';
 import { findReferences } from './page_references';
+import { slugFromFilename } from './slug';
 
 const hooks: FileHooks = {
     async initialize(db, filename, frontmatter, contents) {
@@ -11,9 +12,9 @@ const hooks: FileHooks = {
             console.error('Posts must have a `title` string-field in the frontmatter.');
             return;
         }
-        if (!hasStringField(frontmatter, 'slug') || !frontmatter.slug) {
-            console.error('Posts must have a `slug` string-field in the frontmatter.');
-            return;
+        let slug = slugFromFilename(filename);
+        if (hasStringField(frontmatter, 'slug') && frontmatter.slug) {
+            slug = frontmatter.slug;
         }
         let katexMacros = {};
         if (hasObjectField(frontmatter, 'katex_macros') && frontmatter.katex_macros) {
@@ -30,8 +31,8 @@ const hooks: FileHooks = {
 
         const post = touchPost(db, {
             title: frontmatter.title,
-            slug: frontmatter.slug,
             created: frontmatter.created,
+            slug,
             edited,
             filename,
             katexMacros,

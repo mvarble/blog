@@ -30,7 +30,7 @@ title: My cool post
 slug: my-cool-post
 ```
 
-The `slug` field must be unique and it serves as an identifier for the post.
+The `slug` field must be unique and it serves as an identifier for the post; if not provided, it is assumed to be the filename without the extension or the directory name if the filename is `index.svx`.
 An optional field `katex_macros` provides a map of LaTeX macros that will be used throughout the document.
 
 ### Creating sequences
@@ -49,7 +49,7 @@ children:
   - filename: ./path/to/doc3.svx
 ```
 
-The `slug` field must be unique and it serves as an identifier for the sequence.
+The `slug` field must be unique and it serves as an identifier for the sequence; if not provided, it is assumed to be the filename without the extension or the directory name if the filename is `index.svx`.
 The `children` field is an array serving as a tree-like structure: each of its children represents a page in the sequence, it must include a field `filename` specifying the content for the page, and it may itself include a `children` field which recurses the structure.
 
 Any sequence page represented in `children` must have the following frontmatter.
@@ -59,7 +59,7 @@ title: A page in my cool sequence
 slug: some-page
 ```
 
-The `slug` must be unique _within its parent_ and it serves as an identifier for the page among its siblings.
+The `slug` must be unique _within its parent_ and it serves as an identifier for the page among its siblings; if not provided, it is assumed to be the filename without the extension or the directory name if the filename is `index.svx`.
 The sequence has an optional field `enumerate` which dictates whether the sequence pages have numbers at the front of them.
 Just as with posts, the sequence and its pages also have optional frontmatter fields `katex_macros`, which fold through the children.
 For example, if the sequence has the following frontmatter,
@@ -82,17 +82,33 @@ kind: remark
 slug: my-cool-remark
 ```
 
-The `slug` field must be unique, as it is the identifier we use to reference the statement.
+The `slug` field must be unique, as it is the identifier we use to reference the statement; if not provided, it is assumed to be the filename without the extension or the directory name if the filename is `index.svx`.
 For a statement to be tracked on the website, it must exist within a post or sequence page.
 To do this, import the mdsvex document as a svelte component within the page.
 
 ```svelte
 <script>
-  import Remark from './path/to/remark.svx';
+  import * as remark from './path/to/remark.svx';
 </script>
 ```
 
-From there, the component can be rendered just like any other svelte component.
+From there, the component can be rendered just like any other svelte component,
+
+```svelte
+<remark.default />
+```
+
+but it is better to use the `Sequence` component which renders relevant information from the content-management layer.
+
+```svelte
+<script>
+  import Statement from '$lib/components/statement.svelte';
+  import * as remark from './path/to/remark.svx';
+</script>
+
+<Statement {...remark} />
+```
+
 Just as with sequences, a statement will inherit the macros from the context in which it was introduced.
 
 > **Note.** The content-management layer does not enforce a statement be owned solely by a unique parent.

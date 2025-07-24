@@ -7,7 +7,7 @@ export const load: Load = async ({ url }) => {
     // connect to database
     const conn = db.connect();
 
-    // get the filename from that pathname
+    // get the filename from the pathname
     const pathname = url.pathname.slice(1, -1);
     const filename = db.getPageFilename(conn, pathname);
     if (!filename) {
@@ -19,7 +19,7 @@ export const load: Load = async ({ url }) => {
     if (!sequence) {
         if (dev) {
             error(500, {
-                message: `Page found for ${pathname} but no matching sequence. This should never happen`,
+                message: `Page found for ${pathname} but no matching sequence. This should never happen.`,
             });
         } else {
             error(404, { message: `Not found ${pathname}` });

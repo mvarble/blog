@@ -6,15 +6,19 @@ import { fromJs } from 'esast-util-from-js';
 import rehypeParse from 'rehype-parse';
 import matter from 'gray-matter';
 
-import { getStatement, touchStatementDependency, TouchStatementInput } from '../db';
+import { getStatementFromSlug, touchStatementDependency, TouchStatementInput } from '../db';
 import { hasArrayField, hasObjectField, hasStringField } from './typechecks';
-import { FileHooks, mdastParser } from '.';
+import { FileHooks, mdastParser } from './cms';
 import { findReferences } from './page_references';
+import { slugFromFilename } from './slug';
 
 const hooks: FileHooks = {
-    async crossReference(db, _filename, frontmatter, contents) {
-        if (!hasStringField(frontmatter, 'slug')) return;
-        const statement = getStatement(db, frontmatter.slug);
+    async crossReference(db, filename, frontmatter, contents) {
+        let slug = slugFromFilename(filename);
+        if (hasStringField(frontmatter, 'slug') && frontmatter.slug) {
+            slug = frontmatter.slug;
+        }
+        const statement = getStatementFromSlug(db, slug);
         if (!statement) {
             return;
         }
@@ -35,7 +39,7 @@ const hooks: FileHooks = {
                     console.error('Statement has dependency which is not a string: ', dep);
                     return;
                 }
-                const childStatement = getStatement(db, dep);
+                const childStatement = getStatementFromSlug(db, dep);
                 if (!childStatement) {
                     console.error(`Statement has dependency '${dep}' which does not exist.`);
                     return;
@@ -88,11 +92,9 @@ export async function getStatements(
                                         );
                                         return undefined;
                                     }
-                                    if (!hasStringField(frontmatter, 'slug') || !frontmatter.slug) {
-                                        console.error(
-                                            'Statements must have a string-field `slug`.',
-                                        );
-                                        return undefined;
+                                    let slug = slugFromFilename(filename);
+                                    if (hasStringField(frontmatter, 'slug') && frontmatter.slug) {
+                                        slug = frontmatter.slug;
                                     }
                                     let katexMacros = {};
                                     if (
@@ -105,7 +107,7 @@ export async function getStatements(
                                     return {
                                         parentId,
                                         kind: frontmatter.kind,
-                                        slug: frontmatter.slug,
+                                        slug,
                                         item: item++,
                                         itemPrefix,
                                         filename,

@@ -60,28 +60,39 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
     };
 }
 
-export function getStatementParent(db: Database, filename: string): string | undefined {
-    const out0 = db
+function getStatementParentField<K extends string>(
+    db: Database,
+    filename: string,
+    key: K,
+): string | undefined {
+    const out = db
         .prepare(
-            'SELECT statements.parent_id FROM pages INNER JOIN statements WHERE pages.id = statements.page_id AND pages.filename = ?;',
+            `SELECT pp.${key} FROM pages p INNER JOIN statements s INNER JOIN pages pp
+            WHERE p.filename = ? AND p.id = s.page_id AND s.parent_id = pp.id`,
         )
-        .get(filename) as { parent_id: number } | undefined;
-    if (out0) {
-        const out1 = db
-            .prepare('SELECT filename FROM pages WHERE pages.id = = ?;')
-            .get(out0.parent_id) as { filename: string } | undefined;
-        if (out1) {
-            return out1.filename;
-        }
+        .get(filename) as Record<K, string> | undefined;
+    if (out) {
+        return out[key];
     }
 }
 
-export function getStatement(db: Database, slug: string): Statement | undefined {
+export function getStatementParentFilename(db: Database, filename: string): string | undefined {
+    return getStatementParentField(db, filename, 'filename');
+}
+
+export function getStatementParentPathname(db: Database, filename: string): string | undefined {
+    return getStatementParentField(db, filename, 'pathname');
+}
+
+function getStatementFrom(db: Database, key: string, value: string): Statement | undefined {
     const output = db
         .prepare(
-            'SELECT s.id, s.page_id, s.parent_id, s.kind, s.slug, s.item, s.item_prefix, p.pathname, p.filename, p.katex_macros FROM statements s INNER JOIN pages p WHERE p.id = s.page_id AND s.slug = ?;',
+            `SELECT
+                s.id, s.page_id, s.parent_id, s.kind, s.slug, s.item, s.item_prefix, p.pathname,
+                p.filename, p.katex_macros
+            FROM statements s INNER JOIN pages p WHERE p.id = s.page_id AND ${key} = ?;`,
         )
-        .get(slug) as
+        .get(value) as
         | {
             id: number;
             page_id: number;
@@ -109,6 +120,14 @@ export function getStatement(db: Database, slug: string): Statement | undefined 
             katexMacros: JSON.parse(output.katex_macros),
         };
     }
+}
+
+export function getStatementFromFilename(db: Database, filename: string): Statement | undefined {
+    return getStatementFrom(db, 'p.filename', filename);
+}
+
+export function getStatementFromSlug(db: Database, slug: string): Statement | undefined {
+    return getStatementFrom(db, 's.slug', slug);
 }
 
 export interface StatementReference {

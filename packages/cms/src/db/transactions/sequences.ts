@@ -177,7 +177,7 @@ export function touchSequenceChild(
     };
 }
 
-export function getParentSequence(db: Database, filename: string): string | undefined {
+export function getParentSequenceFilename(db: Database, filename: string): string | undefined {
     const output = db
         .prepare(
             'SELECT parent_pages.filename ' +

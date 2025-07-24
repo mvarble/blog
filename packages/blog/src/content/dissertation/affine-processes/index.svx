@@ -1,0 +1,29 @@
+---
+title: Affine processes
+---
+
+Our first chapter will get us familiar with affine processes.
+Most of the results will be simple consequences of [](/citations#cuchiero2011) and [](/citations#keller2015), which pretty much comprehensively prove everything there is to know about affine processes on convex state spaces.
+It is still important for us to have this chapter, for we will need to have a careful understanding of how the spaces of finite moments change with respect to time, and these facts only seem to exist in the case of affine diffusions.
+Furthermore, the magnificent papers above provide us so much information at the cost of being very formal.
+Readers which have not found themselves familiar with massive texts like [](/citations#jacod2003) may not be able to decipher the results involving semimartingale characteristics in intuitive terms.
+It is for this reason that we found it beneficial to provide some calculus-heavy proofs that somehow _demystify_ these objects.
+In particular, we translate many of the results of [](/citations#jacod2003) to the special setting of _jump-diffusions_--those semimartingales in which the characteristics are differentiable.
+While certainly less powerful than their general semimartingale brethren, jump-diffusions involve deterministic functions $(\affDrift, \affDiff, \affJump)$ which make calculations far more intuitive.
+Furthermore, they can always be understood as weak solutions to stochastic differential equations involving a Brownian motion and a Poisson random measure, which gives them a somewhat _generative_ flavor.
+In the case of affine processes, we may remove one more layer of abstraction, insisting that the functions each take an affine form in their respective vector spaces.
+$$
+  \begin{aligned}
+    \affDrift(\stateVar^1, \ldots, \stateVar^d) &= \affDriftPart_0 + \sum_{i=1}^d \stateVar^i \affDriftPart_i \\
+    \affDiff(\stateVar^1, \ldots, \stateVar^d) &= \affDiffPart_0 + \sum_{i=1}^d \stateVar^i \affDiffPart_i \\
+    \affJump(\stateVar^1, \ldots, \stateVar^d, \rmd\markVar) &= \affJumpPart_0(\rmd\markVar) + \sum_{i=1}^d \stateVar^i \affJumpPart_i(\rmd\markVar)
+  \end{aligned}
+$$
+Any result which does not require this affine property is in [the Appendix](./jump-diffusions)--a choice which was made less because the information is unrelated to affine processes, and more that the extra generality of non-affine differential characteristics comes at little-to-no cost.
+In any case, we suggest the reader familiarize themselves with [the Appendix](./jump-diffusions) sooner than later, as we use this material very often throughout the chapters.
+The remainder of this chapter is organized as follows.
+
+1. Defines an affine process and identifies some relevant notions from which we begin our investigation.
+2. Explores consequences of the affine transform formula on real moments.
+3. Lifts the notions of the preceding section from marginals to finite-dimensional distributions.
+4. Explores more on the path-based properties--particularly the jump-diffusion nature--of affine processes.

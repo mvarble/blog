@@ -1,4 +1,4 @@
-import { type FileHooks } from '.';
+import { type FileHooks } from './cms';
 import bibtex from 'bibtex';
 import { touchCitation } from '../db';
 

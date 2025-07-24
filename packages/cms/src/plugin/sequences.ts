@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import matter from 'gray-matter';
 import { type Database } from '../db';
-import { mdastParser, type FileHooks } from '.';
+import { mdastParser, type FileHooks } from './cms';
 import {
     hasArrayField,
     hasBooleanField,
@@ -19,19 +19,18 @@ import {
     getSequence,
 } from '../db';
 import { findReferences } from './page_references';
+import { slugFromFilename } from './slug';
 
 const hooks: FileHooks = {
     async initialize(db, filename, frontmatter, contents) {
-        // check frontmatter for title
         if (!hasStringField(frontmatter, 'title') || !frontmatter.title) {
             console.error('Sequences must have a `title` string-field in the frontmatter.');
             return;
         }
 
-        // check frontmatter for slug
-        if (!hasStringField(frontmatter, 'slug') || !frontmatter.slug) {
-            console.error('Sequences must have a `slug` string-field in the frontmatter.');
-            return;
+        let slug = slugFromFilename(filename);
+        if (hasStringField(frontmatter, 'slug') && frontmatter.slug) {
+            slug = frontmatter.slug;
         }
 
         if (!hasDateField(frontmatter, 'created')) {
@@ -63,7 +62,7 @@ const hooks: FileHooks = {
         if (!('children' in frontmatter)) {
             const sequence = touchSequence(db, {
                 title: frontmatter.title,
-                slug: frontmatter.slug,
+                slug,
                 created: frontmatter.created,
                 edited,
                 filename,
@@ -90,7 +89,7 @@ const hooks: FileHooks = {
 
         const sequence = touchSequence(db, {
             title: frontmatter.title,
-            slug: frontmatter.slug,
+            slug,
             created: frontmatter.created,
             edited,
             filename,
@@ -192,9 +191,9 @@ async function buildChildren(
             console.error('Sequence pages must have a `title` string-field in the frontmatter.');
             return;
         }
-        if (!hasStringField(frontmatter, 'slug') || !frontmatter.slug) {
-            console.error('Sequence pages must have a `slug` string-field in the frontmatter.');
-            return;
+        let slug = slugFromFilename(filename);
+        if (hasStringField(frontmatter, 'slug') && frontmatter.slug) {
+            slug = frontmatter.slug;
         }
         let katexMacros = {};
         if (hasObjectField(frontmatter, 'katex_macros') && frontmatter.katex_macros) {
@@ -204,7 +203,7 @@ async function buildChildren(
         if (!('children' in child)) {
             out.push({
                 title: frontmatter.title,
-                slug: frontmatter.slug,
+                slug,
                 filename,
                 katexMacros,
             });
@@ -222,7 +221,7 @@ async function buildChildren(
         }
         out.push({
             title: frontmatter.title,
-            slug: frontmatter.slug,
+            slug,
             filename,
             katexMacros,
             children,

@@ -1,0 +1,37 @@
+---
+title: Formulation
+---
+
+<script>
+  import Statement from '$lib/components/statement.svelte';
+  import * as affineProcessDefinition from './definitions/affine-process.svx';
+  import * as affineRemarks from './results/affine-remarks.svx';
+  import AffineRegularity from './results/affine-regularity.svx';
+  import RiccatiAffineFormulation from './results/riccati-affine-formulation.svx';
+</script>
+
+<pre>{JSON.stringify(affineProcessDefinition, null, 2)}</pre>
+
+<!-- specify the state space -->
+We start by specifying our affine processes as in [](/citations#keller2015).
+That is to say, we fix a finite-dimensional real vector space $\vecSpace$ with inner-product $\prj\cdot\cdot$ and select a convex, closed $\stateSpace \subseteq \vecSpace$ satisfying $0 \in \stateSpace$ and $\operatorname{span}\stateSpace = \vecSpace$.
+Associate this space with the finite exponentials.
+$$
+  \boundedSpace \defeq \Big\{ \momentVar \in \vecSpace \oplus \im\vecSpace : \sup_{\stateVar \in \stateSpace} \exp\prj{\Re(\momentVar)}{\stateVar} < \infty \Big\}
+$$
+We may now define the notion of an affine process on $\stateSpace$.
+
+<!-- define an affine process -->
+<Statement {...affineProcessDefinition} />
+
+<!-- clear up our definition with the literature -->
+
+In [Theorem 1.2.7](/citations#cuchiero2011), it is shown that, without loss of generality on conditional distributions $(\Prb_\stateVar)_{\stateVar\in\stateSpace}$, an affine process $\X$ can be chosen to have càdlàg paths.
+Thus, each distribution $\Prb_\stateVar$ may be recognized as a measure on the Borel algebra associated with the space $\pathSpace{[0,\infty)}{\stateSpace}$ of càdlàg functions equipped with the Skorokhod topology.
+By imposing this regularity, the following theorem tells us that an affine process $\X$ as in [%label](/statements/affine-process-definition) is a $(\Prb_\stateVar, \scrF)$ jump-diffusion for each $\stateVar \in \stateSpace$.
+For relevant definitions and results pertaining to jump-diffusions, we refer the reader to Appendix
+
+<AffineRegularity />
+<RiccatiAffineFormulation />
+
+Henceforth, we fix $\X$ a càdlàg affine process with conditional distributions $(\Prb_\stateVar)_{\stateVar\in\stateSpace}$ on $\pathSpace{[0,\infty)}{\stateSpace}$, induced filtration $\scrF=(\scrF_t)_{t\geq0}$, and moment function $\aff$ as in [%label](/statements/affine-process-definition).

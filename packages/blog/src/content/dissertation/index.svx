@@ -1,10 +1,12 @@
 ---
 type: sequence
 title: Large deviations of affine processes
-slug: dissertation
 created: 2025-07-23
 children:
   - filename: ./notation.svx
+  - filename: ./affine-processes/index.svx
+    children:
+      - filename: ./affine-processes/formulation.svx
 katex_macros:
   \dim: '{\operatorname{dim}}'
   \Exp: '{\operatorname{E}}'
