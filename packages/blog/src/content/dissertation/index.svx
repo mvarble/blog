@@ -1,5 +1,6 @@
 ---
 type: sequence
+enumerate: true
 title: Large deviations of affine processes
 created: 2025-07-23
 children:
@@ -7,6 +8,7 @@ children:
   - filename: ./affine-processes/index.svx
     children:
       - filename: ./affine-processes/formulation.svx
+      - filename: ./affine-processes/real-moments.svx
 katex_macros:
   \dim: '{\operatorname{dim}}'
   \Exp: '{\operatorname{E}}'
@@ -84,7 +86,7 @@ katex_macros:
   \mgRf: G
   \diffVar: \dot\stateVar
   \hawkesRate: r
-  \prj: '\langle #1, #2 \rangle'
+  \prj: '{\langle #1, #2 \rangle}'
   \bprj: '\big\langle #1, #2 \big\rangle'
   \pathSpace: '\bbD(#1,#2)'
   \cpathSpace: '\bbC(#1,#2)'

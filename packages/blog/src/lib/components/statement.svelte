@@ -37,4 +37,18 @@
         background: #efefef;
         padding: 1em;
     }
+    :global(ol) {
+        list-style-type: none;
+        counter-reset: item;
+    }
+
+    :global(ol > li) {
+        counter-increment: item;
+    }
+
+    :global(ol > li:before) {
+        content: '(' counter(item, lower-alpha) ')';
+        display: inline-block;
+        width: 30px;
+    }
 </style>

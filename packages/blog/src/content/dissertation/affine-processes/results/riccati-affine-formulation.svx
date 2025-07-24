@@ -1,0 +1,13 @@
+---
+type: statement
+kind: remark
+slug: affine-process-riccati-formulation
+---
+
+By [%label (e)](/statements/affine-process-definition-remark) and linearity of differentiation, the differential equation in [%label](/statements/affine-process-regularity) is equivalent to the following system of equations.
+$$
+  \forall ~ \stateVar \in \stateSpace, \qquad \left\{\begin{aligned}
+    \dot\aff(t, \momentVar, \stateVar) &= \ode\big(\affPart(t,\momentVar), \stateVar\big) & t \geq 0 \\
+    \aff(0,\momentVar, \stateVar) &= \prj{\momentVar}{\stateVar}
+  \end{aligned}\right.
+$$

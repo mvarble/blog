@@ -1,4 +1,43 @@
 ---
 type: statement
-kind: remark
+kind: theorem
+slug: affine-process-regularity
 ---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+An affine process $\X$ on $\stateSpace$ is a $(\Prb_\stateVar, \scrF)$ jump-diffusion in which the differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$ are affine maps of the following form.
+$$
+  \begin{aligned}
+    \affDrift^\trunc(\stateVar) &\defeq \affDriftPart^\trunc_0 + \sum_{i=1}^d \stateVar^i \affDriftPart^\trunc_i, \\
+    \affDiff(\stateVar) &\defeq \affDiffPart_0 + \sum_{i=1}^d \stateVar^i \affDiffPart_i,  \\
+    \affJump(\stateVar, \rmd\markVar) &\defeq \affJumpPart_0(\rmd\markVar) + \sum_{i=1}^d \stateVar^i \affJumpPart_i(\rmd\markVar)
+  \end{aligned}
+$$
+The associated _Lévy-Khintchine map_ $\ode$ then also affine,
+$$
+  \begin{aligned}
+    \ode(\momentVar, \stateVar)
+    &= \bprj{\momentVar}{\affDrift^\trunc(\stateVar)} + \frac12 \bprj{\momentVar}{\affDiff(\stateVar)\momentVar} + \int_\vecSpace \Big( e^{\prj{\momentVar}{\markVar}} - 1 - \bprj{\momentVar}{\trunc(\markVar)} \Big) \affJump(\stateVar, \rmd\markVar) \\
+    &= \odePart_0(\momentVar) + \sum_{i=1}^d \stateVar^i \odePart_i(\momentVar) \\
+    \odePart_i(\momentVar)
+    &\defeq \bprj{\momentVar}{\affDriftPart_i^\trunc(\stateVar)} + \frac12\bprj{\momentVar}{\affDiffPart_i(\stateVar)\momentVar} + \int_\vecSpace \Big( e^{\prj{\momentVar}{\markVar}} - 1 - \bprj{\momentVar}{\trunc(\markVar)} \Big) \affJumpPart_i(\stateVar, \rmd\markVar),
+  \end{aligned}
+$$
+and each $\momentVar \in \im\vecSpace$ induces the following differential equation.
+$$
+  \left\{\begin{aligned}
+    \affPart_0(t,\momentVar) &= \odePart_0\big(\affPart(t, \momentVar)\big) & t \geq 0 \\
+    \affPart(t,\momentVar) &= \odePart\big(\affPart(t,\momentVar)\big) & t \geq 0 \\
+    \affPart_0(0,\momentVar) &= 0 \\
+    \affPart(0, \momentVar) &= \momentVar
+  \end{aligned}\right.
+$$
+
+<Proof>
+
+  This is simply a restatement of [Theorem 1.5.4](/citations#cuchiero2011).
+
+</Proof>

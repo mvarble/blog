@@ -1,0 +1,15 @@
+---
+type: statement
+kind: remark
+slug: affine-process-definition-remark
+---
+
+1. See [Remark 2.3](/citations#keller2015) for an argument on how our assumptions on $\stateSpace$ are at no loss of generality; $\stateSpace$ may as well be any nonempty convex set.
+2. Note how the equation in [%label](/statements/affine-process-definition) specifies the characteristic function of each transition kernel of the Markov process $\X$; thus, should an affine process exist for choice of $\aff$, _only_ one will exist, up to distribution.
+3. See how our notation $(\affPart_0, \affPart)$ differs from that of [](/citations#keller2015) and other papers, which typically use $(\phi, \affPart)$.
+4. We choose to do this because affine functions prevail throughout our investigation of affine processes, and we saw this an opportunity to have more cohesive notation of all such affine functions.
+  $$
+    \affDiff(\stateVar) = \affDiffPart_0 + \sum_{i=1}^d \stateVar^i \affDiffPart_i
+  $$
+5. If we have a vector space $\bbA$ and affine map $\alpha: \stateSpace \rightarrow \bbA$ determined by $a_0, \ldots, a_d \in \bbA$ via $\alpha(\stateVar) = a_0 + \sum_{i=1}^d \stateVar^i a_i$, then our linear assumptions $0 \in \stateSpace$ and $\operatorname{span}\stateSpace = \vecSpace$ uniquely determine $a_0, \ldots, a_d \in \bbA$.
+  In particular, the map $\aff$ uniquely identifies its parts $\affPart_i: \bbR_+ \times \boundedSpace \rightarrow \bbC$ for $i=0,\ldots,d$.
