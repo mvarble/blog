@@ -55,35 +55,12 @@ export async function nodeParser(
         //   - HTML blocks
         if (typedNode.kind == 'remark') {
             const node = typedNode.source;
-
-            // check math blocks for `@tag(...)`
-            itemsAdded += checkMathTags(db, node, page.id, item + itemsAdded, itemPrefix);
-
-            // check ordered lists for `@tag(...)`
-            itemsAdded += checkNumberedListTags(db, node, page.id, item + itemsAdded, itemPrefix);
-
-            // check for components that aren't detected as HTML; expand the search if they are an import
-            if (node.type == 'text') {
-                const spreadComponents = node.value.matchAll(componentRegex);
-                for (const [, component, prop] of spreadComponents) {
-                    const componentPath = imports[component];
-                    const propPath = imports[prop];
-                    if (
-                        componentPath &&
-                        propPath &&
-                        (componentPath == '$lib/components/statement.svelte' ||
-                            remapFile(page.filename, componentPath) ==
-                                'src/lib/components/statement.svelte')
-                    ) {
-                        itemsAdded += await recurseChild(
-                            propPath,
-                            db,
-                            page,
-                            item + itemsAdded,
-                            itemPrefix,
-                        );
-                    }
-                }
+            if ('children' in node && Array.isArray(node.children) && node.children.length) {
+                nodes.push(
+                    ...node.children
+                        .toReversed()
+                        .map((source) => ({ kind: 'remark', source }) as RemarkNode),
+                );
             }
 
             // if HTML, parse and expand the search
@@ -96,12 +73,31 @@ export async function nodeParser(
                 );
             }
 
-            if ('children' in node && Array.isArray(node.children) && node.children.length) {
-                nodes.push(
-                    ...node.children
-                        .toReversed()
-                        .map((source) => ({ kind: 'remark', source }) as RemarkNode),
-                );
+            // check math blocks for `@tag(...)`
+            itemsAdded += checkMathTags(db, node, page.id, item + itemsAdded, itemPrefix);
+
+            // check for components that aren't detected as HTML; expand the search if they are an import
+            if (node.type == 'text') {
+                const spreadComponents = node.value.matchAll(componentRegex);
+                for (const [, component, prop] of spreadComponents) {
+                    const componentPath = imports[component];
+                    const propPath = imports[prop];
+                    if (
+                        componentPath &&
+                        propPath &&
+                        (componentPath == '$lib/components/statement.svelte' ||
+                            remapFile(page.filename, componentPath) ==
+                            'src/lib/components/statement.svelte')
+                    ) {
+                        itemsAdded += await recurseNodeChild(
+                            propPath,
+                            db,
+                            page,
+                            item + itemsAdded,
+                            itemPrefix,
+                        );
+                    }
+                }
             }
         }
 
@@ -110,13 +106,20 @@ export async function nodeParser(
         //   - SVX components
         if (typedNode.kind == 'rehype') {
             const node = typedNode.source;
+            if ('children' in node && Array.isArray(node.children) && node.children.length) {
+                nodes.push(
+                    ...node.children
+                        .toReversed()
+                        .map((source) => ({ kind: 'rehype', source }) as RehypeNode),
+                );
+            }
 
             checkImports(node, imports);
 
             if (node.type == 'element') {
                 const componentPath = imports[node.tagName];
                 if (componentPath && componentPath.endsWith('.svx')) {
-                    itemsAdded += await recurseChild(
+                    itemsAdded += await recurseNodeChild(
                         componentPath,
                         db,
                         page,
@@ -124,14 +127,6 @@ export async function nodeParser(
                         itemPrefix,
                     );
                 }
-            }
-
-            if ('children' in node && Array.isArray(node.children) && node.children.length) {
-                nodes.push(
-                    ...node.children
-                        .toReversed()
-                        .map((source) => ({ kind: 'rehype', source }) as RehypeNode),
-                );
             }
         }
     }
@@ -147,6 +142,9 @@ export function edgeParser(
     const nodes: RemarkContent[] = root.children.toReversed();
     while (nodes.length > 0) {
         const node = nodes.pop()!;
+        if ('children' in node && Array.isArray(node.children) && node.children.length) {
+            nodes.push(...node.children.toReversed());
+        }
         if (node.type == 'math') {
             for (const [, slug] of node.value.matchAll(tagRegex)) {
                 touchTagReference(db, page.id, slug);
@@ -167,9 +165,6 @@ export function edgeParser(
                 }
             }
         }
-        if ('children' in node && Array.isArray(node.children) && node.children.length) {
-            nodes.push(...node.children.toReversed());
-        }
     }
 }
 
@@ -189,35 +184,6 @@ function checkMathTags(
             label: buildLabel(item + itemsAdded++, itemPrefix),
         });
     }
-    return itemsAdded;
-}
-
-function checkNumberedListTags(
-    db: Database,
-    node: RemarkContent,
-    parentId: number,
-    item: number,
-    itemPrefix?: number,
-): number {
-    if (node.type != 'list' || !node.ordered) return 0;
-    let itemsAdded = 0;
-    node.children.forEach((child) => {
-        child.children.forEach((child) => {
-            if (child.type == 'paragraph' && child.children.length) {
-                child.children.forEach((child) => {
-                    if (child.type == 'text') {
-                        for (const [, slug] of child.value.matchAll(tagRegex)) {
-                            touchTag(db, {
-                                parentId,
-                                slug,
-                                label: buildLabel(item + itemsAdded++, itemPrefix),
-                            });
-                        }
-                    }
-                });
-            }
-        });
-    });
     return itemsAdded;
 }
 
@@ -254,7 +220,7 @@ function remapFile(baseFilename: string, relativeFilename: string) {
     return path.relative('.', path.resolve(path.dirname(baseFilename), relativeFilename));
 }
 
-async function recurseChild(
+async function recurseNodeChild(
     relFilename: string,
     db: Database,
     page: { id: number; pathname: string; filename: string },

@@ -1,3 +1,0 @@
----
-title: Jump diffusions
----

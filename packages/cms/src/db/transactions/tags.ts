@@ -15,7 +15,7 @@ export function touchTag(db: Database, tag: Tag) {
         );
     } catch (e) {
         if (isUniqueConstraintError(e)) {
-            db.prepare('UPDATE tags SET parent_filename = ?, label = ? WHERE slug = ?;').run(
+            db.prepare('UPDATE tags SET parent_id = ?, label = ? WHERE slug = ?;').run(
                 tag.parentId,
                 tag.label,
                 tag.slug,

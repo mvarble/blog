@@ -23,7 +23,11 @@ Any result which does not require this affine property is in [the Appendix](./ju
 In any case, we suggest the reader familiarize themselves with [the Appendix](./jump-diffusions) sooner than later, as we use this material very often throughout the chapters.
 The remainder of this chapter is organized as follows.
 
-1. Defines an affine process and identifies some relevant notions from which we begin our investigation.
-2. Explores consequences of the affine transform formula on real moments.
-3. Lifts the notions of the preceding section from marginals to finite-dimensional distributions.
-4. Explores more on the path-based properties--particularly the jump-diffusion nature--of affine processes.
+
+[Section %label](./formulation) Defines an affine process and identifies some relevant notions from which we begin our investigation.
+
+[Section %label](./real-moments) Explores consequences of the affine transform formula on real moments.
+
+[Section %label](./fdds) Lifts the notions of the preceding section from marginals to finite-dimensional distributions.
+
+[Section %label](./jump-diffusions) Explores more on the path-based properties--particularly the jump-diffusion nature--of affine processes.

@@ -9,6 +9,8 @@ children:
     children:
       - filename: ./affine-processes/formulation.svx
       - filename: ./affine-processes/real-moments.svx
+      - filename: ./affine-processes/fdds.svx
+      - filename: ./affine-processes/jump-diffusions.svx
 katex_macros:
   \dim: '{\operatorname{dim}}'
   \Exp: '{\operatorname{E}}'

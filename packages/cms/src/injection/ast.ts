@@ -68,7 +68,6 @@ export const remarkCms: Plugin<[undefined?], Root, Root> = () => {
                                 node.data.hProperties.id = slug;
                             }
                         }
-                        console.log(JSON.stringify(node, null, 2));
                     }
                 }
             }
@@ -93,7 +92,7 @@ export const remarkCms: Plugin<[undefined?], Root, Root> = () => {
                     const tag = tagReferences[slug];
                     if (!tag) continue;
                     node.url = `/${tag.pathname}#${slug}`;
-                    node.children = [{ type: 'text', value: tag.label }];
+                    node.children = [{ type: 'text', value: `(${tag.label})` }];
                 }
 
                 // make sure there is some text to potentially replace
