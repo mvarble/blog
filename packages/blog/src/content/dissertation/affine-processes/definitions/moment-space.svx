@@ -1,0 +1,27 @@
+---
+type: statement
+kind: definition
+slug: moment-space-definition
+---
+
+For each $\tau \geq 0$ and $\momentVar \in \odeSpace$, we say $Q^\momentVar: [0,\tau] \times \stateSpace \rightarrow \bbR$ satisfies $\system(\ode, \tau,\momentVar)$ if the following hold.
+$$
+  @tag(eq-riccati-system)
+  \begin{aligned}
+    \forall\, t \in [0,\tau], ~ \stateVar \in \stateSpace, \quad
+    & Q^\momentVar(t, \stateVar) = q_0^\momentVar(t) + \prj{q^\momentVar(t)}{\stateVar},  \\
+    %
+    \forall\, \stateVar \in \stateSpace, \quad
+    & \left\{\begin{aligned}
+      \dot Q^\momentVar(t, \stateVar) &= \ode\big(q^\momentVar(t), \stateVar\big), & t \in [0,\tau] \\
+      Q^\momentVar(0, \stateVar) &= \prj{\momentVar}{\stateVar}
+    \end{aligned}\right.
+  \end{aligned}
+$$
+Now define the following sets.
+$$
+  \begin{aligned}
+    \momentSpace(\tau) &\defeq \Big\{ \momentVar \in \odeSpace : \text{there exists a solution to } \system(\ode,\tau,\momentVar) \Big\} \\
+    \momentSpace &\defeq \bigcup_{\tau\geq 0} \Big( \{\tau\} \times \momentSpace(\tau) \Big)
+  \end{aligned}
+$$

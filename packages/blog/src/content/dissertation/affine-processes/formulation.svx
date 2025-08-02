@@ -4,7 +4,7 @@ title: Formulation
 
 <script>
   import Statement from '$lib/components/statement.svelte';
-  import * as affineProcessDefinition from './definitions/affine-process.svx';
+  import * as affineProcess from './definitions/affine-process.svx';
   import * as affineRemarks from './results/affine-remarks.svx';
   import * as affineRegularity from './results/affine-regularity.svx';
   import * as riccatiAffineFormulation from './results/riccati-affine-formulation.svx';
@@ -20,7 +20,7 @@ $$
 We may now define the notion of an affine process on $\stateSpace$.
 
 <!-- define an affine process -->
-<Statement {...affineProcessDefinition} />
+<Statement {...affineProcess} />
 
 <!-- clear up our definition with the literature -->
 <Statement {...affineRemarks} />
@@ -28,7 +28,7 @@ We may now define the notion of an affine process on $\stateSpace$.
 In [Theorem 1.2.7](/citations#cuchiero2011), it is shown that, without loss of generality on conditional distributions $(\Prb_\stateVar)_{\stateVar\in\stateSpace}$, an affine process $\X$ can be chosen to have càdlàg paths.
 Thus, each distribution $\Prb_\stateVar$ may be recognized as a measure on the Borel algebra associated with the space $\pathSpace{[0,\infty)}{\stateSpace}$ of càdlàg functions equipped with the Skorokhod topology.
 By imposing this regularity, the following theorem tells us that an affine process $\X$ as in [%full](/statements/affine-process-definition) is a $(\Prb_\stateVar, \scrF)$ jump-diffusion for each $\stateVar \in \stateSpace$.
-For relevant definitions and results pertaining to jump-diffusions, we refer the reader to [Appendix %item](/sequences/dissertation/jump-diffusions).
+For relevant definitions and results pertaining to jump-diffusions, we refer the reader to [Appendix %label](/sequences/dissertation/jump-diffusions).
 
 <!-- state the existence of \ode, \affDrift, \affDiff, \affJump -->
 <Statement {...affineRegularity} />

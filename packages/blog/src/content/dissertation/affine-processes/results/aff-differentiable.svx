@@ -1,0 +1,5 @@
+---
+type: statement
+kind: proposition
+slug: aff-differentiable
+---

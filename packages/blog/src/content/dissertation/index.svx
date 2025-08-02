@@ -13,6 +13,11 @@ children:
       - filename: ./affine-processes/jump-diffusions.svx
   - filename: ./jump-diffusions/index.svx
     appendix: true
+    children:
+      - filename: ./jump-diffusions/formulation.svx
+      - filename: ./jump-diffusions/special.svx
+      - filename: ./jump-diffusions/countable.svx
+      - filename: ./jump-diffusions/real-moments.svx
 katex_macros:
   \dim: '{\operatorname{dim}}'
   \Exp: '{\operatorname{E}}'
@@ -37,6 +42,7 @@ katex_macros:
   \measSpace: \bbM
   \probSpace: \bbM_1
   \measVar: m
+  \id: '{\rm id}'
   \X: X
   \Xe: \epsilon\X^\epsilon
   \Xee: \X^\epsilon

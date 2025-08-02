@@ -1,3 +1,42 @@
 ---
 title: Existence of real moments
 ---
+
+<script>
+  import Statement from '$lib/components/statement.svelte';
+  import * as momentSpace from './definitions/moment-space.svx';
+  import * as km from './results/km.svx';
+  import * as momentSpaceFacts from './results/moment-space-facts.svx';
+  import * as compactOdeExistence from './results/compact-ode-existence.svx';
+  import * as affDifferentiable from './results/aff-differentiable.svx';
+  import * as lightTailsEquivalence from './results/light-tails-equivalence.svx';
+</script>
+
+<!--  discuss how we intend to talk about \ode -->
+This section elaborates upon the extension of the transform formula in [](tag:eq-affine-process-definition) and equations [](tag:eq-complex-riccati-charts) and [](tag:eq-complex-riccati-system) to real moments $\momentVar \in \vecSpace$.
+Clearly, should any extension exist for some $\momentVar \in \vecSpace$, the value $\ode(\momentVar, \stateVar) = \dot\aff(0,\momentVar,\stateVar)$ should be well-defined.
+Throughout this section, we recall our exploration in [Section %label](/sequences/dissertation/jump-diffusions/real-moments) of the L\'evy-Khintchine map $\ode$ and its essential domain of real moments.
+$$
+  \odeSpace \defeq \Big\{ \momentVar \in \vecSpace : \ode(\momentVar, \stateVar) \text{ is well-defined for all } \stateVar \in \stateSpace \Big\}
+$$
+These will allow us to establish existence results of $\aff(\cdot, \momentVar, \cdot)$ for real moments $\momentVar \in \vecSpace$.
+The following definition will get us started.
+
+<!-- define \momentSpace -->
+<Statement {...momentSpace} />
+
+<!-- state KM -->
+<Statement {...km} />
+
+<!-- discuss how we want to know the nature of \aff and \momentSpace -->
+Now that we have two characterizations for the space $\momentSpace$, we seek to understand properties of it and the associated moment map $\aff: \momentSpace \times \stateSpace \rightarrow \bbR$.
+
+<!-- all the useful results -->
+<Statement {...momentSpaceFacts} />
+<Statement {...compactOdeExistence} />
+<Statement {...affDifferentiable} />
+
+<!-- state how \odeSpace being full is same as all moments having some time -->
+While we will not need the following result until the next chapter, we find it important to put it here, as a _reality check_ with our spaces $\odeSpace$ and $\momentSpace$.
+
+<Statement {...lightTailsEquivalence} />

@@ -78,10 +78,11 @@ export const remarkCms: Plugin<[undefined?], Root, Root> = () => {
                     const key = node.url.slice('/citations#'.length);
                     const citation = citations[key];
                     if (!citation) continue;
+                    const label = `${citation.authors[0].lastname.slice(0, 4)}${String(citation.year).slice(-2)}`;
                     if (node.children.length == 1 && node.children[0].type == 'text') {
-                        node.children[0].value = `[${key}, ${node.children[0].value}]`;
+                        node.children[0].value = `[${label}, ${node.children[0].value}]`;
                     } else if (!node.children.length) {
-                        node.children = [{ type: 'text', value: `[${key}]` }];
+                        node.children = [{ type: 'text', value: `[${label}]` }];
                     }
                     continue;
                 }
