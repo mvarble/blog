@@ -19,8 +19,8 @@ $$
     \affJump(\stateVar^1, \ldots, \stateVar^d, \rmd\markVar) &= \affJumpPart_0(\rmd\markVar) + \sum_{i=1}^d \stateVar^i \affJumpPart_i(\rmd\markVar)
   \end{aligned}
 $$
-Any result which does not require this affine property is in [the Appendix](./jump-diffusions)--a choice which was made less because the information is unrelated to affine processes, and more that the extra generality of non-affine differential characteristics comes at little-to-no cost.
-In any case, we suggest the reader familiarize themselves with [the Appendix](./jump-diffusions) sooner than later, as we use this material very often throughout the chapters.
+Any result which does not require this affine property is in [Appendix %label](../jump-diffusions)--a choice which was made less because the information is unrelated to affine processes, and more that the extra generality of non-affine differential characteristics comes at little-to-no cost.
+In any case, we suggest the reader familiarize themselves with [Appendix %label](../jump-diffusions) sooner than later, as we use this material very often throughout the chapters.
 The remainder of this chapter is organized as follows.
 
 

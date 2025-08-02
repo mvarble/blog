@@ -1,7 +1,7 @@
 import { isUniqueConstraintError, type Database } from '..';
 import { PostInfo, type KatexMacros } from '.';
 
-export interface TouchSequenceChildInput {
+export interface TouchSequenceChildInputBase {
     title: string;
     slug: string;
     filename: string;
@@ -9,13 +9,17 @@ export interface TouchSequenceChildInput {
     children?: TouchSequenceChildInput[];
 }
 
-export interface TouchSequenceInput extends TouchSequenceChildInput {
+export interface TouchSequenceChildInput extends TouchSequenceChildInputBase {
+    appendix: boolean;
+}
+
+export interface TouchSequenceInput extends TouchSequenceChildInputBase {
     created: Date;
     edited: Date;
     enumerate: boolean;
 }
 
-export interface SequenceChild {
+export interface SequenceChildBase {
     pageId: number;
     title: string;
     slug: string;
@@ -26,7 +30,11 @@ export interface SequenceChild {
     label?: string;
 }
 
-export interface Sequence extends SequenceChild {
+export interface SequenceChild extends SequenceChildBase {
+    appendix: boolean;
+}
+
+export interface Sequence extends SequenceChildBase {
     id: number;
     created: Date;
     edited: Date;
@@ -84,11 +92,28 @@ export function touchSequence(db: Database, input: TouchSequenceInput): Sequence
         }
     }
     if (input.children) {
-        input.children.forEach((child, i) => {
+        let appendixStart: number | undefined = undefined;
+        let i = 0;
+        for (const child of input.children) {
+            if (child.appendix && typeof appendixStart == 'undefined') {
+                appendixStart = i;
+            }
             children.push(
-                touchSequenceChild(db, id, input.enumerate, pageId, pathname, i, String(i), child),
+                touchSequenceChild(
+                    db,
+                    id,
+                    input.enumerate,
+                    pageId,
+                    pathname,
+                    i,
+                    typeof appendixStart == 'undefined'
+                        ? String(i)
+                        : String.fromCharCode(65 + i - appendixStart),
+                    child,
+                ),
             );
-        });
+            ++i;
+        }
     }
     return {
         ...input,
@@ -120,7 +145,7 @@ export function touchSequenceChild(
             .get(pathname, input.filename, JSON.stringify(input.katexMacros));
         pageId = (out as { id: number }).id;
         db.prepare(
-            'INSERT INTO sequence_pages (page_id, sequence_id, parent_id, title, slug, item, label) VALUES (?, ?, ?, ?, ?, ?, ?);',
+            'INSERT INTO sequence_pages (page_id, sequence_id, parent_id, title, slug, item, appendix, label) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
         ).run(
             pageId,
             sequenceId,
@@ -128,6 +153,7 @@ export function touchSequenceChild(
             input.title,
             input.slug,
             item,
+            input.appendix ? 1 : 0,
             enumerate ? label : null,
         );
     } catch (e) {
@@ -139,13 +165,14 @@ export function touchSequenceChild(
                 .get(pathname, JSON.stringify(input.katexMacros), input.filename);
             pageId = (out as { id: number }).id;
             db.prepare(
-                'UPDATE sequence_pages SET sequence_id = ?, parent_id = ?, title = ?, slug = ?, item = ?, label = ? WHERE page_id = ?;',
+                'UPDATE sequence_pages SET sequence_id = ?, parent_id = ?, title = ?, slug = ?, item = ?, appendix = ?, label = ? WHERE page_id = ?;',
             ).run(
                 sequenceId,
                 parentId,
                 input.title,
                 input.slug,
                 item,
+                input.appendix ? 1 : 0,
                 enumerate ? label : null,
                 pageId,
             );
@@ -195,7 +222,9 @@ export function getParentSequenceFilename(db: Database, filename: string): strin
 export function getSequence(db: Database, filename: string): Sequence | undefined {
     const sequenceRes = db
         .prepare(
-            `SELECT s.id, s.page_id, s.title, s.slug, s.created, s.edited, s.enumerate, pp.pathname, pp.filename, pp.katex_macros
+            `SELECT
+                s.id, s.page_id, s.title, s.slug, s.created, s.edited, s.enumerate,
+                pp.pathname, pp.filename, pp.katex_macros
             FROM sequences s INNER JOIN sequence_pages sp INNER JOIN pages p INNER JOIN pages pp
             WHERE p.filename = ?
             AND ((p.id = sp.page_id AND sp.sequence_id = s.id) OR p.id = s.page_id)
@@ -218,7 +247,10 @@ export function getSequence(db: Database, filename: string): Sequence | undefine
     if (sequenceRes) {
         const sequencePages = db
             .prepare(
-                'SELECT sp.page_id, sp.parent_id, sp.title, sp.slug, sp.item, sp.label, p.pathname, p.filename, p.katex_macros FROM sequence_pages sp INNER JOIN pages p ON sp.page_id = p.id WHERE sp.sequence_id = ?;',
+                `SELECT
+                    sp.page_id, sp.parent_id, sp.title, sp.slug, sp.item,
+                    sp.appendix, sp.label, p.pathname, p.filename, p.katex_macros
+                FROM sequence_pages sp INNER JOIN pages p ON sp.page_id = p.id WHERE sp.sequence_id = ?;`,
             )
             .all(sequenceRes.id) as IntermediateSequenceChild[];
         return {
@@ -244,6 +276,7 @@ interface IntermediateSequenceChild {
     slug: string;
     item: number;
     label?: string;
+    appendix: number;
     pathname: string;
     filename: string;
     katex_macros: string;
@@ -270,6 +303,7 @@ function buildTree(items: IntermediateSequenceChild[], rootId: number): Sequence
                 pathname: child.pathname,
                 filename: child.filename,
                 label: child.label,
+                appendix: child.appendix == 0 ? false : true,
                 katexMacros: JSON.parse(child.katex_macros),
                 children: buildChildren(child.page_id),
             });

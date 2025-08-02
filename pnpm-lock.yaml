@@ -34,22 +34,6 @@ importers:
         version: 8.38.0(eslint@9.32.0)(typescript@5.8.3)
 
   packages/blog:
-    dependencies:
-      '@types/hast':
-        specifier: 2.3.1
-        version: 2.3.1
-      better-sqlite3:
-        specifier: ^12.2.0
-        version: 12.2.0
-      fast-glob:
-        specifier: ^3.3.3
-        version: 3.3.3
-      katex:
-        specifier: ^0.16.22
-        version: 0.16.22
-      remark-math:
-        specifier: 3.0.0
-        version: 3.0.0
     devDependencies:
       '@sveltejs/adapter-auto':
         specifier: ^6.0.0
@@ -63,24 +47,42 @@ importers:
       '@types/better-sqlite3':
         specifier: ^7.6.13
         version: 7.6.13
+      '@types/hast':
+        specifier: 2.3.1
+        version: 2.3.1
       '@types/katex':
         specifier: ^0.16.7
         version: 0.16.7
+      better-sqlite3:
+        specifier: ^12.2.0
+        version: 12.2.0
       cms:
         specifier: workspace:*
         version: link:../cms
       eslint-plugin-svelte:
         specifier: ^3.0.0
         version: 3.11.0(eslint@9.32.0)(svelte@5.37.0)
+      fast-glob:
+        specifier: ^3.3.3
+        version: 3.3.3
       globals:
         specifier: ^16.0.0
         version: 16.3.0
+      katex:
+        specifier: ^0.16.22
+        version: 0.16.22
       mdsvex:
         specifier: ^0.12.3
         version: 0.12.6(svelte@5.37.0)
       prettier-plugin-svelte:
         specifier: ^3.3.3
         version: 3.4.0(prettier@3.6.2)(svelte@5.37.0)
+      remark-frontmatter:
+        specifier: 2.0.0
+        version: 2.0.0
+      remark-math:
+        specifier: 3.0.0
+        version: 3.0.0
       svelte:
         specifier: ^5.0.0
         version: 5.37.0
@@ -1042,6 +1044,9 @@ packages:
   fastq@1.19.1:
     resolution: {integrity: sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==}
 
+  fault@1.0.4:
+    resolution: {integrity: sha512-CJ0HCB5tL5fYTEA7ToAq5+kTwd++Borf1/bifxd9iT70QcXr4MRrO3Llf8Ifs70q+SJcGHFtnIE/Nw6giCtECA==}
+
   fault@2.0.1:
     resolution: {integrity: sha512-WtySTkS4OKev5JtpHXnib4Gxiurzh5NCGvWrFaZ34m6JehfTUhKZvn9njTfw48t6JumVQOmrKqpmGcdwxnhqBQ==}
 
@@ -1564,6 +1569,9 @@ packages:
 
   rehype-parse@9.0.1:
     resolution: {integrity: sha512-ksCzCD0Fgfh7trPDxr2rSylbwq9iYDkSn8TCDmEJ49ljEUBxDVCzCHv7QNzZOfODanX4+bWQ4WZqLCRWYLfhag==}
+
+  remark-frontmatter@2.0.0:
+    resolution: {integrity: sha512-uNOQt4tO14qBFWXenF0MLC4cqo3dv8qiHPGyjCl1rwOT0LomSHpcElbjjVh5CwzElInB38HD8aSRVugKQjeyHA==}
 
   remark-frontmatter@5.0.0:
     resolution: {integrity: sha512-XTFYvNASMe5iPN0719nPrdItC9aU0ssC4v14mH1BCi1u0n1gAocqcujWUrByftZTbLhRtiKRyjYTSIOcr69UVQ==}
@@ -2695,6 +2703,10 @@ snapshots:
     dependencies:
       reusify: 1.1.0
 
+  fault@1.0.4:
+    dependencies:
+      format: 0.2.2
+
   fault@2.0.1:
     dependencies:
       format: 0.2.2
@@ -3324,6 +3336,10 @@ snapshots:
       '@types/hast': 3.0.4
       hast-util-from-html: 2.0.3
       unified: 11.0.5
+
+  remark-frontmatter@2.0.0:
+    dependencies:
+      fault: 1.0.4
 
   remark-frontmatter@5.0.0:
     dependencies:

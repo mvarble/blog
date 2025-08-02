@@ -11,6 +11,8 @@ children:
       - filename: ./affine-processes/real-moments.svx
       - filename: ./affine-processes/fdds.svx
       - filename: ./affine-processes/jump-diffusions.svx
+  - filename: ./jump-diffusions/index.svx
+    appendix: true
 katex_macros:
   \dim: '{\operatorname{dim}}'
   \Exp: '{\operatorname{E}}'

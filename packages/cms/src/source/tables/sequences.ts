@@ -7,6 +7,7 @@ import {
     type TouchSequenceChildInput,
     touchSequence,
     getSequence,
+    SequenceChildBase,
 } from '../../db';
 import {
     hasArrayField,
@@ -85,7 +86,7 @@ const hooks: FileHooks = {
             return;
         }
 
-        const children = await buildChildren(filename, frontmatter.children);
+        const children = await buildChildren(filename, frontmatter.children, false, true);
         if (!children) {
             return;
         }
@@ -150,7 +151,7 @@ const hooks: FileHooks = {
     async crossReference(db, filename, _frontmatter, contents) {
         const sequence = getSequence(db, filename);
         if (sequence) {
-            async function recurseFile(child: SequenceChild, contents: string) {
+            async function recurseFile(child: SequenceChildBase, contents: string) {
                 edgeParser(
                     db,
                     { id: child.pageId, pathname: child.pathname, filename: child.filename },
@@ -161,7 +162,7 @@ const hooks: FileHooks = {
                 }
             }
 
-            async function recurse(child: SequenceChild) {
+            async function recurse(child: SequenceChildBase) {
                 const file = await fs.promises.readFile(child.filename, 'utf8');
                 await recurseFile(child, file);
             }
@@ -174,12 +175,18 @@ const hooks: FileHooks = {
 async function buildChildren(
     rootFilename: string,
     children: unknown[],
+    appendixStart: boolean,
+    topLevel: boolean,
 ): Promise<TouchSequenceChildInput[] | undefined> {
     const out: TouchSequenceChildInput[] = [];
+    let appendix = appendixStart;
     for (const child of children) {
         if (typeof child != 'object' || !child) {
             console.error('Each descendant in the sequences field `children` must be an object.');
             return;
+        }
+        if (topLevel && !appendix && hasBooleanField(child, 'appendix') && child.appendix) {
+            appendix = true;
         }
         if (!hasStringField(child, 'filename') || !child.filename) {
             console.error(
@@ -212,6 +219,7 @@ async function buildChildren(
                 slug,
                 filename,
                 katexMacros,
+                appendix,
             });
             continue;
         }
@@ -221,7 +229,7 @@ async function buildChildren(
             return;
         }
 
-        const children = await buildChildren(rootFilename, child.children);
+        const children = await buildChildren(rootFilename, child.children, appendix, false);
         if (!children) {
             return;
         }
@@ -231,6 +239,7 @@ async function buildChildren(
             filename,
             katexMacros,
             children,
+            appendix,
         });
     }
     return out;

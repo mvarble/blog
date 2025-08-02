@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS sequence_pages (
     title TEXT NOT NULL,
     slug TEXT NOT NULL,
     item INTEGER NOT NULL,
+    appendix BOOLEAN NOT NULL,
     label TEXT
 );
 
