@@ -31,7 +31,7 @@ export async function nodeParser(
     page: { id: number; pathname: string; filename: string },
     contents: string,
     item: number,
-    itemPrefix: number | undefined = undefined,
+    itemPrefix: string | undefined = undefined,
 ): Promise<number> {
     // create our node-visiting state
     const nodes: Node[] = [];
@@ -173,7 +173,7 @@ function checkMathTags(
     node: RemarkContent,
     parentId: number,
     item: number,
-    itemPrefix?: number,
+    itemPrefix?: string,
 ): number {
     if (node.type != 'math') return 0;
     let itemsAdded = 0;
@@ -225,7 +225,7 @@ async function recurseNodeChild(
     db: Database,
     page: { id: number; pathname: string; filename: string },
     item: number,
-    itemPrefix?: number,
+    itemPrefix?: string,
 ): Promise<number> {
     let itemsAdded = 0;
     const filename = remapFile(page.filename, relFilename);

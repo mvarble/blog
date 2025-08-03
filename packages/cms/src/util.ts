@@ -76,6 +76,6 @@ export function resolvePathname(base: string, rel: string): string | undefined {
     }
 }
 
-export function buildLabel(item: number, itemPrefix?: number): string {
-    return typeof itemPrefix == 'number' ? `${itemPrefix}.${item}` : `${item}`;
+export function buildLabel(item: number, itemPrefix?: string): string {
+    return typeof itemPrefix == 'string' ? `${itemPrefix}.${item}` : `${item}`;
 }

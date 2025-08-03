@@ -3,3 +3,38 @@ type: statement
 kind: proposition
 slug: aff-differentiable
 ---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+For any compact subset $K \subseteq \momentSpace^\circ$, there exists $C_K > 0$ such that the following holds for all $(t, \momentVar) \in K$.
+$$
+  \big| \aff(t, \momentVar, \stateVar) - \aff(0, \momentVar, \stateVar) \big| \leq C_K \cdot t \cdot \big( 1 + |\stateVar| \big)
+$$
+
+<Proof>
+
+Let $K \subseteq \momentSpace^\circ$ be compact.
+By  [%full](/statements/riccati-affine-formulation) and [%full(c)](/statements/moment-space-facts), we have that the functions $\affPart_i$ for $i = 0, \ldots, d$ are continuously differentiable on $\momentSpace^\circ$.
+Thus, we may define the following positive numbers.
+$$
+  \begin{gathered}
+    C_{K,i} \defeq \sup_{(t, \momentVar) \in K} |\dot\affPart_i(t, \momentVar)|, \quad i = 0, \ldots, d \\
+    C_K \defeq \max\Big\{ C_{K,0}, C_{K,1}\sqrt d, \ldots, C_{K,d} \sqrt d \Big\} < \infty
+  \end{gathered}
+$$
+Using the fundamental theorem of calculus and the fact that $\aff(\cdot,\momentVar,\cdot)$ solves $\system(\ode,\tau,\momentVar)$, we produce the following bound for all $(t, \momentVar) \in K$.
+$$
+  \begin{aligned}
+    \big|\aff(t, \momentVar, \stateVar) - \aff(0, \momentVar, \stateVar)\big|
+    &= \Big| \affPart_0(t, \momentVar) + \bprj{\affPart(t, \momentVar) - \momentVar}{\stateVar} \Big| \\
+    &\leq \big|\affPart_0(t,\momentVar)\big| + \big|\affPart(t,\momentVar) - \momentVar\big| \cdot |\stateVar| \\
+    &= \left| \int_0^t \dot\affPart_0(s,\momentVar) \rmd s \right|
+      + \left| \int_0^t \dot\affPart_i(s,\momentVar) \rmd s \right| \cdot |\stateVar| \\
+    &\leq C_{K,0} \cdot t + \Big( \sum_{i=1}^d C_{K,i}^2 \Big)^{1/2} \cdot t \cdot |\stateVar| \\
+    &\leq C_K  \cdot t \cdot \big( 1 + |\stateVar| \big)
+  \end{aligned}
+$$
+
+</Proof>

@@ -10,6 +10,7 @@ import {
     SequenceChildBase,
 } from '../../db';
 import {
+    buildLabel,
     hasArrayField,
     hasBooleanField,
     hasDateField,
@@ -74,7 +75,7 @@ const hooks: FileHooks = {
                 { id: sequence.pageId, pathname: sequence.pathname, filename: sequence.filename },
                 contents,
                 0,
-                enumerate ? 0 : undefined,
+                enumerate ? '0' : undefined,
             );
 
             return;
@@ -102,7 +103,7 @@ const hooks: FileHooks = {
             children,
         });
 
-        let currentItemPrefix = enumerate ? 0 : undefined;
+        let currentItemPrefix = enumerate ? '0' : undefined;
         let currentItem = await nodeParser(
             db,
             { id: sequence.pageId, pathname: sequence.pathname, filename: sequence.filename },
@@ -111,16 +112,16 @@ const hooks: FileHooks = {
             currentItemPrefix,
         );
 
-        const descendants: { data: SequenceChild; itemPrefix?: number }[] = sequence
+        const descendants: { data: SequenceChild; itemPrefix?: string }[] = sequence
             .children!.map((data, i) => ({
                 data,
-                itemPrefix: sequence.enumerate ? i : undefined,
+                itemPrefix: sequence.enumerate ? String(i) : undefined,
             }))
             .toReversed();
         while (descendants.length > 0) {
             const descendant = descendants.pop()!;
             if (
-                typeof descendant.itemPrefix == 'number' &&
+                typeof descendant.itemPrefix == 'string' &&
                 descendant.itemPrefix != currentItemPrefix
             ) {
                 currentItem = 0;
@@ -141,7 +142,15 @@ const hooks: FileHooks = {
             if (descendant.data.children) {
                 descendants.push(
                     ...descendant.data.children
-                        .map((data) => ({ data, itemPrefix: currentItemPrefix }))
+                        .map((data, i) => ({
+                            data,
+                            itemPrefix:
+                                typeof currentItemPrefix == 'string'
+                                    ? currentItemPrefix.includes('.')
+                                        ? currentItemPrefix
+                                        : buildLabel(i, currentItemPrefix)
+                                    : undefined,
+                        }))
                         .toReversed(),
                 );
             }

@@ -1,0 +1,11 @@
+---
+type: statement
+kind: definition
+slug: aff-fdds
+---
+
+To each $\underline t \vdash [0,\infty)$, denote the cumulant generating function of $\X_{\underline t}$ by $\aff(\underline t, \cdot, \cdot): (\vecSpace \oplus \im\vecSpace)^{|\underline t|} \times \stateSpace \rightarrow (-\infty,\infty]$.
+$$
+  \Exp_{\Prb_\stateVar} \exp\prj{\underline\momentVar}{\X_{\underline t}} \eqdef \exp\aff(\underline t, \underline\momentVar, \stateVar)
+$$
+Note that this extends the definition of $\aff$ in that we may always consider some time $t > 0$ as a partition $t \vdash [0,\infty)$.

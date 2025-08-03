@@ -42,7 +42,7 @@ const hooks: FileHooks = {
             { id: post.pageId, pathname: post.pathname, filename },
             contents,
             post.pageId,
-            0,
+            undefined,
         );
     },
 
