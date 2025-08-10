@@ -3,3 +3,179 @@ type: statement
 kind: proposition
 slug: aff-fdds-complex
 ---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+  For any $\underline t \vdash [0,\infty)$, $\underline\momentVar \in \im\vecSpace^{|\underline t|}$, and $\stateVar \in \stateSpace$, we have the following identity, where we denote $n \defeq |\underline t|$ for brevity.
+$$
+  \begin{gathered}
+    \begin{aligned}
+      \twistVar_n &\defeq \momentVar_n \\
+      \twistVar_k &\defeq \momentVar_k + \affPart(\Delta t_{k+1}, \twistVar_{k+1}), & k = n-1, \ldots, 1
+    \end{aligned} \\
+    \aff(\underline t, \underline\momentVar, \stateVar) = \sum_{k=1}^{|\underline t|} \affPart_0(\Delta t_k, \twistVar_k) + \bprj{\affPart(\Delta t_k, \twistVar_k)}{\stateVar}
+  \end{gathered}
+$$
+
+<Proof>
+
+We start by recognizing that $\underline\momentVar \in \im\vecSpace$ means the following identity.
+$$
+  \big| e^\prj{\momentVar_k}{\stateVar} \big| = \exp\Re\prj{\momentVar_k}{\stateVar} = 1, \quad k = 1, \ldots, n
+$$
+In particular, we have $\twistVar_n = \momentVar_n \in \boundedSpace$; we show $\twistVar_k \in \boundedSpace$ for $k = n-1,\ldots, 1$ by induction and [%full](/statements/aff-part-bounded).
+$$
+  \begin{aligned}
+    \sup_{\stateVar\in\stateSpace}\exp\Re\prj{\twistVar_k}{\stateVar}
+    &= \sup_{\stateVar\in\stateSpace}\big| e^\prj{\twistVar_k}{\stateVar} \big|  \\
+    &= \sup_{\stateVar\in\stateSpace}\big| e^\prj{\momentVar_k + \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\stateVar} \big| \\
+    &= \sup_{\stateVar\in\stateSpace}\big| e^\prj{\momentVar_k}{\stateVar} \big| \cdot \big| e^\prj{\affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\stateVar} \big| \\
+    &= \sup_{\stateVar\in\stateSpace} \exp\Re\prj{\affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\stateVar} < \infty
+  \end{aligned}
+$$
+Now observe the following identity.
+
+<div class="aligned-left">
+
+<span>
+<span></span>
+
+$$
+  \aff(\underline t, \underline\momentVar, \stateVar)
+$$
+
+</span>
+<span>
+<span></span>
+
+$$
+  =\log\Exp_{\Prb_\stateVar} \exp\prj{\underline\momentVar}{\X_{\underline t}}
+$$
+
+</span>
+<span>
+<span></span>
+
+$$
+  @tag(eq-complex-tower-start)
+  = \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \prj{\momentVar_k}{\X_{t_k}} \cdot \exp\prj{\twistVar_n}{\X_{t_n}} \right)
+$$
+
+</span>
+<span>
+<span></span>
+
+$$
+  = \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \prj{\momentVar_k}{\X_{t_k}} \cdot \Exp_{\Prb_\stateVar}\Big(\exp\prj{\twistVar_n}{\X_{t_n}} |\scrF_{t_{n-1}} \Big) \right) \\
+$$
+
+</span>
+<span>
+<span></span>
+
+$$
+  = \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \prj{\momentVar_k}{\X_{t_k}} \cdot \exp\aff(\Delta t_n, \twistVar_n, \X_{t_{n-1}})\right)
+$$
+
+</span>
+<span>
+<span></span>
+
+$$
+  = \begin{aligned}
+    &\affPart_0(\Delta t_n, \twistVar_n) \\
+    &+ \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \prj{\momentVar_k}{\X_{t_k}} \cdot \exp\Big( \bprj{\affPart(\Delta t_n, \twistVar_n)}{\X_{t_{n-1}}} \Big)   \right)
+  \end{aligned}
+$$
+
+</span>
+<span>
+<span></span>
+
+$$
+  = \begin{aligned}
+    &\affPart_0(\Delta t_n, \twistVar_n) \\
+    &+ \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-2} \prj{\momentVar_k}{\X_{t_k}} \cdot \exp\Big( \bprj{\momentVar_{n-1} + \affPart(\Delta t_n, \twistVar_n)}{\X_{t_{n-1}}} \Big)   \right)
+  \end{aligned}
+$$
+
+</span>
+<span>
+<span></span>
+
+$$
+  @tag(eq-complex-tower-end)
+  = \begin{aligned}
+    &\affPart_0(\Delta t_n, \twistVar_n) \\
+    &+ \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-2} \prj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \exp\Big( \bprj{\twistVar_{n-1}}{\X_{t_{n-1}}} \Big)   \right)
+  \end{aligned}
+$$
+
+</span>
+
+</div>
+
+<!-- $$ -->
+<!--   \begin{aligned} -->
+<!--     &\aff(\underline t, \underline\momentVar, \stateVar) \\ -->
+<!--     &=\log\Exp_{\Prb_\stateVar} \exp\prj{\underline\momentVar}{\X_{\underline t}} \\ -->
+<!--     @tag(eq-complex-tower-start) -->
+<!--     &= \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \prj{\momentVar_k}{\X_{t_k}} \cdot \exp\prj{\twistVar_n}{\X_{t_n}} \right) \\ -->
+<!--     &= \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \prj{\momentVar_k}{\X_{t_k}} \cdot \Exp_{\Prb_\stateVar}\Big(\exp\prj{\twistVar_n}{\X_{t_n}} |\scrF_{t_{n-1}} \Big) \right) \\ -->
+<!--     &= \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \prj{\momentVar_k}{\X_{t_k}} \cdot \exp\aff(\Delta t_n, \twistVar_n, \X_{t_{n-1}})\right) \\ -->
+<!--     &= \begin{aligned}[t] -->
+<!--       &\affPart_0(\Delta t_n, \twistVar_n) \\ -->
+<!--       &+ \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \prj{\momentVar_k}{\X_{t_k}} \cdot \exp\Big( \bprj{\affPart(\Delta t_n, \twistVar_n)}{\X_{t_{n-1}}} \Big)   \right) -->
+<!--     \end{aligned} \\ -->
+<!--     &= \begin{aligned}[t] -->
+<!--       &\affPart_0(\Delta t_n, \twistVar_n) \\ -->
+<!--       &+ \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-2} \prj{\momentVar_k}{\X_{t_k}} \cdot \exp\Big( \bprj{\momentVar_{n-1} + \affPart(\Delta t_n, \twistVar_n)}{\X_{t_{n-1}}} \Big)   \right) -->
+<!--     \end{aligned} \\ -->
+<!--     @tag(eq-complex-tower-end) -->
+<!--     &= \begin{aligned}[t] -->
+<!--       &\affPart_0(\Delta t_n, \twistVar_n) \\ -->
+<!--       &+ \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-2} \prj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \exp\Big( \bprj{\twistVar_{n-1}}{\X_{t_{n-1}}} \Big)   \right) -->
+<!--     \end{aligned} -->
+<!--   \end{align} -->
+<!-- $$ -->
+The final term of [](tag:eq-complex-tower-start) is identical to that of [](tag:eq-complex-tower-end) where we have reduced $k = n$ to $k = n-1$.
+Repeating these equalities inductively $k = n -1, \ldots, 1$ will result in the desired identity.
+$$
+  \begin{aligned}
+    \aff(\underline t, \underline\momentVar, \stateVar)
+    &= \sum_{k=2}^n \affPart_0(\Delta t_k, \twistVar_k) + \log\Exp_{\Prb_\stateVar}\exp\prj{\twistVar_1}{\X_{t_1}} \\
+    &= \sum_{k=1}^n \affPart_0(\Delta t_k, \twistVar_k) + \bprj{\affPart(\Delta t_1, \twistVar_1)}{\stateVar}
+  \end{aligned}
+$$
+
+</Proof>
+
+<style>
+
+.aligned-left {
+  display: flex;
+  flex-direction: column;
+
+  > span {
+    display: flex;
+
+    > span {
+      flex-basis: 40%;
+    }
+
+    > div {
+      min-width: 600px;
+      flex-grow: 2;
+    }
+
+  }
+
+
+  :global(.katex-display > .katex) {
+    text-align: left;
+  }
+}
+
+</style>

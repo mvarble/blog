@@ -1,0 +1,28 @@
+---
+type: statement
+kind: lemma
+slug: aff-part-bounded
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+For each $t \geq 0$ and $\momentVar \in \boundedSpace$, we have $\affPart(t, \momentVar) \in \boundedSpace$.
+
+<Proof>
+
+This is an immediate result of [%full](/statements/affine-process-definition).
+For any $\stateVar \in \stateSpace$, we have the following uniform bound.
+$$
+  \begin{aligned}
+    \exp\Re\bprj{\affPart(t,\momentVar)}{\stateVar}
+    &= \big| e^\prj{\affPart(t,\momentVar)}{\stateVar} \big|  \\
+    &= \Big| e^{-\affPart_0(t, \momentVar) + \aff(t, \momentVar, \stateVar)} \Big| \\
+    &= \Big| e^{-\affPart_0(t, \momentVar)} \Big| \cdot \Big| \Exp_{\Prb_\stateVar}\exp\prj{\momentVar}{\X_t}  \Big| \\
+    &\leq \Big| e^{-\affPart_0(t, \momentVar)} \Big| \cdot \Exp_{\Prb_\stateVar} \Big| \exp\prj{\momentVar}{\X_t}  \Big| \\
+    &\leq \Big| e^{-\affPart_0(t, \momentVar)} \Big| \cdot \sup_{\stateVar'\in\stateSpace} \exp\Re\prj{\momentVar}{\stateVar'}
+  \end{aligned}
+$$
+
+</Proof>

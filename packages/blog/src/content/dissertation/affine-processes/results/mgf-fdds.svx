@@ -1,0 +1,71 @@
+---
+type: statement
+kind: theorem
+slug: mgf-fdds
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+Fix $\underline t \vdash [0,\infty)$ and $\stateVar_0 \in \stateSpace^\circ$.
+The map $\twistToMoment_{\underline t}$ is a homeomorphism from $\momentSpace(\underline t)$ to the collection of $\underline\momentVar \in \vecSpace^{|\underline t|}$ for which $\aff(\underline t, \underline\momentVar, \stateVar_0) < \infty$.
+In particular, this means $\underline\momentVar \in \vecSpace^{|\underline t|}$ satisfies $\aff(\underline t, \underline\momentVar, \stateVar_0) < \infty$ if and only if $\underline\momentVar = \twistToMoment_{\underline t}(\underline\twistVar)$.
+Moreover, we have the following identity for all $\underline\stateVar \in \stateSpace^{|\underline t|}$.
+$$
+  \prj{\underline\momentVar}{\underline\stateVar} - \aff(\underline t, \underline\momentVar, \stateVar_0) = \sum_{k=1}^{|\underline t|} \Big( \prj{\twistVar_k}{\stateVar_k-\stateVar_{k-1}} - \affShift(\Delta t_k, \twistVar_k, \stateVar_{k-1}) \Big), \quad \underline\momentVar = \twistToMoment_{\underline t}(\underline\twistVar)
+$$
+
+<Proof>
+
+By [%full](/statements/twist-to-moment), we have that $\twistToMoment$ is indeed a continuous map from $\momentSpace(\underline t)$ into the finite domain of $\aff(\underline t, \cdot, \stateVar_0)$.
+Conversely, [%full](/statements/moment-to-twist) indicates to us that, on the finite domain of $\aff(\underline t, \cdot, \stateVar_0)$, a recursively-defined map $\momentToTwist_{\underline t}$ from [](tag:eq-moment-to-twist) exists.
+Denoting $n \defeq |\underline t|$, we see that this map is continuous by induction and continuity of compositions.
+$$
+  \momentToTwist_{\underline t}(\underline\momentVar) = \Big( \momentToTwist_{\underline t, 1}(\underline\momentVar_{1:n}), \ldots, \momentToTwist_{\underline t, n}(\underline\momentVar_{n:n}) \Big),  \quad
+  \begin{aligned}[t]
+    \momentToTwist_{\underline t,n}(\underline\momentVar_{n:n}) &= \momentVar_n \\
+    \momentToTwist_{\underline t,k}(\underline\momentVar_{k:n}) &= \momentVar_k + \affPart\big(\Delta t_{k+1}, \momentToTwist_{\underline t}(\underline\momentVar_{k+1:n}) \big)
+  \end{aligned}
+$$
+
+Observe that $\momentToTwist_{\underline t}$ is the inverse of $\twistToMoment_{\underline t}$.
+To see this, fix $\underline\twistVar \in \momentSpace(\underline t)$ and $\underline\momentVar \defeq \twistToMoment_{\underline t}(\underline\twistVar)$.
+The final coordinate is obvious,
+$$
+  \momentToTwist_{\underline t, n}(\underline\momentVar_{n:n}) = \momentVar_n = \twistToMoment_{\underline t,n}(\underline\twistVar) = \twistVar_n,
+$$
+while an inductive hypothesis $\momentToTwist_{\underline t, k}(\underline\momentVar_{k:n}) = \twistVar_k$ gives us the next step.
+$$
+  \begin{aligned}
+    \momentToTwist_{\underline t, k-1}(\underline\momentVar_{k-1:n})
+    &= \twistToMoment_{\underline t, k-1}(\underline\twistVar) + \affPart\big(\Delta t_k, \momentToTwist_{\underline t, k}(\underline\momentVar_{k:n}) \big) \\
+    &= \twistVar_{k-1} - \affPart(\Delta t_k, \twistVar_k) + \affPart(\Delta t_k, \twistVar_k )\\
+    &= \twistVar_{k-1}
+  \end{aligned}
+$$
+Dual to this, fix $\underline\momentVar \in \vecSpace^{|\underline t|}$ for which $\aff(\underline t, \underline\momentVar, \stateVar_0) < \infty$ and define $\underline\twistVar \defeq \momentToTwist_{\underline t}(\underline\momentVar)$.
+Again, we immediately have
+$$
+  \twistToMoment_{\underline t, n}(\underline\twistVar) = \twistVar_n = \momentToTwist_{\underline t, n}(\underline\momentVar_{n:n}) = \momentVar_n,
+$$
+and an inductive hypothesis of $\twistToMoment_{\underline t, k}(\underline\twistVar) = \momentVar_k$ results in the next step.
+$$
+  \twistToMoment_{\underline t, k-1}(\underline\twistVar) = \twistVar_{k-1} - \affPart(\Delta t_k, \twistVar_k) = \momentToTwist_{\underline t,k-1}(\underline\momentVar_{k-1:n}) - \affPart\big(\Delta t_k, \momentToTwist_{\underline t, k}(\underline\momentVar_{k:n})\big) = \momentVar_{k-1}
+$$
+
+We have now showed that $\twistToMoment_{\underline t}$ is a homeomorphism with inverse $\momentToTwist_{\underline t}$.
+It remains to show our identity for a pairing $\underline\momentVar = \twistToMoment_{\underline t}(\underline\twistVar)$.
+
+$$
+  \begin{aligned}
+    &\prj{\underline\momentVar}{\underline\stateVar} - \aff(\underline t, \underline\momentVar, \stateVar_0) \\
+    &= \bprj{\twistToMoment_{\underline t}(\underline\twistVar)}{\underline\stateVar} - \aff\big(\underline t, \twistToMoment_{\underline t}(\underline\twistVar), \stateVar_0\big) \\
+    &= \sum_{i=1}^{n-1} \bprj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\stateVar_k} + \prj{\twistVar_n}{\stateVar_n} - \sum_{i=1}^n \affPart_0(\Delta t_k, \twistVar_k) - \bprj{\affPart(\Delta t_1, \twistVar_1)}{\stateVar_0}  \\
+    &= \sum_{i=1}^n \Big( \prj{\twistVar_k}{\stateVar_k} - \affPart_0(\Delta t_k, \twistVar_k) - \bprj{\affPart(\Delta t_k, \twistVar_k)}{\stateVar_k} \Big) \\
+    &= \sum_{i=1}^n \Big( \prj{\twistVar_k}{\stateVar_k} - \aff(\Delta t_k, \twistVar_k, \stateVar_k) \Big) \\
+    &= \sum_{i=1}^n \Big( \prj{\twistVar_k}{\stateVar_k-\stateVar_{k-1}} - \affShift(\Delta t_k, \twistVar_k, \stateVar_k) \Big)
+  \end{aligned}
+$$
+
+</Proof>

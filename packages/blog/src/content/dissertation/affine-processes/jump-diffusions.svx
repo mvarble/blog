@@ -1,3 +1,31 @@
 ---
 title: Affine jump-diffusions
 ---
+
+<script>
+  import Statement from '$lib/components/statement.svelte';
+<!-- \input{./results/affJump-regularity} -->
+<!-- \input{./results/special} -->
+<!-- \input{./results/locally-countable} -->
+<!-- \input{./results/exponential-martingale} -->
+<!-- \input{./results/affine-resolution} -->
+</script>
+
+This section shows how the notions of jump-diffusions explained in [Appendix %label](/sequences/dissertation/jump-diffusions) apply in the affine case.
+These results are useful because---as we see in [%full](/statements/affine-process-regularity)---affine processes are affine jump-diffusions.
+Throughout this section, we take $\X$ to be an affine jump-diffusion with differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$, but _do not necessarily_ assume $\X$ is an affine process, in the sense of [%full](/statements/affine-process-definition).
+Firstly, we prove the uniform-boundedness property for the affine jump kernel $\affJump$.
+
+<!-- \input{./results/affJump-regularity} -->
+
+With this result, we can state succinct versions of the results which exist for general jump-diffusions.
+The first of which can be seen as our _escape hatch_ to representing affine processes $\X$ as objects subject to a dynamical system $\dot\pathVar = \affDrift(\pathVar)$, subject to both continuous and purely-discontinuous martingale noise.
+
+<!-- \input{./results/special} -->
+<!-- \input{./results/locally-countable} -->
+<!-- \input{./results/exponential-martingale} -->
+
+Now that we have results on affine jump-diffusions, the question arises if they are affine processes in the sense of our [%full](/statements/affine-process-definition).
+The answer is _yes_, so long as the associated differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$ and subsequent Lévy-Khintchine map have an associated solution to [](tag:eq-complex-riccati-system).
+
+<!-- \input{./results/affine-resolution} -->

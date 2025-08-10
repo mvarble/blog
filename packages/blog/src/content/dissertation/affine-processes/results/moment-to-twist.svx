@@ -1,0 +1,51 @@
+---
+type: statement
+kind: proposition
+slug: moment-to-twist
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+Fix $\underline t \vdash [0,\infty)$ and denote $n \defeq |\underline t|$ for brevity.
+If $\underline\momentVar \in \vecSpace^{|\underline t|}$ is such that $\aff(\underline t, \underline\momentVar, \stateVar) < \infty$ for some $\stateVar \in \stateSpace^\circ$, then the following recursion holds.
+$$
+  @tag(eq-moment-to-twist)
+  \begin{aligned}
+    \twistVar_n &\defeq \momentVar_n \in \momentSpace(\Delta t_n) \\
+    \twistVar_k &\defeq \momentVar_k + \affPart\big(\Delta t_{k+1}, \twistVar_{k+1}\big) \in \momentSpace(\Delta t_k), & k = n-1, \ldots, 1
+  \end{aligned}
+$$
+
+<Proof>
+
+Consider $\underline\momentVar \in \vecSpace^{|\underline t|}$ from which we may not construct the recursion in [](tag:eq-moment-to-twist).
+In other words, there exists maximal $j \in \{1, \ldots, n\}$ in the recursion which fails; i.e.\ $\twistVar_k \in \momentSpace(\Delta t_k)$ for all $k = n, \ldots, j+1$ and $\twistVar_j \not\in\momentSpace(\Delta t_j)$.
+We now repeat the work as in [](tag:eq-tower-start)-[](tag:eq-tower-end) for a fixed $\stateVar \in \stateSpace^\circ$ to get the following identity.
+$$
+  \begin{aligned}
+    &\log\Exp_{\Prb_\stateVar}\exp\prj{\underline\momentVar}{\X_{\underline t}} \\
+    &= \log\Exp_{\Prb_\stateVar}\bigg( \exp\Big(\sum_{k=1}^{n-1} \prj{\momentVar_k}{\X_{t_k}}\Big) \cdot \Exp_{\Prb_\stateVar}\Big( \exp\bprj{\momentVar_n}{\X_{t_n}} |\scrF_{t_{n-1}} \Big) \bigg) \\
+    &= \begin{aligned}
+      &\affPart_0(\Delta t_n, \momentVar_n)
+      + \log\Exp_{\Prb_\stateVar}\bigg( \exp\Big(\sum_{k=1}^{n-2} \prj{\momentVar_k}{\X_{t_k}}\Big) \\
+      &\hspace{50mm} \cdot \Exp_{\Prb_\stateVar}\Big( \exp\bprj{\momentVar_{n-1} + \affPart(\Delta t_n, \momentVar_n)}{\X_{t_{n-1}}} | \scrF_{t_{n-2}} \Big)  \bigg)
+    \end{aligned} \\
+    &= \begin{aligned}
+      &\affPart_0\big(\Delta t_n, \twistVar_n) \\
+      &+ \log\Exp_{\Prb_\stateVar}\bigg( \exp\Big(\sum_{k=1}^{n-2} \prj{\momentVar_k}{\X_{t_k}}\Big) \cdot \Exp_{\Prb_\stateVar}\Big( \exp\bprj{\twistVar_{n-1}}{\X_{t_{n-1}}} | \scrF_{t_{n-2}} \Big)  \bigg)
+    \end{aligned} \\
+    & \quad\vdots \\
+    &= \begin{aligned}
+      &\sum_{k=j+1}^n \affPart_0(\Delta t_k, \twistVar_k) \\
+      &+ \log\Exp_{\Prb_\stateVar}\bigg( \exp\Big(\sum_{k=1}^{j-1} \prj{\momentVar_k}{\X_{t_k}}\Big) \cdot \Exp_{\Prb_\stateVar}\Big( \exp\bprj{\twistVar_j}{\X_{t_j}} |\scrF_{t_{j-1}} \Big) \bigg)
+    \end{aligned} \\
+    &= \sum_{k=j+1}^n \affPart_0(\Delta t_k, \twistVar_k) + \log\Exp_{\Prb_\stateVar}\bigg( \exp\Big(\sum_{k=1}^{j-1} \prj{\momentVar_k}{\X_{t_k}}\Big) \cdot \Exp_{\Prb_{\X_{t_{j-1}}}} \exp\bprj{\twistVar_j}{\X_{\Delta t_j}} \bigg)
+  \end{aligned}
+$$
+By [%full](/statements/keller-ressel-mayerhofer), since $\twistVar_j \not\in \momentSpace(\Delta t_j)$, we have $\Exp_{\Prb_{\stateVar'}} \exp\prj{\twistVar_j}{\X_{\Delta t_j}} = \infty$ for all $\stateVar' \in \stateSpace^\circ$, so the above integrand is infinite on the set $\X_{t_{j-1}} \in \stateSpace^\circ$.
+Seeing as $\stateVar \in \stateSpace^\circ$, this set is $\Prb_\stateVar$ non-negligible, and so the quantity is infinite.
+We conclude that $\underline\momentVar \not\in \momentSpace(\underline t)$, which finishes the proof by contrapositive.
+
+</Proof>

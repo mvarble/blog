@@ -86,7 +86,7 @@ slug: moment-space-facts
       \Der\aff(t,\momentVar,\stateVar)
       &= \Der\affPart_0(t,\momentVar) + \Der\affPart(t,\momentVar)\cdot\stateVar \\
       &= \Der  q_0(t,\momentVar) + \Der q(t,\momentVar)\cdot\stateVar \\
-      &= \begin{aligned}[t]
+      &= \begin{aligned}
         &\int_0^t \Der \odePart_0\big(q(s,\momentVar)\big) \Der q(s,\momentVar) \rmd s \\
         &\quad+ \left(\id_{\vecSpace} + \int_0^t \Der \odePart\big(q(s,\momentVar)\big)\Der  q(s,\momentVar) \rmd s\right)\cdot\stateVar
       \end{aligned} \\

@@ -15,7 +15,7 @@ title: Existence of real moments
 <!--  discuss how we intend to talk about \ode -->
 This section elaborates upon the extension of the transform formula in [](tag:eq-affine-process-definition) and equations [](tag:eq-complex-riccati-charts) and [](tag:eq-complex-riccati-system) to real moments $\momentVar \in \vecSpace$.
 Clearly, should any extension exist for some $\momentVar \in \vecSpace$, the value $\ode(\momentVar, \stateVar) = \dot\aff(0,\momentVar,\stateVar)$ should be well-defined.
-Throughout this section, we recall our exploration in [Section %label](/sequences/dissertation/jump-diffusions/real-moments) of the L\'evy-Khintchine map $\ode$ and its essential domain of real moments.
+Throughout this section, we recall our exploration in [Section %label](/sequences/dissertation/jump-diffusions/real-moments) of the Lévy-Khintchine map $\ode$ and its essential domain of real moments.
 $$
   \odeSpace \defeq \Big\{ \momentVar \in \vecSpace : \ode(\momentVar, \stateVar) \text{ is well-defined for all } \stateVar \in \stateSpace \Big\}
 $$
