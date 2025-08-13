@@ -1,0 +1,3 @@
+---
+title: Semi-closed form of rate function
+---

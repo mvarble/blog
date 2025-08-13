@@ -1,0 +1,31 @@
+---
+type: statement
+kind: proposition
+slug: affine-special
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+If $0 \in \odeSpace^\circ$, then $\X$ is a $(\Prb_\stateVar, \scrF)$ special jump-diffusion for each $\stateVar \in \stateSpace$.
+The resulting drift map $\affDrift: \stateSpace \rightarrow \vecSpace$ in the special semimartingale decomposition,
+$$
+  \X_t = \stateVar + \affDrift(\X) \shortInt \leb_t + \X^\rmc + \id_\vecSpace \ast \compensate{\jumpMeas^\X}_t
+$$
+is also affine, making all the special differential characteristics $(\affDrift, \affDiff, \affJump)$ affine.
+
+<Proof>
+
+By combining [%full](/statements/aff-jump-regularity) and[%full](/statements/LK-special), we get that $\X$ is special.
+Now, we perform the algebra to see the affine structure of $\affDrift$.
+$$
+  \begin{aligned}
+    \affDrift(\stateVar)
+    &= \affDrift^\trunc(\stateVar) + \int_\vecSpace \big( \markVar - \trunc(\markVar) \big) \affJump(\stateVar, \rmd\markVar) \\
+    &= \bigg( \affDriftPart^\trunc_0 + \sum_{i=1}^d \stateVar^i \affDriftPart^\trunc_i \bigg) + \int_\vecSpace \big(\markVar - \trunc(\markVar)\big) \bigg( \affJumpPart_0(\rmd\markVar) + \sum_{i=1}^d \stateVar^i \affJumpPart_i(\rmd\markVar) \bigg) \\
+    &= \bigg( \affDriftPart^\trunc_0 + \int_\vecSpace \big(\markVar - \trunc(\markVar) \big) \affJumpPart_0(\rmd\markVar) \bigg) + \sum_{i=1}^d \stateVar^i \bigg(  \affDriftPart^\trunc_i + \int_\vecSpace \big(\markVar - \trunc(\markVar) \big) \affJumpPart_i(\rmd\markVar) \bigg)
+  \end{aligned}
+$$
+
+</Proof>

@@ -106,7 +106,7 @@ $$
 <span></span>
 </div>
 
-The final term of [](tag:eq-tower-end) is identical to that of [](tag:eq-tower-start}), where we have reduced $k = n$ to $k = n-1$.
+The final term of [](tag:eq-tower-end) is identical to that of [](tag:eq-tower-start), where we have reduced $k = n$ to $k = n-1$.
 Repeating these equalities inductively $k = n -1, \ldots, 1$ will result in the desired identity.
 $$
   \begin{aligned}

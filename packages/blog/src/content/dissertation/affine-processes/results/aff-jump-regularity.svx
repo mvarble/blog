@@ -1,0 +1,32 @@
+---
+type: statement
+kind: lemma
+slug: aff-jump-regularity
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+The jump kernel $\affJump$ satisfies the following uniform-boundedness property.
+Any function $f \in \scrB(\vecSpace)/\scrB(\bbR)$ that satisfies
+$$
+  \int_\vecSpace |f(\markVar)| \affJump(\stateVar, \rmd\markVar) < \infty
+$$
+for all $\stateVar \in \stateSpace$ then satisfies the following.
+$$
+  \stateVar \mapsto \int_\vecSpace |f(\markVar)| \affJump(\stateVar, \rmd\markVar)  \text{ bounded on compact sets}
+$$
+
+<Proof>
+
+Seeing as $0 \in \stateSpace$ and $\operatorname{span}\stateSpace = \vecSpace$, we can take appropriate linear combinations to get finite integrals for each of the parts $\affJumpPart_0, \ldots, \affJumpPart_d$ of $\affJump$.
+$$
+  F_i \defeq \int_\vecSpace |f(\markVar)| \affJumpPart_i(\rmd\markVar) < \infty, \quad i = 0, \ldots, d
+$$
+From here, the result is a simple effect of our affine property and boundedness of compact sets.
+$$
+  \sup_{|\stateVar|\leq M} \bigg| \int_\vecSpace |f(\markVar)| \affJump(\stateVar, \rmd\markVar) \bigg| = \sup_{|\stateVar|\leq M} \bigg| F_0 + \sum_{i=1}^d \stateVar^i F_i \bigg| \leq F_0 + M \sum_{i=1}^d F_i < \infty
+$$
+
+</Proof>

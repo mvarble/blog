@@ -1,0 +1,42 @@
+---
+type: statement
+kind: theorem
+slug: affine-exponential-martingale
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+If $0 \in \odeSpace^\circ$, then any $\twistFunc \in \pathSpace{[0,\infty)}{\vecSpace}$ of finite variation, compact support, and image contained in $\odeSpace^\circ$ makes $\exp(\twistFunc \shortInt \X)$ a $(\Prb_\stateVar, \scrF)$ special jump-diffusion and
+$$
+  \mgDensity^\twistFunc \defeq \exp\Big( \twistFunc \shortInt \X - \ode\big(\twistFunc, \X\big) \shortInt \leb \Big)
+$$
+a martingale for every $\stateVar \in \stateSpace$.
+Moreover, we may define a new measure $\mgPrb^\twistFunc$ by
+$$
+  \mgPrb^\twistFunc(\rmd\omega) \defeq \mgDensity^\twistFunc(\omega) \cdot \Prb(\rmd\omega)
+$$
+such that $\X$ is a $(\mgPrb^\twistFunc, \scrF)$ special jump-diffusion with affine $(\mgPrb^\twistFunc, \scrF)$ special differential characteristics $(\affDrift^\twistFunc, \affDiff, \affJump^\twistFunc)$.
+$$
+  \begin{aligned}
+    \affDrift^\twistFunc(s, \stateVar) &\defeq \affDrift(\stateVar) + \affDiff(\stateVar) \twistFunc(s) + \int_\vecSpace \markVar \big(e^\prj{\twistFunc(s)}{\markVar} -1 \big) \affJump(\stateVar, \rmd\markVar) \\
+    \affJump^\twistFunc(s, \stateVar, \rmd\markVar) &\defeq e^\prj{\twistFunc(s)}{\markVar} \affJump(\stateVar, \rmd\markVar)
+  \end{aligned}
+$$
+
+<Proof>
+
+The quantity $M = \exp\big(\twistFunc \shortInt \X - \ode(\twistFunc, \X) \shortInt \leb \big)$ is a $(\Prb_\stateVar, \scrF)$ local martingale by our hypotheses and [%full](/statements/LK-exponential-martingale).
+To get the remaining martingale property, we first note that the compact support of $\twistFunc$ means that there exists $\tau > 0$ such that $\twistFunc(t) = 0$ for all $t > \tau$.
+This makes $M = M^\tau$, and so we only need to consider the martingale property on the interval $[0,\tau]$.
+For this, we use [Theorem 2.6](/citations#spreij2010), which requires the maps
+$$
+  (s, \stateVar) \mapsto \bprj{\twistFunc(s)}{\affDiff(\stateVar)\twistFunc(s)}, \quad
+  (s, \stateVar) \mapsto \int_\vecSpace \big( e^\prj{\twistFunc(s)}{\markVar} - 1 - \prj{\twistFunc(s)}{\markVar} \big) \affJump(\stateVar, \rmd\markVar)
+$$
+are bounded on compact sets of points $(s, \stateVar)$.
+This comes from the fact that the image of $\twistFunc$ is contained in some compact subset of $\odeSpace^\circ$ and that $\ode$ is uniformly bounded on compact subsets of $\odeSpace^\circ \times \stateSpace$ by [%full](/statements/ode-differentiable).
+The $(\mgPrb^\twistFunc, \scrF)$ special differential characteristics then come from [%full](/statements/LK-girsanov).
+
+</Proof>

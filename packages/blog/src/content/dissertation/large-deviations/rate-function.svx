@@ -1,0 +1,3 @@
+---
+title: Integral representation of rate function
+---

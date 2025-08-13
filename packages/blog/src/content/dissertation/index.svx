@@ -11,6 +11,20 @@ children:
       - filename: ./affine-processes/real-moments.svx
       - filename: ./affine-processes/fdds.svx
       - filename: ./affine-processes/jump-diffusions.svx
+  - filename: ./large-deviations/index.svx
+    children:
+      - filename: ./large-deviations/asymptotics.svx
+      - filename: ./large-deviations/assumptions.svx
+      - filename: ./large-deviations/dawson-gaertner.svx
+      - filename: ./large-deviations/exponential-martingales.svx
+      - filename: ./large-deviations/rate-function.svx
+  - filename: ./rate-functions/index.svx
+    children:
+      - filename: ./rate-functions/mogulskii.svx
+      - filename: ./rate-functions/transformations.svx
+      - filename: ./rate-functions/coupling.svx
+      - filename: ./rate-functions/main.svx
+      - filename: ./rate-functions/interpretation.svx
   - filename: ./jump-diffusions/index.svx
     appendix: true
     children:
@@ -105,6 +119,9 @@ katex_macros:
   \ball: 'B(#1,#2)'
   \closedBall: '{\overline B(#1,#2)}'
   \push: '{#2}_\#{#1}'
+  \shortInt: '\boldsymbol{\cdot}'
+  \predproj: '\hat{#1}'
+  \compensate: '\tilde{#1}'
 ---
 
 This collection of pages is a transcription of my [PhD thesis](https://escholarship.org/uc/item/6xk7n2f2), which aims to develop a comprehensive picture of large deviations of affine processes.

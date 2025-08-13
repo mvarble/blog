@@ -1,0 +1,69 @@
+---
+type: statement
+kind: proposition
+slug: affine-resolution
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+Assume that are differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$ are such that the Lévy-Khintchine map $\ode$ has a solution $\aff(\cdot, \momentVar, \cdot)$ to the following system for each $\momentVar \in \boundedSpace$.
+$$
+  \begin{gathered}
+    \aff(t, \momentVar, \stateVar) = \affPart_0(t, \momentVar) + \bprj{\affPart(t,\momentVar)}{\stateVar} \\
+    \forall ~ \stateVar \in \stateSpace, \qquad \left\{\begin{aligned}
+      \dot\aff(t, \momentVar, \stateVar) &= \ode\big(\affPart(t,\momentVar), \stateVar\big) & t \geq 0 \\
+      \aff(0,\momentVar, \stateVar) &= \prj{\momentVar}{\stateVar}
+    \end{aligned}\right.
+  \end{gathered}
+$$
+Then we have the remaining necessary condition of [%full](/statements/affine-process-definition).
+$$
+    \Exp_{\Prb_\stateVar}\exp\prj{\momentVar}{\X_t} = \exp\aff(t, \momentVar, \stateVar), \quad t \geq 0, ~ \momentVar \in\boundedSpace, ~ \stateVar \in \stateSpace
+$$
+
+<Proof>
+
+Fix $\tau \geq 0$, $\momentVar \in \boundedSpace$, and $\stateVar \in \stateSpace$ and denote $M_t = \exp\aff(\tau-t, \momentVar, \X_t)$.
+We now apply our jump-diffusion version of Itô's formula for jump-diffusions as in [%full](/statements/ito), indifferently treating an element of $\vecSpace$ as one of $\bbL(\vecSpace, \bbR)$ in the canonical way.
+$$
+  \begin{aligned}
+    M_t
+    &= \exp\aff(\tau, \momentVar, \stateVar)
+      - \exp\aff(\tau-\leb, \momentVar, \X) \dot\aff(\tau-\leb, \momentVar, \X) \shortInt \leb_t  \\
+    &\quad+ \exp\aff(\tau-\leb, \momentVar, \X_-) \affPart(\tau-\leb, \momentVar) \shortInt \X_t  \\
+    &\quad+ \frac12 \exp\aff(\tau-\leb, \momentVar, \X) \bprj{\affPart(\tau-\leb,\momentVar)}{\affDiff(\X)\affPart(\tau-\leb,\momentVar)} \shortInt \leb \\
+    &\quad+ \Big( \exp\aff(\tau-\leb, \momentVar, \X) - \exp\aff(\tau-\leb, \momentVar, \X_-) - \bprj{\affPart(\tau-\leb, \momentVar)}{\id_\vecSpace} \Big) \ast \jumpMeas^\X \\
+    &= \exp\aff(\tau, \momentVar, \stateVar)
+      - M \ode\big(\affPart(\tau-\leb, \momentVar), \X\big) \shortInt \leb_t \\
+    &\quad+ M \bigg( \bprj{\affPart(\tau-\leb, \momentVar)}{\affDrift^\trunc(\X)} + \frac12 \prj{\affPart(\tau-\leb,\momentVar)}{\affDiff(\X)\affPart(\tau-\leb,\momentVar)} \bigg) \shortInt \leb_t \\
+    &\quad+ M_- \affPart(\tau-\leb, \momentVar) \shortInt \X^\rmc
+      + M_- \bprj{\affPart(\tau-\leb,\momentVar)}{\trunc} \ast \compensate{\jumpMeas^\X}_t  \\
+    &\quad+ M_- \bprj{\affPart(\tau-\leb, \momentVar)}{\id_\vecSpace-\trunc} \ast \jumpMeas^\X_t  \\
+    &\quad+ M_- \Big( \exp\prj{\affPart(\tau-\leb,\momentVar)}{\id_\vecSpace} - 1 - \bprj{\affPart(\tau-\leb, \momentVar)}{\id_\vecSpace} \Big) \ast \jumpMeas^\X
+  \end{aligned}
+$$
+Now, we use [%full](/statements/aff-part-bounded) to claim that $M$ is bounded, and so it is special by [Lemma I.4.24](/citations#jacod2003), so we may compensate our jump integrals above.
+$$
+  \begin{aligned}
+    M_t
+    &= \exp\aff(\tau, \momentVar, \stateVar)
+      - M \ode\big(\affPart(\tau-\leb, \momentVar), \X\big) \shortInt \leb_t \\
+    &\quad+ M \bigg( \bprj{\affPart(\tau-\leb, \momentVar)}{\affDrift^\trunc(\X)} + \frac12 \prj{\affPart(\tau-\leb,\momentVar)}{\affDiff(\X)\affPart(\tau-\leb,\momentVar)} \bigg) \shortInt \leb_t \\
+    &\quad+ M_- \affPart(\tau-\leb, \momentVar) \shortInt \X^\rmc
+      + M_- \bprj{\affPart(\tau-\leb,\momentVar)}{\trunc} \ast \compensate{\jumpMeas^\X}_t \\
+    &\quad+ M_- \Big( \exp\prj{\affPart(\tau-\leb,\momentVar)}{\id_\vecSpace} - 1 - \bprj{\affPart(\tau-\leb,\momentVar)}{\trunc} \Big) \ast \predproj{\jumpMeas^\X}_t \\
+    &\quad+ M_- \Big( \exp\prj{\affPart(\tau-\leb,\momentVar)}{\id_\vecSpace} - 1 - \bprj{\affPart(\tau-\leb,\momentVar)}{\trunc} \Big) \ast \compensate{\jumpMeas^\X}_t
+    \\
+    &= \exp\aff(\tau, \momentVar, \stateVar)
+      + M_- \affPart(\tau-\leb, \momentVar) \shortInt \X^\rmc \\
+    &\quad+ M_- \Big( \exp\prj{\affPart(\tau-\leb,\momentVar)}{\id_\vecSpace} - 1 \Big) \ast \compensate{\jumpMeas^\X}_t
+  \end{aligned}
+$$
+This shows that $M$ is a local martingale; because it is bounded, it is a martingale, and we have our desired transform.
+$$
+  \Exp_\Prb \exp\prj{\momentVar}{\X_\tau} = \Exp_\Prb \exp\aff(0, \momentVar, \X_\tau) = \Exp_\Prb M_\tau = \exp\aff(\tau, \momentVar, \X_\tau)
+$$
+
+</Proof>
