@@ -5,9 +5,10 @@ import matter from 'gray-matter';
 import {
     type SequenceChild,
     type TouchSequenceChildInput,
+    type SequenceChildBase,
+    type Database,
     touchSequence,
     getSequence,
-    SequenceChildBase,
 } from '../../db';
 import {
     buildLabel,
@@ -23,75 +24,62 @@ import { type FileHooks } from '..';
 
 const hooks: FileHooks = {
     async initialize(db, filename, frontmatter, contents) {
-        if (!hasStringField(frontmatter, 'title') || !frontmatter.title) {
-            console.error('Sequences must have a `title` string-field in the frontmatter.');
-            return;
-        }
+        await initialize(db, filename, frontmatter, contents);
+    },
 
-        let slug = slugFromFilename(filename);
-        if (hasStringField(frontmatter, 'slug') && frontmatter.slug) {
-            slug = frontmatter.slug;
-        }
+    async crossReference(db, filename, _frontmatter, contents) {
+        await crossReference(db, filename, contents);
+    },
 
-        if (!hasDateField(frontmatter, 'created')) {
-            console.error('Sequences must have a `created` date-field.');
-            return;
-        }
-        let edited: Date = frontmatter.created;
-        if (hasDateField(frontmatter, 'edited')) {
-            edited = frontmatter.edited;
-        }
+    async hmr(db, filename, frontmatter, contents) {
+        await initialize(db, filename, frontmatter, contents);
+        await crossReference(db, filename, contents);
+    },
+};
 
-        // check frontmatter for enumerate (optional or boolean)
-        if ('enumerate' in frontmatter && !hasBooleanField(frontmatter, 'enumerate')) {
-            console.error('Sequences field `enumerate` must be boolean.');
-            return;
-        }
-        let enumerate = false;
-        if (hasBooleanField(frontmatter, 'enumerate')) {
-            enumerate = frontmatter.enumerate;
-        }
+async function initialize(
+    db: Database,
+    filename: string,
+    frontmatter: Record<'type', string>,
+    contents: string,
+) {
+    if (!hasStringField(frontmatter, 'title') || !frontmatter.title) {
+        console.error('Sequences must have a `title` string-field in the frontmatter.');
+        return;
+    }
 
-        // check frontmatter for katex macros (optional or object)
-        let katexMacros = {};
-        if (hasObjectField(frontmatter, 'katex_macros') && frontmatter.katex_macros) {
-            katexMacros = frontmatter.katex_macros;
-        }
+    let slug = slugFromFilename(filename);
+    if (hasStringField(frontmatter, 'slug') && frontmatter.slug) {
+        slug = frontmatter.slug;
+    }
 
-        // if frontmatter does not have children, then the sequence is done
-        if (!('children' in frontmatter)) {
-            const sequence = touchSequence(db, {
-                title: frontmatter.title,
-                slug,
-                created: frontmatter.created,
-                edited,
-                filename,
-                enumerate,
-                katexMacros,
-            });
+    if (!hasDateField(frontmatter, 'created')) {
+        console.error('Sequences must have a `created` date-field.');
+        return;
+    }
+    let edited: Date = frontmatter.created;
+    if (hasDateField(frontmatter, 'edited')) {
+        edited = frontmatter.edited;
+    }
 
-            await nodeParser(
-                db,
-                { id: sequence.pageId, pathname: sequence.pathname, filename: sequence.filename },
-                contents,
-                0,
-                enumerate ? '0' : undefined,
-            );
+    // check frontmatter for enumerate (optional or boolean)
+    if ('enumerate' in frontmatter && !hasBooleanField(frontmatter, 'enumerate')) {
+        console.error('Sequences field `enumerate` must be boolean.');
+        return;
+    }
+    let enumerate = false;
+    if (hasBooleanField(frontmatter, 'enumerate')) {
+        enumerate = frontmatter.enumerate;
+    }
 
-            return;
-        }
+    // check frontmatter for katex macros (optional or object)
+    let katexMacros = {};
+    if (hasObjectField(frontmatter, 'katex_macros') && frontmatter.katex_macros) {
+        katexMacros = frontmatter.katex_macros;
+    }
 
-        // ensure the children are presented as an array; check each child and short-circuit if any fail
-        if (!hasArrayField(frontmatter, 'children')) {
-            console.error('Sequences field `children` must be an array of objects.');
-            return;
-        }
-
-        const children = await buildChildren(filename, frontmatter.children, false, true);
-        if (!children) {
-            return;
-        }
-
+    // if frontmatter does not have children, then the sequence is done
+    if (!('children' in frontmatter)) {
         const sequence = touchSequence(db, {
             title: frontmatter.title,
             slug,
@@ -100,86 +88,117 @@ const hooks: FileHooks = {
             filename,
             enumerate,
             katexMacros,
-            children,
         });
 
-        let currentItemPrefix = enumerate ? '0' : undefined;
-        let currentItem = await nodeParser(
+        await nodeParser(
             db,
             { id: sequence.pageId, pathname: sequence.pathname, filename: sequence.filename },
             contents,
             0,
-            currentItemPrefix,
+            enumerate ? '0' : undefined,
         );
 
-        const descendants: { data: SequenceChild; itemPrefix?: string }[] = sequence
-            .children!.map((data, i) => ({
-                data,
-                itemPrefix: sequence.enumerate ? String(i) : undefined,
-            }))
-            .toReversed();
-        while (descendants.length > 0) {
-            const descendant = descendants.pop()!;
-            if (
-                typeof descendant.itemPrefix == 'string' &&
-                descendant.itemPrefix != currentItemPrefix
-            ) {
-                currentItem = 0;
-                currentItemPrefix = descendant.itemPrefix;
-            }
-            const contents = await fs.promises.readFile(descendant.data.filename, 'utf8');
-            currentItem += await nodeParser(
-                db,
-                {
-                    id: descendant.data.pageId,
-                    pathname: descendant.data.pathname,
-                    filename: descendant.data.filename,
-                },
-                contents,
-                currentItem,
-                currentItemPrefix,
+        return;
+    }
+
+    // ensure the children are presented as an array; check each child and short-circuit if any fail
+    if (!hasArrayField(frontmatter, 'children')) {
+        console.error('Sequences field `children` must be an array of objects.');
+        return;
+    }
+
+    const children = await buildChildren(filename, frontmatter.children, false, true);
+    if (!children) {
+        return;
+    }
+
+    const sequence = touchSequence(db, {
+        title: frontmatter.title,
+        slug,
+        created: frontmatter.created,
+        edited,
+        filename,
+        enumerate,
+        katexMacros,
+        children,
+    });
+
+    let currentItemPrefix = enumerate ? '0' : undefined;
+    let currentItem = await nodeParser(
+        db,
+        { id: sequence.pageId, pathname: sequence.pathname, filename: sequence.filename },
+        contents,
+        0,
+        currentItemPrefix,
+    );
+
+    const descendants: { data: SequenceChild; itemPrefix?: string }[] = sequence
+        .children!.map((data, i) => ({
+            data,
+            itemPrefix: sequence.enumerate ? String(i) : undefined,
+        }))
+        .toReversed();
+    while (descendants.length > 0) {
+        const descendant = descendants.pop()!;
+        if (
+            typeof descendant.itemPrefix == 'string' &&
+            descendant.itemPrefix != currentItemPrefix
+        ) {
+            currentItem = 0;
+            currentItemPrefix = descendant.itemPrefix;
+        }
+        const contents = await fs.promises.readFile(descendant.data.filename, 'utf8');
+        currentItem += await nodeParser(
+            db,
+            {
+                id: descendant.data.pageId,
+                pathname: descendant.data.pathname,
+                filename: descendant.data.filename,
+            },
+            contents,
+            currentItem,
+            currentItemPrefix,
+        );
+        if (descendant.data.children) {
+            descendants.push(
+                ...descendant.data.children
+                    .map((data, i) => ({
+                        data,
+                        itemPrefix:
+                            typeof currentItemPrefix == 'string'
+                                ? currentItemPrefix.includes('.')
+                                    ? currentItemPrefix
+                                    : buildLabel(i, currentItemPrefix)
+                                : undefined,
+                    }))
+                    .toReversed(),
             );
-            if (descendant.data.children) {
-                descendants.push(
-                    ...descendant.data.children
-                        .map((data, i) => ({
-                            data,
-                            itemPrefix:
-                                typeof currentItemPrefix == 'string'
-                                    ? currentItemPrefix.includes('.')
-                                        ? currentItemPrefix
-                                        : buildLabel(i, currentItemPrefix)
-                                    : undefined,
-                        }))
-                        .toReversed(),
-                );
+        }
+    }
+}
+
+async function crossReference(db: Database, filename: string, contents: string) {
+    const sequence = getSequence(db, filename);
+    if (sequence) {
+        async function recurseFile(child: SequenceChildBase, contents: string) {
+            edgeParser(
+                db,
+                { id: child.pageId, pathname: child.pathname, filename: child.filename },
+                contents,
+            );
+            if (child.children) {
+                child.children.forEach(recurse);
             }
         }
-    },
 
-    async crossReference(db, filename, _frontmatter, contents) {
-        const sequence = getSequence(db, filename);
-        if (sequence) {
-            async function recurseFile(child: SequenceChildBase, contents: string) {
-                edgeParser(
-                    db,
-                    { id: child.pageId, pathname: child.pathname, filename: child.filename },
-                    contents,
-                );
-                if (child.children) {
-                    child.children.forEach(recurse);
-                }
-            }
-
-            async function recurse(child: SequenceChildBase) {
-                const file = await fs.promises.readFile(child.filename, 'utf8');
-                await recurseFile(child, file);
-            }
-
-            await recurseFile(sequence, contents);
+        async function recurse(child: SequenceChildBase) {
+            const file = await fs.promises.readFile(child.filename, 'utf8');
+            await recurseFile(child, file);
         }
-    },
-};
+
+        await recurseFile(sequence, contents);
+    }
+}
 
 async function buildChildren(
     rootFilename: string,

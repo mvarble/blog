@@ -3,7 +3,7 @@ import { type Database, isUniqueConstraintError, type Tag } from '..';
 export function touchTagReference(db: Database, parentId: number, childSlug: string): boolean {
     try {
         const tag = db
-            .prepare('SELECT parent_id as parentId, label, slug FROM tags WHERE slug = ?')
+            .prepare('SELECT parent_id as parentId, label, slug FROM tags WHERE slug = ?;')
             .get(childSlug) as Tag | undefined;
         if (!tag) return false;
         db.prepare('INSERT INTO tag_references (parent_id, child_slug) VALUES (?, ?);').run(

@@ -21,30 +21,36 @@ import citation from './tables/citations';
 import { type Database } from '../db';
 
 export interface FileHooks {
-    // First hook: "node" data which does not include any cross-re:erencing.
+    // First hook: "node" data which does not include any cross-referencing.
     initialize?(
         db: Database,
         filename: string,
-        frontmatter: {
-            type: string;
-            [key: string]: unknown;
-        },
+        frontmatter: Record<'type', string>,
         contents: string,
     ): Promise<void>;
     // Second hook: "edge" data which assumes nodes have already been populated in DB.
     crossReference?(
         db: Database,
         filename: string,
-        frontmatter: {
-            type: string;
-            [key: string]: unknown;
-        },
+        frontmatter: Record<'type', string>,
+        contents: string,
+    ): Promise<void>;
+    // HMR trigger
+    hmr?(
+        db: Database,
+        filename: string,
+        frontmatter: Record<'type', string>,
         contents: string,
     ): Promise<void>;
 }
 
 // CMS DB hooks
-const HOOKS: { [key: string]: FileHooks } = { post, sequence, statement, citation };
+const HOOKS: { [key: string]: FileHooks } = {
+    post,
+    sequence,
+    statement,
+    citation,
+};
 
 // Vite plugin which exposes a virtual module for access to a database that is populated from
 // project files. These files are watched in development mode to hot-update the database, which
@@ -58,11 +64,7 @@ export function cmsSource(): Plugin {
     prepareDb(db);
 
     // helper function called on each file during first-pass of adding "nodes"
-    async function initializeFile(
-        filename: string,
-        frontmatter: { [key: string]: unknown },
-        contents: string,
-    ) {
+    async function initialize(filename: string, frontmatter: object & {}, contents: string) {
         if (hasStringField(frontmatter, 'type') && frontmatter.type in HOOKS) {
             const hook = HOOKS[frontmatter.type];
             if (hook.initialize) {
@@ -72,9 +74,9 @@ export function cmsSource(): Plugin {
     }
 
     // helper function called on each file during second-pass of adding "edges"
-    async function crossReferenceFile(
+    async function crossReference(
         filename: string,
-        frontmatter: { [key: string]: unknown },
+        frontmatter: object & {},
         contents: string,
         checkParents = false,
     ) {
@@ -86,7 +88,7 @@ export function cmsSource(): Plugin {
         } else if (checkParents) {
             const parentFilename = getParentSequenceFilename(db, filename);
             if (parentFilename) {
-                await crossReferenceFile(
+                await crossReference(
                     parentFilename,
                     matter(await fs.promises.readFile(parentFilename, 'utf8')).data,
                     contents,
@@ -97,24 +99,23 @@ export function cmsSource(): Plugin {
     }
 
     // helper function called during hot-updates to file
-    async function updateFile(
-        filename: string,
-        frontmatter: { [key: string]: unknown },
-        contents: string,
-    ) {
+    async function hmr(filename: string, frontmatter: object & {}, contents: string) {
         if (hasStringField(frontmatter, 'type') && frontmatter.type in HOOKS) {
-            initializeFile(filename, frontmatter, contents);
-        } else {
-            // if the page is a sequence-page or a statement, we grab its parent from the database to trigger the correct node resolution.
-            let parentFilename = getParentSequenceFilename(db, filename);
-            if (!parentFilename) {
-                // if the page is a
-                parentFilename = getStatementParentFilename(db, filename);
+            const hook = HOOKS[frontmatter.type];
+            if ('hmr' in hook && typeof hook.hmr == 'function') {
+                hook.hmr(db, filename, frontmatter, contents);
+                return;
             }
-            if (parentFilename) {
-                const parentContents = await fs.promises.readFile(parentFilename, 'utf8');
-                await updateFile(parentFilename, matter(parentContents).data, parentContents);
-            }
+        }
+        // if the page is a sequence-page or a statement, we grab its parent from the database to trigger the correct node resolution.
+        let parentFilename = getParentSequenceFilename(db, filename);
+        if (!parentFilename) {
+            parentFilename = getStatementParentFilename(db, filename);
+        }
+        if (parentFilename) {
+            const parentContents = await fs.promises.readFile(parentFilename, 'utf8');
+            const parentFrontmatter = matter(parentContents).data;
+            await hmr(parentFilename, parentFrontmatter, parentContents);
         }
     }
 
@@ -129,20 +130,22 @@ export function cmsSource(): Plugin {
             const bibFilenames = await glob('src/content/**/*.bib');
 
             // first pass
-            for (const svxFilename of svxFilenames) {
-                const svxFile = await fs.promises.readFile(svxFilename, 'utf8');
-                await initializeFile(svxFilename, matter(svxFile).data, svxFile);
+            const svxFileData = new Map<string, { file: string; frontmatter: object & {} }>();
+            for (const filename of svxFilenames) {
+                const file = await fs.promises.readFile(filename, 'utf8');
+                const frontmatter = matter(file).data;
+                svxFileData.set(filename, { frontmatter, file });
+                await initialize(filename, frontmatter, file);
             }
-            for (const bibFilename of bibFilenames) {
-                const bibFile = await fs.promises.readFile(bibFilename, 'utf8');
-                await initializeFile(bibFilename, { type: 'citation' }, bibFile);
+            for (const filename of bibFilenames) {
+                const file = await fs.promises.readFile(filename, 'utf8');
+                await initialize(filename, { type: 'citation' }, file);
             }
 
             // second pass
-            for (const svxFilename of svxFilenames) {
-                const svxFile = await fs.promises.readFile(svxFilename, 'utf8');
-                const frontmatter = matter(svxFile).data;
-                await crossReferenceFile(svxFilename, frontmatter, svxFile);
+            for (const filename of svxFilenames) {
+                const { file, frontmatter } = svxFileData.get(filename)!;
+                await crossReference(filename, frontmatter, file);
             }
         },
 
@@ -154,10 +157,7 @@ export function cmsSource(): Plugin {
             if (inContent && (isSvx || isBib)) {
                 const file = await fs.promises.readFile(filename, 'utf8');
                 const frontmatter = isSvx ? matter(file).data : { type: 'citation' };
-                await updateFile(filename, frontmatter, file);
-                if (isSvx) {
-                    await crossReferenceFile(filename, frontmatter, file);
-                }
+                await hmr(filename, frontmatter, file);
             }
         },
     };

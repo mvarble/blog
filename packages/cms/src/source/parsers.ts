@@ -87,7 +87,7 @@ export async function nodeParser(
                         propPath &&
                         (componentPath == '$lib/components/statement.svelte' ||
                             remapFile(page.filename, componentPath) ==
-                            'src/lib/components/statement.svelte')
+                                'src/lib/components/statement.svelte')
                     ) {
                         itemsAdded += await recurseNodeChild(
                             propPath,
@@ -157,12 +157,14 @@ export function edgeParser(
                 if (!tag) {
                     console.error(`'${absPathname}' does not resolve to a tag in the site.`);
                 }
+                continue;
             }
             if (absPathname && !absPathname.startsWith('citations')) {
                 const ref = touchPageReference(db, page.id, absPathname);
                 if (!ref) {
                     console.error(`'${absPathname}' does not resolve to a page in the site.`);
                 }
+                continue;
             }
         }
     }

@@ -6,7 +6,7 @@ slug: riccati-affine-formulation
 
 By [%full (e)](/statements/affine-process-definition-remark) and linearity of differentiation, the differential equation in [%label](/statements/affine-process-regularity) is equivalent to the following system of equations.
 $$
-  @tag(eq-complex-riccati-charts)
+  @tag(eq-complex-riccati-system)
   \forall ~ \stateVar \in \stateSpace, \qquad \left\{\begin{aligned}
     \dot\aff(t, \momentVar, \stateVar) &= \ode\big(\affPart(t,\momentVar), \stateVar\big) & t \geq 0 \\
     \aff(0,\momentVar, \stateVar) &= \prj{\momentVar}{\stateVar}
