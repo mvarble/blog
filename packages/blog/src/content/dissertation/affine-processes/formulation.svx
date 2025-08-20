@@ -4,10 +4,10 @@ title: Formulation
 
 <script>
   import Statement from '$lib/components/statement.svelte';
-  import * as affineProcess from './definitions/affine-process.svx';
-  import * as affineRemarks from './results/affine-remarks.svx';
-  import * as affineRegularity from './results/affine-regularity.svx';
-  import * as riccatiAffineFormulation from './results/riccati-affine-formulation.svx';
+  import * as affineProcess from './statements/affine-process-definition.svx';
+  import * as affineRemarks from './statements/affine-remarks.svx';
+  import * as affineRegularity from './statements/affine-regularity.svx';
+  import * as riccatiAffineFormulation from './statements/riccati-affine-formulation.svx';
 </script>
 
 <!-- specify the state space -->

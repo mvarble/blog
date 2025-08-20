@@ -4,11 +4,11 @@ title: Affine jump-diffusions
 
 <script>
   import Statement from '$lib/components/statement.svelte';
-  import * as affJumpRegularity from './results/aff-jump-regularity.svx';
-  import * as affineSpecial from './results/affine-special.svx';
-  import * as affineLocallyCountable from './results/affine-locally-countable.svx';
-  import * as affineExponentialMartingale from './results/affine-exponential-martingale.svx';
-  import * as affineResolution from './results/affine-resolution.svx';
+  import * as affJumpRegularity from './statements/aff-jump-regularity.svx';
+  import * as affineSpecial from './statements/affine-special.svx';
+  import * as affineLocallyCountable from './statements/affine-locally-countable.svx';
+  import * as affineExponentialMartingale from './statements/affine-exponential-martingale.svx';
+  import * as affineResolution from './statements/affine-resolution.svx';
 </script>
 
 This section shows how the notions of jump-diffusions explained in [Appendix %label](/sequences/dissertation/jump-diffusions) apply in the affine case.

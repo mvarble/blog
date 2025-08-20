@@ -4,12 +4,12 @@ title: Existence of real moments
 
 <script>
   import Statement from '$lib/components/statement.svelte';
-  import * as momentSpace from './definitions/moment-space.svx';
-  import * as km from './results/km.svx';
-  import * as momentSpaceFacts from './results/moment-space-facts.svx';
-  import * as compactOdeExistence from './results/compact-ode-existence.svx';
-  import * as affDifferentiable from './results/aff-differentiable.svx';
-  import * as lightTailsEquivalence from './results/light-tails-equivalence.svx';
+  import * as momentSpace from './statements/moment-space-definition.svx';
+  import * as km from './statements/km.svx';
+  import * as momentSpaceFacts from './statements/moment-space-facts.svx';
+  import * as compactOdeExistence from './statements/compact-ode-existence.svx';
+  import * as affDifferentiable from './statements/aff-differentiable.svx';
+  import * as lightTailsEquivalence from './statements/light-tails-equivalence.svx';
 </script>
 
 <!--  discuss how we intend to talk about \ode -->

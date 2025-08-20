@@ -4,12 +4,12 @@ title: Finite-dimensional distributions
 
 <script>
   import Statement from '$lib/components/statement.svelte';
-  import * as affFdds from './definitions/aff-fdds.svx';
-  import * as affPartBounded from './results/aff-part-bounded.svx';
-  import * as affFddsComplex from './results/aff-fdds-complex.svx';
-  import * as twistToMoment from './results/twist-to-moment.svx';
-  import * as momentToTwist from './results/moment-to-twist.svx';
-  import * as mgfFdds from './results/mgf-fdds.svx';
+  import * as affFdds from './statements/aff-fdds-definition.svx';
+  import * as affPartBounded from './statements/aff-part-bounded.svx';
+  import * as affFddsComplex from './statements/aff-fdds-complex.svx';
+  import * as twistToMoment from './statements/twist-to-moment.svx';
+  import * as momentToTwist from './statements/moment-to-twist.svx';
+  import * as mgfFdds from './statements/mgf-fdds.svx';
 </script>
 
 <!-- mention how we are effectively repeating  -->

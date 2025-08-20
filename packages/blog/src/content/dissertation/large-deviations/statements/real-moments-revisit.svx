@@ -1,0 +1,30 @@
+---
+type: statement
+kind: proposition
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+- For each $\tau > 0$, $\momentSpace(\tau)$ is open; in particular, there exists $\delta > 0$ such that $\ball{0}{\delta} \subseteq \momentSpace(\tau)$.
+- For each $\tau > 0$ and $\momentVar \in \momentSpace(\tau)$, $\aff(\cdot,\momentVar,\cdot)$ from [%full](/statements/keller-ressel-mayerhofer) is the unique solution to $\system(\ode, \tau, \momentVar)$.
+- For each $M > 0$, there exists $\delta > 0$ such that $\closedBall{0}{M} \subseteq \momentSpace(\delta)$.
+- For each $M > 0$, there exist $\delta > 0$ and $C_M$ such that the following holds.
+  $$
+    \big| \aff(t, \momentVar, \stateVar) - \aff(0, \momentVar, \stateVar) \big| \leq C_M \cdot t \cdot \big( 1 + |\stateVar| \big), \quad t \in [0,\delta], ~ \momentVar \in \closedBall{0}{M}, ~ \stateVar \in \stateSpace
+  $$
+
+
+<Proof>
+
+- [%full (a)](/statements/moment-space-facts) tells us that $\momentSpace(\tau)$ is open in $\odeSpace^\circ$, which is now $\vecSpace$ by our assumption.
+  Also, seeing as $\Exp_{\Prb_\stateVar}\exp\prj{0}{\X_\tau} = 1 < \infty$ for all $\stateVar \in \stateSpace$, $0 \in \momentSpace(\tau)$.
+  Openness of $\momentSpace(\tau)$ now grants some $\ball{0}{\delta} \subseteq \momentSpace(\tau)$.
+- [%full (b)](/statements/moment-space-facts) gives us uniqueness of $\aff(\cdot, \momentVar, \cdot)$ as a solution to $\system(\ode, \tau, \momentVar)$ for any $\momentVar \in \momentSpace(\tau) \cap \odeSpace^\circ$, which is now the same thing as $\momentVar \in \momentSpace(\tau)$.
+- Seeing as $\odeSpace = \vecSpace$, we now have $\closedBall{0}{M} \subseteq \odeSpace^\circ$, so [%full](/statements/compact-ode-existence) gives us $\delta > 0$ such that $\closedBall{0}{M} \subseteq \momentSpace(\delta)$.
+- Fix $M > 0$.
+  By part (c), there exists $\delta > 0$ such that $\closedBall{0}{2M} \subseteq \momentSpace(2\delta)$.
+  Now, $[0,\delta] \times \closedBall{0}{M}$ is a compact subset of $\momentSpace^\circ$, and so [%full](/statements/aff-differentiable) gives us our desired $C_M$.
+
+</Proof>

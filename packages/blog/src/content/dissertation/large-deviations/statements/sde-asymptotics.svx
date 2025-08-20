@@ -1,0 +1,80 @@
+---
+type: statement
+kind: proposition
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+Fix a probability space $(\Omega, \Sigma, \Prb)$ equipped with standard Brownian motion $\W$ on $\vecSpace$ and Poisson random measure $\poisRM$ on $\scrB(\bbR_+\times\vecSpace)$.
+Let $\affDiffSqrt: \stateSpace \rightarrow \bbL(\vecSpace)$ and $\thinner: \stateSpace \times \vecSpace \rightarrow \vecSpace$ satisfy [](tag:eq-sde-reminder) for the $\trunc$-differential characteristics $(\affDrift^\trunc, \affDiff, \affJump)$, as granted by [%full](/statements/jump-diffusion-characterizations).
+For each $\stateVar \in \stateSpace$, the family $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ of distributions $\Prb^\epsilon_\stateVar$ may be recognized as each $\Prb^\epsilon_\stateVar$ being a weak solution to the respective _scaled_ stochastic dynamical system,
+$$
+    \Xe_t = \stateVar + \affDrift^\trunc(\Xe) \shortInt \leb_t + \sqrt\epsilon \affDiffSqrt(\X) \shortInt \W_t + \trunc \circ \epsilon\thinner\big(\Xe, \sqrt[d]{\epsilon} \cdot \id_\vecSpace\big) \ast \compensate{\poisRM}_t + \trunc' \circ \epsilon\thinner\big(\Xe, \sqrt[d]{\epsilon} \cdot \id_\vecSpace\big) \ast \poisRM_t,
+$$
+or the _time-changed_ stochastic dynamical system.
+$$
+  \begin{gathered}
+    \Xe_t = \stateVar + \affDrift^\trunc(\Xe) \shortInt \leb_t + \epsilon \affDiffSqrt(\X) \shortInt \W^\epsilon_t + \trunc \circ \epsilon\thinner\big(\Xe, \id_\vecSpace\big) \ast \compensate{\poisRM^\epsilon}_t + \trunc' \circ \epsilon\thinner\big(\Xe, \id_\vecSpace\big) \ast \poisRM^\epsilon_t, \\
+    \W^\epsilon_t \defeq \W_{t/\epsilon} \\
+    \poisRM^\epsilon([0,t]\times \Gamma) \defeq \poisRM([0,t/\epsilon] \times \Gamma)
+  \end{gathered}
+$$
+
+<Proof>
+
+By [III.2.26](/citations#jacod2003), it suffices to check if the characteristics of the above dynamical systems match those of $\Xe$.
+We will instead match those of the scaled $\Xee$; recall its characteristics, as specified by [](tag:eq-characteristic-asymptotics).
+$$
+  \bprj{{\Xee}^{,\rmc,i}}{{\Xee}^{,\rmc,j}} = \frac1\epsilon\affDiff_{i,j}(\Xe) \shortInt \leb, \quad
+  \predproj{\jumpMeas^{\Xee}}(\rmd s, \rmd\markVar) = \frac1\epsilon \affJump(\Xe, \rmd\markVar) \rmd s
+$$
+Let us first address the first system.
+Note that for any $i, j = 1, \ldots, d$, we use [Theorem I.4.40(d)](/citations#jacod2003) to resolve the predictable quadratic covariation of the continuous local martingale part $\frac{1}{\sqrt\epsilon} \affDiffSqrt(\Xe) \shortInt \W$ of $\Xee$.
+$$
+  \begin{aligned}
+    &\Bprj{\big(\frac{1}{\sqrt\epsilon} \affDiffSqrt(\Xe) \shortInt\W\big)^i}{\big(\frac{1}{\sqrt\epsilon} \affDiffSqrt(\Xe) \shortInt\W\big)^j} \\
+    &= \Bprj{\sum_{l=1}^d \frac{1}{\sqrt\epsilon} \affDiffSqrt_{i,l}(\Xe) \shortInt\W^l}{\sum_{m=1}^d \frac{1}{\sqrt\epsilon} \affDiffSqrt_{j,m}(\Xe) \shortInt\W^m} \\
+    &= \frac1\epsilon\sum_{l,m=1}^d \affDiffSqrt_{i,l}(\Xe)\affDiffSqrt_{j,m}(\Xe) \shortInt \bprj{\W^l}{\W^m} \\
+    &= \frac1\epsilon\sum_{l=1}^d \affDiffSqrt_{i,l}(\Xe)\affDiffSqrt_{j,l}(\Xe) \shortInt \leb \\
+    &= \frac1\epsilon \affDiff_{i,j}(\Xe) \shortInt \leb \\
+    &= \prj{{\Xee}^{,\rmc,i}}{{\Xee}^{,\rmc,j}}
+  \end{aligned}
+$$
+Note that the accumulated jump process associated from $\Xee$ in these dynamics is the following process.
+$$
+  t \mapsto \sum_{0<s\leq t} \thinner\big(\Xe_{s-}, \sqrt[d]{\epsilon} \cdot \epsilon\Delta\Xee_s \big)
+$$
+This allows us to see that, for a predictable process $H: \Omega \times \bbR_+ \times \vecSpace \rightarrow \bbR_+$, we have the following identities, via changing coordinates.
+$$
+  \begin{aligned}
+    \Exp_\Prb\Big( H \ast \jumpMeas^{\Xee}_\infty \Big)
+    &= \Exp_\Prb \int_{\bbR_+\times\vecSpace} H\Big(\cdot, s, \thinner\big(\Xe_{s-}, \sqrt[d]{\epsilon} \cdot \markVar\big) \Big) \poisRM(\rmd s, \rmd\markVar) \\
+    &= \Exp_\Prb \int_0^\infty \int_\vecSpace H\Big(\cdot, s, \thinner\big(\Xe_{s-}, \sqrt[d]{\epsilon} \cdot \markVar\big) \Big) \rmd\markVar\rmd s \\
+    &= \Exp_\Prb \int_0^\infty \int_\vecSpace H\Big(\cdot, s, \thinner\big(\Xe_{s-}, \markVar\big) \Big) \frac1\epsilon \rmd\markVar \rmd s & \markVar \leftarrow \sqrt[d]{\epsilon} \cdot \markVar \\
+    &= \Exp_\Prb \int_0^\infty \int_\vecSpace H(\cdot, s, \markVar) \frac1\epsilon \affJump(\Xe_{s-}, \rmd\markVar) \rmd s & \markVar \leftarrow \thinner(\X_{s-}, \markVar)
+  \end{aligned}
+$$
+  Now we address the second system using the same calculations; the continuous local martingale term of $\Xee$ in this case is $\affDiffSqrt(\Xe)\shortInt\W$, and we have the following identity.
+$$
+  \begin{aligned}
+    \Bprj{\big(\affDiffSqrt(\Xe) \shortInt \W^\epsilon\big)^i}{\big(\affDiffSqrt(\Xe) \shortInt\W^\epsilon\big)^j}
+    &= \Bprj{\sum_{l=1}^d \affDiffSqrt_{i,l}(\Xe) \shortInt\W^{\epsilon,l}}{\sum_{m=1}^d \affDiffSqrt_{j,m}(\Xe) \shortInt\W^{\epsilon,m}} \\
+    &= \sum_{l,m=1}^d \affDiffSqrt_{i,l}(\Xe)\affDiffSqrt_{j,m}(\Xe) \shortInt \bprj{\W^{\epsilon,l}}{\W^{\epsilon,m}} \\
+    &= \sum_{l=1}^d \affDiffSqrt_{i,l}(\Xe)\affDiffSqrt_{j,l}(\Xe) \shortInt \big( \epsilon^{-1} \leb \big) \\
+    &= \frac1\epsilon \affDiff_{i,j}(\Xe) \shortInt \leb \\
+    &= \prj{{\Xee}^{,\rmc,i}}{{\Xee}^{,\rmc,j}}
+  \end{aligned}
+$$
+Meanwhile, our time-change of the Poisson random measure immediately gives us our desired characteristic.
+$$
+  \begin{aligned}
+    \Exp_\Prb\Big( H \ast \jumpMeas^{\Xee}_\infty \Big)
+    &= \Exp_\Prb \int_{\bbR_+\times\vecSpace} H\big(\cdot, s, \thinner(\Xe_{s-}, \markVar) \big) \poisRM^\epsilon(\rmd s, \rmd\markVar) \\
+    &= \Exp_\Prb \int_0^\infty \int_\vecSpace H\big(\cdot, s, \thinner(\Xe_{s-}, \markVar) \big) \rmd\markVar \cdot \frac1\epsilon \rmd s \\
+    &= \Exp_\Prb \int_0^\infty \int_\vecSpace H(\cdot, s, \markVar) \frac1\epsilon \affJump(\Xe_{s-}, \rmd\markVar) \rmd s & \markVar \leftarrow \thinner(\X_{s-}, \markVar)
+  \end{aligned}
+$$
+
+</Proof>

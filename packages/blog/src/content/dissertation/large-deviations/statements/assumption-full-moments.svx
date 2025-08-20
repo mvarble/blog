@@ -1,0 +1,6 @@
+---
+type: statement
+kind: assumption
+---
+
+We have $\odeSpace = \vecSpace$.

@@ -1,0 +1,6 @@
+---
+type: statement
+kind: remark
+---
+
+Note that $\operatorname{span}\stateSpace$ is at no loss of generality, per [%full](/statements/affine-process-definition-remark).

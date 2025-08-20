@@ -1,0 +1,12 @@
+---
+type: statement
+kind: remark
+---
+
+Note that the above proof can be applied to complex moments, since [%full](/statements/affine-regularity) and [%full](/statements/riccati-affine-formulation) indicate to us that each $\aff^\epsilon(\cdot,\momentVar, \cdot)$ is a solution to following equation, for each $\momentVar \in \im\vecSpace$.
+$$
+  \forall~\stateVar\in\stateSpace, \quad \left\{\begin{array}{ll}
+    \dot\aff^\epsilon(t,\momentVar,\stateVar) = \ode^\epsilon\big(\affPart^\epsilon(t, \momentVar), \stateVar\big), & t \geq 0 \\
+    \aff^\epsilon(0,\momentVar,\stateVar) = \prj\momentVar\stateVar
+  \end{array}\right.
+$$

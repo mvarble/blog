@@ -1,0 +1,6 @@
+---
+type: statement
+kind: assumption
+---
+
+The space $\stateSpace$ is a cone and $\operatorname{span}\stateSpace = \vecSpace$.

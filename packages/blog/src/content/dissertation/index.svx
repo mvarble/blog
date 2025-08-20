@@ -112,6 +112,7 @@ katex_macros:
   \hawkesRate: r
   \prj: '{\langle #1, #2 \rangle}'
   \bprj: '\big\langle #1, #2 \big\rangle'
+  \Bprj: '\Big\langle #1, #2 \Big\rangle'
   \pathSpace: '\bbD(#1,#2)'
   \cpathSpace: '\bbC(#1,#2)'
   \ccpathSpace: '\bbC^{#1}(#2,#3)'

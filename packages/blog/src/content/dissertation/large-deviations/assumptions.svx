@@ -1,3 +1,45 @@
 ---
 title: Assumptions
 ---
+
+<script>
+  import Statement from '$lib/components/statement.svelte';
+  import * as affRegimeExistence from './statements/aff-regime-existence.svx';
+  import * as affRegimeExistenceRemark from './statements/aff-regime-existence-remark.svx';
+  import * as assumptionFullCone from './statements/assumption-full-cone.svx';
+  import * as assumptionFullConeRemark from './statements/assumption-full-cone-remark.svx';
+  import * as assumptionFullMoments from './statements/assumption-full-moments.svx';
+  import * as assumptionFullMomentsRemark from './statements/assumption-full-moments-remark.svx';
+  import * as realMomentsRevisit from './statements/real-moments-revisit.svx';
+</script>
+
+We now clearly spell out the assumptions we will need to prove our large deviation principle.
+The first of which concerns existence of our affine processes.
+
+As mentioned in the previous section, the base parameters $(\affDrift^\trunc, \affDiff, \affJump)$ parameterize those $(\affDrift^{\trunc,\epsilon}, \affDiff^\epsilon, \affJump^\epsilon)$ for each $\epsilon > 0$.
+This means that selecting the base affine process $\X$ immediately imposes the laws $\Xe$ for all other $\epsilon > 0$, _should they exist_.
+Generally speaking, there exist functions $(\affDrift^\trunc, \affDiff, \affJump)$ for which there is no jump-diffusion that makes them differential characteristics.
+[%full](/statements/mean-field-asymptotics) indicated that, should distributions $(\Prb_\stateVar)_{\stateVar\in\stateSpace}$ exist for an affine process $\X$ with differential characteristics $(\affDrift^\trunc, \affDiff, \affJump)$, then we can construct distributions $\Prb^{\epsilon_m}_\stateVar$ for each $m \in \bbN$ and $\stateVar \in \stateSpace$ by taking convolutions (recall, $\epsilon_m \defeq 1/m$).
+However, we find it important to establish our large deviation principle over a continuously defined family $\epsilon > 0$.
+This now motivates the following assumption, which was already implicitly assumed in the previous section.
+
+<Statement {...affRegimeExistence} />
+<Statement {...affRegimeExistenceRemark} />
+
+Our proof ultimately comes from the parameterizations of our moment functions $\aff^\epsilon$ in the previous section.
+These relied on $\stateSpace$ being a cone, so we specifically mention that here.
+
+<Statement {...assumptionFullCone} />
+<Statement {...assumptionFullConeRemark} />
+
+Our last assumption is of key importance.
+Large deviations are best understood through moment generating functions, which serve no purpose if they are not finite.
+For an initial point $\stateVar_0 \in \stateSpace^\circ$, a large deviation principle holds for a family $(\Prb^\epsilon_{\stateVar_0})_{\epsilon>0}$ on the projective limit space (i.e.\ the product topology), so long as $0 \in \odeSpace^\circ$.
+However, in order to strengthen this result to the Skorokhod topology&mdash;a step which is necessary for interesting asymptotics and an integral-form of our rate function&mdash;we need the full strength of $\odeSpace = \vecSpace$.
+
+<Statement {...assumptionFullMoments} />
+<Statement {...assumptionFullMomentsRemark} />
+
+With this assumption in mind, we state versions of the propositions at the end of [Section %label](../../affine-processes/real-moments) in our scenario.
+
+<Statement {...realMomentsRevisit} />

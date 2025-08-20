@@ -1,0 +1,37 @@
+---
+type: statement
+kind: proposition
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+Assume $\stateSpace$ is a cone with $\operatorname{span}\stateSpace = \vecSpace$.
+For a fixed $\stateVar \in \stateSpace$, the family $(\Prb^{\epsilon_m}_\stateVar)_{\epsilon>0}$ corresponds to a mean-field regime.
+That is to say, if we fix a probability space $(\Omega, \Sigma, \Prb)$ equipped with a sequence of independent quantities $(\X^{(j)})_{j\in\bbN}$ each distributing according to $\Prb_\stateVar$,
+then we may realize each $\epsilon_m \X^{\epsilon_m}$ as follows.
+$$
+  \epsilon_m \X^{\epsilon_m} = \frac1m \sum_{j=1}^m \X^{(j)}, \quad m \in \bbN
+$$
+
+<Proof>
+
+We will prove this by showing that the finite-dimensional distributions agree by identity of their characteristic functions.
+Fixing $\underline t \vdash [0,\infty)$ and $\underline\momentVar \in \vecSpace^{|\underline t|}$, we apply Proposition [%full](/statements/aff-fdds-complex) and [%full](/statements/aff-asymptotics).
+
+$$
+\begin{aligned}
+    \log\Exp_\Prb\exp\Bprj{\im\underline\momentVar}{\sum_{j=1}^m \X^{(j)}_{\underline t}}
+    &= \log\bigg(\Exp_{\Prb_\stateVar}\exp\prj{\im\underline\momentVar}{\X_{\underline t}} \bigg)^m \\
+    &= \log\Big(\exp\aff\big(\underline t, \im\underline\momentVar, \stateVar \big) \Big)^m \\
+    &=  m \aff\big(\underline t, \im\underline\momentVar, \stateVar \big)  \\
+    &= m \bigg( \sum_{k=1}^{|\underline t|} \affPart_0(\Delta t_k, \twistVar_k) + \bprj{\affPart(\Delta t_1, \twistVar)}{\stateVar} \bigg)  \\
+    &= \sum_{k=1}^{|\underline t|} \frac{1}{\epsilon_m}\affPart_0(\Delta t_k, \twistVar_k) + \bprj{\affPart(\Delta t_1, \twistVar)}{\stateVar/\epsilon_m} \bigg)  \\
+    &= \sum_{k=1}^{|\underline t|} \affPart^{\epsilon_m}_0(\Delta t_k, \twistVar_k) + \bprj{\affPart^{\epsilon_m}(\Delta t_1, \twistVar)}{\stateVar/\epsilon_m}  \\
+    &= \aff^{\epsilon_m}(\underline t, \underline\momentVar, \stateVar/\epsilon_m) \\
+    &= \log\Exp_{\Prb^{\epsilon_m}_\stateVar} \exp\prj{\underline\momentVar}{\X_{\underline t}}
+  \end{aligned}
+$$
+
+</Proof>

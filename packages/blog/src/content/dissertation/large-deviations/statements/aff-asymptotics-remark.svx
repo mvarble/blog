@@ -1,0 +1,72 @@
+---
+type: statement
+kind: proposition
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+Assume $\stateSpace$ is a cone satisfying $\operatorname{span}\stateSpace = \vecSpace$.
+For each $\epsilon > 0$, we have $\momentSpace = \momentSpacee$ and the following identities.
+$$
+  \aff^\epsilon(t, \momentVar, \stateVar) = \frac1\epsilon \aff(t, \momentVar, \epsilon\stateVar), \quad
+  \affPart^\epsilon_0(t,\momentVar) = \frac1\epsilon \affPart_0(t,\momentVar), \quad
+  \affPart^\epsilon(t,\momentVar) = \affPart(t,\momentVar),
+$$
+
+<Proof>
+
+Start by selecting $(\tau, \momentVar) \in \momentSpace$.
+This means that $\momentVar \in \momentSpace(\tau)$ and $\aff(\cdot, \momentVar, \cdot)$ is a solution to $\system(\ode, \momentVar, \tau)$.
+Observe that this implies the following identity for all $\stateVar \in \stateSpace$.
+$$
+  \begin{gathered}
+    @tag(eq-aff-dominated-1)
+    \frac{\partial}{\partial t} \frac1\epsilon \aff(t, \momentVar, \epsilon\stateVar) = \frac1\epsilon \dot\aff(t, \momentVar, \epsilon\stateVar) = \frac1\epsilon \ode\big(\affPart(t,\momentVar), \epsilon\stateVar\big) = \ode^\epsilon(\affPart(t, \momentVar), \stateVar), \quad t \in [0,\tau] \\
+    \frac1\epsilon\aff(0,\momentVar, \epsilon\stateVar) = \frac1\epsilon\prj{\momentVar}{\epsilon\stateVar} = \prj{\momentVar}{\stateVar}
+  \end{gathered}
+$$
+This means that $\frac1\epsilon\aff(\cdot, \momentVar, \epsilon\cdot)$ is a solution to $\system(\ode^\epsilon, \tau, \momentVar)$.
+By definition, existence of a solution means that $\momentVar \in \momentSpacee(\tau)$, and so $(\tau, \momentVar) \in \momentSpacee$.
+[%full](/statements/keller-ressel-mayerhofer) then tells us $\aff^\epsilon(\cdot, \momentVar, \cdot)$ exists and is dominated by the other solution.
+$$
+  \aff^\epsilon(t, \momentVar, \stateVar) \leq \frac1\epsilon \aff(t, \momentVar, \epsilon\stateVar), \quad t \in [0,\tau], ~ \stateVar \in \stateSpace
+$$
+
+On the other hand, if we have $(\tau, \momentVar) \in \momentSpacee$, then $\momentVar \in \momentSpacee(\tau)$, and so $\aff^\epsilon(\cdot, \momentVar, \cdot)$ is a solution to $\system(\ode^\epsilon, \tau, \momentVar)$.
+Now, we have the following identity for all $\stateVar \in \stateSpace$,
+$$
+\begin{gathered}
+  \frac{\partial}{\partial t} \epsilon \aff^\epsilon(t, \momentVar, \stateVar/\epsilon) = \epsilon \dot\aff^\epsilon(t, \momentVar, \stateVar/\epsilon) = \epsilon \ode^\epsilon\big(\affPart^\epsilon(t,\momentVar), \epsilon\stateVar\big) = \ode(\affPart(t, \momentVar), \stateVar), \quad t \in [0,\tau] \\
+  \epsilon\aff^\epsilon(0,\momentVar, \stateVar/\epsilon) = \epsilon\prj{\momentVar}{\stateVar/\epsilon} = \prj{\momentVar}{\stateVar},
+\end{gathered}
+$$
+and so $\epsilon\aff^\epsilon(\cdot,\momentVar,\cdot)$ is a solution to $\system(\ode, \tau, \momentVar)$.
+Again, we may conclude from this that $(\tau,\momentVar) \in \momentSpace$ and that $\aff^\epsilon(\cdot, \momentVar, \cdot)$ exists and is dominated by the other solution.
+$$
+  @tag(eq-aff-dominated-2)
+  \aff(t, \momentVar, \stateVar) \leq \epsilon \aff^\epsilon(t, \momentVar, \stateVar/\epsilon), \quad t \in [0,\tau], ~ \stateVar \in \stateSpace
+$$
+
+In total, we have now shown that $\momentSpace = \momentSpacee$, and inequalities [](tag:eq-aff-dominated-1) and [](tag:eq-aff-dominated-2) indicate to us that the following functions agree.
+$$
+  \aff^\epsilon(t, \momentVar, \stateVar) = \frac1\epsilon \aff(t, \momentVar, \stateVar), \quad (t, \momentVar) \in \momentSpace, ~ \stateVar \in \stateSpace
+  $$
+This means equality of the following affine expressions.
+$$
+  \begin{aligned}
+    \affPart^\epsilon_0(t, \momentVar) + \bprj{\affPart^\epsilon(t,\momentVar)}{\stateVar}
+    &= \aff^\epsilon(t, \momentVar, \stateVar) \\
+    &= \frac1\epsilon \aff(t, \momentVar, \epsilon\stateVar) \\
+    &= \frac1\epsilon \affPart_0(t, \momentVar) + \frac1\epsilon \bprj{\affPart(t, \momentVar)}{\epsilon\stateVar}
+    = \frac1\epsilon \affPart_0(t, \momentVar) + \bprj{\affPart(t, \momentVar)}{\stateVar}
+  \end{aligned}
+$$
+Seeing as $\operatorname{span}\stateSpace = \vecSpace$, we may take appropriate linear combinations to show the remaining identities.
+$$
+  \affPart^\epsilon_0(t, \momentVar) = \frac1\epsilon\affPart_0(t,\momentVar), \quad
+  \affPart^\epsilon_i(t, \momentVar) = \affPart_i(t,\momentVar), \quad i = 1, \ldots, d
+$$
+
+</Proof>

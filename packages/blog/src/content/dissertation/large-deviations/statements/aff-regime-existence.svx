@@ -1,0 +1,6 @@
+---
+type: statement
+kind: assumption
+---
+
+The affine parameters $(\affDrift^\trunc, \affDiff, \affJump)$ are chosen so that each $\epsilon \in (0,1]$, affine processes $\Xee$ exist which exhibit the parameters $(\affDrift^{\trunc,\epsilon}, \affDiff^\epsilon, \affJump^\epsilon)$ as in [](tag:eq-characteristic-asymptotics).
