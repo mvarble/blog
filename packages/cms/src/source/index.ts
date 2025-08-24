@@ -124,6 +124,7 @@ export function cmsSource(): Plugin {
         name: 'cms',
         version: '0.0.1',
 
+        // https://rollupjs.org/plugin-development/#buildstart
         async buildStart() {
             // all of the SVX/bibtex files
             const svxFilenames = await glob('src/content/**/*.svx');
@@ -149,7 +150,8 @@ export function cmsSource(): Plugin {
             }
         },
 
-        async handleHotUpdate({ file }) {
+        // https://vite.dev/guide/api-plugin.html#handlehotupdate
+        async handleHotUpdate({ file, server }) {
             const filename = path.relative(path.resolve('.'), file);
             const inContent = filename.startsWith('src/content');
             const isSvx = filename.endsWith('.svx');
@@ -158,6 +160,9 @@ export function cmsSource(): Plugin {
                 const file = await fs.promises.readFile(filename, 'utf8');
                 const frontmatter = isSvx ? matter(file).data : { type: 'citation' };
                 await hmr(filename, frontmatter, file);
+                // do a full reload since Vite somehow doesn't know about this file
+                server.ws.send({ type: 'full-reload' });
+                return [];
             }
         },
     };
