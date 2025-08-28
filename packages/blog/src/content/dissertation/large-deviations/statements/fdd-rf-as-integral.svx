@@ -1,0 +1,32 @@
+---
+type: statement
+kind: lemma
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+For each $\pathVar \in \acpathSpace{[0,\infty)}{\stateSpace}$, $\underline t \vdash [0,\infty)$ and $\underline\twistVar \in \momentSpace(\underline t)$, we have an identity similar to that of [%full](/statements/prb-equivalence).
+$$
+    \fddRf(\pathVar, \underline t, \underline\twistVar) = \mgRf\big(\pathVar, \twistFunc(\cdot, \underline t, \underline\twistVar)\big) = \int_0^\infty \Big( \bprj{\twistFunc(t, \underline t, \underline\twistVar)}{\dot\pathVar(t)} - \ode\big(\twistFunc(t, \underline t, \underline\twistVar), \pathVar(t)\big) \Big) \rmd t.
+$$
+
+<Proof>
+
+Similar to as in [%full](/statements/prb-equivalence), we use Propositions [%label (c)](/statements/momentSpace-facts) and [%label (a)](/statements/real-moments-revisit) and apply the fundamental theorem of calculus and integration by parts.
+$$
+  \begin{aligned}
+    \fddRf(\pathVar, \underline t, \underline\twistVar)
+    &= \sum_{k=1}^{|\underline t|} \Big( \bprj{\twistVar_k}{\pathVar(t_k)-\pathVar(t_{k-1})} - \affShift\big(\Delta t_k, \twistVar_k, \pathVar(t_{k-1})\big) \Big) \\
+    &= \sum_{k=1}^{|\underline t|} \Big( \aff\big(t_k-t_k, \twistVar_k, \pathVar(t_k) \big) - \aff\big(t_k-t_{k-1}, \twistVar_k, \pathVar(t_{k-1})\big) \Big) \\
+    &= \sum_{k=1}^{|\underline t|} \int_{t_{k-1}}^{t_k} \frac{\partial}{\partial t} \aff\big(t_k-t, \twistVar_k, \pathVar(t)\big) \rmd t \\
+    &= \sum_{k=1}^{|\underline t|} \int_{t_{k-1}}^{t_k} \Big( -\dot\aff\big(t_k-t, \twistVar_k, \pathVar(t)\big) + \bprj{\affPart(t_k-t, \twistVar_k)}{\dot\pathVar(t)} \Big) \rmd t \\
+    &= \sum_{k=1}^{|\underline t|} \int_{t_{k-1}}^{t_k} \Big( \bprj{\affPart(t_k-t, \twistVar_k)}{\dot\pathVar(t)} - \ode\big( \affPart(t_k-t,\twistVar_k), \pathVar(t) \big)\Big) \rmd t \\
+    &= \int_0^\infty \Big( \bprj{\twistFunc(t,\underline t,\underline\twistVar)}{\dot\pathVar(t)} - \ode\big(\twistFunc(t, \underline t, \underline\twistVar), \pathVar(t)\big) \Big) \rmd t \\
+    &= \bprj{\twistFunc(0, \underline t, \underline\twistVar)}{\pathVar(0)} - \int_0^\infty \pathVar(t-) \rmd\twistFunc(t,\underline t,\underline\twistVar)- \int_0^\infty \ode\big(\twistFunc(t, \underline t, \underline\twistVar), \pathVar(t)\big) \rmd t \\
+    &= \mgRf\big(\pathVar, \twistFunc(\cdot, \underline t, \underline\twistVar) \big)
+  \end{aligned}
+$$
+
+</Proof>

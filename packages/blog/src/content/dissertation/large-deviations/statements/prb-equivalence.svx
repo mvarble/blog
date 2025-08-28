@@ -1,0 +1,50 @@
+---
+type: statement
+kind: theorem
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+For each $\underline t \vdash [0,\infty)$ and $\underline\twistVar \in \momentSpace(\underline t)$, we have $\twistFunc(\cdot,\underline t, \underline\twistVar) \in \twistSpace$, and for any semimartingale $H$,
+$$
+  \fddRf(H, \underline t, \underline\twistVar) = \mgRf\big(H, \twistFunc(\cdot, \underline t, \underline\twistVar)\big).
+$$
+Thus, for any $\epsilon > 0$ and $\stateVar \in \stateSpace$, we have the following identities.
+$$
+  \fddDensity^{\epsilon, \underline t, \underline\twistVar} = \mgDensity^{\epsilon, \twistFunc(\cdot, \underline t, \underline\twistVar)}, \quad
+  \fddPrb^{\epsilon, \underline t, \underline\twistVar}_\stateVar = \mgPrb^{\epsilon, \twistFunc(\cdot, \underline t, \underline\twistVar)}_\stateVar
+$$
+
+<Proof>
+
+It is clear that $\twistFunc(\cdot, \underline t, \underline\twistFunc)$ is compactly supported on the intervals of $\underline t$.
+Meanwhile, [%full (c)](/statements/momentSpace-facts) tells us that $\twistFunc(\cdot, \underline t, \underline\twistVar)$ is differentiable everywhere but potentially the nodes of $\underline t$, and so it is of finite variation.
+This concludes $\twistFunc \in \twistSpace$.
+
+Seeing as $\aff$ is $\stateSpace$-affine and stochastic integration is linear, we can use a simplified version of Itô's formula below (again using [%full (c)](/statements/momentSpace-facts)).
+$$
+  \begin{aligned}
+    \fddRf(H, \underline t,\underline\twistVar)
+    &= \sum_{k=1}^{|\underline t|} \Big( \bprj{\twistVar_k}{H_{t_k}-H_{t_{k-1}}} - \affShift\big(\Delta t_k, \twistVar_k, H_{t_{k-1}}\big) \Big) \\
+    &= \sum_{k=1}^{|\underline t|} \Big( \aff\big(t_k-t_k, \twistVar_k, H_{t_k}\big) - \aff\big(t_k-t_{k-1}, \twistVar_k, H_{t_{k-1}}\big) \Big) \\
+    &= \sum_{k=1}^{|\underline t|}  \int_{t_{k-1}}^{t_k} \rmd \aff(t_k-\cdot, \twistVar_k, H_\cdot) \\
+    &= \sum_{k=1}^{|\underline t|} \bigg( -\int_{t_{k-1}}^{t_k} \dot\aff(t_k-t, \twistVar_k, H_t) \rmd t + \int_{t_{k-1}}^{t_k} \affPart(t_k-t,\twistVar_k) \rmd H_t \bigg) \\
+    &= \sum_{k=1}^{|\underline t|} \bigg( \int_{t_{k-1}}^{t_k} \affPart(t_k-t, \twistVar_k) \rmd H_t - \int_{t_{k-1}}^{t_k} \ode\big(\affPart(t_k-t, \twistVar_k), H_t\big) \rmd t \bigg) \\
+    &= \sum_{k=1}^{|\underline t|} \bigg( \int_{t_{k-1}}^{t_k} \twistFunc(t, \underline t, \underline\twistVar) \rmd H_t - \int_{t_{k-1}}^{t_k} \ode\big(\twistFunc(t, \underline t, \underline\twistVar), H_t\big) \rmd t \bigg) \\
+    &= \twistFunc(\cdot, \underline t, \underline\twistVar) \shortInt H_\infty - \ode\big(\twistFunc(\cdot, \underline t, \underline\twistVar), H\big) \shortInt \leb_\infty
+  \end{aligned}
+$$
+From here, as we did in [%full](/statements/martingale-measure), we apply integration by parts to complete the equality.
+$$
+  \begin{aligned}
+    \fddRf(H, \underline t,\underline\twistVar)
+    &=\twistFunc(\cdot, \underline t, \underline\twistVar) \shortInt H_\infty - \ode\big(\twistFunc(\cdot, \underline t, \underline\twistVar), H\big) \shortInt \leb_\infty \\
+    &=\prj{\twistFunc(0,\underline t,\underline\twistVar)}{H_0} - \int_0^\infty H_{s-} \rmd\twistFunc(s,\underline t, \underline\twistVar) - \int_0^\infty \ode\big( \twistFunc(\cdot, \underline t, \underline\twistVar), H_s\big) \rmd s \\
+    &= \mgRf\big(H, \twistFunc(\cdot,\underline t,\underline\twistVar)\big)
+  \end{aligned}
+$$
+Evaluating this identity at $\Xe$ now gives us the remaining equalities.
+
+</Proof>

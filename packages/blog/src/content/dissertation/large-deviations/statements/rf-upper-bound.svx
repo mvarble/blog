@@ -1,0 +1,44 @@
+---
+type: statement
+kind: proposition
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+
+  For each $\pathVar \in \acpathSpace{[0,\infty)}{\stateSpace}$, we have the following upper bound.
+$$
+    \rf(\pathVar) \leq \int_0^\infty \ode^*\big(\dot\pathVar(t), \pathVar(t)\big) \rmd t
+$$
+
+<Proof>
+
+Fix $\underline t \vdash [0,\infty)$ and $\underline\momentVar \in \vecSpace^{|\underline t|}$.
+Observe that if $\aff\big(\underline t, \underline\momentVar, \pathVar(0)\big) = \infty$, we immediately have the following inequality.
+$$
+  \bprj{\underline\momentVar}{\pathVar(\underline t)} - \aff\big(\underline t, \underline\momentVar, \pathVar(0)\big) = -\infty \leq 0 = \int_0^\infty \ode^*\big(\dot\pathVar(t), \pathVar(t)\big) \rmd t
+$$
+Otherwise, [%full](/statements/mgf-fdds) tells us that $\underline\momentVar = \twistToMoment_{\underline t}(\underline\twistVar)$ for some $\underline\twistVar \in \momentSpace(\underline t)$.
+By [%full](/statements/fdd-rf-as-integral), we now see the same inequality.
+$$
+  \begin{aligned}
+    \bprj{\underline\momentVar}{\pathVar(\underline t)} - \aff\big(\underline t, \underline\momentVar, \pathVar(0)\big)
+    &= \sum_{k=1}^{|\underline t|} \Big(\bprj{\twistVar_k}{\pathVar(t_k)-\pathVar(t_{k-1})} - \affShift(\Delta t_k, \twistVar_k, \pathVar(t_{k-1}) \big)\Big) \\
+    &= \fddRf(\pathVar, \underline t, \underline\twistVar) \\
+    &= \int_0^\infty \Big( \bprj{\twistFunc(t,\underline t,\underline\twistVar)}{\dot\pathVar(t)} - \ode\big(\twistFunc(t, \underline t, \underline\twistVar), \pathVar(t)\big) \Big) \rmd t \\
+    &\leq \int_0^\infty \ode^*\big(\dot\pathVar(t), \pathVar(t)\big) \rmd t
+  \end{aligned}
+$$
+Thus, we have the following upper bound.
+$$
+  \begin{aligned}
+    \rf(\pathVar)
+    = \sup_{\underline t \vdash \Delta_\pathVar^c} \aff^*\big(\underline t, \pathVar(\underline t), \pathVar(0)\big)
+    &= \sup_{\underline t \vdash [0,\infty)} \sup_{\underline\momentVar \in \vecSpace^{|\underline t|}} \Big( \bprj{\underline\momentVar}{\pathVar(\underline t)} - \aff\big(\underline t, \underline\momentVar, \pathVar(0)\big) \Big) \\
+    &\leq \int_0^\infty \ode^*\big(\dot\pathVar(t), \pathVar(t)\big) \rmd t
+  \end{aligned}
+$$
+
+</Proof>

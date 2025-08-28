@@ -1,7 +1,6 @@
 ---
 type: statement
 kind: proposition
-slug: moment-space-facts
 ---
 
 <script>

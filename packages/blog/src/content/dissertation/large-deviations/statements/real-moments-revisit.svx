@@ -18,10 +18,10 @@ kind: proposition
 
 <Proof>
 
-- [%full (a)](/statements/moment-space-facts) tells us that $\momentSpace(\tau)$ is open in $\odeSpace^\circ$, which is now $\vecSpace$ by our assumption.
+- [%full (a)](/statements/momentSpace-facts) tells us that $\momentSpace(\tau)$ is open in $\odeSpace^\circ$, which is now $\vecSpace$ by our assumption.
   Also, seeing as $\Exp_{\Prb_\stateVar}\exp\prj{0}{\X_\tau} = 1 < \infty$ for all $\stateVar \in \stateSpace$, $0 \in \momentSpace(\tau)$.
   Openness of $\momentSpace(\tau)$ now grants some $\ball{0}{\delta} \subseteq \momentSpace(\tau)$.
-- [%full (b)](/statements/moment-space-facts) gives us uniqueness of $\aff(\cdot, \momentVar, \cdot)$ as a solution to $\system(\ode, \tau, \momentVar)$ for any $\momentVar \in \momentSpace(\tau) \cap \odeSpace^\circ$, which is now the same thing as $\momentVar \in \momentSpace(\tau)$.
+- [%full (b)](/statements/momentSpace-facts) gives us uniqueness of $\aff(\cdot, \momentVar, \cdot)$ as a solution to $\system(\ode, \tau, \momentVar)$ for any $\momentVar \in \momentSpace(\tau) \cap \odeSpace^\circ$, which is now the same thing as $\momentVar \in \momentSpace(\tau)$.
 - Seeing as $\odeSpace = \vecSpace$, we now have $\closedBall{0}{M} \subseteq \odeSpace^\circ$, so [%full](/statements/compact-ode-existence) gives us $\delta > 0$ such that $\closedBall{0}{M} \subseteq \momentSpace(\delta)$.
 - Fix $M > 0$.
   By part (c), there exists $\delta > 0$ such that $\closedBall{0}{2M} \subseteq \momentSpace(2\delta)$.

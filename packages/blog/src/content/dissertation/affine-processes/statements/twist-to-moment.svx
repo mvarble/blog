@@ -30,7 +30,7 @@ The final component of $\twistToMoment_{\underline t}$ ensures that $\twistVar_n
 $$
   \twistVar_{k-1} - \affPart(\Delta t_k, \twistVar_k) = \twistToMoment_{\underline t,k-1}(\underline\twistVar) = \twistToMoment_{\underline t,k-1}(\underline\twistVar')   = \twistVar_{k-1}' - \affPart(\Delta t_k, \twistVar_k')
 $$
-This indicates to us that $\twistToMoment_{\underline t}$ is an injection, and continuity comes simply from continuity of each $\affPart(\Delta t_k, \cdot)$ via [%full(c)](/statements/moment-space-facts).
+This indicates to us that $\twistToMoment_{\underline t}$ is an injection, and continuity comes simply from continuity of each $\affPart(\Delta t_k, \cdot)$ via [%full(c)](/statements/momentSpace-facts).
 
 It now remains to show the identity in [](tag:eq-aff-extension).
 This reduces down to repeatedly applying iterated expectations; fix $\stateVar \in \stateSpace$ and observe the following.

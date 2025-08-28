@@ -1,7 +1,6 @@
 ---
 type: statement
 kind: definition
-slug: moment-space-definition
 ---
 
 For each $\tau \geq 0$ and $\momentVar \in \odeSpace$, we say $Q^\momentVar: [0,\tau] \times \stateSpace \rightarrow \bbR$ satisfies $\system(\ode, \tau,\momentVar)$ if the following hold.

@@ -1,0 +1,40 @@
+---
+type: statement
+kind: proposition
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+Fix $\epsilon > 0$, $\twistFunc \in \twistSpace$, and $\stateVar \in \stateSpace$.
+The process $\Xee$ is a $(\mgPrb^{\epsilon,\twistFunc}_\stateVar, \scrF^\epsilon)$ special semimartingale with the following decomposition.
+$$
+  \Xee_t = \stateVar/\epsilon + \frac1\epsilon \affDrift^\twistFunc(\cdot, \Xe_-) \shortInt \leb_t + {\Xee_t}^{,c} + \id_\vecSpace \ast \compensate{\jumpMeas^{\twistFunc,\Xee}}_t,
+$$
+where the drift $\affDrift^\twistFunc$, diffusion $\affDiff$, and jump predictable compensator $\predproj{\jumpMeas^{h,\Xee}}$ (above, we have $\compensate{\jumpMeas^{h,\Xee}} = \jumpMeas^{\Xee} - \predproj{\jumpMeas^{\twistFunc,\Xee}}$) are as follows.
+$$
+\begin{aligned}
+  \affDrift^\twistFunc(s, \stateVar)
+  &\defeq \affDrift(\stateVar) + \affDiff(\stateVar)\twistFunc(s) + \int_\vecSpace \markVar\big(e^\prj{\twistFunc(s)}{\markVar} - 1 \big) \affJump(\stateVar, \rmd\markVar) \\
+  %
+  \langle {\Xee}^{,c,i}, {\Xee}^{,c,j} \rangle &= \frac1\epsilon\affDiff_{i,j}(\Xe_-) \shortInt \leb \\
+  \predproj{\jumpMeas^{\twistFunc,\Xee}}(\rmd s, \rmd\markVar)
+  &\defeq e^\prj{\twistFunc(s)}{\markVar} \frac1\epsilon \affJump(\Xe_{s-}, \rmd\markVar) \rmd s
+\end{aligned}
+$$
+Moreover the distributions $\mgPrb^{\epsilon,\twistFunc}_\stateVar$ weakly converge to a degenerate measure $\delta_{\pathVar_\twistFunc}$ at the solution $\pathVar_\twistFunc$ to the following dynamical system.
+$$
+  @tag(eq-limit-ode)
+  \left\{\begin{aligned}
+    \dot\pathVar_\twistFunc(t) &= \affDrift^\twistFunc\big(t, \pathVar_\twistFunc(t)\big) & t \geq 0 \\
+    \pathVar_\twistFunc(0) &= \stateVar
+  \end{aligned}\right.
+$$
+
+<Proof>
+
+The $(\mgPrb^{\epsilon,\twistFunc}_\stateVar, \scrF^\epsilon)$ dynamics of $\Xee$ simply come from [%full](/statements/exponential-martingale).
+As far as weak convergence is concerned, this is immediate from the exponential tightness of our family and convergence of finite-dimensional distributions.
+
+</Proof>

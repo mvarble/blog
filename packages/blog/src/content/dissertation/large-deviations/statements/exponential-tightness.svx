@@ -1,0 +1,191 @@
+---
+type: statement
+kind: proposition
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+For each $\stateVar \in \stateSpace$, the family $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ is exponentially tight on $\pathSpace{[0,\infty)}{\stateSpace}$.
+
+<Proof>
+
+First note that each family $(\push{\Prb^\epsilon_\stateVar}{\pi_{\underline t}})_{\epsilon>0}$ of finite-dimensional distributions is exponentially tight by [%full](/statements/ldp-fdds).
+This is because each $\rho > 0$ produces a compact set $K_\rho \defeq \aff^*(\underline t, \cdot, \stateVar)^{-1}[0,\rho] \subseteq \vecSpace^{|\underline t|}$ (by goodness of the rate function) clearly satisfying the following.
+$$
+  \limsup_{\epsilon\rightarrow0} \epsilon\log\push{\Prb^\epsilon_\stateVar}{\pi_{\underline t}} (K_\rho^c) \leq -\inf_{\underline\stateVar\in \overline{K_\rho^c}} \aff^*(\underline t, \underline\stateVar, \stateVar) \leq -\rho
+$$
+By [Theorem 4.1](/citations#feng2006) (rather, an adaptation of it involving a continuously parameterized family), our desired exponential tightness is obtained if we produce to each $\epsilon, \delta, \lambda, T > 0$ a random variable $\gamma_\epsilon(\delta,\lambda,T)$ with the following dominating property over all $t \in [0,T]$, $s \in [0,\delta]$,
+$$
+  \begin{gathered}
+    @tag(eq-gamma-dominating)
+    \Exp_{\Prb_\stateVar}\Big(
+      \exp\big( \epsilon^{-1} \lambda \big( |\Xe_{t+s}-\Xe_t| \wedge 1 \big)
+      | \scrF^\epsilon_t \Big)
+    \leq \Exp_{\Prb_\stateVar}\Big(
+      \exp\gamma_\epsilon(\delta, \lambda, T)
+      | \scrF^\epsilon_t \Big),
+  \end{gathered}
+$$
+such that the following equalities are true for all $\lambda > 0$.
+$$
+  @tag(eq-no-gamma-bound)
+  \lim_{\delta\rightarrow0} \limsup_{\epsilon\rightarrow0}
+    \epsilon\log\Exp_{\Prb_\stateVar}\exp\big(
+      \epsilon^{-1}\lambda \big(|\Xe_\delta - \Xe_0| \wedge 1\big)
+    \big) = 0
+$$
+$$
+  @tag(eq-gamma-bound)
+  \lim_{\delta\rightarrow0} \limsup_{\epsilon\rightarrow0} \epsilon\log\Exp_{\Prb_\stateVar}\exp\gamma_\epsilon(\delta,\lambda, T) = 0
+$$
+To show this fact, first note that, by [%full (d)](/statements/real-moments-revisit), to each $\lambda > 0$ there exist $\delta_\lambda > 0$ and $C_\lambda > 0$ such that the following inequality holds.
+$$
+  \big| \aff(t, \momentVar, \stateVar) - \aff(0, \momentVar, \stateVar) \big| \leq C_\lambda \cdot t \cdot \big( 1 + |\stateVar| \big), \quad t \in [0,\delta_\lambda], ~ \momentVar \in  \closedBall{0}{\lambda\sqrt d}, ~ \stateVar \in  \stateSpace
+$$
+We then define the following function $f_\epsilon(\cdot,\delta,\lambda): \stateSpace \rightarrow \bbR$ for each $\epsilon > 0$, $\lambda > 0$, and $\delta \in [0,\delta_\lambda]$.
+$$
+  f_\epsilon(\stateVar',\delta,\lambda) \defeq \log 2d + \frac{1}{\epsilon} \cdot C_\lambda \cdot \delta \cdot \big( 1 + |\stateVar| \big)
+$$
+We now define $\gamma_\epsilon(\delta, \lambda, T) \defeq f_\epsilon\big( \Xe_t, \delta, \lambda \big)$.
+
+Note that for all $\lambda, \epsilon, t > 0$, $\delta \in [0,\delta_\lambda]$, and $s \in [0,\delta]$, we use [%full](/statements/aff-asymptotics) to get the following.
+
+<div class="aligned-left">
+
+<span>
+<span></span>
+
+$$
+  \Exp_{\Prb_\stateVar}\Big(
+    \exp\big( \epsilon^{-1} \lambda \big( |\Xe_{t+s}-\Xe_t| \wedge 1 \big)
+    | \scrF^\epsilon_t \Big)
+$$
+
+</span>
+<span>
+<span></span>
+
+$$
+  \leq \Exp_{\Prb_\stateVar}\Big(
+    \exp\big( \epsilon^{-1} \lambda \big| \Xe_{t+s}-\Xe_t \big|  \big)
+    | \scrF^\epsilon_t \Big)
+$$
+
+</span>
+<span>
+<span></span>
+
+$$
+  \leq \sum_{\ell=0}^1 \sum_{i=1}^d \Exp_{\Prb_\stateVar}\bigg(
+    \exp\Big( \Bprj{(-1)^\ell\epsilon^{-1}\lambda\sqrt d  \basisVec^i}{\Xe_{t+s}-\Xe_t} \Big)
+    | \scrF^\epsilon_t \bigg)
+$$
+
+</span>
+<span>
+<span></span>
+
+$$
+  = \sum_{\ell=0}^1 \sum_{i=1}^d \exp\bigg(
+    \epsilon^{-1}\aff\Big(s, (-1)^\ell\lambda\sqrt d \basisVec^i, \Xe_t \Big)
+    - \epsilon^{-1}\Bprj{(-1)^\ell\lambda\sqrt d \basisVec^i}{\Xe_t} \bigg)
+$$
+
+</span>
+<span>
+<span></span>
+
+$$
+  \leq 2d \cdot \exp\bigg( \frac1\epsilon \cdot C_\lambda \cdot \delta \cdot \big( 1 + |\Xe_t| \big) \bigg)
+$$
+
+</span>
+<span>
+<span></span>
+
+
+$$
+  @tag(eq-verify-gamma-dominating)
+  = \exp f_\epsilon(\Xe_t, \delta, \lambda)
+$$
+
+</span>
+
+</div>
+
+<style>
+
+.aligned-left {
+  display: flex;
+  flex-direction: column;
+
+  > span {
+    display: flex;
+
+    > span {
+      flex-basis: 40%;
+    }
+
+    > div {
+      min-width: 600px;
+      flex-grow: 2;
+    }
+
+  }
+
+
+  :global(.katex-display > .katex) {
+    text-align: left;
+  }
+}
+
+</style>
+
+Note that [](tag:eq-verify-gamma-dominating) makes [](tag:eq-gamma-dominating) true.
+
+$$
+  \begin{aligned}
+    &\Exp_{\Prb_\stateVar}\Big( \exp\big( \epsilon^{-1} \lambda \big( |\Xe_{t+s}-\Xe_t| \wedge 1 \big) | \scrF^\epsilon_t \Big) \\
+    &\leq \exp f_\epsilon(\Xe_t, \delta, \lambda) \\
+    &= \exp \gamma_\epsilon(\delta, \lambda,T) \\
+    &= \Exp_{\Prb_\stateVar}\Big( \exp\gamma_\epsilon(\delta,\lambda,T) | \scrF^\epsilon_t \Big)
+  \end{aligned}
+$$
+
+For [%full](tag:eq-no-gamma-bound), we also use [%full](tag:eq-verify-gamma-dominating).
+
+$$
+  \begin{aligned}
+    &\hspace{-1em}\lim_{\delta\rightarrow0} \limsup_{\epsilon\rightarrow0}
+      \epsilon\log\Exp_{\Prb_\stateVar}\exp\big(
+        \epsilon^{-1}\lambda \big(|\Xe_\delta - \Xe_0| \wedge 1\big)
+      \big)  \\
+    &=\lim_{\delta\rightarrow0} \limsup_{\epsilon\rightarrow0}
+      \epsilon\log\Exp_{\Prb_\stateVar}
+      \Exp_{\Prb_\stateVar}\Big(
+      \exp\big(\epsilon^{-1}\lambda \big(|\Xe_\delta - \Xe_0| \wedge 1\big) \big)
+      |\scrF^\epsilon_0 \Big) \\
+    &\leq \lim_{\delta\rightarrow0}\limsup_{\epsilon\rightarrow0} \epsilon\log\Exp_{\Prb_\stateVar} \exp f_\epsilon(\Xe_0, \delta, \lambda) \\
+    &= \lim_{\delta\rightarrow0}\limsup_{\epsilon\rightarrow0} \Big( \epsilon\log 2d + C_\lambda \cdot \delta \cdot \big( 1 + |\stateVar| \big) \Big) \\
+    &= 0
+  \end{aligned}
+$$
+
+
+Using [%full (a)](/statements/real-moments-revisit), to each $\lambda > 0$, there exists $\delta_\lambda' > 0$ such that $B(0,\delta_\lambda) \subseteq \momentSpace(\delta_\lambda')$.
+Now, for any $\delta < \delta_\lambda \wedge \delta_\lambda'/(2C_\lambda\sqrt d)$, we again use [%full](/statements/aff-asymptotics) to get the following.
+$$
+  \begin{aligned}
+    &\hspace{-1em}\epsilon\log\Exp_{\Prb_\stateVar}\Big( \exp \gamma_\epsilon(\delta, \lambda,T) \Big) \\
+    &=\epsilon\log\Exp_{\Prb_\stateVar}\Big( \exp f_\epsilon(\Xe_t, \delta, \lambda) \Big)  \\
+    &= \epsilon\log 2d + C_\lambda \cdot\delta + \epsilon\log \Exp_{\Prb_\stateVar}\exp\big(\epsilon^{-1}C_\lambda\delta |\Xe_t| \big) \\
+    &\leq \epsilon\log 2d + C_\lambda \cdot\delta + \epsilon\log \sum_{\ell=0}^1\sum_{i=1}^d \Exp_{\Prb_\stateVar}\exp\bprj{(-1)^\ell\epsilon^{-1}C_\lambda \delta\sqrt d \basisVec^i}{\Xe_t} \\
+    &\leq 2\epsilon\log2d + C_\lambda \cdot \delta + \max_{\substack{\ell=0,1\\i=1,\ldots,d\\k=1,\ldots,|\underline t|}} \epsilon\log\Exp_{\Prb_\stateVar} \exp\Bprj{ (-1)^\ell \epsilon^{-1} C_\lambda\delta \sqrt d \basisVec^i}{\Xe_t} \\
+    &\leq 2\epsilon\log2d + C_\lambda \cdot \delta + \max_{\substack{\ell=0,1\\i=1,\ldots,d\\k=1,\ldots,|\underline t|}} \aff\Big( t, (-1)^\ell C_\lambda \delta\sqrt d \basisVec^i, \stateVar\Big)
+  \end{aligned}
+$$
+This gives us [](tag:eq-gamma-bound).
+
+</Proof>

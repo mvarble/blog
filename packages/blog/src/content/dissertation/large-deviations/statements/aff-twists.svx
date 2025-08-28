@@ -1,0 +1,86 @@
+---
+type: statement
+kind: proposition
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+Fix $\epsilon > 0$, $\stateVar \in \stateSpace$, $\underline t \vdash [0,\infty)$, and $\underline\twistVar \in \momentSpace(\underline t)$.
+For each $\ell = 1, \ldots, |\underline t|$ and $\twistVar \in \vecSpace$ with $\twistVar_\ell + \twistVar \in \momentSpace(\Delta t_\ell)$, we have the following moments.
+$$
+  \begin{aligned}
+    &\Exp_{\fddPrb^{\epsilon, \underline t, \underline\twistVar}_\stateVar}\Big( \exp\prj{\twistVar}{\Xee_{t_\ell}-\Xee_{t_{\ell-1}}} | \scrF^\epsilon_{t_{\ell-1}} \Big)  \\
+    &\hspace{1cm} = \exp\Big(\affShift^\epsilon\big(\Delta t_\ell, \twistVar_\ell + \twistVar, \Xee_{t_{\ell-1}} \big)  - \affShift^\epsilon\big(\Delta t_\ell, \twistVar_\ell, \Xee_{t_{\ell-1}} \big)\Big)
+  \end{aligned}
+$$
+This furthermore means we have the following conditional expectations.
+$$
+  \Exp_{\fddPrb^{\epsilon, \underline t,\underline\twistVar}_\stateVar} \Big( \Xe_{t_\ell} - \Xe_{t_{\ell-1}} | \Xe_{\underline t_{1:\ell-1}} = \underline\stateVar_{1:\ell-1} \Big) = \nabla_{\twistVar_\ell}\affShift(\Delta t_\ell, \twistVar_\ell, \stateVar_{\ell-1})
+$$
+
+<Proof>
+
+Denote $n \defeq |\underline t|$ for brevity.
+We first show the following conditional expectation for any $m = n-1,\ldots, 1$.
+$$
+  @tag(eq-fddDensity-conditional-expectation)
+  \Exp_{\Prb^\epsilon_\stateVar}\big(\fddDensity^{\epsilon,\underline t, \underline\twistVar} | \scrF^\epsilon_{t_m} \big) = \prod_{k=1}^m \big( \prj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}} - \affShift^\epsilon(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}})\big),
+$$
+by iteratively projecting onto $\scrF^\epsilon_{t_n}, \ldots, \scrF^\epsilon_{t_{m+1}}$.
+For any $H \in \scrF_{t_m}/\scrB(\bbR_+)$, we have the following.
+$$
+  \begin{aligned}
+    &\Exp_{\Prb^\epsilon_\stateVar}\big(H \fddDensity^{\epsilon,\underline t, \underline\twistVar} \big) \\
+    &= \Exp_{\Prb^\epsilon_\stateVar}\Big( H \prod_{k=1}^n \exp\big(  \prj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}} - \affShift^\epsilon(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}})\big) \Big)  \\
+    &= \Exp_{\Prb^\epsilon_\stateVar}\Big(
+      H \prod_{k=1}^{n-1} \exp\big(  \prj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}} - \affShift^\epsilon(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}})\big)  \\
+      &\hspace{4em}\quad\Exp_{\Prb^\epsilon_\stateVar}\big( \exp\prj{\twistVar_n}{\Xee_{t_n}-\Xee_{t_{n-1}}} | \scrF^\epsilon_{t_{n-1}}\big)\exp\big(-\affShift^\epsilon(\Delta t_n, \twistVar_n, \Xee_{t_{n-1}})\big) \Big) \\
+    &= \Exp_{\Prb^\epsilon_\stateVar}\Big( H \prod_{k=1}^{n-1} \exp\big(  \prj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}} - \affShift^\epsilon(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}})\big) \Big) \\
+    &\quad\vdots \\
+    &= \Exp_{\Prb^\epsilon_\stateVar}\Big( H \prod_{k=1}^m \exp\big(  \prj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}} - \affShift^\epsilon(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}})\big) \Big)
+  \end{aligned}
+$$
+which indicates that [](tag:eq-fddDensity-conditional-expectation) is true.
+Now choosing $H \in \scrF^\epsilon_{t_{\ell-1}}/\scrB(\bbR_+)$, we apply [](tag:eq-fddDensity-conditional-expectation) for $m=\ell$ and $m=\ell-1$ to see that the following holds.
+$$
+  \begin{aligned}
+    &\Exp_{\fddPrb^{\epsilon, \underline t, \underline\twistVar}_\stateVar}\Big( \exp\prj{\twistVar}{\Xee_{t_\ell}-\Xee_{t_{\ell-1}}} H \Big) \\
+    &=\Exp_{\Prb^\epsilon_\stateVar}\Big( \exp\prj{\twistVar}{\Xee_{t_\ell}-\Xee_{t_{\ell-1}}} H \fddDensity^{\epsilon,\underline t,\underline\twistVar} \Big)  \\
+    &=\Exp_{\Prb^\epsilon_\stateVar}\Big( \exp\prj{\twistVar}{\Xee_{t_\ell}-\Xee_{t_{\ell-1}}} H \prod_{k=1}^\ell \exp\big(\prj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}} - \affShift^\epsilon(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}})\big) \Big)  \\
+    &=\Exp_{\Prb^\epsilon_\stateVar}\Big(
+      H  \prod_{k=1}^{\ell-1} \exp\big(\prj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}} - \affShift^\epsilon(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}})\big) \\
+      &\hspace{16mm} \Exp_{\Prb^\epsilon_\stateVar}\big(\exp\prj{\twistVar_\ell + \twistVar}{\Xee_{t_\ell}-\Xee_{t_{\ell-1}}}|\scrF_{t_{\ell-1}}\big) \exp\big(-\affShift^\epsilon(\Delta t_\ell, \twistVar_\ell, \Xee_{t_{\ell-1}})\big) \Big) \\
+    &=\Exp_{\Prb^\epsilon_\stateVar}\Big(
+      H  \prod_{k=1}^{\ell-1} \exp\big(\prj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}} - \affShift^\epsilon(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}})\big) \\
+      &\hspace{16mm} \exp\big(\affShift^\epsilon(\Delta t_\ell, \twistVar_\ell + \twistVar, \Xee_{t_{\ell-1}})-\affShift^\epsilon(\Delta t_\ell, \twistVar_\ell, \Xee_{t_{\ell-1}})\big) \Big)\\
+    &=\Exp_{\Prb^\epsilon_\stateVar}\Big( \exp\big(\affShift^\epsilon(\Delta t_\ell, \twistVar_\ell + \twistVar, \Xee_{t_{\ell-1}})-\affShift^\epsilon(\Delta t_\ell, \twistVar_\ell, \Xee_{t_{\ell-1}})\big) H \fddDensity^{\epsilon,\underline t,\underline\twistVar} \Big) \\
+    &=\Exp_{\fddPrb^{\epsilon, \underline t, \underline\twistVar}_\stateVar}\Big( \exp\big(\affShift^\epsilon(\Delta t_\ell, \twistVar_\ell + \twistVar, \Xee_{t_{\ell-1}})-\affShift^\epsilon(\Delta t_\ell, \twistVar_\ell, \Xee_{t_{\ell-1}})\big) H \Big)
+  \end{aligned}
+$$
+This gives us our first desired identity.
+$$
+    \begin{aligned}
+      &\Exp_{\fddPrb^{\epsilon, \underline t, \underline\twistVar}_\stateVar}\Big( \exp\prj{\twistVar}{\Xee_{t_\ell}-\Xee_{t_{\ell-1}}} | \scrF^\epsilon_{t_{\ell-1}} \Big) \\
+      &\hspace{1cm} = \exp\big(\affShift^\epsilon(\Delta t_\ell, \twistVar_\ell + \twistVar, \Xee_{t_{\ell-1}})-\affShift^\epsilon(\Delta t_\ell, \twistVar_\ell, \Xee_{t_{\ell-1}})\big)
+    \end{aligned}
+$$
+  Now that this identity is established, we appeal to Propositions [%label (a)](/statements/real-moments-revisit), [%label](/statements/aff-differentiable), and [%label](/statements/aff-asymptotics) in specifying an open ball $\ball{\twistVar_k}{\delta} \subseteq \momentSpace(\Delta t_k)$ on which we may apply derivatives to get the following identity.
+$$
+  \begin{aligned}
+    &\Exp_{\fddPrb^{\epsilon, \underline t,\underline\twistVar}_\stateVar} \Big( \Xe_{t_\ell} - \Xe_{t_{\ell-1}} | \scrF^\epsilon_{t_{\ell-1}} \Big)  \\
+    &= \epsilon \Exp_{\fddPrb^{\epsilon, \underline t,\underline\twistVar}_\stateVar} \Big( \Xee_{t_\ell} - \Xee_{t_{\ell-1}} | \scrF^\epsilon_{t_{\ell-1}} \Big)  \\
+    &= \epsilon \Exp_{\fddPrb^{\epsilon, \underline t,\underline\twistVar}_\stateVar} \Big( \nabla_{\twistVar} \exp\prj{\twistVar}{\Xee_{t_\ell} - \Xee_{t_{\ell-1}}}|_{\twistVar=0} | \scrF^\epsilon_{t_{\ell-1}} \Big) \\
+    &=\epsilon \nabla_{\twistVar} \Exp_{\fddPrb^{\epsilon, \underline t,\underline\twistVar}_\stateVar} \Big( \exp\prj{\twistVar}{\Xee_{t_\ell} - \Xee_{t_{\ell-1}}} | \scrF^\epsilon_{t_{\ell-1}} \Big) \Big|_{\twistVar=0}\\
+    &= \epsilon \nabla_{\twistVar} \exp\Big(\affShift^\epsilon\big(\Delta t_\ell, \twistVar_\ell + \twistVar, \Xee_{t_{\ell-1}}\big)-\affShift^\epsilon\big(\Delta t_\ell, \twistVar_\ell, \Xee_{t_{\ell-1}}\big)\Big) \Big|_{\twistVar=0} \\
+    &= \nabla_{\twistVar} \exp\Big(\affShift\big(\Delta t_\ell, \twistVar_\ell + \twistVar, \Xe_{t_{\ell-1}}\big)-\affShift\big(\Delta t_\ell, \twistVar_\ell, \Xe_{t_{\ell-1}}\big)\Big) \Big|_{\twistVar=0} \\
+    &= \nabla_{\twistVar_\ell}\affShift\big(\Delta t_\ell, \twistVar_\ell, \Xe_{t_{\ell-1}}\big)
+  \end{aligned}
+$$
+Seeing as the above quantity is measurable with respect to the $\sigma$-algebra generated by $\X_{\underline t_{1:\ell}}$, we have our desired identity.
+$$
+  \Exp_{\fddPrb^{\epsilon, \underline t,\underline\twistVar}_\stateVar} \Big( \Xe_{t_\ell} - \Xe_{t_{\ell-1}} | \Xe_{\underline t_{1:\ell-1}} = \underline\stateVar_{1:\ell-1} \Big)  = \nabla_{\twistVar_\ell} \affShift\big(\Delta t_\ell, \twistVar_\ell, \Xe_{t_{\ell-1}}\big)
+$$
+
+</Proof>

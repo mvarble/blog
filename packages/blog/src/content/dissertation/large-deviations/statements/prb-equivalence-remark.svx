@@ -1,0 +1,21 @@
+---
+type: statement
+kind: remark
+---
+
+Note that a conditional cumulant $\affShift$ and Lévy-Khintchine map $\ode$ may be defined for any jump-diffusion, despite not generally being $\stateSpace$-affine.
+$$
+  \begin{aligned}
+    \affShift(t, \twistVar, \stateVar) &= \Exp_{\Prb_\stateVar}\exp\prj{\twistVar}{\X-\stateVar}, \\
+    \ode(\momentVar, \stateVar) &= \bprj{\momentVar}{\affDrift(\stateVar)} + \frac12\bprj{\momentVar}{\affDrift(\stateVar)\momentVar} + \int_\vecSpace \Big( e^\prj{\momentVar}{\markVar} - 1 - \bprj{\momentVar}{\markVar} \Big) \affJump(\stateVar, \rmd\markVar)
+  \end{aligned}
+$$
+Furthermore, we may always construct (local) measure changes like $\fddDensity^{\underline t, \underline\twistVar}$ and $\mgDensity^{\twistFunc}$ in [](tag:eq-densities-side-by-side) and postulate an equivalence like [%full](/statements/prb-equivalence).
+$$
+  \begin{aligned}
+    &\exp \sum_{k=1}^{|\underline t|}\Big( \bprj{\twistVar_k}{\X_{t_k}-\X_{t_{k-1}}} - \affShift^\epsilon\big(\Delta t_k, \twistVar_k, \X_{t_{k-1}} \big) \Big)  \\
+    &= \exp\Big( \int_0^\infty \twistFunc(s) \rmd \X_s - \int_0^\infty \ode^\epsilon\big(\twistFunc(s), \X_s\big) \rmd s \Big)
+  \end{aligned}
+$$
+This is the very result which would _generally_ prove that the approaches of twisting/tilting and martingales are in fact identical.
+However, our construction in [](tag:eq-resolve-twists) clearly uses $\affPart$, an object that only exists in the affine context.

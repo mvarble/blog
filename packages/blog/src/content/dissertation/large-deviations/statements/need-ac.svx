@@ -1,0 +1,43 @@
+---
+type: statement
+kind: lemma
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+If $\pathVar \not\in \acpathSpace{[0,\infty)}{\stateSpace}$, then $\rf(\pathVar) = \infty$.
+
+<Proof>
+
+Fix some $\pathVar \in \pathSpace{[0,\infty)}{\stateSpace}$ with $\pathVar \not\in \acpathSpace{[0,\infty)}{\stateSpace}$.
+That is to say, there exists some $\tau > 0$ for which $\pathVar \not\in \acpathSpace{[0,\tau]}{\stateSpace}$.
+For any $\rho > 0$, we now use [%full (d)](/statements/real-moments-revisit) to produce some $\delta > 0$ and $C_{\delta,\rho} > 0$ such that the following bound holds.
+$$
+  \big|\aff(t, \momentVar, \stateVar) - \aff(0, \momentVar, \stateVar)\big| \leq C_{\delta,\rho} \cdot t \cdot \big( 1 + |\stateVar| \big), \quad t \in [0,\delta], ~ \momentVar \in \closedBall{0}{\rho}, ~ \stateVar \in \stateSpace
+$$
+Because $\pathVar \not\in \acpathSpace{[0,\tau]}{\stateSpace}$, there exists $\epsilon > 0$ and a partition $\underline t^\rho \vdash [0,\tau]$ such that
+$$
+  \begin{gathered}
+    \sum_{k=1}^{|\underline t^\rho|} \Delta t^\rho_k < \delta \wedge \Big(C_{\delta,\rho} \big( 1 + \sup_{t\in[0,\tau]}|\pathVar(t)| \big) \Big)^{-1} \\
+    \sum_{k=1}^{|\underline t^\rho|} \big|\pathVar(t^\rho_k) - \pathVar(t^\rho_{k-1}) \big| \geq \epsilon
+  \end{gathered}
+$$
+The countable nature of $\Delta_\pathVar$ allows us to further impose that $\underline t^\rho \vdash \Delta_\pathVar^c$.
+This, along with [%full](/statements/mgf-fdds), results in the following inequality.
+$$
+\begin{aligned}
+  &\sup_{\underline t \vdash [0,\infty)} \aff^*\big( \underline t, \pathVar(\underline t), \pathVar(0) \big) \\
+  &\quad\geq \sup_{\rho > 0} \aff^*\big( \underline t^\rho, \pathVar(\underline t^\rho), \pathVar(0) \big) \\
+  &\quad\geq \sup_{\rho > 0} \sup_{\underline\twistVar \in \momentSpace(\underline t)}\sum_{k=1}^{|\underline t^\rho|}  \Big( \prj{\twistVar_k}{\pathVar(t^\rho_k)-\pathVar(t^\rho_{k-1})} -  \affShift\big( \Delta t^\rho_k, \twistVar_k, \pathVar(t^\rho_{k-1}) \big) \Big) \\
+  &\quad= \sup_{\rho > 0} \sum_{k=1}^{|\underline t^\rho|} \sup_{\twistVar_k\in\momentSpace(\Delta t^\rho_k)}
+    \bigg( \bprj{\twistVar_k}{\pathVar(t^\rho_k)-\pathVar(t^\rho_{k-1})} \\
+    &\hspace{12em} -\Big(\aff\big( \Delta t^\rho_k, \twistVar_k, \pathVar(t^\rho_{k-1}) \big) - \aff^*\big(0, \twistVar_k, \pathVar(t^\rho_{k-1})\big) \Big) \bigg)\\
+  &\quad\geq \sup_{\rho>0} \sum_{k=1}^{|\underline t^\rho|} \bigg( \rho\big|\pathVar(t^\rho_k)-\pathVar(t^\rho_{k-1})\big| - C_{\delta,\rho} \cdot \Delta t^\rho_k \cdot \big( 1 + |\pathVar(t^\rho_{k-1})| \big) \bigg) \\
+  &\quad\geq \epsilon \cdot \sup_{\rho>0} \rho - 1 \\
+  &\quad= \infty
+\end{aligned}
+$$
+
+</Proof>

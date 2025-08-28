@@ -1,0 +1,48 @@
+---
+type: statement
+kind: lemma
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+Fix $\tau > 0$ and $\twistFunc \in \cpathSpace{[0,\tau]}{\stateSpace}$.
+  For each $\epsilon > 0$, there exists a partition $\underline t \vdash [0,\tau]$ and $\underline\twistVar \in \momentSpace(\underline t)$ such that we have the following approximation.
+$$
+    \sup_{t \in [0,\tau)} \big| \twistFunc(t, \underline t, \underline\momentVar) - \twistFunc(t) \big| < \epsilon
+$$
+
+<Proof>
+
+Denote $M \defeq \sup_{t\in[0,\tau]} |\twistFunc(t)|$ and fix $\epsilon > 0$.
+We start by using [%full (d)](/statements/real-moments-revisit) to guarantee $\delta_0 > 0$ and $C_M > 0$ such that the following bound holds.
+$$
+  \big|\aff(t,\momentVar,\stateVar)-\aff(0,\momentVar,\stateVar)\big| \leq C_M \cdot t \cdot \big(1 + |\stateVar|\big), \quad  t \in [0,\delta_0], ~ \momentVar \in  \closedBall{0}{M}, ~\stateVar \in \stateSpace
+$$
+From here, we use the affine structure of $\aff$ to see the following inequality.
+$$
+  \big|\affPart(t,\momentVar)-\momentVar\big| = 3C_M\sqrt d \cdot t, \quad (t,\momentVar) \in [0,\delta_0]\times\overline B(0,M)
+$$
+Seeing as $\twistFunc \in \cpathSpace{[0,\tau]}{\vecSpace}$, it is uniformly continuous.
+Fix $\delta_1 > 0$ such that all $s, t \in [0,\tau]$ with $|t-s| < \delta_1$, we have the following inequality.
+$$
+  \big|\twistFunc(t) - \twistFunc(s)\big| < \epsilon/2
+$$
+Fix an integer $N \in \bbN$ large enough to impose the following inequality.
+$$
+  \frac{\tau}{N} < \frac{\epsilon}{6C_M \sqrt d} \wedge \delta_0 \wedge \delta_1
+$$
+Now define partition $\underline t$ by $t_k = k\tau/N$ for $k = 1, \ldots, N$.
+This way, for each $k = 1, \ldots, N$, and $t \in [t_{k-1},t_k)$, we have
+$$
+  \begin{aligned}
+    \Big| \twistFunc(t, \underline t, \twistFunc(\underline t)\big) - \twistFunc(t) \Big|
+    &= \Big| \affPart\big(t_k - t, \twistFunc(t_k)\big) - \twistFunc(t) \Big| \\
+    &\leq \Big| \affPart\big(t_k - t, \twistFunc(t_k)\big) - \twistFunc(t_k) \Big| + \big| \twistFunc(t_k) - \twistFunc(t) \big| \\
+    &< 3 C_M \sqrt d \cdot (t_k-t) + \epsilon/2 \\
+    &< \epsilon.
+  \end{aligned}
+$$
+
+</Proof>

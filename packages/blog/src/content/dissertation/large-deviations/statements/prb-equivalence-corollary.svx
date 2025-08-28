@@ -1,0 +1,24 @@
+---
+type: statement
+kind: corollary
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+For each $\underline t \vdash [0,\infty)$ and $\underline\twistVar \in \momentSpace(\underline t)$, the distributions $\fddPrb^{\epsilon,\underline t,\underline\twistVar}_\stateVar$ converge weakly to the degenerate measure $\delta_{\pathVar_{\underline t, \underline\twistVar}}$ at the solution $\pathVar_{\underline t, \underline\twistVar}$ to the dynamical system in which $\pathVar_{\underline t, \underline\twistVar}(0) = \stateVar$ and for each $k = 1, \ldots, |\underline t|$, we have the following equation.
+$$
+  \begin{aligned}
+    \dot\pathVar_{\underline t, \underline\twistVar}(t)
+    &= \affDrift\big(\pathVar_{\underline t, \underline\twistVar}(t) \big) + \affDiff\big(\pathVar_{\underline t, \underline\twistVar}(t)\big) \affPart(t_k - t, \twistVar_k) \\
+      &\hspace{25mm}+ \int_\vecSpace \markVar \big( e^\prj{\affPart(t_k-t,\twistVar_k)}{\markVar} - 1 \big) \affJump\big(\pathVar_{\underline t, \underline\twistVar}(t), \rmd\markVar\big),
+    &  \quad t \in [t_{k-1}, t_k)
+  \end{aligned}
+$$
+
+<Proof>
+
+This is simply substituting $\twistFunc(\cdot, \underline t, \underline\twistVar)$ for $\twistFunc$ in [%full](/statements/mgPrb-dynamics).
+
+</Proof>

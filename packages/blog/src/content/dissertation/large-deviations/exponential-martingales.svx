@@ -1,3 +1,106 @@
 ---
 title: Exponential martingales
 ---
+
+<script>
+  import Statement from '$lib/components/statement.svelte';
+  import * as martingaleMeasure from './statements/martingale-measure.svx';
+  import * as mgPrbDynamics from './statements/mgPrb-dynamics.svx';
+  import * as prbEquivalence from './statements/prb-equivalence.svx';
+  import * as prbEquivalenceRemark from './statements/prb-equivalence-remark.svx';
+  import * as prbEquivalenceCorollary from './statements/prb-equivalence-corollary.svx';
+</script>
+
+<!-- discuss how martingales will induce the alternative approach -->
+Now that we have our principle, we discuss how various exponential martingales $\mgDensity^{\epsilon,\twistFunc}$ induce changes of measure alternative to those $\fddDensity^{\epsilon,\underline t,\underline\twistVar}$ which themselves inspire a different flavor of proof.
+We start by defining the building blocks of these exponential martingales.
+$$
+  \begin{gathered}
+    \twistSpace \defeq \big\{ \twistFunc \in \pathSpace{[0,\infty)}{\vecSpace} : \twistFunc \text{ has compact support and finite-variation} \big\} \\
+    \begin{aligned}
+      &\mgRf: \pathSpace{[0,\infty)}{\stateSpace} \times \twistSpace \rightarrow \bbR,  \\
+      &\hspace{1cm} \mgRf(\pathVar, \twistFunc) \defeq \bprj{\pathVar(0)}{\twistFunc(0)} -\int_0^\infty \pathVar(s-) \rmd\twistFunc(s) - \int_0^\infty \ode\big(\twistFunc(s), \pathVar(s)\big) \rmd s
+    \end{aligned}
+  \end{gathered}
+$$
+
+<!-- construct the martingales -->
+<Statement {...martingaleMeasure} />
+
+<!-- show how the process distributes under the change of measure -->
+The above proposition prescribes another change of measure.
+For each $\epsilon > 0$, $\twistFunc \in \twistSpace$, and $\stateVar \in \stateSpace$, define
+$$
+  \mgPrb^{\epsilon,\twistFunc}_\stateVar(\rmd\omega) \defeq \mgDensity^{\epsilon,\twistFunc}(\omega) \cdot \Prb^\epsilon_\stateVar(\rmd\omega).
+$$
+Let us explore the distribution of $\Xe$ over these spaces.
+
+<Statement {...mgPrbDynamics} />
+
+<!-- discuss high-level how exponential martingale method works -->
+From here, a large deviation principle may be approached by concentrating probability on a ball and using Chebyshev-like bounds on $\mgDensity^{\epsilon,\twistFunc}$.
+$$
+  \begin{aligned}
+    \epsilon\log\Prb^\epsilon_\stateVar\big( \Xe \in \ball{\pathVar}{\delta} \big)
+    &= \epsilon\log\Exp_{\mgPrb^{\epsilon,\twistFunc}_\stateVar}\big( (\mgDensity^{\epsilon,\twistFunc})^{-1} 1_{\ball{\pathVar}{\delta}}(\Xe) \big) \\
+    &= \epsilon\log\Exp_{\mgPrb^{\epsilon,\twistFunc}_\stateVar}\Big( \exp\big(-\frac1\epsilon \mgRf(\Xe, \twistFunc) \big) 1_{\ball{\pathVar}{\delta}}(\Xe) \Big) \\
+    &\leq -\inf_{\pathVar' \in \ball{\pathVar}{\delta}} \mgRf(\pathVar', \twistFunc)
+  \end{aligned}
+$$
+Showing lower semi-continuity of $\mgRf(\cdot,\twistFunc)$ would then result in us being able to say
+$$
+  \lim_{\delta \rightarrow 0} \epsilon\log\Prb^\epsilon_\stateVar\big( \Xe \in \ball{\pathVar}{\delta} \big) \leq -\mgRf(\pathVar, \twistFunc),
+$$
+for all $\twistFunc \in \twistSpace$, and so we'd have
+$$
+  \lim_{\delta\rightarrow0} \epsilon\log\Prb^\epsilon_\stateVar\big( \Xe \in \ball{\pathVar}{\delta} \big) \leq - \sup_{\twistFunc \in \twistSpace} \mgRf(\pathVar, \twistFunc)
+$$
+Meanwhile, the lower bound would be approached by showing $\twistSpace$ is suitably rich to have a dense family of limit functions $\pathVar_\twistFunc$ as in [](tag:eq-limit-ode) of [%full](/statements/mgPrb-dynamics), on which $\sup_{\twistFunc' \in \twistSpace} \mgRf(\pathVar_\twistFunc, \twistFunc') = \mgRf(\pathVar_\twistFunc, \twistFunc)$, and so a large deviations lower bound is attained from the following bound.
+$$
+  \begin{aligned}
+    \epsilon\log\Prb^\epsilon_\stateVar\big( \Xe \in \ball{\pathVar_\twistFunc}{\delta} \big)
+    &= \epsilon\log\Exp_{\mgPrb^{\epsilon,\twistFunc}_\stateVar}\big( (\mgDensity^{\epsilon,\twistFunc})^{-1} 1_{\ball{\pathVar_\twistFunc}{\delta}}(\Xe) \big) \\
+    &= \epsilon\log\Exp_{\mgPrb^{\epsilon,\twistFunc}_\stateVar}\Big( \exp\big(-\frac1\epsilon \mgRf(\Xe, \twistFunc) \big) 1_{\ball{\pathVar_\twistFunc}{\delta}}(\Xe) \Big) \\
+    &\geq -\sup_{\pathVar' \in \ball{\pathVar_\twistFunc}{\delta}} \mgRf(\pathVar', \twistFunc) + \epsilon\log\mgPrb^{\epsilon,\twistFunc}_\stateVar\big( \Xe \in \ball{\pathVar_\twistFunc}{\delta} \big) \\
+    &\geq -\mgRf(\pathVar_\twistFunc, \twistFunc) + \epsilon\log\mgPrb^{\epsilon,\twistFunc}_\stateVar\big( \Xe \in \ball{\pathVar_\twistFunc}{\delta} \big) \\
+    &= -\sup_{\twistFunc' \in \twistSpace} \mgRf(\pathVar_\twistFunc, \twistFunc') + \epsilon\log\mgPrb^{\epsilon,\twistFunc}_\stateVar\big( \Xe \in \ball{\pathVar_\twistFunc}{\delta} \big)
+  \end{aligned}
+$$
+
+The benefit of this approach is that our rate function $\pathVar \mapsto \sup_{\twistFunc\in\twistSpace} \mgRf(\pathVar, \twistFunc)$ has an integral form.
+Instead of proving the large deviation principle in this alternative fashion, we reconcile the measure changes that appear in each of the approaches.
+
+<!-- resolve the two approaches as one -->
+It is readily evident that $\mgPrb^{\epsilon,\twistFunc}_\stateVar$ is a generalization of $\fddPrb^{\epsilon,\underline t,\underline\twistVar}_\stateVar$, as we are replacing summations in $\fddDensity^{\epsilon, \underline t, \underline\twistVar}$ with integrals in $\mgDensity^{\epsilon,\twistFunc}$.
+$$
+  @tag(eq-densities-side-by-side)
+  \begin{aligned}
+    \fddDensity^{\epsilon, \underline t, \underline\twistVar}
+    &= \exp \sum_{k=1}^{|\underline t|}\Big( \bprj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}} - \affShift^\epsilon\big(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}} \big) \Big) \\
+    \mgDensity^{\epsilon, \twistFunc}
+    &= \exp\Big( \int_0^\infty \twistFunc(s) \rmd \Xee_s - \int_0^\infty \ode^\epsilon\big(\twistFunc(s), \Xee_s\big) \rmd s \Big)
+  \end{aligned}
+$$
+The summand $\prj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}}$ relates to the integral term $\twistFunc(s) \rmd \Xee_s$, while $\affShift^\epsilon(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}})$ relates to $\ode^\epsilon\big(\twistFunc(s), \Xee_s\big)\rmd s$.
+To explicitly resolve these two expressions, we disambiguate the operations in $\fddDensity^{\epsilon,\underline t, \underline\twistVar}$ involving $\Xee$.
+$$
+  \begin{aligned}
+    &\fddRf(\cdot,\underline t, \underline\twistVar): \pathSpace{[0,\infty)}{\stateSpace} \rightarrow \bbR, \\
+    &\quad \fddRf(\pathVar,\underline t, \underline\twistVar) \defeq \sum_{k=1}^{|\underline t|} \Big( \bprj{\twistVar_k}{\pathVar(t_k)-\pathVar(t_{k-1})} - \aff\big(\Delta t_k, \twistVar_k, \pathVar(t_{k-1})\big) \Big)
+  \end{aligned}
+$$
+We now have a common notation for factoring $\Xee$ through each density.
+$$
+  \fddDensity^{\epsilon, \underline t, \underline\twistVar} = \exp\Big( \frac1\epsilon \fddRf\big(\Xe, \underline t, \underline\twistVar\big) \Big), \quad
+  \mgDensity^{\epsilon, \twistFunc} = \exp\Big( \frac1\epsilon \mgRf\big(\Xe, \twistFunc\big) \Big)
+$$
+We now state the main theorem of this section, which resolves the _twisting/tilting_ approach of measure changes $\fddPrb^{\epsilon,\underline t,\underline\twistVar}$ in [%full](/statements/twists) with the _exponential martingale_ approach of measure changes $\mgPrb^{\epsilon,\twistFunc}$ in [%full](/statements/mgPrb-dynamics).
+It relies on the following parameterization of maps $\twistFunc(\cdot,\underline t, \underline\twistVar)$ over $\underline t \vdash [0,\infty)$ and $\underline\twistVar \in \momentSpace(\underline t)$.
+$$
+  @tag(eq-resolve-twists)
+  \twistFunc(t, \underline t, \underline\twistVar) = \sum_{k=1}^{|\underline t|} 1_{[t_{k-1},t_k)}(t) \affPart(\Delta t_k, \twistVar_k)
+$$
+
+<Statement {...prbEquivalence} />
+<Statement {...prbEquivalenceRemark} />
+<Statement {...prbEquivalenceCorollary} />

@@ -1,3 +1,39 @@
 ---
 title: Dawson-Gärtner
 ---
+
+<script>
+  import Statement from '$lib/components/statement.svelte';
+  import * as ldpFdds from './statements/ldp-fdds.svx';
+  import * as affTwists from './statements/aff-twists.svx';
+  import * as exponentialTightness from './statements/exponential-tightness.svx';
+  import * as ldp from './statements/ldp.svx';
+</script>
+
+This section proves our large deviation principle from a perspective similar to that of Dawson-Gärtner (see [Theorem 4.6.1](/citations#dembo2010)), in which we prove the principle for the finite-dimensional projections, so that we get a principle on the projective space associated with $\pathSpace{[0,\infty)}{\stateSpace}$ that we may tighten to the Skorokhod space through exponential tightness.
+Though we attribute this approach to the names of Dawson and Gärtner, we specifically use results in [](/citations#feng2006) which instead use results which appeal more to weak convergence arguments that are comparable to Prokhorov on an exponential scale.
+
+<Statement {...ldpFdds} />
+
+Cramér's theorem---the tool we leveraged to prove the above principle---is proven by using measure changes induced by densities of the following form.
+$$
+  \exp\Big( \prj{\underline\momentVar}{\Xee_{\underline t}} - \aff^\epsilon(\underline t, \underline\momentVar, \Xee_0) \Big)
+$$
+Observe that [%full](/statements/mgf-fdds) gives us a perspective of how this measure depends on the increments; a valid moment $\underline\momentVar \in \vecSpace^{|\underline t|}$ for the above expression must satisfy $\underline\momentVar = \twistToMoment_{\underline t}(\underline\twistVar)$ for some $\underline\twistVar \in \momentSpace(\underline t)$, and the following.
+$$
+  \exp\Big( \prj{\underline\momentVar}{\Xee_{\underline t}} - \aff^\epsilon(\underline t, \underline\momentVar, \Xee_0) \Big) =
+  \exp\sum_{k=1}^{|\underline t|} \Big( \prj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}} - \affShift^\epsilon\big(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}} \big) \Big)
+$$
+We denote the above quantity $\fddDensity^{\epsilon,\underline t, \underline\twistVar}$, its associated measure change by
+$$
+  \fddPrb^{\epsilon,\underline t,\underline\twistVar}_\stateVar(\rmd\omega) \defeq \fddDensity^{\epsilon,\underline t,\underline\twistVar}(\omega) \cdot \Prb(\rmd\omega),
+$$
+and observe the nature of how they make our increments distribute.
+
+<Statement {...affTwists} />
+
+Understanding these measures $\fddPrb^{\epsilon,\underline t,\underline\twistVar}_\stateVar$ will be important for our next section, where we relate the seemingly alternative exponential martingale method to studying large deviations.
+We now proceed from that short tangent back to our large deviation principle.
+
+<Statement {...exponentialTightness} />
+<Statement {...ldp} />
