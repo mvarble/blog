@@ -10,6 +10,7 @@ export function cmsInjection(): Plugin {
         name: 'cms-injection',
         version: '0.0.1',
         enforce: 'post',
+        // https://vite.dev/guide/api-plugin.html#transforming-custom-file-types
         transform(code, id) {
             if (!id.endsWith('.svx')) return;
             const filename = path.relative('.', id);

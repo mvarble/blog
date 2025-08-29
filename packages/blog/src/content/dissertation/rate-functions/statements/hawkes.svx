@@ -1,0 +1,100 @@
+---
+type: statement
+kind: example
+---
+
+Consider our sequence $(\epsilon\N_{\cdot/\epsilon})_{\epsilon>0}$ derived from a Poisson process $\N$, as in [%full](/statements/poisson).
+Denoting $\Prb^\epsilon$ and $\scrF^\epsilon$ the distribution and filtration, respectively, of each $J^\epsilon \defeq \epsilon\N_{\cdot/\epsilon}$, we may construct a measure $\mgPrb^\epsilon_\tau \ll \Prb^\epsilon|_{\scrF^\epsilon_\tau}$ for each $\tau > 0$, in which $\frac1\epsilon J^\epsilon$ has $\mgPrb^\epsilon$ intensity $\frac1\epsilon\affInt(J^\epsilon)$ for affine function $\affInt$.
+$$
+  \affInt: \bbR_+ \rightarrow \bbR_+, \quad \affInt(\stateVar) = \affIntPart_0 + \affIntPart_1 \stateVar
+$$
+The martingale that induces this change of measure is familiar from [%full](/statements/LK-girsanov), selecting $\twistFunc(s, \stateVar) = \log\affInt(\stateVar)$.
+The Lévy-Khintchine map associated with $\frac1\epsilon J^\epsilon$ is $\ode(\momentVar, \stateVar) = \frac1\epsilon (e^\momentVar - 1)$, and it resolves to the following.
+$$
+  \mgDensity^\epsilon \defeq \exp\bigg( \frac1\epsilon \log\affInt(J^\epsilon_-) \shortInt J^\epsilon + \frac1\epsilon\big( 1 - \affInt(J^\epsilon) \big) \shortInt \leb \bigg)
+$$
+The associated measure $\mgPrb^\epsilon_\tau(\rmd\omega) \defeq \mgDensity^\epsilon(\omega) \cdot \Prb^\epsilon|_{\scrF^\epsilon_\tau}(\rmd\omega)$ makes $\frac1\epsilon J^\epsilon$ have the desired intensity $\frac1\epsilon\affInt(J^\epsilon)$.
+The large deviation principle associated with $(\mgPrb^\epsilon_\tau)_{\epsilon>0}$ then comes from that of $(\Prb^\epsilon|_{\scrF^\epsilon_\tau})_{\epsilon>0}$.
+The change in rate function comes from exponential corrections of our martingale term.
+Indeed, we observe that if $J^\epsilon$ is uniformly within $\delta > 0$ of some absolutely continuous increasing $\pathVar$ on some compact interval $[0,\tau]$, then we have the following inequalities.
+$$
+  \begin{gathered}
+    \bigg| \int_0^\tau \Big( 1 - \affInt\big(J^\epsilon_t\big) \Big) \rmd t - \int_0^\tau \Big( 1 - \affInt\big( \pathVar(t) \big) \Big) \rmd t \bigg|
+    \leq \ell_1 \delta \tau \\
+    %
+    \begin{aligned}
+      &\bigg| \int_0^\tau \log\affInt\big(J^\epsilon_{t-}\big) \rmd J^\epsilon_t - \int_0^\tau \log\affInt\big(\pathVar(t-)\big) \rmd J^\epsilon_t \bigg| \\
+      &\leq \sup_{t\in[0,\tau]} \Big| \log\affInt\big(J^\epsilon_t\big) - \log\affInt\big(\pathVar(t)\big) \Big| \cdot J^\epsilon_T \\
+      &\leq \frac{\affIntPart_1}{\affIntPart_0} \delta \Big( \pathVar(\tau) + \delta \Big),
+    \end{aligned} \\
+    %
+    \bigg| \int_0^\tau \log\affInt\big(\pathVar(t-)\big) \rmd J^\epsilon_t - \int_0^\tau \log\affInt\big(\pathVar(t-)\big) \rmd \pathVar(t)  \bigg|
+    \leq \log\affInt\big(\pathVar(\tau)\big) \delta \\
+    %
+    \bigg| \int_0^\tau \log\affInt\big(J^\epsilon_{t-}\big) \rmd J^\epsilon_t - \int_0^\tau \log\affInt\big(\pathVar(t-)\big) \rmd \pathVar(t) \bigg|
+    \leq \frac{\affIntPart_1}{\affIntPart_0} \delta \Big( \pathVar(\tau) + \delta \Big) + \log\affInt\big(\pathVar(\tau)\big) \delta
+  \end{gathered}
+$$
+Then these give us the following identity, revealing the rate function.
+$$
+  \begin{aligned}
+    &\lim_{\delta\rightarrow0}\lim_{\epsilon\rightarrow0}\epsilon\log\mgPrb^\epsilon_\tau\big( J^\epsilon|_{[0,\tau]} \in \ball{\pathVar}{\delta} \big) \\
+    &= \lim_{\delta\rightarrow0}\lim_{\epsilon\rightarrow0} \epsilon\log\Exp_{\Prb^\epsilon}\bigg( \exp\Big(\frac1\epsilon\int_0^\tau \log\affInt(J^\epsilon_{s-}) \rmd J^\epsilon_s + \frac1\epsilon\int_0^\tau \big(1 - \affInt(J^\epsilon_s) \big) \rmd s  \Big) 1_{J^\epsilon|_{[0,\tau]} \in \ball{\pathVar}{\delta}} \bigg) \\
+    &= \int_0^\tau \log\affInt\big(\pathVar(s-)\big) \rmd\pathVar(s) + \int_0^\tau \Big(1 - \affInt\big(\pathVar(s)\big) \Big) \rmd s \\
+      &\qquad+\lim_{\delta\rightarrow0} \Big( \affIntPart_1 \delta \tau + \frac{\affIntPart_1}{\affIntPart_0} \delta \big( \pathVar(\tau) + \delta \big) + \log\affInt\big(\pathVar(\tau)\big) \delta \Big) \\
+      &\qquad+\lim_{\delta\rightarrow0}\lim_{\epsilon\rightarrow0} \epsilon \log \Prb\Big( \epsilon \N_{\cdot/\epsilon}|_{[0,\tau]} \in \ball{\pathVar}{\delta} \Big) \\
+    &= \int_0^\tau \Big( \dot\pathVar(s) \log \affInt\big(\pathVar(s)\big) - \affInt\big(\pathVar(s)\big) + 1 \Big) \rmd s - \int_0^\tau \Big(\dot\pathVar(t) \log \dot\pathVar(t) - \dot\pathVar(t) + 1 \Big) \rmd s \\
+    &= -\int_0^\tau \bigg( \dot\pathVar(s) \log\Big(\frac{\dot\pathVar(s)}{\affInt\big(\pathVar(s)\big)} \Big) - \dot\pathVar(s) + \affInt\big(\pathVar(s)\big) \bigg) \rmd s
+  \end{aligned}
+$$
+From here, we lift our large deviation principle back to the interval $[0,\infty)$ by another application of Dawson-Gärtner.
+
+Of course, many technical details are missing in the above argument, but we again reiterate that this is merely to gather intuition on rate functions.
+For a rigorous proof involving such analysis, we refer the reader to [](/citations#gao2018b), where they prove a large deviation principle for an asymptotic family of nonlinear Hawkes processes.
+In any case, we again note that [%full](/statements/ldp-integral) covers the large deviation principle and rate function mentioned above.
+A continuous-branching process $\X$ with intensity $\affInt(\X)$ has special semimartingale decomposition as below,
+$$
+  \X = 1 \ast \jumpMeas^{\X} = 1 \ast \predproj{\jumpMeas^{\X}} + 1 \ast \compensate{\jumpMeas^{\X}} = \affInt(\X) \shortInt \leb + 1 \ast \compensate{\jumpMeas^{\X}}
+$$
+which lends itself to the following special differential characteristics $(\affDrift, \affDiff, \affJump)$,
+$$
+  \affDrift(\stateVar) = \affInt(\stateVar), \quad
+  \affDiff(\stateVar) = 0, \quad
+  \affJump(\stateVar, \rmd\markVar) = \affInt(\stateVar) \delta_1(\rmd\markVar)
+$$
+and so the corresponding integrand in [](tag:eq-rf-integral) evaluates the following function.
+$$
+  \begin{aligned}
+    \ode^*\big(\diffVar, \stateVar \big)
+    &= \sup_{\momentVar\in\bbR}\bigg( \momentVar \diffVar - \momentVar\affInt(\stateVar) - \int_\bbR \big( e^{\momentVar\markVar} - 1 - \momentVar\markVar \big) \affInt(\stateVar)\delta_1(\rmd\markVar) \bigg) \\
+    &= \sup_{\momentVar\in\bbR}\bigg( \momentVar \diffVar - \affInt(\stateVar) e^\momentVar + \affInt(\stateVar) \bigg) \\
+    &= \left\{\begin{array}{ll}
+      \displaystyle \diffVar \log\Big(\frac{\diffVar}{\affInt(\stateVar)}\Big) - \diffVar + \affInt(\stateVar), & \diffVar \geq 0, ~ \affInt(\stateVar) \geq 0 \\
+      \infty, & \text{otherwise}
+    \end{array}\right.
+  \end{aligned}
+$$
+
+We may even extend this to Hawkes processes $(\Xe)_{\epsilon>0}$ induced by base process,
+$$
+  \X = \hawkesRate\big(\mu- \X_t \big) \shortInt \leb + \N, \quad \N \text{ intensity } \affInt(\X),
+$$
+for this process $\X$ has affine special differential characteristics.
+$$
+  \affDrift(\stateVar) = \hawkesRate(\mu - \stateVar) + \affInt(\stateVar), \quad
+  \affDiff(\stateVar) = 0, \quad
+  \affJump(\stateVar, \rmd\markVar) = \affInt(\stateVar) \delta_1(\rmd\markVar)
+$$
+The rate function then involves the following expression,
+$$
+  \begin{aligned}
+    \ode^*(\diffVar, \stateVar)
+    &= \sup_{\momentVar\in\bbR} \bigg( \momentVar\diffVar - \momentVar\Big(\hawkesRate(\mu - \stateVar) - \affInt(\stateVar)\Big) - \int_\bbR \big( e^{\momentVar\markVar} - 1 - \momentVar\markVar \big) \affInt(\stateVar) \delta_1(\rmd\markVar) \bigg) \\
+    &= \sup_{\momentVar\in\bbR} \bigg( \momentVar\Big(\diffVar - \hawkesRate(\mu-\stateVar)\Big) - \affInt(\stateVar)e^\momentVar + \affInt(\stateVar) \bigg) \\
+    &= \left\{\begin{array}{ll}
+      \displaystyle \diffVar \log\Big(\frac{\diffVar-\hawkesRate(\mu-\stateVar)}{\affInt(\stateVar)}\Big) - \diffVar + \affInt(\stateVar), &  \affInt(\stateVar) > 0, ~ \diffVar - \hawkesRate(\mu-\stateVar) \geq 0, \\
+      \infty, & \text{otherwise}
+    \end{array}\right.
+  \end{aligned}
+$$
+which is similar to the linear case of [](/citations#gao2018b).

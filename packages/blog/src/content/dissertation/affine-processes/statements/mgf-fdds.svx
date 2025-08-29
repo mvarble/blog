@@ -23,7 +23,7 @@ Conversely, [%full](/statements/moment-to-twist) indicates to us that, on the fi
 Denoting $n \defeq |\underline t|$, we see that this map is continuous by induction and continuity of compositions.
 $$
   \momentToTwist_{\underline t}(\underline\momentVar) = \Big( \momentToTwist_{\underline t, 1}(\underline\momentVar_{1:n}), \ldots, \momentToTwist_{\underline t, n}(\underline\momentVar_{n:n}) \Big),  \quad
-  \begin{aligned}[t]
+  \begin{aligned}
     \momentToTwist_{\underline t,n}(\underline\momentVar_{n:n}) &= \momentVar_n \\
     \momentToTwist_{\underline t,k}(\underline\momentVar_{k:n}) &= \momentVar_k + \affPart\big(\Delta t_{k+1}, \momentToTwist_{\underline t}(\underline\momentVar_{k+1:n}) \big)
   \end{aligned}

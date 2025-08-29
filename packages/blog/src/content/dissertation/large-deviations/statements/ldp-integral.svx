@@ -28,4 +28,15 @@ $$
 $$
 This concludes that $\rf$ can be written as in [](tag:eq-rf-integral).
 
+
+$$
+  @tag(eq-hi-ldp)
+  f(x)
+$$
+
+$$
+  @tag(eq-hi-ldp2)
+  f(x)
+$$
+
 </Proof>

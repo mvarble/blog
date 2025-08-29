@@ -10,6 +10,8 @@ import {
     prepareDb,
     connect,
     cacheDir,
+    getPage,
+    getRootDescendant,
 } from '../db';
 import { hasStringField } from '../util';
 
@@ -160,10 +162,18 @@ export function cmsSource(): Plugin {
                 const file = await fs.promises.readFile(filename, 'utf8');
                 const frontmatter = isSvx ? matter(file).data : { type: 'citation' };
                 await hmr(filename, frontmatter, file);
-                // do a full reload since Vite somehow doesn't know about this file
-                server.ws.send({ type: 'full-reload' });
-                return [];
             }
+
+            const page = getPage(db, filename);
+            if (!page) return;
+
+            // TODO: consider editing everything below as well...
+            let module = server.moduleGraph.getModuleById(file);
+            if (module) server.moduleGraph.invalidateModule(module);
+            const parentFilename = getRootDescendant(db, filename);
+            module = server.moduleGraph.getModuleById(path.resolve(path.join('.', parentFilename)));
+            if (module) server.moduleGraph.invalidateModule(module);
+            server.moduleGraph.invalidateAll();
         },
     };
 }

@@ -1,0 +1,61 @@
+---
+type: statement
+kind: example
+---
+
+We can leverage [%full](/statements/brownian) to a family of processes $(\Xe)_{\epsilon>0}$,
+$$
+  \Xe = \stateVar + \affDrift(\Xe) \shortInt \leb + \sqrt\epsilon \shortInt \W,
+$$
+where the drift $\affDrift: \vecSpace \rightarrow \vecSpace$ is bounded and Lipschitz.
+Having a map $F_\affDrift$ which implicitly solves the equation,
+$$
+  @tag(eq-F-brownian-drift)
+  F_\affDrift(\omega) = \pathVar, \quad \pathVar(t) = \stateVar + \affDrift(\pathVar) \shortInt \leb_t + \omega_t,
+$$
+will make $F_\affDrift(\sqrt\epsilon\W) = \Xe$ for each $\epsilon > 0$, so the contraction principle states that the distributions of $(\Xe)_{\epsilon>0}$ satisfy a large deviation principle in which the rate function $\rf_\affDrift$ is derived from that $\rf_\W$ from [%full](/statements/brownian).
+$$
+  \begin{aligned}
+    \rf_\affDrift(\pathVar) &\defeq \inf\Big\{ \rf_\W(\omega) : F_\affDrift(\omega) = \pathVar \Big\},\\
+    \rf_\W(\omega) &\defeq \left\{\begin{array}{ll}
+      \displaystyle\int_0^\infty \frac12\big|\dot\omega(t)\big|^2 \rmd t, & \omega(0) = 0, ~ \omega \in \acpathSpace{[0,\infty)}{\vecSpace}, \\
+      \infty, & \text{otherwise}
+    \end{array}\right.
+  \end{aligned}
+$$
+When $F_\affDrift(\omega) = \pathVar$, equation ([](tag:eq-F-brownian-drift) tells us $\pathVar(0) = \stateVar$ and $\dot\omega = \dot\pathVar - \affDrift(\pathVar)$, and so we have the following.
+$$
+  \rf_\affDrift(\pathVar) = \left\{\begin{array}{ll}
+    \displaystyle \int_0^\infty \frac12 \Big|\dot\pathVar - \affDrift\big(\pathVar(t)\big)\Big| \rmd t, & \pathVar(0) = \stateVar, ~ \pathVar \in \acpathSpace{[0,\infty)}{\vecSpace}, \\
+    \infty, & \text{otherwise}
+  \end{array}\right.
+$$
+Similarly, we may introduce a bounded, Lipschitz diffusion $\affDiff = \affDiffSqrt\affDiffSqrt^*: \vecSpace \rightarrow \bbL(\vecSpace)$ in which each $\affDiff(\stateVar)$ is invertible, so that the dynamics become as follows.
+$$
+  @tag(eq-F-brownian-drift-diff)
+  \Xe = \stateVar + \affDrift(\Xe) \shortInt \leb + \sqrt\epsilon \affDiffSqrt(\Xe) \shortInt \W,
+$$
+Having a map $F_{\affDrift,\affDiff}$ which implicitly solves the equation,
+$$
+  F_{\affDrift,\affDiff}(\omega) = \pathVar, \quad \pathVar(t) = \affDrift(\pathVar) \shortInt \leb_t + \affDiffSqrt(\pathVar) \shortInt \omega_t,
+$$
+will allow us to repeat the above argument to get a large deviation principle for $(\Xe)_{\epsilon>0}$ with rate function $\rf_{\affDrift,\affDiff}$; when $\pathVar(0) = \stateVar$, $\pathVar \in \acpathSpace{[0,\infty)}{\vecSpace}$, we get the following.
+$$
+  \rf_{\affDrift,\affDiff}(\pathVar) = \int_0^\infty \frac12 \bprj{\Big(\dot\pathVar(t)-\affDrift\big(\pathVar(t)\big)\Big)}{\affDiff\big(\pathVar(t)\big)^{-1}\Big(\dot\pathVar(t)-\affDrift\big(\pathVar(t)\big)\Big)} \rmd t
+$$
+
+The true details of this result, attributed to Freidlin-Wentzel [Theorems 5.6.3 and 5.6.7](/citations#dembo2010), are rather complicated, and the above argument is just a heuristic.
+Also, note that this result does not apply to the general class of affine diffusions, as $\affDrift, \affDiff$ are generally not bounded or Lipschitz, and $\affDiff$ need not be invertible.
+However, [](/citations#kang2014)---a paper which inspires parts of our proof---first proved that affine (jump-)diffusions with special differential characteristics $(\affDrift, \affDiff, 0)$ satisfy a large deviation principle with rate function similar to that above.
+Our rate function [](tag:eq-rf-integral) from [%full](/statements/ldp-integral) immediately resolves an identical representation.
+$$
+  \begin{aligned}
+    \ode^*(\diffVar, \stateVar)
+    &= \sup_{\momentVar \in \vecSpace} \bigg( \prj{\momentVar}{\diffVar} - \bprj{\momentVar}{\affDrift(\stateVar)} - \frac12\bprj{\momentVar}{\affDiff(\stateVar)\momentVar} \bigg) \\
+    &= \left\{\begin{array}{ll}
+      \displaystyle \frac12\Bprj{\big(\diffVar-\affDrift(\stateVar)\big)}{\affDiff(\stateVar)^\dagger\big(\diffVar-\affDrift(\stateVar)\big)}, & \diffVar - \affDrift(\stateVar) \in \operatorname{image}\affDiff(\stateVar), \\
+      \infty, & \text{otherwise}
+    \end{array}\right.
+  \end{aligned}
+$$
+Above, $a^\dagger \in \bbL(\vecSpace)$ denotes the pseudoinverse of $a \in \bbL(\vecSpace)$.

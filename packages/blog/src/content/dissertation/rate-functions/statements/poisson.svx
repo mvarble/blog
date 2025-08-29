@@ -1,0 +1,49 @@
+---
+type: statement
+kind: example
+---
+
+One may apply a very similar argument for when our increment distribution $\affDist$ is $\operatorname{Poisson}(1)$.
+In this case, the integral in the rate function in [](tag:eq-rf-mogulskii) evaluates to
+$$
+  @tag(eq-rf-poisson)
+  \int_0^\infty \Big( \dot\pathVar(t)  \log\big(\dot\pathVar(t)\big) - \dot\pathVar(t) + 1 \Big) \rmd t,
+$$
+so long as $\pathVar(t) \geq 0$ for Lebesgue-almost-every $t \geq 0$ (otherwise, it is infinite).
+In the case that $\pathVar(t) = 0$, we are taking the continuous extension of the integrand, i.e.\ $0\log(0) \defeq 0$.
+Similar to the work of Schilder's theorem, we may show, for a standard Poisson process $\N$, $\epsilon\N_{\cdot/\epsilon}$ is exponentially equivalent to this $Y^\epsilon$, which makes the family satisfy a large deviation principle with rate function [](tag:eq-rf-poisson).
+In fact and exercise of our reference text, [Exercise 5.2.12](/citations#dembo2010), suggests the reader to show just this.
+
+Again, such a family $(\epsilon\N_{\cdot/\epsilon})_{\epsilon>0}$ is covered by [%full](/statements/ldp-integral).
+To see this, consider a base affine process $\X$ on $(\bbR, \scrB(\bbR))$ with special differential characteristics as below, where $\delta_1$ denotes the degenerate distribution at $1 \in \bbR$.
+$$
+  \affDrift(\stateVar) = 1, \quad \affDiff(\stateVar) = 0, \quad \affJump(\stateVar, \rmd\markVar) = \delta_1(\rmd\markVar)
+$$
+Setting the initial state $\stateVar = 0$ and looking at [%full](/statements/sde-asymptotics), we may say that $\Xe$ can be realized as follows.
+$$
+  \begin{aligned}
+    \Xe_t
+    &= t + \epsilon 1_{[0,1]}(\id_\bbR) \ast \compensate{\poisRM^\epsilon}_t \\
+    &= t + \epsilon 1_{[0,1]}(\id_\bbR) \ast \poisRM^\epsilon_t - \epsilon 1_{[0,1]}(\id_\bbR) \ast \predproj{\poisRM^\epsilon}_t \\
+    &= t + \epsilon \poisRM([0,t/\epsilon] \times [0,1]) - \int_0^{t/\epsilon} \int_\bbR \epsilon 1_{[0,1]}(\markVar) \rmd\markVar \rmd s \\
+    &= \epsilon \poisRM([0,t/\epsilon] \times [0,1])
+  \end{aligned}
+$$
+As stated in [Theorem II.4.8](/citations#jacod2003), this Poisson random measure $\poisRM$ is a Poisson point process with Lebesgue intensity.
+This means that, for each $t \geq 0$, $\N_t \defeq \poisRM([0,t] \times [0,1])$ distributes $\operatorname{Poisson}(t)$, and $\N_t - \N_s = \poisRM((s,t] \times [0,1])$ is independent of $\N_s = \poisRM([0,s], [0,1])$ for each $0 \leq s < t$.
+In other words, $\N$ is a standard Poisson process and
+$$
+  \Xe_t = \epsilon \poisRM([0,t/\epsilon] \times [0,1]) = \epsilon\N_{t/\epsilon}.
+$$
+As with the normal increments, our rate function [](tag:eq-rf-integral) resolves this immediately.
+$$
+  \begin{aligned}
+    \ode^*(\diffVar, \stateVar)
+    &= \sup_{\momentVar\in\vecSpace} \bigg( \momentVar\diffVar - \momentVar - \int_\bbR \big( e^{\momentVar\markVar} - 1 - \momentVar\markVar \big) \delta_1(\rmd\markVar) \bigg)  \\
+    &= \sup_{\momentVar\in\vecSpace} \bigg( \momentVar\diffVar - e^\momentVar + 1 \bigg) \\
+    &= \left\{\begin{array}{ll}
+      \diffVar \log\diffVar - \diffVar + 1, & \diffVar \geq 0 \\
+      \infty, & \text{otherwise}
+    \end{array}\right.
+  \end{aligned}
+$$

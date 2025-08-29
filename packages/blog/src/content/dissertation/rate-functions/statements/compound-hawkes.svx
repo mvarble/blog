@@ -1,0 +1,80 @@
+---
+type: statement
+kind: example
+---
+
+We can also consider a family $(\Xe)_{\epsilon>0}$ of compound-Hawkes processes with affine intensity $\affInt(\stateVar) = \affIntPart_0 + \affIntPart_1 \stateVar$.
+$$
+  \begin{gathered}
+    \Xe_t = \stateVar + \hawkesRate\big(\mu - \Xe\big) \shortInt \leb_t + \epsilon \sum_{k=1}^{N^\epsilon_t} \V_k, \\
+    \N^\epsilon \text{ intensity } \frac1\epsilon\affInt(\Xe), \\
+    (\V_k)_{k\in\bbN} \text{ independent and commonly distributed by } \affDist \text{ on } \scrB(\bbR_+)
+  \end{gathered}
+$$
+A proof for a large deviation principle of $(\Xe, \epsilon\N^\epsilon)_{\epsilon>0}$ could use the steps of Examples [%label](/statements/hawkes) and [%label](/statements/compound-poisson), summarized as below.
+
+- Use [%full](/statements/compound-poisson) to establish a large deviation principle for the family $(\epsilon K^\epsilon, \epsilon \N^\epsilon)_{\epsilon>0}$ where $\N^\epsilon$ is a Poisson process with rate $1/\epsilon$ and $K^\epsilon = \sum_{k=1}^{\N^\epsilon} V_k$ is the accumulated jump process.
+  The integral in the rate function will be as [](tag:eq-rf-compound-poisson).
+  $$
+    \rf_{K\N}^\text{pois}(\gamma, \eta) = \int_0^\infty \bigg( \dot\eta(t) \log \dot\eta(t) - \dot\eta(t) + 1 + \dot\eta(t) \ode_\affDist^*\Big(\frac{\dot\gamma(t)}{\dot\eta(t)} \Big) \bigg) \rmd t
+  $$
+- We observe that defining the map $F$,
+  $$
+    F\gamma(t) = \mu + (\stateVar - \mu)e^{-\hawkesRate t} + \int_0^t e^{-\hawkesRate(t-s)} \rmd\gamma(s),
+  $$
+  will be such that $\Xe = F(\epsilon K^\epsilon)$ gives us our path-properties as above.
+  To see this, fix an arbitrary finite-variation $\gamma$ with $\gamma(0) = 0$ and define $\pathVar = F(\gamma)$.
+  Observe that applying the fundamental theorem of calculus and Fubini's theorem provides the following equality.
+  $$
+    @tag(eq-most-annoying-thing-ever)
+    \begin{aligned}
+        \pathVar(t)
+        &= \mu + (\stateVar - \mu) e^{-\hawkesRate t} + \int_0^t e^{-\hawkesRate(t-s)} \rmd \gamma(s) \\
+        &= \stateVar + \big( (\stateVar-\mu)e^{-\hawkesRate t} - (\stateVar - \mu) \big) + \int_0^t \Big( 1 + \big( e^{-\hawkesRate(t-s)} - e^{-\hawkesRate(s-s)} \big) \big) \rmd\gamma(s)  \\
+        &= \stateVar - \hawkesRate (\stateVar - \mu) e^{-\hawkesRate \leb} \shortInt \leb_t + \gamma(t) - \int_0^t \int_s^t \hawkesRate e^{-\hawkesRate(\tau-s)} \rmd\tau \rmd\gamma(s) \\
+        &= \stateVar + \hawkesRate \Big( \mu - \big( \mu + (\stateVar - \mu) e^{-\hawkesRate\leb} \big) \Big) \shortInt\leb_t + \gamma(t) - \int_0^t \int_0^\tau \hawkesRate e^{-\hawkesRate(\tau-s)} \rmd\gamma(s) \rmd\tau \\
+        &= \stateVar + \int_0^t \hawkesRate \Big( \mu - \big( \mu + (\stateVar - \mu) e^{-\hawkesRate\tau} - \int_0^\tau e^{-\hawkesRate(\tau-s)} \rmd\gamma(s) \big) \Big) \rmd \tau + \gamma(t) \\
+        &= \stateVar + \int_0^t \hawkesRate \big( \mu - \pathVar(\tau) \big) \rmd \tau + \gamma(t) \\
+        &= \stateVar + \hawkesRate( \mu - \pathVar ) \shortInt \leb_t + \gamma(t)
+      \end{aligned}
+  $$
+  Thus, if we use the contraction map $(\gamma, \eta) \mapsto (F\gamma, \eta)$, we will get a large deviation principle for $(\Xe, \epsilon\N^\epsilon)$.
+  Note that if an absolutely continuous $\gamma$ is such that $F\gamma = \pathVar$, then [](tag:eq-most-annoying-thing-ever) tells us
+  $$
+    \dot\pathVar(t) = \hawkesRate\big(\mu - \pathVar(t)\big) + \dot\gamma(t),
+  $$
+  and so the integral in our rate function now evaluates as follows.
+  $$
+    \rf_{\X\N}^\text{pois}(\pathVar, \eta) = \int_0^\infty \bigg( \dot\eta(t) \log \dot\eta(t) - \dot\eta(t) + 1 + \dot\eta(t) \ode_\affDist^*\Big(\frac{\dot\pathVar(t) - \hawkesRate(\mu-\pathVar(t))}{\dot\eta(t)} \Big) \bigg) \rmd t
+  $$
+- At last, we apply our measure-change argument as in [%full](/statements/hawkes) to change the intensity of $\N^\epsilon$ to $\frac1\epsilon\affInt(\Xe)$.
+  The work is the exact same, and so our rate function associated with $(\Xe, \epsilon\N^\epsilon)_{\epsilon>0}$ will become the following.
+  $$
+    @tag(eq-rf-compound-hawkes)
+    \begin{aligned}
+    \rf_{\X\N}(\pathVar, \eta)
+    &=\int_0^\infty \bigg( \dot\eta(t) \log\Big( \frac{\dot\eta(t)}{\affInt\big(\pathVar(t)\big)} \Big) - \dot\eta(t) + \affInt\big(\pathVar(t)\big) \bigg) \rmd t \\
+    &\quad+ \int_0^\infty \dot\eta(t) \ode_\affDist^*\Big(\frac{\dot\pathVar(t) - \hawkesRate(\mu-\pathVar(t))}{\dot\eta(t)} \Big) \rmd t
+    \end{aligned}
+  $$
+
+Instead of working through the numerous details of the lengthy argument above, we can again use [%full](/statements/ldp-integral) and its rate function [](tag:eq-rf-integral).
+By work nearly identical to the end of [%full](/statements/compound-poisson), we can see that the special differential characteristics of $\hat\Xee = (\Xee, \N^\epsilon)$ are as below.
+$$
+  \affDrift(\hat\stateVar) = \begin{pmatrix} \hawkesRate(\kappa - \stateVar_1) + \affInt(\stateVar_1)\overline{\affDist} \\ \affInt(\stateVar_1) \end{pmatrix}, \quad
+  \affDrift(\hat\stateVar) = 0, \quad
+  \affJump(\hat\stateVar, \hat\markVar) = \affInt(\stateVar_1) \affDist(\rmd\markVar_1) \delta_1(\rmd\markVar_2)
+$$
+Our associated Lévy-Khintchine map is then the following $\ode$.
+$$
+  \begin{aligned}
+    \ode(\hat\momentVar, \hat\stateVar)
+    &= \momentVar_1\big(\hawkesRate(\mu - \stateVar_1) + \overline\affDist\big) + \momentVar_2 \affInt(\stateVar_1) \\
+      &\quad+ \int_{\bbR_+^2} \Big( e^{\momentVar_1\markVar_1 + \momentVar_2} - 1 - \momentVar_1\markVar_1 - \momentVar_2\markVar_2 \Big) \affDist(\rmd\markVar_1)\delta_1(\rmd\markVar_2) \\
+    &= \momentVar_1 \hawkesRate(\mu-\stateVar_1) + e^{\ode_\affDist(\momentVar_1)+\momentVar_2} - 1
+  \end{aligned}
+$$
+Almost identical calculus to [%full](/statements/compound-poisson) also provides us with the following expression, which agrees with [](tag:eq-rf-compound-hawkes).
+$$
+  \ode^*(\hat\diffVar, \hat\stateVar) = \dot\stateVar_2 \log\Big(\frac{\dot\stateVar_2}{\affInt(\stateVar_1)} \Big) - \dot\stateVar_2 + \affInt(\stateVar_1) + \dot\stateVar_2 \ode_\affDist^*\Big( \frac{\dot\stateVar_1 - \hawkesRate(\mu - \stateVar_1)}{\dot\stateVar_2} \Big)
+$$
