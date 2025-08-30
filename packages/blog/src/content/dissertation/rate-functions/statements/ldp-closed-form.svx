@@ -1,0 +1,219 @@
+---
+type: statement
+kind: theorem
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+Let $\X$ be an affine process as introduced above with [%full](/statements/joint-affine) satisfied.
+Then $\hat\X$ is a base affine process with which we may parameterize $\hat\Xe$ with distribution as in [Section %label](/sequences/dissertation/large-deviations/asymptotics).
+Fixing $\hat\stateVar \in \hat\stateSpace^\circ$ and denoting $\hat\Prb^\epsilon_{\hat\stateVar}$ the distribution associated with $\hat\Xe$ starting at $\hat\stateVar$, we have a large deviation principle for $(\hat\Prb^\epsilon_{\hat\stateVar})_{\epsilon>0}$.
+The rate function $\rf_{\hat\stateVar}$ simplifies to the following semi-closed form, where we denote the components of an arbitrary function $\hat\pathVar$ by $\hat\pathVar \defeq (\pathVar, \omega, \gamma, \eta)$.
+$$
+  \begin{aligned}
+    \rf_{\hat\stateVar}(\hat\pathVar)
+    &= \int_0^\infty \frac12 \Bprj{\dot\omega(t)}{\affDiff\big(\pathVar(t)\big)^\dagger \dot\omega(t)} \rmd t \\
+    &\qquad+ \int_0^\infty \bigg( \dot\eta(t)\log\Big(\frac{\dot\eta(t)}{\affInt\big(\pathVar(t)\big)} \Big) - \dot\eta(t) + \affInt\big(\pathVar(t)\big) \bigg) \rmd t  \\
+    &\qquad+ \int_0^\infty \dot\eta(t) \ode_{\affDist(\pathVar(t),\cdot)}^*\bigg( \frac{\dot\gamma(t) + \affInt\big(\pathVar(t)\big)\overline{\affDist(\pathVar(t), \cdot)}}{\dot\eta(t)} \bigg) \rmd t
+  \end{aligned}
+$$
+In the evaluation above, we are insisting $0\log 0 = 0$, $0 \cdot \ode_{\affDist(\cdot,\cdot)}(\cdot) = 0$, and that $\hat\pathVar$ satisfies the following properties below, where statements involving $t$ are taken Lebesgue-almost-everywhere; otherwise $\rf_{\hat\stateVar}(\hat\pathVar) = \infty$.
+
+- $\hat\pathVar(0) = \hat\stateVar$,
+- $\pathVar \in \acpathSpace{[0,\infty)}{\stateSpace}$, $\omega \in \acpathSpace{[0,\infty)}{\vecSpace}$, $\gamma \in \acpathSpace{[0,\infty)}{\vecSpace}$, and $\eta \in \acpathSpace{[0,\infty)}{\bbR_+}$,
+- $\dot\pathVar(t) = \affDrift\big(\pathVar(t)\big) + \dot\omega(t) + \dot\gamma(t)$,
+- $\dot\omega(t) \in \operatorname{image}\big(\affDiff(\pathVar(t))\big)$,
+- $\affInt\big(\pathVar(t)\big) > 0$.
+- $\dot\eta(t) \geq 0$,
+
+<Proof>
+
+[%full](/statements/joint-affine) is another way of rewriting the system in [%full](/statements/affine-resolution), as in [%full](/statements/riccati-affine-formulation).
+This makes $\hat\X$ an affine process, so [%full](/statements/joint-cone) and [%full](/statements/joint-characteristics) tell us that $\hat\X$ satisfies the assumptions of Section [%label](/sequences/dissertation/large-deviations/assumptions).
+Thus, the parameterization $\hat\Xe$ is a family described by [%full](/statements/ldp-integral), and so we have a large deviation principle for $(\hat\Prb^\epsilon_{\hat\stateVar})_{\epsilon>0}$.
+Again using [%full](/statements/joint-characteristics), we see that the integrand evaluates the following function.
+$$
+  \begin{aligned}
+    \hat\ode^*(\hat{\diffVar}, \hat\stateVar)
+    &= \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
+    &= \sup_{\hat\momentVar \in \hat\vecSpace} \bigg(
+      \prj{\momentVar_1}{\diffVar_1}
+      + \prj{\momentVar_2}{\diffVar_2}
+      + \prj{\momentVar_3}{\diffVar_3}
+      + \momentVar_4\diffVar_4
+      - \prj{\momentVar_1}{\affDrift(\stateVar_1)}  \\
+      &\hspace{16mm}- \frac12\bprj{\momentVar_1+\momentVar_2}{\affDiff(\stateVar_1)(\momentVar_1+\momentVar_2)}
+      - \affInt(\stateVar_1)\exp\Big(\ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3) + \momentVar_4\Big) \\
+      &\hspace{16mm}+ \affInt(\stateVar_1)
+      + \bprj{\momentVar_1+\momentVar_3}{\affInt(\stateVar_1)\overline{\affDist(\stateVar_1,\cdot)}}  \bigg) \\
+    @tag(eq-optimizing-integrand)
+    &= \sup_{\hat\momentVar\in\hat\vecSpace} \bigg(
+      \bprj{\momentVar_1}{\diffVar_1 - \affDrift(\stateVar_1) - \diffVar_2 - \diffVar_3}
+      + \Bprj{\momentVar_1+\momentVar_2}{\diffVar_2
+      - \frac12\affDiff(\stateVar_1)(\momentVar_1+\momentVar_2)} \\
+      &\hspace{16mm}+ \Bprj{\momentVar_1+\momentVar_3}{\diffVar_3 + \affInt(\stateVar_1)\overline{\affDist(\stateVar_1,\cdot)}}
+      + \momentVar_4\diffVar_4 \\
+      &\hspace{16mm}- \affInt(\stateVar_1) \exp\Big(\ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3) + \momentVar_4\Big)
+      + \affInt(\stateVar_1) \bigg)
+  \end{aligned}
+$$
+We now evaluate the expression depending on different scenarios.
+
+- Suppose we had $\diffVar_1 \neq \affDrift(\stateVar_1) + \diffVar_2 + \diffVar_3$.
+  Observe that the expression in [](tag:eq-optimizing-integrand) can have all expressions but the first summand canceled, if $\momentVar_1 = -\momentVar_2 = -\momentVar_3$ and $\momentVar_4 = 0$.
+  This shows us the following.
+  $$
+    \begin{aligned}
+      \hat\ode^*(\hat{\diffVar}, \hat\stateVar)
+      &= \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
+      &\geq \sup_{\substack{\hat\momentVar=(\momentVar, -\momentVar, -\momentVar, 0) \\ \momentVar = \rho (\diffVar_1 - \affDrift(\stateVar_1) - \diffVar_2 - \diffVar_3) \\ \rho \in \bbR}} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
+      &= \sup_{\rho\in\bbR} \rho \Big| \diffVar_1 - \affDrift(\stateVar_1) - \diffVar_2 - \diffVar_3 \Big|^2 \\
+      &= \infty
+    \end{aligned}
+  $$
+- Now assume $\diffVar_2 \not\in \operatorname{image}\affDiff(\stateVar_1)$.
+    Observe that the expression in [](tag:eq-optimizing-integrand) can have all expressions other than the quadratic term canceled, if we set $\momentVar_1 = \momentVar_3 = \momentVar_4 = 0$.
+    Denote $w_2, w_2^\bot \in \vecSpace$ the projections of $\diffVar_2$ onto $\operatorname{image}(\affDiff(\stateVar_1))$ and its orthogonal complement, respectively.
+    Select $\tilde w_2 \in \vecSpace$ such that $w_2 = \frac12\affDiff(\stateVar_1) \tilde w_2$,
+    $$
+      \diffVar_2 = w_2 + w_2^\bot = \frac12 \affDiff(\stateVar_1) \tilde w_2 + w_2^\bot,
+    $$
+    and observe the following.
+    $$
+    \begin{aligned}
+      \hat\ode^*(\hat{\diffVar}, \hat\stateVar)
+      &= \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
+      &\geq \sup_{\substack{\hat\momentVar=(0, \momentVar, 0, 0) \\ \momentVar = \rho w_2^\bot \\ \rho \in \bbR}} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
+      &= \sup_{\rho\in\bbR} \Bprj{\rho w_2^\bot}{\diffVar_2 - \frac12\affDiff(\stateVar_1) \cdot \rho w_2^\bot} \\
+      &= \sup_{\rho\in\bbR} \bigg( \frac12\Bprj{\rho w_2^\bot}{\affDiff(\stateVar_1)(\tilde w_2 - \rho w_2^\bot)} + \Bprj{\rho w_2^\bot}{w_2^\bot} \bigg) \\
+      &= \sup_{\rho\in\bbR} \rho \big|w_2^\bot\big|^2 \\
+      &= \infty
+    \end{aligned}
+    $$
+- Now suppose $\affInt(\stateVar_1) = 0$.
+  Then, [](tag:eq-optimizing-integrand) shows us that evaluating at $\momentVar_1=\momentVar_2=\momentVar_4=0$ will cancel all terms not involving $\diffVar_3$.
+  $$
+    \begin{aligned}
+      \hat\ode^*(\hat{\diffVar}, \hat\stateVar)
+      = \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg)
+      &\geq \sup_{\substack{\hat\momentVar=(0, 0, \momentVar, 0)  \\ \momentVar = \rho \diffVar_3 \\ \rho \in \bbR}} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
+      &= \sup_{\rho\in\bbR} \rho\big|\diffVar_3\big|^2 \\
+      &= \infty
+    \end{aligned}
+  $$
+- Now suppose $\affInt(\stateVar_1) < 0$.
+  It is clear that selecting $\momentVar_1 = \momentVar_2 = \momentVar_3 = 0$ in [](tag:eq-optimizing-integrand) cancels many of the terms unrelated to $\diffVar_4$, which lends us to the following argument.
+  $$
+    \begin{aligned}
+      \hat\ode^*(\hat{\diffVar}, \hat\stateVar)
+      = \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg)
+      &\geq \sup_{\substack{\hat\momentVar=(0, 0, 0, \rho)  \\ \rho \in \bbR}} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
+      &= \sup_{\rho\in\bbR} \bigg( \rho\diffVar_4 + \affInt(\stateVar_1) (1 - e^\rho) \bigg) \\
+      &= \lim_{\rho\rightarrow-\infty} \bigg( \rho\diffVar_4 + \affInt(\stateVar_1) (1 - e^\rho) \bigg) \\
+      &= \infty
+    \end{aligned}
+  $$
+- Now suppose $\affInt(\stateVar_1) > 0$ and $\diffVar_4 < 0$.
+  Again using the same selection as the preceding part, we have another infinite value.
+  $$
+    \begin{aligned}
+      \hat\ode^*(\hat{\diffVar}, \hat\stateVar)
+      = \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg)
+      &\geq \sup_{\substack{\hat\momentVar=(0, 0, 0, \rho)  \\ \rho \in \bbR}} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
+      &= \sup_{\rho\in\bbR} \bigg( \rho\diffVar_4 + \affInt(\stateVar_1) (1 - e^\rho) \bigg) \\
+      &= \lim_{\rho\rightarrow\infty} \bigg( \rho\diffVar_4 + \affInt(\stateVar_1) (1 - e^\rho) \bigg) \\
+      &= \infty
+    \end{aligned}
+  $$
+- Now suppose $\diffVar_1 = \affDrift(\stateVar_1) + \diffVar_2 + \diffVar_3$, $\diffVar_2 \in \operatorname{image}(\affDiff(\stateVar_1))$, $\affInt(\stateVar_1) > 0$, and $\diffVar_4 > 0$.
+  Using [%full](/statements/ode-differentiable), we are able to take the gradients of the expression in [](tag:eq-optimizing-integrand) to get the following system of equations.
+  $$
+    \begin{aligned}
+      0 &= \diffVar_1 - \affDrift(\stateVar_1) - \affDiff(\stateVar_1) (\momentVar_1 + \momentVar_2) \\
+        &\qquad- \affInt(\stateVar_1) \exp\Big( \ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3) + \momentVar_4\Big) \nabla\ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3) \\
+        &\qquad+ \affInt(\stateVar_1) \overline{\affDist(\stateVar_1, \cdot)} \\
+      0 &= \diffVar_2 - \affDiff(\stateVar_1) ( \momentVar_1 + \momentVar_2 ) \\
+      0 &= \diffVar_3 - \affInt(\stateVar_1) \exp\Big( \ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3) + \momentVar_4\Big) \nabla\ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3) \\
+        &\qquad+ \affInt(\stateVar_1) \overline{\affDist(\stateVar_1, \cdot)} \\
+      0 &= \diffVar_4 - \affInt(\stateVar_1) \exp\Big( \ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3) + \momentVar_4\Big)
+    \end{aligned}
+  $$
+  These equations yield the following via simple algebra.
+  $$
+    @tag(eq-semi-closed-algebra)
+    \begin{aligned}
+      \momentVar_1 + \momentVar_2 &= \affDiff(\stateVar_1)^\dagger \diffVar_2 \\
+      \diffVar_4 &= \affInt(\stateVar_1) \exp\Big( \ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3) + \momentVar_4\Big)  \\
+      \diffVar_4\log\Big(\frac{\diffVar_4}{\affInt(\stateVar_1)}\Big) &=   \diffVar_4\ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3) + \momentVar_4\diffVar_4 \\
+      \frac{\diffVar_3 + \affInt(\stateVar_1)\overline{\affDist(\stateVar_1,\cdot)}}{\diffVar_4} &= \nabla\ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3)
+    \end{aligned}
+  $$
+  Seeing as $\ode_{\affDist(\stateVar_1,\cdot)}$ is a convex function, the last equality of [](tag:eq-semi-closed-algebra) corresponds to the unique extreme point of the Fenchel-Legendre transform.
+  $$
+    \begin{aligned}
+      &\Bprj{\momentVar_1 + \momentVar_3}{\frac{\diffVar_3+\affInt(\stateVar_1)\overline{\affDist(\stateVar_1,\cdot)}}{\diffVar_4}} - \ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3) \\
+      &\hspace{55mm}= \ode_{\affDist(\stateVar_1,\cdot)}^*\Big(\frac{\diffVar_3+\affInt(\stateVar_1)\overline{\affDist(\stateVar_1,\cdot)}}{\diffVar_4}\Big)
+    \end{aligned}
+  $$
+  Combining this equality with those of [](tag:eq-semi-closed-algebra) now gives us the following identity.
+  $$
+    \begin{aligned}
+      \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big)
+      &=\prj{\momentVar_1}{\diffVar_1}
+        + \prj{\momentVar_2}{\diffVar_2}
+        + \prj{\momentVar_3}{\diffVar_3}
+        + \momentVar_4\diffVar_4
+        - \prj{\momentVar_1}{\affDrift(\stateVar_1)}  \\
+        &\qquad\quad- \frac12\bprj{\momentVar_1+\momentVar_2}{\affDiff(\stateVar)(\momentVar_1+\momentVar_2)} \\
+        &\qquad\quad- \affInt(\stateVar_1)\exp\Big(\ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3) + \momentVar_4\Big) \\
+        &\qquad\quad+ \affInt(\stateVar_1)
+        + \bprj{\momentVar_1+\momentVar_3}{\affInt(\stateVar_1)\overline{\affDist(\stateVar_1,\cdot)}} \\
+      &=\frac12\Bprj{\diffVar_2}{\affDiff(\stateVar_1)^\dagger\diffVar_2} + \diffVar_4 \log\Big(\frac{\diffVar_4}{\affInt(\stateVar_1)}\Big) - \diffVar_4 + \affInt(\stateVar_1) \\
+        &\qquad+ \ode_{\affDist(\stateVar_1,\cdot)}^*\Big(\frac{\diffVar_3+\affInt(\stateVar_1)\overline{\affDist(\stateVar_1,\cdot)}}{\diffVar_4}\Big)
+    \end{aligned}
+  $$
+  Observe that since $\hat\ode(\cdot,\hat\stateVar)$ convex, the critical point we have solved is a global extremum, evaluating $\hat\ode^*(\hat\diffVar,\hat\stateVar)$.
+- The last case we must consider is when $\diffVar_1 = \affDrift(\stateVar_1) + \diffVar_2 + \diffVar_3$, $\diffVar_2 \in \operatorname{image}(\affDiff(\stateVar_1))$, $\affInt(\stateVar_1) > 0$, and $\diffVar_4 = 0$.
+  For this, we start by greedily optimizing in the $\momentVar_4$ coordinate in [](tag:eq-optimizing-integrand).
+  $$
+    \begin{aligned}
+      \hat\ode^*(\hat{\diffVar}, \hat\stateVar)
+      &= \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg)  \\
+      &= \sup_{\momentVar_1,\momentVar_2,\momentVar_3 \in \vecSpace} \bigg[
+        \bprj{\momentVar_1}{\diffVar_1 - \affDrift(\stateVar_1) - \diffVar_2 - \diffVar_3} \\
+        &\hspace{18mm}+ \Bprj{\momentVar_1+\momentVar_2}{\diffVar_2
+        - \frac12\affDiff(\stateVar_1)(\momentVar_1+\momentVar_2)} \\
+        &\hspace{18mm}+ \Bprj{\momentVar_1+\momentVar_3}{\diffVar_3 + \affInt(\stateVar_1)\overline{\affDist(\stateVar_1,\cdot)}}
+        + \affInt(\stateVar_1) \\
+        &\hspace{18mm}+ \sup_{\momentVar_4 \in \bbR} \bigg(- \affInt(\stateVar_1) \exp\Big(\ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3) + \momentVar_4\Big) \bigg)
+        \bigg] \\
+      &= \sup_{\momentVar_1,\momentVar_2,\momentVar_3 \in \vecSpace} \bigg[
+        \bprj{\momentVar_1}{\diffVar_1 - \affDrift(\stateVar_1) - \diffVar_2 - \diffVar_3}  \\
+        &\hspace{18mm}+ \Bprj{\momentVar_1+\momentVar_2}{\diffVar_2
+        - \frac12\affDiff(\stateVar_1)(\momentVar_1+\momentVar_2)} \\
+        &\hspace{18mm}+ \Bprj{\momentVar_1+\momentVar_3}{\diffVar_3 + \affInt(\stateVar_1)\overline{\affDist(\stateVar_1,\cdot)}}
+        + \affInt(\stateVar_1)
+        \bigg]
+    \end{aligned}
+  $$
+  From here, we are left with yet another convex function we intend to optimize; observe that the critical point now easily evaluates our expression.
+  $$
+    \begin{aligned}
+      0 &= \diffVar_1 - \affDrift(\stateVar_1) - \affDiff(\stateVar_1) (\momentVar_1 + \momentVar_2) + \affInt(\stateVar_1) \overline{\affDist(\stateVar_1, \cdot)} \\
+      0 &= \diffVar_2 - \affDiff(\stateVar_1) ( \momentVar_1 + \momentVar_2 ) \\
+      0 &= \diffVar_3 + \affInt(\stateVar_1) \overline{\affDist(\stateVar_1, \cdot)}
+      &\begin{aligned}
+        \Longrightarrow\quad
+        \prj{\hat\momentVar}{\hat\diffVar} - \hat\ode(\hat\momentVar,\hat\stateVar)
+        & = \frac12 \bprj{\diffVar_2}{\affDiff(\stateVar_1)^\dagger\diffVar_2} + \affInt(\stateVar_1)
+      \end{aligned}
+    \end{aligned}
+  $$
+  Thus, this expression solves $\ode^*(\hat\diffVar,\hat\stateVar)$.
+  Note that this expression is identical to the previous case, when taking convention that $0 \log 0 = 0$ and $0 \cdot \ode_{\affDist(\cdot,\cdot)}(\cdot) = 0$
+
+These cases simplify the nature of $\ode^*$ in [](tag:eq-rf-integral), finishing the proof.
+
+</Proof>

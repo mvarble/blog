@@ -1,0 +1,18 @@
+---
+type: statement
+kind: remark
+---
+
+- When we are dealing with the canonical space $\stateSpace = \bbR^m_+ \times \bbR^n$, then $\hat\stateSpace = \bbR^{\hat m}_+ \times \bbR^{\hat n}$, up to reordering the factors.
+  In this scenario, we have admissibility conditions on the special differential characteristics which impose existence of the solution, for each $\hat\momentVar \in \boundedSpaceJoint$.
+- Note that we already have a solution to the following equation for each $\momentVar \in \boundedSpace$, by existence of $\X$ as an affine process and [%full](/statements/affine-regularity).
+  $$
+    \begin{aligned}
+      &i = 0, \ldots, d \\
+      &\begin{aligned}
+          \dot\affPart_i(t, \momentVar) &=\prj{\affPart(t, \momentVar)}{\affDriftPart_i} + \frac12\prj{\affPart(t, \momentVar)}{\affDiffPart_i\affPart(t,\momentVar)} \\
+            &\qquad + \int_\vecSpace \big( e^\prj{\affPart(t,\momentVar)}{\markVar} - 1 - \prj{\affPart(t,\momentVar)}{\markVar} \big) \affJumpPart_i(\rmd\markVar)
+        \end{aligned} \\
+      & \affPart_0(t, \momentVar) = 0, ~ \affPart_i(t, \momentVar) = \momentVar_i
+    \end{aligned}
+  $$

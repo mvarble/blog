@@ -1,0 +1,15 @@
+---
+type: statement
+kind: assumption
+---
+
+Assume that $\X$ is such that the associated special differential characteristics $(\affDrift, \affDiff, \affJump)$ and the associated parts $\affDriftPart_i, \affDiffPart_i, \affJumpPart_i, \affIntPart_i$ for $i = 0, \ldots, d$ induce a solution to the following equation, for each $\hat\momentVar\in\boundedSpaceJoint$.
+$$
+  \begin{aligned}
+    &i = 0, \ldots, d \\
+    & \partial_t\hat{\affPart_i}(t, \hat\momentVar) =
+      \Bprj{\hat\affPart(t, \hat\momentVar)}{\affDriftPart_i} +  \frac12\Bprj{\hat\affPart(t, \hat\momentVar)+\momentVar_2}{\affDiffPart_i\big(\hat\affPart(t,\hat\momentVar)+\momentVar_2\big)} \\
+      &\hspace{18mm}+ \int_\vecSpace \Big( e^{\prj{\hat\affPart(t,\hat\momentVar) + \momentVar_3}{\markVar} + \momentVar_4} - 1 - \Bprj{\hat\affPart(t,\hat\momentVar) + \momentVar_3}{\markVar} \Big) \affJumpPart_i(\rmd\markVar) \\
+    & \affPart_0(t, \momentVar) = 0, ~ \affPart_i(t, \momentVar) = \momentVar_i
+  \end{aligned}
+$$

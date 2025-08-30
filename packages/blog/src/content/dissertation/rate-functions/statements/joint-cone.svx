@@ -1,0 +1,16 @@
+---
+type: statement
+kind: lemma
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+The space $\hat\stateSpace$ is a cone in $\hat\vecSpace$ with operations taken componentwise.
+
+<Proof>
+
+This is obvious, as each of the factors $\stateSpace$, $\vecSpace$, $\bbR_+$ that appear in our product is also a cone.
+
+</Proof>

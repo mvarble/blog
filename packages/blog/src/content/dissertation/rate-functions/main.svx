@@ -1,3 +1,95 @@
 ---
 title: Semi-closed form of rate function
 ---
+
+<script>
+  import Statement from '$lib/components/statement.svelte';
+  import * as jointCone from './statements/joint-cone.svx';
+  import * as jointCharacteristics from './statements/joint-characteristics.svx';
+  import * as jointAffine from './statements/joint-affine.svx';
+  import * as jointAffineRemark from './statements/joint-affine-remark.svx';
+  import * as ldpClosedForm from './statements/ldp-closed-form.svx';
+</script>
+
+<!-- discuss that we are coming up with semi-closed form -->
+We have now gathered enough familiarity with rate functions that appear in the large deviations literature and the various tools we may use to lift existing principles to new ones.
+This will allow us to more easily understand the nature and derivation of our semi-closed form for [](tag:eq-rf-integral) in [%full](/statements/ldp-integral).
+Let us now elaborate on the family on which we derive our semi-closed form; it is assumed that $\X$ is selected with our assumptions of [Section %label](../large-deviations/assumptions) that we needed for [%full](/statements/ldp-integral).
+
+<!-- introduce the factors of our new process from the original one -->
+Firstly, in order for us to perform the tricks of coupling we explored in the previous section, we need to couple our arrivals and/or accumulated jumps.
+We will need these objects to be locally integrable, so we impose that our base process $\X$ is _locally countable_ in the sense of our definition in [Appendix %label](/sequences/dissertation/jump-diffusions/countable).
+In particular, suppose that our base process $\X$ has special differential characteristics $(\affDrift, \affDiff, \affJump)$, where $\affJump$ has the finiteness condition below.
+$$
+  @tag(eq-assumption-affJump-finite)
+  \affJump(\stateVar, \vecSpace) < \infty, \quad \stateVar \in \stateSpace
+$$
+Note that [%full](/statements/locally-countable) thus provides us with a factoring
+$$
+  @tag(eq-affJump-factoring)
+  \affJump(\stateVar,\rmd\markVar) = \affInt(\stateVar) \affDist(\stateVar, \rmd\markVar)
+$$
+into an intensity function $\affInt \in \scrB(\stateSpace)/\scrB(\bbR_+)$ and conditional jump distribution $\affDist$ from $(\stateSpace, \scrB(\stateSpace))$ to $(\vecSpace, \scrB(\vecSpace))$.
+Denote to each $\affJump(\stateVar, \cdot)$ the notation from Sections [%label](./mogulskii) and [%label](./coupling).
+$$
+  \overline{\affDist(\stateVar, \cdot)} \defeq \int_\vecSpace \markVar \affDist(\stateVar, \rmd\markVar), \quad
+  \ode_{\affDist(\stateVar,\cdot)}(\momentVar) \defeq \int_\vecSpace e^\prj{\momentVar}{\markVar} \affDist(\stateVar, \rmd\markVar)
+$$
+Note that our finiteness assumption [](tag:eq-assumption-affJump-finite) and our light-tails assumption $\odeSpace = \vecSpace$ (along with [%full](/statements/odeSpace-rationale)) give us the following properties.
+$$
+  \overline{\affDist(\stateVar, \cdot)} < \infty, \quad \ode_{\affDist(\stateVar, \cdot)}(\momentVar) < \infty, \quad \stateVar \in \stateSpace
+$$
+We also have local integrability of the following process by our finiteness assumption [](tag:eq-assumption-affJump-finite).
+$$
+  @tag(eq-arrivals)
+  \N^\X \defeq 1 \ast \jumpMeas^\X
+$$
+Note that this is a stronger restriction than local integrability of the compensated jumps
+$$
+  @tag(eq-jumps)
+  \X^\rmd \defeq \id_\vecSpace \ast \compensate{\jumpMeas^\X},
+$$
+which we already have from the special property of $\X$.
+
+<!-- technical measure space stuff for joint process -->
+The remainder of this section will assume $\hat\X \defeq (\X, \X^\rmc, \X^\rmd, \N^\X)$ is specified from an affine process $\X$ with the properties discussed above.
+We will also factor our kernel $(\Prb_\stateVar)_{\stateVar\in\stateSpace}$ even further to one $(\hat\Prb_{\hat\stateVar})_{\hat\stateVar\in\hat\stateSpace}$ derived from the regular conditional $\Prb_\stateVar$-distribution of $(\Prb_\stateVar, \scrF)$ time-homogeneous Markov process $(\X^\rmc, \X^\rmd, \N^\X)$.
+We will see in the coming results that $\hat\X$ and its associated kernel $(\hat\Prb_{\hat\stateVar})_{\hat\stateVar\in\hat\stateSpace}$ and filtration $\scrF$ still satisfy the assumptions of Section [%label](../large-deviations/assumptions) needed to apply [%full](/statements/ldp-integral); furthermore, its coupling structure will allow us to derive a semi-closed form for [](tag:eq-rf-integral).
+This is a process on
+$$
+  \hat\stateSpace \defeq \stateSpace \times \vecSpace \times \vecSpace \times \bbR_+,
+$$
+which is a subset of vector space
+$$
+  \hat\vecSpace \defeq \vecSpace \times \vecSpace \times \vecSpace \times \bbR,
+$$
+when equipped with componentwise operations.
+We henceforth denote elements $\hat\vecVar \in \hat\vecSpace$ with components,
+$$
+  \hat\vecVar \defeq (\vecVar_1, \vecVar_2, \vecVar_3, \vecVar_4),
+$$
+and equip $\hat\vecSpace$ with the inner-product below.
+$$
+  \bprj{\hat\markVar}{\hat w} \defeq \prj{\markVar_1}{w_1} + \prj{\markVar_2}{w_2} + \prj{\markVar_3}{w_3} + \markVar_4 w_4
+$$
+We will also indifferently treat such tuples as column vectors, so that operators on $\bbL(\hat\vecSpace)$ can be seen as $4\times4$ block-matrices of operators on $\bbL(\vecSpace)$ and $\bbL(\bbR)$ (with the natural blocking).
+If we want to go a level deeper within coordinates, we will use the following notation.
+$$
+  \hat\vecVar \defeq \big(\vecVar^{11}, \ldots, \vecVar^{1d}, \vecVar^{21}, \ldots, \vecVar^{2d}, \vecVar^{31}, \ldots, \vecVar^{3d}, \vecVar^{41} \big)
+$$
+
+<!-- preliminary results to ensure theorem is satsified -->
+<Statement {...jointCone} />
+<Statement {...jointCharacteristics} />
+
+<!-- annoying assumption I cannot work out -->
+Unfortunately, despite $\hat\X$ having affine characteristics, this is not enough to ensure it is an affine process.
+We technically need existence of a solution $\hat\aff$ to its associated system $\partial_t\hat\aff(t, \hat\momentVar, \hat\stateVar) = \ode\big(\hat\affPart(t, \hat\momentVar), \hat\stateVar)$ as in [%full](/statements/affine-resolution).
+It is partially solved by the state-independence of $\ode$ in the coordinates $\stateVar_2, \stateVar_3, \stateVar_4$, but we cannot find a way to leverage the equation associated with $\ode$.
+Thus is the following assumption.
+
+<Statement {...jointAffine} />
+<Statement {...jointAffineRemark} />
+
+<!-- restatement of main theorem -->
+<Statement {...ldpClosedForm} />

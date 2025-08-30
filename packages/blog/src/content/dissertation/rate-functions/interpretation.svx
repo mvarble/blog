@@ -1,3 +1,150 @@
 ---
 title: Interpretation
 ---
+
+We finish our discussion by interpreting the last result.
+As discussed in the introduction, this result gives us the following approximation,
+$$
+  \hat\Prb^\epsilon_{\hat\stateVar}\Big( \hat\Xe \in \ball{\hat\pathVar}{\delta} \Big)
+  \approx \exp\Big(-\frac1\epsilon \hat\rf_{\hat\stateVar}(\hat\pathVar) \Big),
+$$
+so $\hat\rf_{\hat\stateVar}(\hat\pathVar)$ gives us an exponential rate of decay of probabilities of the family $\hat\Xe$ being near $\hat\pathVar$.
+In terms of components $\hat\pathVar = (\pathVar, \omega, \gamma, \eta)$, the function $\hat\rf_{\hat\stateVar}$ thus reads properties of $\pathVar, \omega, \gamma, \eta$ and communicates to us how unlikely they are to be exhibited by $\Xe$, ${\Xe}^{,\rmc}$, ${\Xe}^{,\rmd}$, and $\epsilon\N^{\Xe}$, respectively.
+Our semi-closed form in [%full](/statements/ldp-closed-form) tells us a lot.
+
+Let us first elaborate on the conditions of $\hat\pathVar$ which allow $\hat\rf_{\hat\stateVar}(\hat\pathVar)$ to evaluate as a (possibly infinite) integral.
+Should any of these properties not be satisfied, we would have $\hat\rf_{\hat\stateVar}(\hat\pathVar) = \infty$, which means super-exponential decay of $\hat\Xe$ being within a neighborhood of $\hat\pathVar$.
+That said, we interpret these conditions as minimum requirements on $\hat\pathVar$ to even be considered _possible_.
+Throughout, notice we establish an intuition with $\hat\pathVar$ being a proxy for $\hat\Xe$.
+
+- $\hat\pathVar(0) = \hat\stateVar$.
+
+  Seeing as we $\hat\Prb^\epsilon_{\hat\stateVar}$-almost-surely have $\epsilon\hat\X^\epsilon_0 = \hat\stateVar$, we insist $\hat\pathVar(0) = \hat\stateVar$.
+
+- $\hat\pathVar \in \acpathSpace{[0,\infty)}{\hat\stateSpace}$.
+
+  This tells us that the paths of $\hat\Xe$ become smoother as $\epsilon \rightarrow 0$.
+  This should make sense when we look at [%full](/statements/sde-asymptotics), where $\Xe$ is a dynamical system with perturbations on the scale of $\epsilon$.
+
+- $\dot\pathVar(t) = \affDrift\big(\pathVar(t)\big) + \dot\omega(t) + \dot\gamma(t)$.
+
+  Note that this is the same thing as saying,
+  $$
+    \pathVar(t) = \stateVar + \affDrift(\pathVar) \shortInt \leb_t + \omega(t) + \gamma(t),
+  $$
+  (when we include the initial condition above) which is the exact condition each $\hat\Xe$ satisfies.
+  $$
+    \Xe_t = \stateVar + \affDrift(\Xe) \shortInt \leb_t + {\Xe_t}^{,\rmc} + {\Xe_t}^{,\rmd}
+  $$
+
+- $\dot\omega(t) \in \operatorname{image}\big(\affDiff(\pathVar(t))\big)$.
+
+  Seeing as $\epsilon \affDiff(\Xe) \shortInt \leb$ is the predictable quadratic covariation process associated with $\epsilon\X^{\epsilon,\rmc}$, we see the following moments of an increment $\epsilon\X^{\epsilon,\rmc}_{t+\tau}-\epsilon\X^{\epsilon,\rmc}_t$.
+  $$
+    \begin{gathered}
+      \Exp_{\Prb_\stateVar}\big( \epsilon\X^{\epsilon,\rmc}_{t+\Delta t} - \epsilon\X^{\epsilon,\rmc}_t  | \scrF^\epsilon_t \big) = 0, \\
+      \Exp_{\Prb_\stateVar}\Big(\big( \epsilon\X^{\epsilon,i,\rmc}_{t+\Delta t} -  \epsilon\X^{\epsilon,i,\rmc}_t \big) \big( \epsilon\X^{\epsilon,j,\rmc}_{t+\Delta t} -  \epsilon\X^{\epsilon,j,\rmc}_t \big) | \scrF^\epsilon_t \Big) = \Exp_{\Prb_{\Xe_t}} \int_t^{t+\Delta t} \epsilon\affDiff_{ij}\big(\Xe_s\big) \rmd s
+    \end{gathered}
+  $$
+  Thus, on an infinitesimal level, the increment $\dot\omega(t)$ of our continuous noise $\omega$ can be thought of as distributing $\operatorname{Normal}(0, \affDiff(\pathVar(t)))$, which begs the question of $\dot\omega(t) \in \operatorname{image}\big(\affDiff(\pathVar(t))\big)$.
+
+- $\affInt\big(\pathVar(t)\big) > 0$.
+
+  Note that we have the following identity,
+  $$
+    \begin{aligned}
+      \N^{\Xe}_t - \int_0^t \frac1\epsilon \affInt(\Xe_s) \rmd s
+      &= 1 \ast \jumpMeas^{\Xe}_t - \int_0^t \int_\vecSpace \frac1\epsilon\affJump(\Xe_s, \rmd\markVar) \rmd s \\
+      &= 1 \ast \jumpMeas^{\Xe}_t - 1 \ast \predproj{\jumpMeas^{\Xe}}_t \\
+      &= 1 \ast \compensate{\jumpMeas^{\Xe}}_t,
+    \end{aligned}
+  $$
+  which tells us $\N^{\Xe}$ has intensity $\frac1\epsilon\affInt(\Xe)$.
+  On the infinitesimal level, the increment $\dot\eta(t)$ of our arrivals $\eta$ should arrive $\operatorname{Poisson}\big(\affInt(\pathVar(t))\big)$ with positive intensity $\affInt(\pathVar(t))$.
+- $\dot\eta(t) \geq 0$.
+
+  Seeing as $\N^{\Xe}$ is a counting process, its increments of $\epsilon\N^{\Xe}$ are non-negative, and so should those in the infinitesimal sense, $\dot\eta(t) \geq 0$.
+
+Following this, for those $\hat\pathVar$ that are _possible_, in the sense of satisfying the preceding properties, we may interpret the integral form of $\hat\rf_{\hat\stateVar}(\hat\pathVar)$ intuitively.
+We mentioned in the points above that
+$$
+  \dot\pathVar(t) = \affDrift\big(\pathVar(t)\big) + \dot\omega(t) + \dot\gamma(t)
+$$
+is a proxy for our dynamics associated with $\Xe$, and that our derivatives can be interpreted as increments.
+$$
+  \dot\omega(t) ~\leftrightarrow~ \operatorname{Normal}\Big(0, \affDiff\big(\pathVar(t)\big)\Big), \quad
+  \dot\eta(t) ~\leftrightarrow~ \operatorname{Poisson}\Big(\affInt\big(\pathVar(t)\big)\Big)
+$$
+Meanwhile, since $\dot\gamma$ is a proxy for an increment of ${\Xe}^{,\rmd}$, we recognize that the following identity,
+$$
+  \begin{aligned}
+    {\Xe_t}^{,\rmd}
+    &= \id_\vecSpace \ast \compensate{\jumpMeas^{\Xe}}_t \\
+    &= \id_\vecSpace \ast \jumpMeas^{\Xe}_t - \id_\vecSpace \ast \predproj{\jumpMeas^{\Xe}}_t \\
+    &= \int_{[0,t]\times \vecSpace} \markVar \jumpMeas^{\Xe}(\rmd s, \rmd\markVar) - \int_0^t \int_\vecSpace \epsilon\markVar \frac1\epsilon\affJump(\Xe_s, \rmd\markVar) \rmd s \\
+    &= \int_0^t \Delta(\Xe)_s \, \rmd\N^{\Xe}_s  - \int_0^t \affInt(\Xe_s) \overline{\affDist(\Xe_s, \cdot)},
+  \end{aligned}
+$$
+gives us a similar infinitesimal interpretation.
+$$
+  \frac{\dot\gamma(t) + \affInt\big(\pathVar(t)\big) \overline{\affDist(\pathVar(t), \cdot)}}{\dot\eta(t)} \text{ arrives at rate } \dot\eta(t) \text{ with distribution } \affDist\big(\pathVar(t), \cdot\big)
+$$
+In total, we have the following categories of deviations.
+$$
+  \begin{aligned}
+    &\dot\omega(t) & \text{ continuous deviations, }&\operatorname{Normal}\Big(0, \affDiff\big(\pathVar(t)\big)\Big) \\
+    &\dot\eta(t) & \text{ jump-arrival deviations, }& \operatorname{Poisson}\Big(\affInt\big(\pathVar(t)\big)\Big) \\
+    &\frac{\dot\gamma(t)+\affInt\big(\pathVar(t)\big)\overline{\affDist(\pathVar(t), \cdot)}}{\dot\eta(t)} & \text{ jump-size deviations, }& \affDist\big(\pathVar(t), \cdot\big) \\
+    &\dot\pathVar(t) & \text{ combined deviations, } & \affDrift\big(\pathVar(t)\big) + \dot\omega(t) + \dot\gamma(t)
+  \end{aligned}
+$$
+
+Each of these interpretations explains its respective integral term, as we explain below.
+
+- The continuous deviations $\dot\omega$ in our rate function take the integral,
+  $$
+    \int_0^\infty \frac12 \Bprj{\dot\omega(t)}{\affDiff\big(\pathVar(t)\big)^\dagger \dot\omega(t)} \rmd t,
+  $$
+  which takes larger values whenever $\dot\omega(t)$ is a rare sample of $\operatorname{Normal}\big(0, \affDiff(\pathVar(t))\big)$; the likely path here is $\dot\omega(t) = 0$.
+- The jump-arrival deviations $\dot\eta$ in our rate function take the integral,
+  $$
+    \int_0^\infty \bigg( \dot\eta(t)\log\Big(\frac{\dot\eta(t)}{\affInt\big(\pathVar(t)\big)} \Big) - \dot\eta(t) + \affInt\big(\pathVar(t)\big) \bigg) \rmd t,
+  $$
+  which takes larger values whenever $\dot\eta(t)$ is a rare sample of $\operatorname{Poisson}\big(\affInt(\pathVar(t))\big)$; the likely path here is $\dot\eta(t) = \affInt(\pathVar(t))$.
+- The jump-size deviations $\big(\dot\gamma(t)+\affInt(\pathVar(t))\overline{\affDist(\pathVar(t), \cdot)}\big)/\dot\eta(t)$ take the following integral.
+  $$
+    \int_0^\infty \dot\eta(t) \ode_{\affDist(\pathVar(t),\cdot)}^*\bigg( \frac{\dot\gamma(t) + \affInt\big(\pathVar(t)\big)\overline{\affDist(\pathVar(t), \cdot)}}{\dot\eta(t)} \bigg) \rmd t
+  $$
+  This takes larger values when $\big(\dot\gamma(t)+\affInt(\pathVar(t))\overline{\affDist(\pathVar(t), \cdot)}\big)/\dot\eta(t)$ is a rare sample of $\affDist(\pathVar(t), \cdot)$, and the prefactor $\dot\eta(t)$ serves to express the increased rarity of unlikely jumps occurring with high-frequency.
+
+We also would like to mention that [%full](/statements/ldp-closed-form) can take many equivalent forms, depending on which quantities we couple with $\Xe$ and which parameters $\affDiff, \affJump$ are non-zero..
+For instance, as demonstrated by the redundancy,
+$$
+  \dot\pathVar(t) = \affDrift\big(\pathVar(t)\big) + \dot\omega(t) + \dot\gamma(t),
+$$
+we may have considered the smaller tuple $(\Xe, {\Xe}^{,\rmd}, \N^{\Xe})$ and the subsequent rate function would have the following substitution in the first integral.
+$$
+  @tag(eq-Xc-redundancy)
+  \dot\omega(t) = \dot\pathVar(t) - \affDrift\big(\pathVar(t)\big) - \dot\gamma(t),
+$$
+Note that in the case of $\affJump=0$ (diffusions), each of ${\Xe}^{,\rmd}$ and $\N^{\Xe}$ constantly take zero-value, and so we need no coupling; the principle for $\Xe$ already has a closed form.
+This is hinted at in [](tag:eq-Xc-redundancy), which suggests the ultimate rate function.
+$$
+  \dot\omega(t) =\dot\pathVar(t) - \affDrift(\pathVar(t)) \quad\leadsto\quad \int_0^\infty \frac12 \Bprj{\dot\pathVar(t)-\affDrift\big(\pathVar(t)\big)}{\affDiff\big(\pathVar(t)\big)^\dagger \Big(\dot\pathVar(t)-\affDrift\big(\pathVar(t)\big)\Big)} \rmd t,
+$$
+Similarly, we may have considered another tuple $(\Xe, {\Xe}^{,\rmc}, \N^{\Xe})$ and the subsequent rate function would have the following substitution in the last integral.
+$$
+  @tag(eq-Xd-redundancy)
+  \dot\gamma(t) = \dot\pathVar(t) - \affDrift\big(\pathVar(t)\big) - \dot\omega(t)
+$$
+Note that in the case of $\affDiff=0$ (pure-jump processes), ${\Xe}^{,\rmc}$ constantly takes zero-value, and so we only need coupling $(\Xe, \N^{\Xe})$, as hinted at in [](tag:eq-Xd-redundancy).
+This covers the case of our compund-Poisson and Hawkes processes.
+Lastly, we could have alternatively coupled $(\Xe, {\Xe}^{,\rmc}, \id_\vecSpace \ast \jumpMeas^{\Xe}, \N^{\Xe})$ so that the final integral term will clean up a bit,
+$$
+  \int_0^\infty \dot\eta(t) \ode_{\affDist(\pathVar(t),\cdot)}^*\Big(\frac{\dot\wp(t)}{\dot\eta(t)}\Big) \rmd t
+$$
+with our proxy $\hat\pathVar = (\pathVar, \omega, \wp, \eta)$ now satisfying the following.
+$$
+  \dot\pathVar(t) = \affDrift\big(\pathVar(t)\big) + \dot\omega(t) + \hat\wp(t) - \affInt\big(\pathVar(t)\big) \overline{\affDist(\pathVar(t), \cdot)}
+$$
+All of these different perspectives can be proven directly or explained immediately with the contraction principle.
