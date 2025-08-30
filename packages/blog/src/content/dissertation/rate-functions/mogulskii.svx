@@ -36,7 +36,7 @@ for this metric is consistent with $\pathVar_n \rightarrow \pathVar$ if and only
 $$
   (\pathVar_\tau)_{\tau > 0} \in \lim\limits_{\leftarrow\tau} \bbL^\infty[0,\tau] \quad\xleftrightarrow{\pathVar_\tau = \pathVar|_{[0,\tau]}}\quad \pathVar \in \bbL^\infty_\loc[0,\infty)
 $$
-Applying Dawson-G\"artner [Theorem 4.6.1](/citations#dembo2010), the rate function over this space is as follows.
+Applying Dawson-Gärtner [Theorem 4.6.1](/citations#dembo2010), the rate function over this space is as follows.
 $$
   \pathVar \mapsto \left\{ \begin{array}{ll}
     \displaystyle\sup_{\tau>0} \int_0^\tau \ode_\affDist^*\big(\dot\pathVar(t)\big) \rmd t & \pathVar(0) = 0, ~ \pathVar \in \acpathSpace{[0,\tau)}{\vecSpace} \text{ for all } \tau > 0 \\

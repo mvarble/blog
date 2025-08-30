@@ -22,7 +22,7 @@ The blackboard notation will generally correspond to a topological space, includ
       |T| \defeq \sup_{|\vecVar|=1} |Tv|
     $$
     We also concisely denote $\bbL(\vecSpace) \defeq \bbL(\vecSpace, \vecSpace)$.
-- For the a separable metric space $\stateSpace$ and an interval $I \subseteq \bbR_+$, the space $\pathSpace{I}{\stateSpace}$ of c\`adl\`ag functions, equipped with the Skorokhod J1 topology.
+- For the a separable metric space $\stateSpace$ and an interval $I \subseteq \bbR_+$, the space $\pathSpace{I}{\stateSpace}$ of càdlàg functions, equipped with the Skorokhod J1 topology.
 - For topological spaces $\stateSpace, \bbY$, the space $\cpathSpace{\stateSpace}{\bbY}$ of continuous functions, equipped with the supremum norm.
 - For finite-dimensional normed vector spaces $\vecSpace, \bbW$ and open $\bbU \subseteq \vecSpace$, the subspace $\ccpathSpace{1}{\bbU}{\bbW}$ of functions $f \in \cpathSpace{\bbU}{\bbW}$ in which there is a derivative map $\Der f \in \cpathSpace{\bbU}{\bbL(\vecSpace,\bbW)}$.
   $$
