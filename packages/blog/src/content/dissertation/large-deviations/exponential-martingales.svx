@@ -94,7 +94,7 @@ $$
   \fddDensity^{\epsilon, \underline t, \underline\twistVar} = \exp\Big( \frac1\epsilon \fddRf\big(\Xe, \underline t, \underline\twistVar\big) \Big), \quad
   \mgDensity^{\epsilon, \twistFunc} = \exp\Big( \frac1\epsilon \mgRf\big(\Xe, \twistFunc\big) \Big)
 $$
-We now state the main theorem of this section, which resolves the _twisting/tilting_ approach of measure changes $\fddPrb^{\epsilon,\underline t,\underline\twistVar}$ in [%full](/statements/twists) with the _exponential martingale_ approach of measure changes $\mgPrb^{\epsilon,\twistFunc}$ in [%full](/statements/mgPrb-dynamics).
+We now state the main theorem of this section, which resolves the _twisting/tilting_ approach of measure changes $\fddPrb^{\epsilon,\underline t,\underline\twistVar}$ in [%full](/statements/aff-twists) with the _exponential martingale_ approach of measure changes $\mgPrb^{\epsilon,\twistFunc}$ in [%full](/statements/mgPrb-dynamics).
 It relies on the following parameterization of maps $\twistFunc(\cdot,\underline t, \underline\twistVar)$ over $\underline t \vdash [0,\infty)$ and $\underline\twistVar \in \momentSpace(\underline t)$.
 $$
   @tag(eq-resolve-twists)

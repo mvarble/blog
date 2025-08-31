@@ -1,0 +1,30 @@
+---
+type: statement
+kind: proposition
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+Fix a $(\Prb, \scrF)$ jump-diffusion $\X$ with associated differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$.
+Suppose we have the regularity condition [](tag:eq-affJump-regularity) above.
+If $0 \in \odeSpace^\circ$, then $\X$ is special.
+
+<Proof>
+
+If $0 \in \odeSpace^\circ$, then there exists some $\delta > 0$ such that $\closedBall{0}{\delta} \subseteq \odeSpace$.
+Observe the following implication of this fact, for each $\stateVar \in \stateSpace$.
+$$
+  \begin{aligned}
+    \int_{\vecSpace} \big|\markVar - \trunc(\markVar)\big| \affJump(\stateVar, \rmd\markVar)
+    &= \int_{|\markVar|>1} |\markVar| \affJump(\stateVar, \rmd\markVar) \\
+    &\leq \int_{|\markVar|>1} \frac{\sqrt{d}}{\delta} \exp\Big(\frac{\delta|\markVar|}{\sqrt d} \Big) \affJump(\stateVar, \rmd\markVar) \\
+    &\leq \frac{\sqrt d}{\delta} \int_{|\markVar|>1} \exp\Big(\max_{i=1}^d \max_{\ell=0}^1 \bprj{(-1)^\ell \delta \basisVec^i}{\markVar} \Big) \affJump(\stateVar,\rmd\markVar) \\
+    &\leq \frac{\sqrt d}{\delta} \sum_{i=1}^d \sum_{\ell=0}^1 \int_{|\markVar|>1} \exp\bprj{(-1)^\ell \delta \basisVec^i}{\markVar} \affJump(\stateVar,\rmd\markVar) \\
+    &< \infty
+  \end{aligned}
+$$
+Our regularity condition [](tag:eq-affJump-regularity) now allows us to apply [%full](/statements/jump-diffusion-special) to conclude $\X$ is special.
+
+</Proof>

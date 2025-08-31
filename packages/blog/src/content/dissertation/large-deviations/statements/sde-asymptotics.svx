@@ -8,7 +8,7 @@ kind: proposition
 </script>
 
 Fix a probability space $(\Omega, \Sigma, \Prb)$ equipped with standard Brownian motion $\W$ on $\vecSpace$ and Poisson random measure $\poisRM$ on $\scrB(\bbR_+\times\vecSpace)$.
-Let $\affDiffSqrt: \stateSpace \rightarrow \bbL(\vecSpace)$ and $\thinner: \stateSpace \times \vecSpace \rightarrow \vecSpace$ satisfy [](tag:eq-sde-reminder) for the $\trunc$-differential characteristics $(\affDrift^\trunc, \affDiff, \affJump)$, as granted by [%full](/statements/jump-diffusion-characterizations).
+Let $\affDiffSqrt: \stateSpace \rightarrow \bbL(\vecSpace)$ and $\thinner: \stateSpace \times \vecSpace \rightarrow \vecSpace$ satisfy [](tag:eq-sde-reminder) for the $\trunc$-differential characteristics $(\affDrift^\trunc, \affDiff, \affJump)$, as granted by [%full](/statements/jump-diffusion-characterization).
 For each $\stateVar \in \stateSpace$, the family $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ of distributions $\Prb^\epsilon_\stateVar$ may be recognized as each $\Prb^\epsilon_\stateVar$ being a weak solution to the respective _scaled_ stochastic dynamical system,
 $$
     \Xe_t = \stateVar + \affDrift^\trunc(\Xe) \shortInt \leb_t + \sqrt\epsilon \affDiffSqrt(\X) \shortInt \W_t + \trunc \circ \epsilon\thinner\big(\Xe, \sqrt[d]{\epsilon} \cdot \id_\vecSpace\big) \ast \compensate{\poisRM}_t + \trunc' \circ \epsilon\thinner\big(\Xe, \sqrt[d]{\epsilon} \cdot \id_\vecSpace\big) \ast \poisRM_t,

@@ -1,0 +1,36 @@
+---
+type: statement
+kind: example
+---
+
+Fix a probability space $(\Omega, \Sigma, \Prb)$ and filtration $\scrF=(\scrF)_{t\geq0}$.
+
+Just as with $(\bbR^d, \scrB(\vecSpace))$, we say that $\W$ is a standard $(\Prb, \scrF)$ Brownian motion on $(\vecSpace, \scrB(\vecSpace))$ if it is a continuous $(\Prb, \scrF)$ martingale with predictable quadratic covariation as follows.
+$$
+  \prj{\W^i}{\W^j}_t = \left\{\begin{array}{ll}
+    t & i = j \\
+    0 & \text{otherwise}
+  \end{array}\right.
+$$
+It is clear that $\W$ is a $(\Prb, \scrF)$ jump-diffusion with differential $\trunc$-characteristics $(0, \affDiff, 0)$, where $\affDiff(\stateVar) = \id_\vecSpace$ for all $\stateVar \in \stateSpace$.
+
+Similarly, we say that $\poisRM$ is a standard $(\Prb, \scrF)$ Poisson random measure on $\scrB(\bbR_+ \times \vecSpace)$ if its $(\Prb, \scrF)$ predictable projection is the Lebesgue measure $\predproj{\poisRM}(\rmd s, \rmd\markVar) = \rmd s \otimes \rmd\markVar$ (identifying measures on $\scrB(\bbR^d)$ as those on $\scrB(\vecSpace)$).
+By [Theorem II.4.8](/citations#jacod2003), this $\poisRM$ is the same as a Poisson point process with Lebesgue intensity, which has infinitely many jumps on any nonempty interval of time.
+The accumulated jumps $\id_\vecSpace \ast \poisRM$ form a $(\Prb, \scrF)$ jump-diffusion with parameters as follows.
+$$
+  \affDrift^\trunc(\stateVar) = \int_\vecSpace \trunc(\markVar) \rmd\markVar, \quad
+  \affDiff(\stateVar) = 0, \quad
+  \affJump(\stateVar, \rmd\markVar) = \rmd \markVar,
+$$
+because we have the following decomposition.
+$$
+  \begin{aligned}
+    \id_\vecSpace \ast \poisRM
+    &= \trunc \ast \poisRM + (\id_\vecSpace - \trunc) \ast \poisRM  \\
+    &= \trunc \ast \predproj{\poisRM} + \trunc\ast\compensate{\poisRM} + (\id_\vecSpace - \trunc) \ast \poisRM  \\
+    &= \affDrift^\trunc \shortInt \leb + \trunc \ast \compensate{\poisRM} + (\id_\vecSpace - \trunc) \ast \poisRM
+  \end{aligned}
+$$
+Note that the infinite activity of $\poisRM$ means that the last term cannot be compensated.
+
+We will see at the end of this section that these two objects $\W$ and $\poisRM$ are the fundamental building blocks of all jump-diffusions.

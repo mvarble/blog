@@ -25,7 +25,7 @@ kind: proposition
     \end{array}\right.
   $$
   where $f: \bbR \times \odeSpace^\circ \rightarrow \vecSpace$ is defined by $f(t, \momentVar) \defeq \odePart(\momentVar)$.
-  Seeing as $f$ is continuously differentiable on $\bbR \times \odeSpace^\circ$ by [%full](/statements/jd-ode-differentiable), we may use [III.13 Theorem X](/citations#walter1998) to ensure some $\epsilon > 0$ such that the band
+  Seeing as $f$ is continuously differentiable on $\bbR \times \odeSpace^\circ$ by [%full](/statements/jump-diffusion-ode-differentiable), we may use [III.13 Theorem X](/citations#walter1998) to ensure some $\epsilon > 0$ such that the band
   $$
     S_\epsilon \defeq \Big\{ (t, \vecVar) \in [0,\tau] \times \vecSpace : |\vecVar-\affPart(t,\momentVar)| \leq \epsilon \Big\}
   $$

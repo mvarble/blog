@@ -1,0 +1,27 @@
+---
+type: statement
+kind: lemma
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+For each $\stateVar \in \stateSpace$, $\odeSpace(\stateVar)$ is convex.
+
+<Proof>
+
+We use our characterization of $\odeSpace(\stateVar)$ from [%full](/statements/odeSpace-rationale).
+Let $\momentVar, \momentVar' \in \odeSpace(\stateVar)$, $\gamma \in (0,1)$, and use Hölder's inequality to see the following.
+$$
+  \begin{aligned}
+    &\int_{|\markVar|>1} e^\prj{\momentVar' + \gamma(\momentVar-\momentVar')}{\markVar} \affJump(\stateVar,\rmd\markVar) \\
+    &\quad= \int_{|\markVar|>1} \big| (e^\prj{\momentVar}{\markVar})^\gamma \cdot (e^\prj{\momentVar'}{\markVar})^{1-\gamma} \big| \affJump(\stateVar,\rmd\markVar) \\
+    &\quad\leq \left( \int_{|\markVar|>1} \big| (e^\prj{\momentVar}{\markVar})^\gamma \big|^{\frac{1}{\gamma}} \affJump(\stateVar, \rmd\markVar) \right)^\gamma \left( \int_{|\markVar|>1} \big| (e^\prj{\momentVar'}{\markVar})^{1-\gamma} \big|^{\frac{1}{1-\gamma}} \affJump(\stateVar,\rmd\markVar)\right)^{1-\gamma} \\
+    &\quad= \left( \int_{|\markVar|>1} e^\prj{\momentVar}{\markVar} \affJump(\stateVar, \rmd\markVar) \right)^\gamma \left( \int_{|\markVar|>1}  e^\prj{\momentVar'}{\markVar} \affJump(\stateVar,\rmd\markVar)\right)^{1-\gamma} \\
+    &\quad<\infty
+  \end{aligned}
+$$
+An arbitrary convex combination now satisfies $\gamma\momentVar+(1-\gamma)\momentVar' \in \odeSpace(\stateVar)$.
+
+</Proof>

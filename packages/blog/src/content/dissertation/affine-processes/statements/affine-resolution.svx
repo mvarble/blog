@@ -26,7 +26,7 @@ $$
 <Proof>
 
 Fix $\tau \geq 0$, $\momentVar \in \boundedSpace$, and $\stateVar \in \stateSpace$ and denote $M_t = \exp\aff(\tau-t, \momentVar, \X_t)$.
-We now apply our jump-diffusion version of Itô's formula for jump-diffusions as in [%full](/statements/ito), indifferently treating an element of $\vecSpace$ as one of $\bbL(\vecSpace, \bbR)$ in the canonical way.
+We now apply our jump-diffusion version of Itô's formula for jump-diffusions as in [%full](/statements/jump-diffusion-ito), indifferently treating an element of $\vecSpace$ as one of $\bbL(\vecSpace, \bbR)$ in the canonical way.
 $$
   \begin{aligned}
     M_t

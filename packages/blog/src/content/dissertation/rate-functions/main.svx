@@ -14,7 +14,7 @@ title: Semi-closed form of rate function
 <!-- discuss that we are coming up with semi-closed form -->
 We have now gathered enough familiarity with rate functions that appear in the large deviations literature and the various tools we may use to lift existing principles to new ones.
 This will allow us to more easily understand the nature and derivation of our semi-closed form for [](tag:eq-rf-integral) in [%full](/statements/ldp-integral).
-Let us now elaborate on the family on which we derive our semi-closed form; it is assumed that $\X$ is selected with our assumptions of [Section %label](../large-deviations/assumptions) that we needed for [%full](/statements/ldp-integral).
+Let us now elaborate on the family on which we derive our semi-closed form; it is assumed that $\X$ is selected with our assumptions of [Section %label](../../../large-deviations/assumptions) that we needed for [%full](/statements/ldp-integral).
 
 <!-- introduce the factors of our new process from the original one -->
 Firstly, in order for us to perform the tricks of coupling we explored in the previous section, we need to couple our arrivals and/or accumulated jumps.
@@ -24,13 +24,13 @@ $$
   @tag(eq-assumption-affJump-finite)
   \affJump(\stateVar, \vecSpace) < \infty, \quad \stateVar \in \stateSpace
 $$
-Note that [%full](/statements/locally-countable) thus provides us with a factoring
+Note that [%full](/statements/jump-diffusion-countable) thus provides us with a factoring
 $$
   @tag(eq-affJump-factoring)
   \affJump(\stateVar,\rmd\markVar) = \affInt(\stateVar) \affDist(\stateVar, \rmd\markVar)
 $$
 into an intensity function $\affInt \in \scrB(\stateSpace)/\scrB(\bbR_+)$ and conditional jump distribution $\affDist$ from $(\stateSpace, \scrB(\stateSpace))$ to $(\vecSpace, \scrB(\vecSpace))$.
-Denote to each $\affJump(\stateVar, \cdot)$ the notation from Sections [%label](./mogulskii) and [%label](./coupling).
+Denote to each $\affJump(\stateVar, \cdot)$ the notation from Sections [%label](../mogulskii) and [%label](../coupling).
 $$
   \overline{\affDist(\stateVar, \cdot)} \defeq \int_\vecSpace \markVar \affDist(\stateVar, \rmd\markVar), \quad
   \ode_{\affDist(\stateVar,\cdot)}(\momentVar) \defeq \int_\vecSpace e^\prj{\momentVar}{\markVar} \affDist(\stateVar, \rmd\markVar)

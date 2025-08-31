@@ -39,9 +39,9 @@ where $A$ is some linear form and $B$ is appropriately compensating it to make $
 The object $\twistVar$ in the above expression is a parameter suitably chosen to make the measure $\mgPrb^{\epsilon,\twistVar}(\Xe \in \Gamma^c)$ effectively _small enough_ to neglect.
 We will explain this more in the chapter, but we find it important to state here that the nature of our linear form $A$ can be associated with a _finite-dimensional_ projection of $\Xee$ or be a linear operator on the _infinite-dimensional_ space of paths.
 
-The expression [](tag:eq-vague-measure-change) looks familiar to our local martingale in [%full](/statements/LK-exponential-martingale).
+The expression [](tag:eq-vague-measure-change) looks familiar to our local martingale in [%full](/statements/jump-diffusion-lk-exponential-martingale).
 Such a measure change is of the _infinite-dimensional_ nature, and is a commonly used tool in the literature of large deviations which we refer to as the _exponential martingale approach_.
-Note that the dynamics in [%full](/statements/LK-girsanov) allow for easy calibration our density in [](tag:eq-vague-measure-change).
+Note that the dynamics in [%full](/statements/jump-diffusion-lk-girsanov) allow for easy calibration our density in [](tag:eq-vague-measure-change).
 A particular case in which this tool is used is [](/citations#kang2014), where they prove a large deviation principle for continuous affine (jump-)diffusions with special differential characteristics $(\affDrift, \affDiff, 0)$.
 This approach lends itself to integral expressions which ultimately find their way in the rate function $\rf_\stateVar$.
 Having a rate $\rf_\stateVar(\pathVar)$ involve an integral of $\pathVar$ is very useful for investigating local properties of the family $(\Xe)_{\epsilon>0}$ and will be explained more in depth in the next chapter.

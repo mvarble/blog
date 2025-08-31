@@ -8,7 +8,7 @@ Denoting $\Prb^\epsilon$ and $\scrF^\epsilon$ the distribution and filtration, r
 $$
   \affInt: \bbR_+ \rightarrow \bbR_+, \quad \affInt(\stateVar) = \affIntPart_0 + \affIntPart_1 \stateVar
 $$
-The martingale that induces this change of measure is familiar from [%full](/statements/LK-girsanov), selecting $\twistFunc(s, \stateVar) = \log\affInt(\stateVar)$.
+The martingale that induces this change of measure is familiar from [%full](/statements/jump-diffusion-lk-girsanov), selecting $\twistFunc(s, \stateVar) = \log\affInt(\stateVar)$.
 The Lévy-Khintchine map associated with $\frac1\epsilon J^\epsilon$ is $\ode(\momentVar, \stateVar) = \frac1\epsilon (e^\momentVar - 1)$, and it resolves to the following.
 $$
   \mgDensity^\epsilon \defeq \exp\bigg( \frac1\epsilon \log\affInt(J^\epsilon_-) \shortInt J^\epsilon + \frac1\epsilon\big( 1 - \affInt(J^\epsilon) \big) \shortInt \leb \bigg)

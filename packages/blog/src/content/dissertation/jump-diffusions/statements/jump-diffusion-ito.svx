@@ -1,0 +1,89 @@
+---
+type: statement
+kind: lemma
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+
+Let $\X$ be a jump-diffusion with differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$ and $f \in \ccpathSpace{2}{\vecSpace}{\bbR}$.
+The composition $f(\X)$ has the following semimartingale representation.
+$$
+ \begin{aligned}
+    f(\X_t)
+    &= f(\X_0)
+      + \Big( \Der f(\X) \cdot \affDrift^\trunc(\X) \Big) \shortInt \leb_t
+      + \frac12 \tr\Big( \Hess f(\X) \circ \affDiff(\X) \Big)  \shortInt \leb_t \\
+      &\quad + \Der f(\X_-) \shortInt \X^\rmc
+      + \Big( \Der f(\X_-) \cdot \trunc \Big) \ast \compensate{\jumpMeas^\X}_t \\
+      &\quad + \Big( f(\X_-+\id_\vecSpace) - f(\X_-) - \Der f(\X_-) \cdot \trunc \Big) \ast \jumpMeas^\X_t
+  \end{aligned}
+$$
+
+<Proof>
+
+Apply Itô's formula [Theorem I.4.57](/citations#jacod2003) and use the predictable covariation identity in [](tag:eq-jump-diffusion-canonical) to get the following.
+$$
+  \begin{aligned}
+    f(\X_t)
+    &= f(\X_0) + \sum_{i=1}^d \Der_i f(\X_-) \shortInt \X^i_t + \frac12\sum_{i,j=1}^d \Der_{ij} f(\X_-) \shortInt \prj{\X^{\rmc,i}}{\X^{\rmc,j}}_t \\
+      &\quad + \sum_{0<s\leq t} \Big( f(\X_s) - f(\X_{s-}) - \sum_{i=1}^d \Der f_i(\X_{s-}) \Delta\X_s \Big) \\
+    &= f(\X_0) + \Der f(\X_-) \shortInt \X_t + \frac12\sum_{i,j=1}^d \Der_{ij} f(\X_-) \shortInt \big(\affDiff_{ij}(\X) \shortInt \leb\big)_t \\
+      &\quad + \Big( f(\X_-+\id_\vecSpace) - f(\X_-) - \Der f(\X_-) \cdot \id_\vecSpace \Big) \ast \jumpMeas^\X_t
+  \end{aligned}
+$$
+Using the iterated stochastic integral formula [Remark I.4.37](/citations#jacod2003), we may simplify the above equation to the following.
+$$
+ \begin{aligned}
+  f(\X_t)
+    &= f(\X_0) + \Der f(\X_-) \shortInt \X_t + \frac12 \tr \Big( \Der_{ij} f(\X_-) \circ \affDiff(\X) \Big) \shortInt \leb_t \\
+    &\quad + \Big( f(\X_-+\id_\vecSpace) - f(\X_-) - \Der f(\X_-) \cdot \id_\vecSpace \Big) \ast \jumpMeas^\X_t
+  \end{aligned}
+$$
+Now substitute our representation of [](tag:eq-jump-diffusion-canonical) and repeat the iterated stochastic integral to get the following.
+$$
+\begin{aligned}
+  f(\X_t)
+  &= f(\X_0)
+    + \Der f(\X_-) \shortInt \big( \X_0 + \affDrift^\trunc(\X) \shortInt \leb + \X^\rmc + \trunc \ast \compensate{\jumpMeas^\X} + (\id_\vecSpace-\trunc) \ast \jumpMeas^\X \big)_t \\
+    &\quad + \frac12 \tr\Big( \Hess f(\X_-) \circ \affDiff(\X) \Big)  \shortInt \leb_t  \\
+    &\quad + \Big( f(\X_-+\id_\vecSpace) - f(\X_-) - \Der f(\X_-) \cdot \id_\vecSpace \Big) \ast \jumpMeas^\X_t \\[1em]
+  &= f(\X_0)
+    + \Big( \Der f(\X_-) \cdot \affDrift^\trunc(\X) \Big) \shortInt \leb_t + \frac12 \tr\Big( \Hess f(\X_-) \circ \affDiff(\X) \Big)  \shortInt \leb_t \\
+    &\quad+ \Der f(\X_-) \shortInt \X^\rmc \\
+    &\quad+ \Der f(\X_-) \shortInt \big( \trunc \ast \compensate{\jumpMeas^\X} \big)_t
+    + \Big( f(\X_-+\id_\vecSpace) - f(\X_-) - \Der f(\X_-) \cdot \trunc \Big) \ast \jumpMeas^\X_t
+\end{aligned}
+$$
+Furthermore, since $\X_- = \X$ on all but a countable amount of jumps, we may rewrite the Lebesgue integrals.
+$$
+  @tag(eq-ito-pause)
+  \begin{aligned}
+    f(\X_t)
+    &= f(\X_0)
+      + \Big( \Der f(\X) \cdot \affDrift^\trunc(\X) \Big) \shortInt \leb_t
+      + \frac12 \tr\Big( \Hess f(\X) \circ \affDiff(\X) \Big)  \shortInt \leb_t \\
+    &\quad + \Der f(\X_-) \shortInt \X^\rmc
+      + \Der f(\X_-) \shortInt \big( \trunc \ast \compensate{\jumpMeas^\X} \big)_t \\
+    &\quad + \Big( f(\X_-+\id_\vecSpace) - f(\X_-) - \Der f(\X_-) \cdot \trunc \Big) \ast \jumpMeas^\X_t
+  \end{aligned}
+$$
+For the remaining equality, we construct localizing sequence $(T_n)_{n\in\bbN}$ of $\scrF$ stopping times,
+$$
+  @tag(eq-stopping-times)
+  T_n(\omega) \defeq \inf \big\{ t > 0 : \X_t(\omega) > n \big\} \wedge n, \quad \omega \in \Omega, ~ n \in \bbN,
+$$
+to see that $\Der f(\X_-)$ is $(\Prb, \scrF)$ locally bounded.
+$$
+  \big|\Der f(\X^{T_n}_{s-})\big| \leq \sup_{|\stateVar| \leq n} \big| \Der f(\stateVar) \big|
+$$
+Thus, by [Proposition II.1.30](/citations#jacod2003), we may rewrite the following.
+$$
+  \Der f(\X_-) \shortInt \big( \trunc \ast \compensate{\jumpMeas^\X} \big)_t
+  = \big( \Der f(\X_-) \cdot \trunc \big) \ast \compensate{\jumpMeas^\X}_t ,
+$$
+which when substituted into [](tag:eq-ito-pause) gives us our desired identity.
+
+</Proof>

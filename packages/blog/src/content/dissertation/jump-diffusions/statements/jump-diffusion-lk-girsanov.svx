@@ -1,0 +1,73 @@
+---
+type: statement
+kind: theorem
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+Fix a $(\Prb, \scrF)$ special jump-diffusion $\X$ with $(\Prb, \scrF)$ special differential characteristics $(\affDrift, \affDiff, \affJump)$.
+Fix $\twistFunc: [0,\infty) \times \stateSpace \rightarrow \vecSpace$ such that $\twistFunc(\leb, \X_-)$ is of finite variation.
+Define
+$$
+  \mgDensity^\twistFunc \defeq \exp\Big(\twistFunc(\leb, \X_-) \shortInt \X - \ode\big(\twistFunc(\leb, \X), \X\big) \shortInt \leb\Big),
+$$
+and assume $(\mgDensity^\twistFunc_t)_{t\in[0,\tau]}$ is uniformly integrable for each $\tau > 0$.
+Then, to each $\tau > 0$, we may define $\mgPrb^\twistFunc$ on $(\Omega, \scrF_\tau)$, via
+$$
+  \mgPrb^\twistFunc_\tau(\rmd\omega) \defeq \mgDensity^\twistFunc_\tau(\omega) \cdot \Prb(\rmd\omega),
+$$
+such that $\X$ is a $(\mgPrb^\twistFunc_\tau, (\scrF_t)_{t\in[0,\tau]})$ special jump-diffusion with $(\mgPrb^\twistFunc_\tau, (\scrF_t)_{t\in[0,\tau]})$ special differential characteristics $(\affDrift^\twistFunc, \affDiff, \affJump^\twistFunc)$.
+$$
+  \begin{aligned}
+    \affDrift^\twistFunc(s, \stateVar) &= \affDrift(\stateVar) + \affDiff(\stateVar) \twistFunc(s, \stateVar) + \int_\vecSpace \markVar \big( e^\prj{\twistFunc(s,\stateVar)}{\markVar} - 1 \big) \affJump(\stateVar, \rmd\markVar), \\
+    \affJump^\twistFunc(s, \stateVar, \rmd\markVar) &= e^\prj{\twistFunc(s,\stateVar)}{\markVar} \affJump(\stateVar, \rmd\markVar) \rmd s
+  \end{aligned}
+$$
+
+<Proof>
+
+Note that [%full](/statements/jump-diffusion-lk-exponential-martingale) gives us the $(\Prb, \scrF)$ local martingale property, so our $\Prb$ uniform-integrability assumption serves to give us a $(\Prb, \scrF)$ uniformly-integrable martingale $\mgDensity^\twistFunc$ on $[0,\tau]$.
+Now, evaluating the $(\mgPrb^\twistFunc_\tau, (\scrF_t)_{t\in[0,\tau]})$ dynamics of $\X$ amount to applying Girsanov's theorem for semimartingales.
+Specifically we use [Theorem III.3.24](/citations#jacod2003) and verify that our proposed differential characteristics align with the identities of [III.3.28](/citations#jacod2003).
+For any $\scrF$ predictable $H: \Omega \times \bbR_+ \times \vecSpace \rightarrow \bbR_+$, we apply [Remark I.4.36](/citations#jacod2003) to see that the following identities hold.
+$$
+  \begin{aligned}
+    &\Exp_\Prb \big( (\mgDensity^\twistFunc H) \ast \jumpMeas^\X \big) \\
+    &= \Exp_\Prb \int_{\bbR_+ \times \vecSpace} \mgDensity^\twistFunc_s H(\cdot, s, \markVar) \jumpMeas^\X(\rmd s, \rmd\markVar) \\
+    &= \Exp_\Prb \int_{\bbR_+ \times \vecSpace} \exp\Big( \twistFunc(\leb, \X_-) \shortInt \X_s - \ode\big( \twistFunc(\leb, \X), \X \big) \shortInt \leb_s \Big) H(\cdot, s, \markVar) \jumpMeas^\X(\rmd s, \rmd\markVar) \\
+    &= \Exp_\Prb \int_{\bbR_+ \times \vecSpace}
+      \exp\Big( \twistFunc(\leb, \X_-) \shortInt \X_{s-} + \Delta\big(\twistFunc(\leb, \X_-) \shortInt \X\big)_s - \ode\big( \twistFunc(\leb, \X), \X \big) \shortInt \leb_s \Big)  \\
+      &\hspace{80mm} \cdot H(\cdot, s, \markVar) \jumpMeas^\X(\rmd s, \rmd\markVar)  \\
+    &= \Exp_\Prb \int_{\bbR_+ \times \vecSpace} \mgDensity^\twistFunc_{s-} e^\prj{\twistFunc(s, \X_{s-})}{\markVar} H(\cdot, s, \markVar) \jumpMeas^\X(\rmd s, \rmd\markVar)  \\
+    &= \Exp_\Prb \int_{\bbR_+ \times \vecSpace} \mgDensity^\twistFunc_{s-} e^\prj{\twistFunc(s, \X_{s-})}{\markVar} H(\cdot, s, \markVar) \predproj{\jumpMeas^\X}(\rmd s, \rmd\markVar)  \\
+    &= \Exp_\Prb \int_{\bbR_+ \times \vecSpace} \mgDensity^\twistFunc_{s-} e^\prj{\twistFunc(s, \X_{s-})}{\markVar} H(\cdot, s, \markVar) \affJump(\X_s, \rmd\markVar) \rmd s  \\
+    &= \Exp_\Prb \int_{\bbR_+ \times \vecSpace} \mgDensity^\twistFunc_s e^\prj{\twistFunc(s, \X_s)}{\markVar} H(\cdot, s, \markVar) \affJump(\X_s, \rmd\markVar) \rmd s
+  \end{aligned}
+$$
+This first part indicates that our $\affJump^\twistFunc$ is as described.
+Now, let us establish the drift by looking at the continuous predictable projections.
+First, we recall [](tag:eq-jump-diffusion-exponentially-special) and the calculations below it to note that $\mgDensity^\twistFunc$ has the following continuous local martingale component.
+$$
+  \begin{aligned}
+    \mgDensity^{\twistFunc,\rmc}_t
+    &= \exp\Big( -\ode\big(\twistFunc(\leb, \X), \X\big) \shortInt \leb \Big) \shortInt \bigg( \exp\big( \twistFunc(\leb, \X_-) \shortInt \X_- \big) \twistFunc(\leb, \X_-) \shortInt \X^\rmc_t\bigg)  \\
+    &= \mgDensity^\twistFunc_- \twistFunc(\leb, \X_-) \shortInt \X^\rmc_t
+  \end{aligned}
+$$
+Note that we applied our usual calculus operation [Remark I.4.37](/citations#jacod2003) above.
+Using this calculus operation once more, in addition to that in [Theorem I.4.40](/citations#jacod2003), we get our desired predictable quadratic covariation.
+$$
+  \begin{aligned}
+    \bprj{\mgDensity^{\twistFunc,\rmc}}{\X^{\rmc,j}}
+    &= \Bprj{\mgDensity^\twistFunc_- \twistFunc(\leb, \X_-) \shortInt \X^\rmc}{\X^{\rmc,j}} \\
+    &= \Bprj{\sum_{i=1}^d \mgDensity^\twistFunc_- \twistFunc_i(\leb, \X_-) \shortInt \X^{\rmc,i}}{\X^{\rmc,j}} \\
+    &= \sum_{i=1}^d \mgDensity^\twistFunc_- \twistFunc_i(\leb, \X_-) \shortInt \Bprj{\X^{\rmc,i}}{\X^{\rmc,j}} \\
+    &= \sum_{i=1}^d \mgDensity^\twistFunc_- \twistFunc_i(\leb, \X_-) \shortInt \big( \affDiff_{ij}(\X) \shortInt \leb\big) \\
+    &= \sum_{i=1}^d \mgDensity^\twistFunc_- \twistFunc_i(\leb, \X) \affDiff_{ij}(\X) \shortInt \leb \\
+    &= \mgDensity^\twistFunc \affDiff(\X) \twistFunc(\leb, \X) \shortInt \leb \\
+  \end{aligned}
+$$
+
+</Proof>

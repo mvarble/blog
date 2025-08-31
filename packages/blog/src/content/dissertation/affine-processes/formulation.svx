@@ -36,4 +36,4 @@ For relevant definitions and results pertaining to jump-diffusions, we refer the
 
 <!-- fix our "base" affine process -->
 Henceforth, we fix $\X$ a càdlàg affine process with conditional distributions $(\Prb_\stateVar)_{\stateVar\in\stateSpace}$ on $\pathSpace{[0,\infty)}{\stateSpace}$, induced filtration $\scrF=(\scrF_t)_{t\geq0}$, and moment function $\aff$ as in [%full](/statements/affine-process-definition).
-We will use the truncation function $\trunc(\markVar) = \markVar 1_{|\markVar|\leq 1}$ and fix the differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$ and Lévy-Khintchine map $\ode$ as in [%full](/statements/affine-process-regularity).
+We will use the truncation function $\trunc(\markVar) = \markVar 1_{|\markVar|\leq 1}$ and fix the differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$ and Lévy-Khintchine map $\ode$ as in [%full](/statements/affine-regularity).

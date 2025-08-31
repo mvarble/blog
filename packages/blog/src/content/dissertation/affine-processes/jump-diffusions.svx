@@ -12,7 +12,7 @@ title: Affine jump-diffusions
 </script>
 
 This section shows how the notions of jump-diffusions explained in [Appendix %label](/sequences/dissertation/jump-diffusions) apply in the affine case.
-These results are useful because---as we see in [%full](/statements/affine-process-regularity)---affine processes are affine jump-diffusions.
+These results are useful because---as we see in [%full](/statements/affine-regularity)---affine processes are affine jump-diffusions.
 Throughout this section, we take $\X$ to be an affine jump-diffusion with differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$, but _do not necessarily_ assume $\X$ is an affine process, in the sense of [%full](/statements/affine-process-definition).
 Firstly, we prove the uniform-boundedness property for the affine jump kernel $\affJump$.
 

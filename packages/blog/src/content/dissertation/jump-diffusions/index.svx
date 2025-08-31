@@ -1,3 +1,44 @@
 ---
 title: Jump diffusions
 ---
+
+In order to discuss jump-diffusions on a finite-dimensional real vector space, one must have a decent understanding of semimartingales.
+A great text for a comprehensive study of this is [](/citations#jacod2003), which we will refer to in our proofs.
+In terms of notational differences, we choose our probability space $(\Omega, \Sigma, \Prb)$ and filtration $\scrF=(\scrF_t)_{t\geq0}$, where $\scrF_\infty \subseteq \Sigma$ denotes the joined space.
+Furthermore, we do not explicitly write processes to take values in $\bbR^d$, but rather some vector space $\vecSpace$ with dimension $d \defeq \operatorname{dim}\vecSpace$ and inner-product $\prj\cdot\cdot$.
+Surely---due to our isometric isomorphism $\vecSpace \equiv \bbR^d$---any componentwise or linear notion, such as integration or differentiation may be taken as equivalent.
+Furthermore, we sometimes specify that a stochastic process $\X$ has a Borel state space $\stateSpace\subseteq \vecSpace$, as this is the case when studying affine processes.
+We find it important to highlight the following important notation of objects introduced in [Chapters I-II](/citations#jacod2003).
+
+- Given $(\Prb,\scrF)$ locally square-integrable martingales $M, N: \Omega \times \bbR_+ \rightarrow \bbR$, denote $\prj{M}{N}$ the predictable quadratic covariation.
+- Given $H,\X: \Omega \times \bbR_+ \rightarrow \bbR$ with $H$ being $\scrF$ predictable and $(\Prb, \scrF)$ locally bounded and $\X$ a $(\Prb, \scrF)$ semimartingale, denote the stochastic integral process as follows.
+  $$
+    H\shortInt \X_t = \int_0^t H_s \rmd\X_s
+  $$
+  We may lift this concept componentwise and linearly.
+  This allows us to choose the codomains of $H, \X$ to various combinations of $\vecSpace$ and $\bbL(\vecSpace, \bbW)$ when evaluating $H \shortInt \X$, so long as such a combination allows for $H_t \cdot \X_t$ to make sense.
+- Denote $\leb: \bbR_+ \rightarrow \bbR_+$ the identity map to allow a concise notation for Lebesgue integration.
+  $$
+    H \shortInt \leb_t = \int_0^t H_s \rmd s
+  $$
+  Throughout, we will often use the following fact without mention; any càdlàg process $H$ is such that $H_t=H_{t-}$ at all but a countable amount of times $t \in \bbR$, and so
+  $$
+    H_- \shortInt \leb_t = \int_0^t H_{s-} \rmd s = \int_0^t H_s \rmd s = H \shortInt \leb_t
+  $$
+- For a random measure $\jumpMeas: \Omega \times \scrB(\bbR_+ \times \vecSpace) \rightarrow [0,\infty]$ and (suitably integrable) process $H: \Omega \times \bbR_+ \times \vecSpace \rightarrow \bbR$, we denote the stochastic integral as follows.
+  $$
+    H \ast \jumpMeas_t = \int_{[0,t] \times \vecSpace} H_s(\markVar) \jumpMeas(\rmd s, \rmd\markVar)
+  $$
+  Denote its $(\Prb, \scrF)$ predictable projection by $\predproj{\jumpMeas}$ and the compensated measure $\compensate{\jumpMeas} = \jumpMeas - \predproj{\jumpMeas}$.
+  We will frequently use, without mention, that $\predproj{\jumpMeas}$ is characterized by the property that any $\scrF$ predictable $H: \Omega \times \bbR_+ \times \vecSpace \rightarrow \bbR_+$ is such that
+  $$
+    \Exp_\Prb\big( H \ast \jumpMeas_\infty \big)
+    = \Exp_\Prb\big( H \ast \predproj{\jumpMeas}_\infty \big)
+  $$
+  Also denote $H \ast \compensate{\jumpMeas}$ the compensated local martingale process for suitable $H \in G_\loc(\jumpMeas)$, as constructed in [Definition II.1.27](/citations#jacod2003).
+  Lift these integration notions to vector-valued $H$ componentwise.
+  Instead of choosing a canonical variable for integrating expressions in this form, we use the identity maps $\id_\vecSpace$ or $\leb$.
+  $$
+    f(\leb, \id_\vecSpace) \ast \jumpMeas_t = \int_{[0,t] \times \vecSpace} f(s, \markVar) \jumpMeas(\rmd s, \rmd\markVar)
+  $$
+- Given a semimartingale $\X$, denote $\X^\rmc$ its continuous local martingale component and $\jumpMeas^\X$ its jump measure.

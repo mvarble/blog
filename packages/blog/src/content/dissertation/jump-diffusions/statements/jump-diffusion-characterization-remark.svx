@@ -1,0 +1,17 @@
+---
+type: statement
+kind: remark
+---
+
+
+In the final part above, the push-forward map $\thinner$ may put mass on $0$,
+$$
+  \int_\vecSpace 1_{\{0\}}\big(\thinner(\stateVar, \markVar)\big) \rmd\markVar > 0,
+$$
+to _thin_ or _delete_ jumps coming from $\poisRM$ (of which there are infinitely many).
+However, this contradicts the condition [](tag:eq-affJump-conditions) that $\affJump(\stateVar, \{0\}) = 0$ for all $\stateVar \in \stateSpace$.
+Explicitly, the push-forward in [](tag:eq-sde-terms) happens on the space $\markSpace \defeq \vecSpace - \{0\}$,
+$$
+  \affJump(\stateVar, \Gamma) = \int_\vecSpace 1_\Gamma\big(\thinner(\stateVar,\markVar)\big)\rmd\markVar, \quad \Gamma \in \scrB(\markSpace)
+$$
+to allow for such _thinning_.

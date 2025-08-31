@@ -4,7 +4,7 @@ kind: remark
 slug: riccati-affine-formulation
 ---
 
-By [%full (e)](/statements/affine-process-definition-remark) and linearity of differentiation, the differential equation in [%label](/statements/affine-process-regularity) is equivalent to the following system of equations.
+By [%full (e)](/statements/affine-process-definition-remark) and linearity of differentiation, the differential equation in [%full](/statements/affine-regularity) is equivalent to the following system of equations.
 $$
   @tag(eq-complex-riccati-system)
   \forall ~ \stateVar \in \stateSpace, \qquad \left\{\begin{aligned}

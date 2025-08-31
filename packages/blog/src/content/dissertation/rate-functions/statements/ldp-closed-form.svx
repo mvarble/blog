@@ -128,7 +128,7 @@ We now evaluate the expression depending on different scenarios.
     \end{aligned}
   $$
 - Now suppose $\diffVar_1 = \affDrift(\stateVar_1) + \diffVar_2 + \diffVar_3$, $\diffVar_2 \in \operatorname{image}(\affDiff(\stateVar_1))$, $\affInt(\stateVar_1) > 0$, and $\diffVar_4 > 0$.
-  Using [%full](/statements/ode-differentiable), we are able to take the gradients of the expression in [](tag:eq-optimizing-integrand) to get the following system of equations.
+  Using [%full](/statements/jump-diffusion-ode-differentiable), we are able to take the gradients of the expression in [](tag:eq-optimizing-integrand) to get the following system of equations.
   $$
     \begin{aligned}
       0 &= \diffVar_1 - \affDrift(\stateVar_1) - \affDiff(\stateVar_1) (\momentVar_1 + \momentVar_2) \\

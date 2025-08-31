@@ -1,0 +1,110 @@
+---
+type: statement
+kind: lemma
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+For each $\stateVar \in \stateSpace$, the map $\ode(\cdot,\stateVar)$ is continuously differentiable on $\odeSpace(\stateVar)^\circ$, with derivative $\Der \ode(\cdot,\stateVar): \odeSpace(\stateVar)^\circ \rightarrow \bbL(\vecSpace, \bbR)$ as follows.
+$$
+  @tag(eq-ode-derivative-truncation)
+  \Der \ode(\momentVar,\stateVar) w = \Bprj{\affDrift^\trunc(\stateVar) + \affDiff(\stateVar)\momentVar + \int_\vecSpace \big( e^\prj{\momentVar}{\markVar} \markVar - \trunc(\markVar)\big) \affJump(\stateVar,\rmd\markVar)}{w}, \quad \momentVar \in \odeSpace(\stateVar)^\circ
+$$
+
+<Proof>
+
+Fix $\stateVar \in \stateSpace$, $\momentVar \in \odeSpace(\stateVar)^\circ$.
+Let $\epsilon > 0$ such that $B(\momentVar, \epsilon) \subseteq \odeSpace(\stateVar)$.
+For all $0 < \delta < \epsilon$ and $i = 1, \ldots, d$, we now have the following identity
+$$
+  @tag(eq-difference-quotient)
+  \begin{aligned}
+    \frac{\ode(\momentVar+\delta \basisVec_i,\stateVar) - \ode(\momentVar,\stateVar)}{\delta}
+    &= \prj{\basisVec_i}{\affDrift^\trunc(\stateVar)} + \prj{\basisVec_i}{\affDiff(\stateVar)\momentVar} + \frac12\prj{\delta \basisVec_i}{\affDiff(\stateVar)\momentVar} \\
+      &\quad+ \int_{|\markVar|\leq 1} \frac1\delta\Big( e^\prj{\momentVar+\delta \basisVec_i}{\markVar} - e^\prj{\momentVar}{\markVar} - \prj{\delta \basisVec_i}{\markVar} \Big) \affJump(\stateVar,\rmd\markVar) \\
+      &\quad+ \int_{|\markVar| > 1}  \frac1\delta\Big( e^\prj{\momentVar+\delta \basisVec_i}{\markVar} - e^\prj{\momentVar}{\markVar} \Big) \affJump(\stateVar,\rmd\markVar) \\
+  \end{aligned}
+$$
+Evaluating the limit of [](tag:eq-difference-quotient) as $\delta \rightarrow 0$ is now a matter of exchanging the limit with integration; we will do this by using the dominated convergence theorem.
+
+For the first integral, Taylor's theorem provides us $\gamma_0, \gamma_1 \in [0,1]$ such that the following hold.
+$$
+  \begin{gathered}
+    e^\prj{\momentVar+\delta \basisVec_i}{\markVar} = 1 + \prj{\momentVar+\delta \basisVec_i}{\markVar} + \frac12 \prj{\momentVar+\delta \basisVec_i}{\markVar}^2 e^{\gamma_0\prj{\momentVar+\delta \basisVec_i}{\markVar}} \\
+    e^\prj{\momentVar}{\markVar} = 1 + \prj{\momentVar}{\markVar} + \frac12 \prj{\momentVar}{\markVar}^2 e^{\gamma_1\prj{\momentVar}{\markVar}}
+  \end{gathered}
+$$
+This shows us that, for all $0 < \delta < \epsilon$ and $|\markVar| \leq 1$,
+$$
+  \begin{aligned}
+    \Big| \frac1\delta \Big( e^\prj{\momentVar+\delta \basisVec_i}{\markVar} - e^\prj{\momentVar}{\markVar} - \prj{\delta \basisVec_i}{\markVar} \Big) \Big|
+    &= \Big| \frac{1}{2} \prj{\momentVar+\delta \basisVec_i}{\markVar}^2 e^{\gamma_0\prj{\momentVar+\delta \basisVec_i}{\markVar}} + \frac12\prj{\momentVar}{\markVar}^2 e^{\gamma_1\prj{\momentVar}{\markVar}} \Big| \\
+    &\leq \Big(\big(|\momentVar| + \epsilon\big)^2 e^{|\momentVar|+\epsilon} \Big) |\markVar|^2.
+  \end{aligned}
+$$
+This dominating function is integrable,
+$$
+  \int_{|\markVar|\leq 1} \Big( \big(|\momentVar|+\epsilon\big)^2 e^{|\momentVar|+\epsilon} \Big) |\markVar|^2 \affJump(\stateVar,\rmd\markVar)
+  \leq  \Big( \big(|\momentVar|+\epsilon\big)^2 e^{|\momentVar|+\epsilon} \Big) \int_\vecSpace (1 \wedge |\markVar|^2) \affJump(\stateVar,\rmd\markVar) < \infty,
+$$
+so we may apply the dominated convergence theorem.
+$$
+  \begin{aligned}
+    &\lim_{\delta \rightarrow 0} \int_{|\markVar|\leq 1} \frac1\delta \Big( e^\prj{\momentVar+\delta \basisVec_i}{\markVar} - e^\prj{\momentVar}{\markVar} - \prj{\delta \basisVec_i}{\markVar} \Big) \affJump(\stateVar,\rmd\markVar)  \\
+    &\quad= \int_{|\markVar|\leq 1} \lim_{\delta\rightarrow0} \frac{1}{\delta} \Big( e^\prj{\momentVar+\delta \basisVec_i}{\markVar} - e^\prj{\momentVar}{\markVar} - \prj{\delta \basisVec_i}{\markVar} \Big) \affJump(\stateVar,\rmd\markVar)  \\
+    @tag(eq-dct1)
+    &\quad= \int_{|\markVar|\leq1} \Big( e^\prj{\momentVar}{\markVar} \markVar_i - \markVar_i \Big) \affJump(\stateVar,\rmd\markVar)
+  \end{aligned}
+$$
+
+For the second integral, we again use Taylor's theorem to establish for each $0 < \delta < \epsilon/2$, some $\gamma_\delta \in [0,\delta]$ such that
+$$
+  e^\prj{\momentVar+\delta \basisVec_i}{\markVar} = e^\prj{\momentVar}{\markVar} + \prj{\delta \basisVec_i}{\markVar} e^\prj{\momentVar+\gamma_\delta \basisVec_i}{\markVar}
+$$
+This way, we have the following dominating function.
+$$
+  \Big| \frac1\delta \Big( e^\prj{\momentVar+\delta \basisVec_i}{\markVar} - e^\prj{\momentVar}{\markVar} \Big) \Big|
+  %
+  \leq \Big|\prj{\basisVec_i}{\markVar} e^\prj{\momentVar+\gamma_\delta \basisVec_i}{\markVar} \Big|
+  %
+  \leq |\markVar_i| e^{\prj{\momentVar}{\markVar} + \epsilon|\markVar_i|/2}
+$$
+The claim is that this dominating function is integrable.
+To see this, first note that because we have the following limit,
+$$
+  \lim_{|\markVar|\rightarrow\infty} \frac{|\markVar_i|e^{\prj{\momentVar}{\markVar}+\epsilon|\markVar_i|/2}}{e^{\prj{\momentVar}{\markVar}+2\epsilon|\markVar_i|/3}} = \lim_{|\markVar|\rightarrow\infty} \frac{|\markVar_i|}{e^{\epsilon|\markVar_i|/6}} =  0
+$$
+There exists $M > 0$ such that for all $|\markVar| > M$,
+$$
+  |\markVar_i| e^{\prj{\momentVar}{\markVar} + \epsilon|\markVar_i|/2} < e^{\prj{\momentVar}{\markVar} + 2\epsilon|\markVar_i|/3}.
+$$
+We now see that
+$$
+  \begin{aligned}
+    &\int_{|\markVar| > 1} |\markVar_i| e^{\prj{\momentVar}{\markVar} + \epsilon|\markVar_i|/2} \affJump(\stateVar,\rmd\markVar) \\
+    &\quad=\int_{1 < |\markVar|\leq M} |\markVar_i| e^{\prj{\momentVar}{\markVar} + \epsilon|\markVar_i|/2} \affJump(\stateVar,\rmd\markVar) +  \int_{|\markVar| > M} |\markVar_i| e^{\prj{\momentVar}{\markVar} + \epsilon|\markVar_i|/2} \affJump(\stateVar,\rmd\markVar) \\
+    &\quad\leq \int_{1 < |\markVar| \leq M} M e^{(|\momentVar|+\epsilon/2)M} \affJump(\stateVar,\rmd\markVar) + \int_{|\markVar| > M} e^{\prj{\momentVar}{\markVar} + 2\epsilon|\markVar_i|/3} \affJump(\stateVar,\rmd\markVar) \\
+    &\quad\leq Me^{(|\momentVar|+\epsilon/2)M} \int_\vecSpace (1 \wedge |\markVar|^2) \affJump(\stateVar,\rmd\markVar) + \sum_{\ell=0}^1 \int_{|\markVar|>1} e^\prj{\momentVar+2\epsilon \basisVec_i/3}{\markVar} \affJump(\stateVar,\rmd\markVar) \\
+    &\quad < \infty.
+  \end{aligned}
+$$
+We again use the dominated convergence theorem to deduce the following.
+$$
+  \begin{aligned}
+    &\lim_{\delta \rightarrow 0} \int_{|\markVar|> 1} \frac1\delta \Big( e^\prj{\momentVar+\delta \basisVec_i}{\markVar} - e^\prj{\momentVar}{\markVar} \Big) \affJump(\stateVar,\rmd\markVar) \\
+    &\quad= \int_{|\markVar|> 1} \lim_{\delta\rightarrow0} \frac{1}{\delta} \Big( e^\prj{\momentVar+\delta \basisVec_i}{\markVar} - e^\prj{\momentVar}{\markVar}  \Big) \affJump(\stateVar,\rmd\markVar) \\
+    @tag(eq-dct2)
+    &\quad= \int_{|\markVar|>1} e^\prj{\momentVar}{\markVar} \markVar_i  \affJump(\stateVar,\rmd\markVar)
+  \end{aligned}
+$$
+Combining equations [](tag:eq-difference-quotient), [](tag:eq-dct1), and [](tag:eq-dct2) now yields our desired identity.
+$$
+  \Der_i \ode(\momentVar,\stateVar)
+  = \Bprj{\basisVec_i}{\affDrift^\trunc(\stateVar) + \affDiff(\stateVar)\momentVar + \int_\vecSpace \Big( e^\prj{\momentVar}{\markVar} \markVar - \trunc(\markVar) \Big) \affJump(\stateVar,\rmd\markVar)}
+$$
+Continuity of $\Der_i \ode(\momentVar, \stateVar)$ for $\momentVar \in \odeSpace(\stateVar)^\circ$ involves very similar dominated convergence theorem arguments as above.
+From here, it is clear that $\ode$ is continuously differentiable with the form in [](tag:eq-ode-derivative-truncation).
+
+</Proof>

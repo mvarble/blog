@@ -1,7 +1,6 @@
 ---
 type: statement
 kind: theorem
-slug: affine-process-regularity
 ---
 
 <script>

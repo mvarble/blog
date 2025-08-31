@@ -1,0 +1,42 @@
+---
+type: statement
+kind: lemma
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+
+Fix a $(\Prb, \scrF)$ jump-diffusion $\X$ with differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$ satisfying
+$$
+  \stateVar \mapsto \affJump\big(\stateVar, \vecSpace\big) \text{ is bounded on compact sets,}
+$$
+then $\X$ is locally countable.
+Moreover, we may define $\affInt: \stateSpace \rightarrow \bbR_+$ and probability kernel $\affDist: \stateSpace \times \scrB(\vecSpace) \rightarrow [0,1]$ by the following factoring.
+$$
+  \affInt(\stateVar) \defeq \affJump(\stateVar, \vecSpace), \quad \affJump(\stateVar, \rmd\markVar) \eqdef \affInt(\stateVar) \affDist(\stateVar, \rmd\markVar)
+$$
+Also, $N$ has $(\Prb, \scrF)$ intensity $\affInt(\X)$.
+
+<Proof>
+
+Select the sequence $(T_n)_{n\in\bbN}$ as in [](tag:eq-stopping-times).
+Note now that, since the constant function $1$ is predictable,
+$$
+  \Exp_\Prb \N^\X_{T_n}
+  = \Exp_\Prb 1 \ast \jumpMeas^\X_{T_n}
+  = \Exp_\Prb 1 \ast \predproj{\jumpMeas^\X}_{T_n}
+  = \Exp_\Prb \int_0^{T_n} \affJump(\X_t, \vecSpace) \rmd t
+  \leq n \cdot \sup_{|\stateVar| \leq n} \affJump(\stateVar, \vecSpace) < \infty
+  $$
+This means that $\N^\X$ is locally integrable, making $\X$ locally countable.
+Moreover, by [Theorem II.1.8](/citations#jacod2003),
+$$
+  \N^\X - \int_0^t \affInt(\X_s) \rmd s
+  = 1 \ast \jumpMeas^\X - \int_0^t \int_\vecSpace \affJump(\X_s, \rmd\markVar) \rmd s
+  = 1 \ast \jumpMeas^\X - 1 \ast \predproj{\jumpMeas^\X}
+$$
+is a $(\Prb, \scrF)$ local martingale, which finishes the proof.
+
+</Proof>

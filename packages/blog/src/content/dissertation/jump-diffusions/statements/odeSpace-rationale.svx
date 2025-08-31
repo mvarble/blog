@@ -1,0 +1,34 @@
+---
+type: statement
+kind: lemma
+---
+
+<script>
+  import Proof from '$lib/components/proof.svelte';
+</script>
+
+For any $\stateVar \in \stateSpace$, we have the following equivalence.
+$$
+  \momentVar \in \odeSpace(\stateVar)
+  \quad\Leftrightarrow\quad
+  \int_{|\vecVar|>1} e^\prj{\momentVar}{\vecVar} \affJump(\stateVar, \rmd\markVar) < \infty
+$$
+
+<Proof>
+
+To each $\momentVar, \vecVar \in \vecSpace$, Taylor's theorem gives us $\gamma_{\momentVar,\vecVar} \in [0,1]$ such that
+$$
+  e^\prj{\momentVar}{\vecVar} = 1 + \prj{\momentVar}{\vecVar} + \frac12 e^{\gamma_{\momentVar,\vecVar} \prj{\momentVar}{\vecVar}} \prj{\momentVar}{\vecVar}^2.
+$$
+This allows us to see that, for each $\stateVar \in \stateSpace$, $\ode(\momentVar,\stateVar)$ and $\int_{|\markVar|>1} e^\prj{\momentVar}{\markVar} \affJump(\stateVar,\rmd\markVar)$ differ by finite expressions.
+$$
+  \begin{aligned}
+    &\left|\ode(\momentVar, \stateVar) - \int_{|\markVar|>1} e^\prj{\momentVar}{\vecVar} \affJump(\stateVar, \rmd\markVar) \right|  \\
+    &= \left|\prj{\momentVar}{\affDrift^\trunc(\stateVar)} + \frac12\prj{\momentVar}{\affDiff(\stateVar)\momentVar} + \int_{|\vecVar|\leq 1} \big( e^\prj{\momentVar}{\vecVar} - 1 - \prj{\momentVar}{\vecVar} \big) \affJump(\stateVar,\rmd\markVar) - \int_{|\vecVar|>1} \affJump(\stateVar,\rmd\markVar) \right| \\
+    &\leq \left|\prj{\momentVar}{\affDrift^\trunc(\stateVar)} + \frac12\prj{\momentVar}{\affDiff(\stateVar)\momentVar} \right| + \left| \int_{|\markVar|\leq1} \frac12 e^{\gamma_{\momentVar,\markVar}\prj{\momentVar}{\markVar}} \prj{\momentVar}{\markVar}^2 \affJump(\stateVar,\rmd\markVar)\right| + \int_{|\markVar|>1} \affJump(\stateVar,\rmd\markVar) \\
+    &\leq \left|\prj{\momentVar}{\affDrift^\trunc(\stateVar)} + \frac12\prj{\momentVar}{\affDiff(\stateVar)\momentVar} \right| + \left( \frac12 e^{|\momentVar|} + 1 \right) \int_\vecSpace \big(1 \wedge |\markVar|^2\big) \affJump(\stateVar, \rmd\markVar)
+  \end{aligned}
+$$
+Thus, one can be defined as a finite displacement of the other.
+
+</Proof>

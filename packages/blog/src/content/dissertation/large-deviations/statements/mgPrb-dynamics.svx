@@ -34,7 +34,7 @@ $$
 
 <Proof>
 
-The $(\mgPrb^{\epsilon,\twistFunc}_\stateVar, \scrF^\epsilon)$ dynamics of $\Xee$ simply come from [%full](/statements/exponential-martingale).
+The $(\mgPrb^{\epsilon,\twistFunc}_\stateVar, \scrF^\epsilon)$ dynamics of $\Xee$ simply come from [%full](/statements/jump-diffusion-lk-exponential-martingale).
 As far as weak convergence is concerned, this is immediate from the exponential tightness of our family and convergence of finite-dimensional distributions.
 
 </Proof>

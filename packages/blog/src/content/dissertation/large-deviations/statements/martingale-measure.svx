@@ -33,7 +33,7 @@ $$
   \end{aligned}
 $$
 The remaining identity is a special case of that from [Theorem III.7.24](/citations#jacod2003), but we will perform the Itô calculus here for completion's sake.
-Note that [%full](/statements/exponential-martingale) tells us that $\exp(\twistFunc \shortInt \Xee)$ is a $(\Prb_\stateVar, \scrF)$ jump-diffusion, and [](tag:eq-jump-diffusion-exponentially-special) from [%full](/statements/LK-exponential-martingale) gives us its special semimartingale decomposition.
+Note that [%full](/statements/jump-diffusion-lk-exponential-martingale) tells us that $\exp(\twistFunc \shortInt \Xee)$ is a $(\Prb_\stateVar, \scrF)$ jump-diffusion, and [](tag:eq-jump-diffusion-exponentially-special) from [%full](/statements/jump-diffusion-lk-exponential-martingale) gives us its special semimartingale decomposition.
 $$
   \begin{aligned}
     \exp\big( \twistFunc \shortInt \Xee_t \big)
@@ -68,6 +68,6 @@ $$
   \end{aligned}
 $$
 Note that this is one argument that $\mgDensity^{\epsilon,\twistFunc} = \calE(H)_\infty$ corresponds to a $(\Prb, \scrF)$ local martingale, since $H$ is (see [Theorem I.4.61(b)](/citations#jacod2003)).
-In any case, the martingale nature comes from [%full](/statements/exponential-martingale).
+In any case, the martingale nature comes from [%full](/statements/jump-diffusion-lk-exponential-martingale).
 
 </Proof>

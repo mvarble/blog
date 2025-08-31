@@ -20,13 +20,13 @@ $$
 
 <Proof>
 
-By combining Lemmas [%label](/statements/aff-jump-regularity) and [%label](/statements/countable), we get the desired local countability.
+By combining Lemmas [%label](/statements/aff-jump-regularity) and [%label](/statements/jump-diffusion-countable), we get the desired local countability.
 Because $0 \in \stateSpace$ and $\operatorname{span}\stateSpace = \vecSpace$, we are able to take appropriate linear combinations to ensure finiteness of the quantities $\affIntPart_i \defeq \affJumpPart_i(\vecSpace)$ for each $i = 0, \ldots, d$.
 This allows us to define our intensity map.
 $$
   \affInt(\stateVar) \defeq \affIntPart_0 + \sum_{i=1}^d \stateVar^i \affIntPart_i = \affJumpPart_0(\vecSpace) + \sum_{i=1}^d \stateVar^i \affJumpPart_i(\vecSpace) = \affJump(\stateVar, \vecSpace)
 $$
-Now, just as in [%full](/statements/countable-remark), each non-zero $\affIntPart_i$ will produce a probability distribution $\affDistPart_i(\rmd\markVar) \defeq \affJumpPart_i(\rmd\markVar) / \affIntPart_i$; otherwise, simply define $\affDistPart_i(\rmd\markVar) \defeq \delta_{\basisVec_1}$.
+Now, just as in [%full](/statements/jump-diffusion-countable-remark), each non-zero $\affIntPart_i$ will produce a probability distribution $\affDistPart_i(\rmd\markVar) \defeq \affJumpPart_i(\rmd\markVar) / \affIntPart_i$; otherwise, simply define $\affDistPart_i(\rmd\markVar) \defeq \delta_{\basisVec_1}$.
 This way, we have the factoring $\affJumpPart_i(\rmd\markVar) = \affIntPart_i\affDistPart_i(\rmd\markVar)$ for each $i = 0, \ldots, d$.
 If $\affInt(\stateVar) \neq 0$, we see our other desired identity.
 $$

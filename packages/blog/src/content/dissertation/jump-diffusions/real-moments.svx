@@ -1,3 +1,53 @@
 ---
 title: Real moments of jump-diffusions
 ---
+
+<script>
+  import Statement from '$lib/components/statement.svelte';
+  import * as odeSpaceRationale from './statements/odeSpace-rationale.svx';
+  import * as odeSpaceConvex from './statements/odeSpace-convex.svx';
+  import * as jumpDiffusionOdeDifferentiable from './statements/jump-diffusion-ode-differentiable.svx';
+  import * as jumpDiffusionLkSpecial from './statements/jump-diffusion-lk-special.svx';
+  import * as jumpDiffusionLkReal from './statements/jump-diffusion-lk-real.svx';
+  import * as jumpDiffusionLkExponentialMartingale from './statements/jump-diffusion-lk-exponential-martingale.svx';
+  import * as jumpDiffusionLkGirsanov from './statements/jump-diffusion-lk-girsanov.svx';
+</script>
+
+We now turn our focus to the real moments of $(\Prb, \scrF)$ jump-diffusions and the extension of our Lévy-Khintchine map $\ode$,
+$$
+  \ode(\momentVar, \stateVar) = \bprj{\momentVar}{\affDrift^\trunc(\stateVar)} + \frac12\bprj{\momentVar}{\affDiff(\stateVar)} + \int_\vecSpace \big( e^\prj{\momentVar}{\markVar} - 1 - \prj{\momentVar}{\trunc(\markVar)} \big) \affJump(\stateVar, \rmd\markVar),
+$$
+to evaluate real moments $\momentVar \in \vecSpace$.
+The above expression may be infinite, as the final term includes an unbounded integral over a possibly infinite measure.
+That said, we find it imperative to denote the following sets of finiteness.
+$$
+  @tag(eq-odeSpace-general)
+  \odeSpace(\stateVar) \defeq \Big\{ \momentVar \in \vecSpace : \ode(\momentVar, \stateVar) < \infty \Big\}, \qquad
+  \odeSpace \defeq \bigcap_{\stateVar \in \stateSpace} \odeSpace(\stateVar)
+$$
+The following results will explore the nature of the maps $\ode(\cdot,\stateVar): \odeSpace(\stateVar) \rightarrow \bbR$ for fixed differentiable $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$, where our truncation function $\trunc$ is defined by $\trunc(\markVar) = \markVar 1_{|\markVar|\leq 1}$.
+Note that there is no loss of generality in selecting this truncation function, since they all evaluate $\ode$ identically.
+
+<Statement {...odeSpaceRationale} />
+<Statement {...odeSpaceConvex} />
+<Statement {...jumpDiffusionOdeDifferentiable} />
+
+As we have seen in Lemmas [%label](/statements/jump-diffusion-special) and [%label](/statements/jump-diffusion-countable), if we have local boundedness of certain integrals of a jump kernel $\affJump$, we can leverage these to $(\Prb, \scrF)$ local conditions of the associated jump-diffusion $\X$.
+Throughout the remainder of this section, we impose the following uniform-boundedness principle for the kernel $\affJump$.
+$$
+  @tag(eq-affJump-regularity)
+  \begin{aligned}
+    &f \in \scrB(\vecSpace)/\scrB(\bbR), ~ \int_\vecSpace |f(\markVar)| \affJump(\stateVar, \rmd\markVar) < \infty \text{ for all } \stateVar \in \stateSpace \\
+    &\quad\Longrightarrow\quad \stateVar \mapsto \int_\vecSpace |f(\markVar)| \affJump(\stateVar, \rmd\markVar) \text{ bounded on compact sets}
+  \end{aligned}
+$$
+With this assumption, we get some nice results on finite exponential moments of $\X$.
+
+<Statement {...jumpDiffusionLkSpecial} />
+<Statement {...jumpDiffusionLkReal} />
+<Statement {...jumpDiffusionLkExponentialMartingale} />
+
+In the case that the local martingale in the preceding theorem satisfies sufficient integrability, we are able to introduce a measure change with which the dynamics of $\X$ are still understood.
+Note that the following theorem states this, with careful language delineating the fact that special differential characteristics depend on the underlying measure.
+
+<Statement {...jumpDiffusionLkGirsanov} />
