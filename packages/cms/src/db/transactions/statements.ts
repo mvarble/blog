@@ -168,3 +168,16 @@ export function getStatementReferences(
         };
     });
 }
+
+export function getImportedStatements(
+    db: Database,
+    parentId: number,
+): { id: number; pageId: number; filename: string }[] {
+    return db
+        .prepare(
+            `SELECT
+                s.id, s.page_id as pageId, p.filename
+            FROM statements s INNER JOIN pages p WHERE p.id = s.page_id AND s.parent_id = ?;`,
+        )
+        .all(parentId) as { id: number; pageId: number; filename: string }[];
+}

@@ -15,6 +15,13 @@ export interface Post extends TouchPostInput {
     pathname: string;
 }
 
+export function isPost(db: Database, pageId: number): boolean {
+    return (
+        typeof db.prepare('SELECT posts.page_id FROM posts WHERE posts.page_id = ?').get(pageId) !=
+        'undefined'
+    );
+}
+
 export function touchPost(db: Database, input: TouchPostInput): Post {
     let pageId: number;
     const pathname = `posts/${input.slug}`;

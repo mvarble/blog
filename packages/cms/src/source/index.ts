@@ -1,4 +1,4 @@
-import { Plugin } from 'vite';
+import { Plugin, ViteDevServer } from 'vite';
 import path from 'path';
 import fs from 'fs';
 import glob from 'fast-glob';
@@ -11,7 +11,8 @@ import {
     connect,
     cacheDir,
     getPage,
-    getRootDescendant,
+    getImportedStatements,
+    isPost,
 } from '../db';
 import { hasStringField } from '../util';
 
@@ -100,7 +101,7 @@ export function cmsSource(): Plugin {
         }
     }
 
-    // helper function called during hot-updates to file
+    // helper function called during hot-updates to file which updates database
     async function hmr(filename: string, frontmatter: object & {}, contents: string) {
         if (hasStringField(frontmatter, 'type') && frontmatter.type in HOOKS) {
             const hook = HOOKS[frontmatter.type];
@@ -118,6 +119,47 @@ export function cmsSource(): Plugin {
             const parentContents = await fs.promises.readFile(parentFilename, 'utf8');
             const parentFrontmatter = matter(parentContents).data;
             await hmr(parentFilename, parentFrontmatter, parentContents);
+        }
+    }
+
+    // helper function called during hot-updates to file which invalidates
+    function invalidate(filename: string, server: ViteDevServer) {
+        const file = path.join(path.resolve('.'), filename);
+        const module = server.moduleGraph.getModuleById(file);
+        if (module) server.moduleGraph.invalidateModule(module);
+
+        const parentFilename = getStatementParentFilename(db, filename);
+        if (parentFilename) {
+            invalidate(parentFilename, server);
+            return;
+        }
+
+        const page = getPage(db, filename);
+        if (page) {
+            for (const child of getImportedStatements(db, page.id)) {
+                const file = path.join(path.resolve('.'), child.filename);
+                const module = server.moduleGraph.getModuleById(file);
+                if (module) server.moduleGraph.invalidateModule(module);
+            }
+            if (isPost(db, page.id)) {
+                let module = server.moduleGraph.getModuleById(
+                    path.resolve('./src/routes/posts/[...path]/+page.ts'),
+                );
+                if (module) server.moduleGraph.invalidateModule(module);
+                module = server.moduleGraph.getModuleById(
+                    path.resolve('./src/routes/posts/[...path]/+page.svelte'),
+                );
+                if (module) server.moduleGraph.invalidateModule(module);
+            } else {
+                let module = server.moduleGraph.getModuleById(
+                    path.resolve('./src/routes/sequences/[...path]/+page.ts'),
+                );
+                if (module) server.moduleGraph.invalidateModule(module);
+                module = server.moduleGraph.getModuleById(
+                    path.resolve('./src/routes/sequences/[...path]/+page.svelte'),
+                );
+                if (module) server.moduleGraph.invalidateModule(module);
+            }
         }
     }
 
@@ -161,19 +203,9 @@ export function cmsSource(): Plugin {
             if (inContent && (isSvx || isBib)) {
                 const file = await fs.promises.readFile(filename, 'utf8');
                 const frontmatter = isSvx ? matter(file).data : { type: 'citation' };
-                await hmr(filename, frontmatter, file);
+                await hmr(filename, frontmatter, file); // this will update the database
+                invalidate(filename, server);
             }
-
-            const page = getPage(db, filename);
-            if (!page) return;
-
-            // TODO: consider editing everything below as well...
-            let module = server.moduleGraph.getModuleById(file);
-            if (module) server.moduleGraph.invalidateModule(module);
-            const parentFilename = getRootDescendant(db, filename);
-            module = server.moduleGraph.getModuleById(path.resolve(path.join('.', parentFilename)));
-            if (module) server.moduleGraph.invalidateModule(module);
-            server.moduleGraph.invalidateAll();
         },
     };
 }
