@@ -1,0 +1,178 @@
+:root {
+  /* ===== HUE VARIABLES ===== */
+  --hue-indigo: 215;
+  --hue-blue: 200;
+  --hue-sand: 40;
+  --hue-green: 120;
+  --hue-neutral: 220;
+
+  /* ===== COLOR SHADES ===== */
+  /* Indigo family */
+  --indigo-50: hsl(var(--hue-indigo), 45%, 95%);
+  --indigo-100: hsl(var(--hue-indigo), 45%, 88%);
+  --indigo-200: hsl(var(--hue-indigo), 45%, 78%);
+  --indigo-300: hsl(var(--hue-indigo), 45%, 68%);
+  --indigo-400: hsl(var(--hue-indigo), 45%, 58%);
+  --indigo-500: hsl(var(--hue-indigo), 45%, 48%);
+  --indigo-600: hsl(var(--hue-indigo), 55%, 38%);
+  --indigo-700: hsl(var(--hue-indigo), 65%, 28%);
+  --indigo-800: hsl(var(--hue-indigo), 75%, 18%);
+  --indigo-900: hsl(var(--hue-indigo), 85%, 12%);
+
+  /* Blue family */
+  --blue-50: hsl(var(--hue-blue), 50%, 95%);
+  --blue-100: hsl(var(--hue-blue), 50%, 88%);
+  --blue-200: hsl(var(--hue-blue), 50%, 78%);
+  --blue-300: hsl(var(--hue-blue), 50%, 68%);
+  --blue-400: hsl(var(--hue-blue), 50%, 58%);
+  --blue-500: hsl(var(--hue-blue), 50%, 48%);
+  --blue-600: hsl(var(--hue-blue), 60%, 38%);
+  --blue-700: hsl(var(--hue-blue), 70%, 28%);
+  --blue-800: hsl(var(--hue-blue), 80%, 18%);
+  --blue-900: hsl(var(--hue-blue), 90%, 12%);
+
+  /* Sand family */
+  --sand-50: hsl(var(--hue-sand), 25%, 95%);
+  --sand-100: hsl(var(--hue-sand), 25%, 88%);
+  --sand-200: hsl(var(--hue-sand), 25%, 78%);
+  --sand-300: hsl(var(--hue-sand), 25%, 68%);
+  --sand-400: hsl(var(--hue-sand), 25%, 58%);
+  --sand-500: hsl(var(--hue-sand), 25%, 48%);
+  --sand-600: hsl(var(--hue-sand), 35%, 38%);
+  --sand-700: hsl(var(--hue-sand), 45%, 28%);
+  --sand-800: hsl(var(--hue-sand), 55%, 18%);
+  --sand-900: hsl(var(--hue-sand), 65%, 12%);
+
+  /* Green family */
+  --green-50: hsl(var(--hue-green), 35%, 95%);
+  --green-100: hsl(var(--hue-green), 35%, 88%);
+  --green-200: hsl(var(--hue-green), 35%, 78%);
+  --green-300: hsl(var(--hue-green), 35%, 68%);
+  --green-400: hsl(var(--hue-green), 35%, 58%);
+  --green-500: hsl(var(--hue-green), 35%, 48%);
+  --green-600: hsl(var(--hue-green), 45%, 38%);
+  --green-700: hsl(var(--hue-green), 55%, 28%);
+  --green-800: hsl(var(--hue-green), 65%, 18%);
+  --green-900: hsl(var(--hue-green), 75%, 12%);
+
+  /* Neutral family */
+  --neutral-50: hsl(var(--hue-neutral), 10%, 98%);
+  --neutral-100: hsl(var(--hue-neutral), 10%, 95%);
+  --neutral-200: hsl(var(--hue-neutral), 10%, 88%);
+  --neutral-300: hsl(var(--hue-neutral), 10%, 75%);
+  --neutral-400: hsl(var(--hue-neutral), 8%, 58%);
+  --neutral-500: hsl(var(--hue-neutral), 6%, 45%);
+  --neutral-600: hsl(var(--hue-neutral), 8%, 32%);
+  --neutral-700: hsl(var(--hue-neutral), 10%, 24%);
+  --neutral-800: hsl(var(--hue-neutral), 12%, 16%);
+  --neutral-900: hsl(var(--hue-neutral), 14%, 10%);
+
+  /* White */
+  --white: hsl(0, 0%, 100%);
+
+  /* ===== SEMANTIC COLOR VARIABLES ===== */
+  /* Backgrounds */
+  --bg-primary: var(--white);
+  --bg-secondary: var(--neutral-50);
+  --bg-tertiary: var(--neutral-100);
+  --bg-accent: var(--indigo-50);
+  --bg-muted: var(--neutral-200);
+
+  /* Text colors */
+  --text-primary: var(--neutral-800);
+  --text-secondary: var(--neutral-600);
+  --text-muted: var(--neutral-500);
+  --text-light: var(--neutral-400);
+  --text-inverse: var(--white);
+  --text-accent: var(--blue-600);
+  --text-success: var(--green-700);
+  --text-warning: var(--sand-700);
+
+  /* Surface colors */
+  --surface-primary: var(--white);
+  --surface-secondary: var(--neutral-50);
+  --surface-elevated: var(--white);
+  --surface-overlay: var(--neutral-900);
+
+  /* Border colors */
+  --border-primary: var(--neutral-200);
+  --border-secondary: var(--neutral-300);
+  --border-accent: var(--blue-300);
+  --border-success: var(--green-300);
+  --border-warning: var(--sand-300);
+  --border-error: hsl(0, 65%, 70%);
+
+  /* Interactive elements */
+  --interactive-primary: var(--blue-400);
+  --interactive-primary-hover: var(--blue-500);
+  --interactive-primary-active: var(--blue-600);
+  
+  --interactive-secondary: var(--indigo-400);
+  --interactive-secondary-hover: var(--indigo-500);
+  --interactive-secondary-active: var(--indigo-600);
+
+  --interactive-accent: var(--green-400);
+  --interactive-accent-hover: var(--green-500);
+  --interactive-accent-active: var(--green-600);
+
+  --interactive-muted: var(--sand-300);
+  --interactive-muted-hover: var(--sand-400);
+  --interactive-muted-active: var(--sand-500);
+
+  /* Status colors */
+  --status-info: var(--blue-500);
+  --status-success: var(--green-500);
+  --status-warning: var(--sand-500);
+  --status-error: hsl(0, 65%, 55%);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px hsla(var(--hue-neutral), 50%, 10%, 0.05);
+  --shadow-md: 0 4px 6px hsla(var(--hue-neutral), 50%, 10%, 0.07);
+  --shadow-lg: 0 10px 15px hsla(var(--hue-neutral), 50%, 10%, 0.1);
+  --shadow-xl: 0 20px 25px hsla(var(--hue-neutral), 50%, 10%, 0.1);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--indigo-400), var(--blue-400));
+  --gradient-secondary: linear-gradient(135deg, var(--blue-400), var(--green-400));
+  --gradient-accent: linear-gradient(135deg, var(--sand-300), var(--green-300));
+  --gradient-subtle: linear-gradient(135deg, var(--neutral-50), var(--indigo-50));
+}
+
+/* ===== EXAMPLE USAGE ===== */
+/*
+body {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.header {
+  background: var(--gradient-primary);
+  color: var(--text-inverse);
+}
+
+.button-primary {
+  background-color: var(--interactive-primary);
+  color: var(--text-inverse);
+  border: 1px solid var(--border-accent);
+  box-shadow: var(--shadow-md);
+}
+
+.button-primary:hover {
+  background-color: var(--interactive-primary-hover);
+}
+
+.card {
+  background-color: var(--surface-primary);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.text-accent {
+  color: var(--text-accent);
+}
+
+.status-success {
+  background-color: var(--status-success);
+  color: var(--text-inverse);
+}
+*/
