@@ -1,7 +1,7 @@
 import { isUniqueConstraintError, type Database } from '..';
 import { type KatexMacros } from '.';
 
-export interface TouchPostInput {
+interface PostBase {
     title: string;
     created: Date;
     edited: Date;
@@ -10,63 +10,66 @@ export interface TouchPostInput {
     katexMacros: KatexMacros;
 }
 
-export interface Post extends TouchPostInput {
+export interface TouchPostInput extends PostBase {
+    descriptionId?: number;
+}
+
+export interface Post extends PostBase {
     pageId: number;
     pathname: string;
 }
 
-export function isPost(db: Database, pageId: number): boolean {
-    return (
-        typeof db.prepare('SELECT posts.page_id FROM posts WHERE posts.page_id = ?').get(pageId) !=
-        'undefined'
-    );
-}
-
-export function touchPost(db: Database, input: TouchPostInput): Post {
+export function touchPost(db: Database, { descriptionId, ...post }: TouchPostInput): Post {
+    let mddocId: number;
     let pageId: number;
-    const pathname = `posts/${input.slug}`;
+    const pathname = `posts/${post.slug}`;
     try {
-        const out = db
-            .prepare(
-                'INSERT INTO pages (pathname, filename, katex_macros) VALUES (?, ?, ?) RETURNING id;',
-            )
-            .get(pathname, input.filename, JSON.stringify(input.katexMacros));
-        pageId = (out as { id: number }).id;
+        const mddoc = db
+            .prepare('INSERT INTO mddocs (filename, katex_macros) VALUES (?, ?) RETURNING id;')
+            .get(post.filename, JSON.stringify(post.katexMacros));
+        mddocId = (mddoc as { id: number }).id;
+
+        const page = db
+            .prepare('INSERT INTO pages (mddoc_id, pathname) VALUES (?, ?) RETURNING id;')
+            .get(mddocId, pathname);
+        pageId = (page as { id: number }).id;
+
         db.prepare(
-            'INSERT INTO posts (page_id, title, slug, created, edited) VALUES (?, ?, ?, ?, ?);',
+            'INSERT INTO posts (page_id, description_id, title, slug, created, edited) VALUES (?, ?, ?, ?, ?, ?);',
         ).run(
             pageId,
-            input.title,
-            input.slug,
-            input.created.toISOString(),
-            input.edited.toISOString(),
+            typeof descriptionId == 'number' ? descriptionId : null,
+            post.title,
+            post.slug,
+            post.created.toISOString(),
+            post.edited.toISOString(),
         );
     } catch (e) {
         if (isUniqueConstraintError(e)) {
-            const out = db
-                .prepare(
-                    'UPDATE pages SET pathname = ?, katex_macros = ? WHERE filename = ? RETURNING id;',
-                )
-                .get(pathname, JSON.stringify(input.katexMacros), input.filename);
-            pageId = (out as { id: number }).id;
+            const mddoc = db
+                .prepare('UPDATE mddocs SET katex_macros = ? WHERE filename = ? RETURNING id;')
+                .get(JSON.stringify(post.katexMacros), post.filename);
+            mddocId = (mddoc as { id: number }).id;
+
+            const page = db
+                .prepare('UPDATE pages SET pathname = ? WHERE mddoc_id = ? RETURNING id;')
+                .get(pathname, mddocId);
+            pageId = (page as { id: number }).id;
+
             db.prepare(
-                'UPDATE posts SET title = ?, slug = ?, created = ?, edited = ? WHERE page_id = ?;',
+                'UPDATE posts SET title = ?, created = ?, edited = ?, slug = ? WHERE page_id = ?;',
             ).run(
-                input.title,
-                input.slug,
-                input.created.toISOString(),
-                input.edited.toISOString(),
+                post.title,
+                post.created.toISOString(),
+                post.edited.toISOString(),
+                post.slug,
                 pageId,
             );
         } else {
             throw e;
         }
     }
-    return {
-        pageId,
-        pathname,
-        ...input,
-    };
+    return { pageId, pathname, ...post };
 }
 
 export interface PostReference {
@@ -76,22 +79,18 @@ export interface PostReference {
     full: string;
 }
 
-export function getPostReferences(
-    db: Database,
-    parentId: number,
-    childIds: number[],
-): PostReference[] {
+export function getPostReferences(db: Database, sourceMddocId: number): PostReference[] {
     const outputs = db
         .prepare(
-            `SELECT child.page_id, childp.pathname, child.title
-            FROM posts child INNER JOIN pages childp INNER JOIN page_references pr
-            ON pr.parent_id = ? AND child.page_id = childp.id AND childp.id = pr.child_id
-            AND pr.child_id IN (${childIds.map(() => '?').join(', ')});`,
+            `SELECT post_page.id, post_page.pathname, post.title
+            FROM posts post INNER JOIN pages post_page INNER JOIN page_refs refs
+            ON refs.target_page_id = post_page.id AND post_page.id = post.page_id
+            WHERE refs.source_mddoc_id = ?`,
         )
-        .all(parentId, ...childIds);
-    return (outputs as { page_id: number; pathname: string; title: string }[]).map(
-        ({ page_id, pathname, title }) => ({
-            pageId: page_id,
+        .all(sourceMddocId);
+    return (outputs as { id: number; pathname: string; title: string }[]).map(
+        ({ id, pathname, title }) => ({
+            pageId: id,
             pathname,
             title,
             full: title,
@@ -109,8 +108,8 @@ export interface PostInfo {
 export function getPostInfos(db: Database): PostInfo[] {
     const outputs = db
         .prepare(
-            `SELECT b.title, b.created, b.edited, a.pathname
-            FROM pages a INNER JOIN posts b ON a.id = b.page_id ORDER BY b.edited DESC;`,
+            `SELECT posts.title, posts.created, posts.edited, pages.pathname
+            FROM posts INNER JOIN pages ON posts.page_id = pages.id ORDER BY posts.edited DESC;`,
         )
         .all() as {
             title: string;

@@ -1,47 +1,34 @@
--- A page encapsulates the minimal information for a page of markdown-driven
--- content on the website.
-CREATE TABLE IF NOT EXISTS pages (
+-- Markdown-driven content on the website.
+CREATE TABLE IF NOT EXISTS mddocs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     filename TEXT UNIQUE NOT NULL,
-    pathname TEXT UNIQUE NOT NULL,
-    katex_macros TEXT NOT NULL
+    katex_macros TEXT
 );
 
--- Any time a page links to another, we add an edge between them.
-CREATE TABLE IF NOT EXISTS page_references (
-    parent_id INTEGER NOT NULL REFERENCES pages(id),
-    child_id INTEGER NOT NULL REFERENCES pages(id),
-    UNIQUE (parent_id, child_id)
+-- Page on the website; always associated with a markdown document.
+CREATE TABLE IF NOT EXISTS pages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    mddoc_id INTEGER NOT NULL REFERENCES mddocs(id)
+    pathname TEXT UNIQUE NOT NULL
 );
 
--- An item worth numbering for reference within a document
-CREATE TABLE IF NOT EXISTS tags (
-    parent_id INTEGER NOT NULL REFERENCES pages(id),
-    slug TEXT UNIQUE NOT NULL,
-    label TEXT NOT NULL
-);
-
--- Any time a file links to another, we add an edge between them.
-CREATE TABLE IF NOT EXISTS tag_references (
-    parent_id TEXT NOT NULL REFERENCES pages(id),
-    child_slug TEXT NOT NULL REFERENCES tags(slug),
-    UNIQUE (parent_id, child_slug)
-);
-
--- A post encapsulates a self-contained page on the site.
+-- Posts are pages on the website which are primarily self-contained.
 CREATE TABLE IF NOT EXISTS posts (
     page_id INTEGER NOT NULL REFERENCES pages(id),
+    description_id INTEGER REFERENCES mddocs(id),
     title TEXT NOT NULL,
     created DATE NOT NULL,
     edited DATE NOT NULL,
     slug TEXT UNIQUE NOT NULL
 );
 
--- A sequence encapsulates a collection of pages organized in a tree-like
--- structure, similar to a book. The foreign-key is the "root" page.
+-- Sequences are collections of pages on the website which are organized in a
+-- tree-like structure, similar to a book. The foreign-key is the "root" page
+-- from which all other pages within the sequence descend.
 CREATE TABLE IF NOT EXISTS sequences (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     page_id INTEGER NOT NULL REFERENCES pages(id),
+    description_id INTEGER REFERENCES mddocs(id),
     title TEXT NOT NULL,
     created DATE NOT NULL,
     edited DATE NOT NULL,
@@ -49,11 +36,11 @@ CREATE TABLE IF NOT EXISTS sequences (
     enumerate BOOLEAN NOT NULL DEFAULT FALSE
 );
 
--- The position information of a page within a sequence.
+-- Position information of a non-root page within a sequence.
 CREATE TABLE IF NOT EXISTS sequence_pages (
-    page_id INTEGER NOT NULL REFERENCES pages(id),
     sequence_id INTEGER NOT NULL REFERENCES sequences(id),
-    parent_id INTEGER REFERENCES pages(id),
+    page_id INTEGER NOT NULL REFERENCES pages(id),
+    parent_page_id INTEGER REFERENCES pages(id),
     title TEXT NOT NULL,
     slug TEXT NOT NULL,
     item INTEGER NOT NULL,
@@ -61,24 +48,46 @@ CREATE TABLE IF NOT EXISTS sequence_pages (
     label TEXT
 );
 
--- A statement encapsulates information which I would like to deductively
--- track. Each statement is introduced in a page. A statement may be referenced
--- by its index of its occurence in the page (i.e. 0, 1, 2, ...), much like in
--- LaTeX.
+-- Statements encapsulate information within a page which may easily be
+-- referenced elsewhere on the site. Each statement is owned by a single page,
+-- and thus has a label determined by its position within the page. This
+-- promotes easier readability.
 CREATE TABLE IF NOT EXISTS statements (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    page_id INTEGER NOT NULL REFERENCES pages(id),
-    parent_id INTEGER NOT NULL REFERENCES pages(id),
-    kind TEXT NOT NULL,
+    mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
+    parent_page_id INTEGER NOT NULL REFERENCES pages(id),
     slug TEXT UNIQUE NOT NULL,
     label TEXT UNIQUE NOT NULL
+    kind TEXT NOT NULL,
 );
 
--- A statement may depend on another one, indicating the deductive flow.
-CREATE TABLE IF NOT EXISTS statement_dependencies (
-    parent_id INTEGER NOT NULL REFERENCES statements(id),
-    child_id INTEGER NOT NULL REFERENCES statements(id),
-    UNIQUE(parent_id, child_id)
+-- Equations within a page can be numbered and referenced throughout the site.
+CREATE TABLE IF NOT EXISTS equations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parent_page_id INTEGER NOT NULL REFERENCES pages(id),
+    slug TEXT UNIQUE NOT NULL,
+    label TEXT NOT NULL
+);
+
+-- Track whenever a document references a page.
+CREATE TABLE IF NOT EXISTS page_refs (
+    source_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
+    target_page_id INTEGER NOT NULL REFERENCES pages(id),
+    UNIQUE (source_mddoc_id, target_page_id)
+);
+
+-- Track whenever a document references a statement.
+CREATE TABLE IF NOT EXISTS statement_refs (
+    source_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
+    target_statement_id INTEGER NOT NULL REFERENCES statements(id),
+    UNIQUE (source_mddoc_id, target_statement_id)
+);
+
+-- Track whenever a document references an equation.
+CREATE TABLE IF NOT EXISTS equation_refs (
+    source_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
+    target_equation_id INTEGER NOT NULL REFERENCES equations(id),
+    UNIQUE (source_mddoc_id, target_equation_id)
 );
 
 -- A bibtex reference.

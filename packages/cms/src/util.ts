@@ -1,6 +1,6 @@
 import path from 'path';
 
-export const tagRegex = /@tag\(([a-zA-Z-_0-9]+)\)/g;
+export const eqRegex = /@tag\(([a-zA-Z-_0-9]+)\)/g;
 
 export function slugFromFilename(filename: string): string {
     const basename = path.basename(filename);
@@ -64,14 +64,11 @@ export function hasDateField<Obj extends object & {}, K extends PropertyKey>(
     );
 }
 
-export function resolvePathname(base: string, rel: string): string | undefined {
-    if (rel.startsWith('tag:')) {
-        return rel;
-    }
+export function resolvePathname(base: string | undefined, rel: string): string | undefined {
     if (rel.startsWith('/')) {
         return rel.slice(1);
     }
-    if (rel.startsWith('.')) {
+    if (typeof base == 'string' && rel.startsWith('.')) {
         return path.join(base, rel);
     }
 }

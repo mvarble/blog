@@ -2,50 +2,48 @@ import { isUniqueConstraintError, type Database } from '..';
 import { type KatexMacros } from '.';
 
 export interface TouchStatementInput {
-    parentId: number;
-    kind: string;
+    parentPageId: number;
     slug: string;
     label: string;
     filename: string;
     katexMacros: KatexMacros;
+    kind: string;
 }
 
 export interface Statement extends TouchStatementInput {
     id: number;
-    pageId: number;
-    pathname: string;
+    mddocId: number;
 }
 
 export function touchStatement(db: Database, input: TouchStatementInput): Statement {
-    let pageId: number;
+    let mddocId: number;
     let id: number;
-    const pathname = `statements/${input.slug}`;
     try {
-        let out = db
+        const mddoc = db
+            .prepare('INSERT INTO mddocs (filename, katex_macros) VALUES (?) RETURNING id;')
+            .get(input.filename, JSON.stringify(input.katexMacros));
+        mddocId = (mddoc as { id: number }).id;
+
+        const out = db
             .prepare(
-                'INSERT INTO pages (pathname, filename, katex_macros) VALUES (?, ?, ?) RETURNING id;',
+                `INSERT INTO statements (
+                    mddoc_id, parent_page_id, slug, label, kind)
+                VALUES (?, ?, ?, ?, ?) RETURNING id;`,
             )
-            .get(pathname, input.filename, JSON.stringify(input.katexMacros));
-        pageId = (out as { id: number }).id;
-        out = db
-            .prepare(
-                'INSERT INTO statements (page_id, parent_id, kind, slug, label) VALUES (?, ?, ?, ?, ?) RETURNING id;',
-            )
-            .get(pageId, input.parentId, input.kind, input.slug, input.label);
+            .get(mddocId, input.parentPageId, input.slug, input.label, input.kind);
         id = (out as { id: number }).id;
     } catch (e) {
         if (isUniqueConstraintError(e)) {
-            let out = db
+            const mddoc = db
+                .prepare('UPDATE mddocs SET katex_macros = ? WHERE filename = ? RETURNING id;')
+                .get(JSON.stringify(input.katexMacros), input.filename);
+            mddocId = (mddoc as { id: number }).id;
+
+            const out = db
                 .prepare(
-                    'UPDATE pages SET pathname = ?, katex_macros = ? WHERE filename = ? RETURNING id;',
+                    'UPDATE statements SET parent_page_id = ?, slug = ?, label = ?, kind = ? WHERE mddoc_id = ? RETURNING id;',
                 )
-                .get(pathname, JSON.stringify(input.katexMacros), input.filename);
-            pageId = (out as { id: number }).id;
-            out = db
-                .prepare(
-                    'UPDATE statements SET parent_id = ?, kind = ?, slug = ?, label = ? WHERE page_id = ? RETURNING id;',
-                )
-                .run(input.parentId, input.kind, input.slug, input.label, pageId);
+                .get(input.parentPageId, input.slug, input.label, input.kind, mddocId);
             id = (out as { id: number }).id;
         } else {
             throw e;
@@ -53,53 +51,63 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
     }
     return {
         id,
-        pageId,
-        pathname,
+        mddocId,
         ...input,
     };
 }
 
-function getStatementParentField<K extends string>(
-    db: Database,
-    filename: string,
-    key: K,
-): string | undefined {
+export function getStatementParentFilename(db: Database, filename: string): string | undefined {
     const out = db
         .prepare(
-            `SELECT pp.${key} FROM pages p INNER JOIN statements s INNER JOIN pages pp
-            WHERE p.filename = ? AND p.id = s.page_id AND s.parent_id = pp.id`,
+            `SELECT m.filename
+            FROM
+                mddocs m
+                INNER JOIN pages p
+                INNER JOIN statements s
+                INNER JOIN mddocs mm
+            ON
+                m.id = p.mddoc_id
+                AND p.id = s.parent_page_id
+                AND s.mddoc_id = mm.id
+            WHERE mm.filename = ?;`,
         )
-        .get(filename) as Record<K, string> | undefined;
+        .get(filename) as { filename: string } | undefined;
     if (out) {
-        return out[key];
+        return out.filename;
     }
 }
 
-export function getStatementParentFilename(db: Database, filename: string): string | undefined {
-    return getStatementParentField(db, filename, 'filename');
-}
-
 export function getStatementParentPathname(db: Database, filename: string): string | undefined {
-    return getStatementParentField(db, filename, 'pathname');
+    const out = db
+        .prepare(
+            `SELECT p.pathname
+            FROM pages p INNER JOIN statements s INNER JOIN mddocs mm
+            ON p.id = s.parent_page_id AND s.mddoc_id = mm.id
+            WHERE mm.filename = ?;`,
+        )
+        .get(filename) as { pathname: string } | undefined;
+    if (out) {
+        return out.pathname;
+    }
 }
 
 function getStatementFrom(db: Database, key: string, value: string): Statement | undefined {
     const output = db
         .prepare(
             `SELECT
-                s.id, s.page_id, s.parent_id, s.kind, s.slug, s.label, p.pathname,
-                p.filename, p.katex_macros
-            FROM statements s INNER JOIN pages p WHERE p.id = s.page_id AND ${key} = ?;`,
+                s.id, s.mddoc_id, s.parent_page_id, s.slug, s.label, s.kind,
+                m.filename, m.katex_macros
+            FROM statements s INNER JOIN mddocs m
+            ON s.mddoc_id = m.id WHERE ${key} = ?;`,
         )
         .get(value) as
         | {
             id: number;
-            page_id: number;
-            parent_id: number;
-            kind: string;
+            mddoc_id: number;
+            parent_page_id: number;
             slug: string;
             label: string;
-            pathname: string;
+            kind: string;
             filename: string;
             katex_macros: string;
         }
@@ -107,12 +115,11 @@ function getStatementFrom(db: Database, key: string, value: string): Statement |
     if (output) {
         return {
             id: output.id,
-            pageId: output.page_id,
-            parentId: output.parent_id,
-            kind: output.kind,
+            mddocId: output.mddoc_id,
+            parentPageId: output.parent_page_id,
             slug: output.slug,
             label: output.label,
-            pathname: output.pathname,
+            kind: output.kind,
             filename: output.filename,
             katexMacros: JSON.parse(output.katex_macros),
         };
@@ -120,7 +127,7 @@ function getStatementFrom(db: Database, key: string, value: string): Statement |
 }
 
 export function getStatementFromFilename(db: Database, filename: string): Statement | undefined {
-    return getStatementFrom(db, 'p.filename', filename);
+    return getStatementFrom(db, 'm.filename', filename);
 }
 
 export function getStatementFromSlug(db: Database, slug: string): Statement | undefined {
@@ -128,39 +135,40 @@ export function getStatementFromSlug(db: Database, slug: string): Statement | un
 }
 
 export interface StatementReference {
-    pageId: number;
+    id: number;
+    slug: string;
     pathname: string;
     kind: string;
     label: string;
     full: string;
 }
 
-export function getStatementReferences(
-    db: Database,
-    parentId: number,
-    childIds: number[],
-): StatementReference[] {
+export function getStatementReferences(db: Database, sourceMddocId: number): StatementReference[] {
     interface S {
-        pageId: number;
+        id: number;
         pathname: string;
+        slug: string;
         label: string;
         kind: string;
     }
     const output = db
         .prepare(
-            `SELECT s.page_id as pageId, p.pathname, s.label, s.kind
-            FROM statements s INNER JOIN pages p INNER JOIN page_references pr
-            ON s.page_id = p.id AND pr.parent_id = ? AND pr.child_id = p.id AND pr.child_id IN (${childIds.map(() => '?').join(', ')});`,
+            `SELECT s.id, p.pathname, s.slug, s.label, s.kind
+            FROM statements s INNER JOIN pages p INNER JOIN statement_refs sr
+            ON s.parent_page_id = p.id AND s.id = sr.target_statement_id
+            WHERE sr.source_mddoc_id = ?`,
         )
-        .all(parentId, ...childIds) as S[];
-    return output.map(({ pageId, pathname, label, ...rest }) => {
-        const kind = rest.kind
+        .all(sourceMddocId) as S[];
+    return output.map(({ id, pathname: parentPathname, slug, label, kind: k }) => {
+        const kind = k
             .split(' ')
             .map((str) => `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`)
             .join(' ');
         const full = `${kind} ${label}`;
+        const pathname = `${parentPathname}#${slug}`;
         return {
-            pageId,
+            id,
+            slug,
             pathname,
             kind,
             label,
@@ -171,13 +179,13 @@ export function getStatementReferences(
 
 export function getImportedStatements(
     db: Database,
-    parentId: number,
-): { id: number; pageId: number; filename: string }[] {
+    parentPageId: number,
+): { id: number; mddocId: number; filename: string }[] {
     return db
         .prepare(
-            `SELECT
-                s.id, s.page_id as pageId, p.filename
-            FROM statements s INNER JOIN pages p WHERE p.id = s.page_id AND s.parent_id = ?;`,
+            `SELECT s.id, s.mddoc_id as mddocId, m.filename
+            FROM statements s INNER JOIN mddocs m
+            ON s.mddoc_id = m.id WHERE s.parent_page_id = ?`,
         )
-        .all(parentId) as { id: number; pageId: number; filename: string }[];
+        .all(parentPageId) as { id: number; mddocId: number; filename: string }[];
 }
