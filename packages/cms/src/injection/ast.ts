@@ -10,7 +10,7 @@ import {
     connect,
     getPageReferences,
     foldKatexMacros,
-    getCitations,
+    getCitationReferences,
     getStatementReferences,
     getEquationReferences,
     getMddoc,
@@ -31,7 +31,7 @@ export const remarkCms: Plugin<[undefined?], Root, Root> = () => {
 
         // replace intra-cite references and links
         const citations = Object.fromEntries(
-            getCitations(db).map((citation) => [citation.key, citation]),
+            getCitationReferences(db, mddoc.id).map((citation) => [citation.key, citation]),
         );
         const eqReferences = Object.fromEntries(
             getEquationReferences(db, mddoc.id).map((obj) => [obj.slug, obj]),
@@ -90,12 +90,11 @@ export const remarkCms: Plugin<[undefined?], Root, Root> = () => {
                     const key = node.url.slice('cite:'.length);
                     const citation = citations[key];
                     if (!citation) continue;
-                    const label = `${citation.authors[0].lastname.slice(0, 4)}${String(citation.year).slice(-2)}`;
-                    node.url = `/citations#${key}`;
+                    node.url = citation.pathname;
                     if (node.children.length == 1 && node.children[0].type == 'text') {
-                        node.children[0].value = `[${label}, ${node.children[0].value}]`;
+                        node.children[0].value = `[${citation.label}, ${node.children[0].value}]`;
                     } else if (!node.children.length) {
-                        node.children = [{ type: 'text', value: `[${label}]` }];
+                        node.children = [{ type: 'text', value: `[${citation.label}]` }];
                     }
                     continue;
                 }

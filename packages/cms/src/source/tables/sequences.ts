@@ -92,7 +92,12 @@ async function initialize(
 
         await nodeParser(
             db,
-            { id: sequence.pageId, pathname: sequence.pathname, filename: sequence.filename },
+            {
+                mddocId: sequence.mddocId,
+                relevantPageId: sequence.pageId,
+                pathname: sequence.pathname,
+                filename: sequence.filename,
+            },
             contents,
             0,
             enumerate ? '0' : undefined,
@@ -126,7 +131,12 @@ async function initialize(
     let currentItemPrefix = enumerate ? '0' : undefined;
     let currentItem = await nodeParser(
         db,
-        { id: sequence.pageId, pathname: sequence.pathname, filename: sequence.filename },
+        {
+            mddocId: sequence.mddocId,
+            relevantPageId: sequence.pageId,
+            pathname: sequence.pathname,
+            filename: sequence.filename,
+        },
         contents,
         0,
         currentItemPrefix,
@@ -151,7 +161,8 @@ async function initialize(
         currentItem += await nodeParser(
             db,
             {
-                id: descendant.data.pageId,
+                mddocId: descendant.data.mddocId,
+                relevantPageId: descendant.data.pageId,
                 pathname: descendant.data.pathname,
                 filename: descendant.data.filename,
             },
@@ -183,7 +194,12 @@ async function crossReference(db: Database, filename: string, contents: string) 
         async function recurseFile(child: SequenceChildBase, contents: string) {
             edgeParser(
                 db,
-                { id: child.pageId, pathname: child.pathname, filename: child.filename },
+                {
+                    mddocId: child.mddocId,
+                    relevantPageId: child.pageId,
+                    pathname: child.pathname,
+                    filename: child.filename,
+                },
                 contents,
             );
             if (child.children) {

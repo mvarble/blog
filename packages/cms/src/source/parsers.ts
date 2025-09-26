@@ -13,12 +13,14 @@ import type { RootContent as RehypeContent } from 'hast';
 
 import {
     type Database,
-    touchTag,
+    touchEquation,
     touchStatement,
     touchPageReference,
-    touchTagReference,
+    touchEquationReference,
+    touchStatementReference,
+    touchCitationReference,
 } from '../db';
-import { buildLabel, resolvePathname, tagRegex } from '../util';
+import { buildLabel, eqRegex, resolvePathname } from '../util';
 import { parseStatementFrontmatter } from './tables/statements';
 
 const remark = unified().use(remarkParse).use(remarkFrontmatter).use(remarkMath);
@@ -26,9 +28,16 @@ const rehype = unified().use(rehypeParse);
 
 const componentRegex = /<(\w+)\s+\{\.\.\.(\w+)\}\s*(\/?)>/g;
 
+export interface DocumentInPage {
+    mddocId: number;
+    relevantPageId: number;
+    pathname: string;
+    filename: string;
+}
+
 export async function nodeParser(
     db: Database,
-    page: { id: number; pathname: string; filename: string },
+    doc: DocumentInPage,
     contents: string,
     item: number,
     itemPrefix: string | undefined = undefined,
@@ -49,8 +58,7 @@ export async function nodeParser(
         const typedNode = nodes.pop()!;
 
         // if we are visiting a remark node, we must check for the following:
-        //   - tags within math blocks
-        //   - tags within numbered lists
+        //   - equation tags within math blocks
         //   - `<Component {...blob}>` for `blob` SVX imports
         //   - HTML blocks
         if (typedNode.kind == 'remark') {
@@ -74,7 +82,7 @@ export async function nodeParser(
             }
 
             // check math blocks for `@tag(...)`
-            itemsAdded += checkMathTags(db, node, page.id, item + itemsAdded, itemPrefix);
+            itemsAdded += checkMathTags(db, node, doc, item + itemsAdded, itemPrefix);
 
             // check for components that aren't detected as HTML; expand the search if they are an import
             if (node.type == 'text') {
@@ -86,13 +94,13 @@ export async function nodeParser(
                         componentPath &&
                         propPath &&
                         (componentPath == '$lib/components/statement.svelte' ||
-                            remapFile(page.filename, componentPath) ==
-                                'src/lib/components/statement.svelte')
+                            remapFile(doc.filename, componentPath) ==
+                            'src/lib/components/statement.svelte')
                     ) {
                         itemsAdded += await recurseNodeChild(
                             propPath,
                             db,
-                            page,
+                            doc,
                             item + itemsAdded,
                             itemPrefix,
                         );
@@ -122,7 +130,7 @@ export async function nodeParser(
                     itemsAdded += await recurseNodeChild(
                         componentPath,
                         db,
-                        page,
+                        doc,
                         item + itemsAdded,
                         itemPrefix,
                     );
@@ -133,11 +141,7 @@ export async function nodeParser(
     return itemsAdded;
 }
 
-export function edgeParser(
-    db: Database,
-    page: { id: number; pathname: string; filename: string },
-    contents: string,
-) {
+export function edgeParser(db: Database, doc: DocumentInPage, contents: string) {
     const root = remark.parse(contents);
     const nodes: RemarkContent[] = root.children.toReversed();
     while (nodes.length > 0) {
@@ -146,23 +150,38 @@ export function edgeParser(
             nodes.push(...node.children.toReversed());
         }
         if (node.type == 'math') {
-            for (const [, slug] of node.value.matchAll(tagRegex)) {
-                touchTagReference(db, page.id, slug);
+            for (const [, slug] of node.value.matchAll(eqRegex)) {
+                touchEquationReference(db, doc.mddocId, slug);
             }
         }
         if (node.type == 'link') {
-            const absPathname = resolvePathname(page.pathname, node.url);
-            if (absPathname && absPathname.startsWith('tag:')) {
-                const tag = touchTagReference(db, page.id, absPathname.slice('tag:'.length));
-                if (!tag) {
-                    console.error(`'${absPathname}' does not resolve to a tag in the site.`);
+            if (node.url.startsWith('cite:')) {
+                const key = node.url.slice('cite:'.length);
+                const exists = touchCitationReference(db, doc.mddocId, key);
+                if (!exists) {
+                    console.error(`'${key}' does not resolve to a citation in the site.`);
+                }
+            }
+            if (node.url.startsWith('tag:')) {
+                const slug = node.url.slice('tag:'.length);
+                const exists = touchEquationReference(db, doc.mddocId, slug);
+                if (!exists) {
+                    console.error(`'${slug}' does not resolve to an equation in the site.`);
                 }
                 continue;
             }
-            if (absPathname && !absPathname.startsWith('citations')) {
-                const ref = touchPageReference(db, page.id, absPathname);
+            if (node.url.startsWith('statement:')) {
+                const slug = node.url.slice('statement:'.length);
+                const exists = touchStatementReference(db, doc.mddocId, slug);
+                if (!exists) {
+                    console.error(`'${slug}' does not resolve to a statement in the site.`);
+                }
+            }
+            const rel = resolvePathname(doc.pathname, node.url);
+            if (rel) {
+                const ref = touchPageReference(db, doc.mddocId, rel);
                 if (!ref) {
-                    console.error(`'${absPathname}' does not resolve to a page in the site.`);
+                    console.error(`'${rel}' does not resolve to a page in the site.`);
                 }
                 continue;
             }
@@ -173,15 +192,16 @@ export function edgeParser(
 function checkMathTags(
     db: Database,
     node: RemarkContent,
-    parentId: number,
+    document: { mddocId: number; relevantPageId: number },
     item: number,
     itemPrefix?: string,
 ): number {
     if (node.type != 'math') return 0;
     let itemsAdded = 0;
-    for (const [, slug] of node.value.matchAll(tagRegex)) {
-        touchTag(db, {
-            parentId,
+    for (const [, slug] of node.value.matchAll(eqRegex)) {
+        touchEquation(db, {
+            sourceMddocId: document.mddocId,
+            parentPageId: document.relevantPageId,
             slug,
             label: buildLabel(item + itemsAdded++, itemPrefix),
         });
@@ -225,19 +245,19 @@ function remapFile(baseFilename: string, relativeFilename: string) {
 async function recurseNodeChild(
     relFilename: string,
     db: Database,
-    page: { id: number; pathname: string; filename: string },
+    doc: DocumentInPage,
     item: number,
     itemPrefix?: string,
 ): Promise<number> {
     let itemsAdded = 0;
-    const filename = remapFile(page.filename, relFilename);
+    const filename = remapFile(doc.filename, relFilename);
     const contents = await fs.promises.readFile(filename, 'utf8');
     const frontmatter = matter(contents).data;
     const statementFrontmatter = parseStatementFrontmatter(filename, frontmatter);
     if (statementFrontmatter) {
         const statement = touchStatement(db, {
             ...statementFrontmatter,
-            parentId: page.id,
+            parentPageId: doc.relevantPageId,
             kind: frontmatter.kind,
             label: buildLabel(item + itemsAdded++, itemPrefix),
             filename,
@@ -245,8 +265,9 @@ async function recurseNodeChild(
         itemsAdded += await nodeParser(
             db,
             {
-                id: statement.pageId,
-                pathname: statement.pathname,
+                mddocId: statement.mddocId,
+                relevantPageId: statement.parentPageId,
+                pathname: doc.pathname,
                 filename: statement.filename,
             },
             contents,

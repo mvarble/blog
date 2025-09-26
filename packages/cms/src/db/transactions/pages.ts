@@ -19,7 +19,8 @@ export function getPage(db: Database, filename: string): Page | undefined {
     const out = db
         .prepare(
             `SELECT pages.id, pages.pathname, pages.mddoc_id, mddocs.filename, mddocs.katex_macros
-            FROM pages INNER JOIN mddocs ON pages.mddoc_id = mddocs.id WHERE mddocs.filename = ?;`,
+            FROM pages INNER JOIN mddocs ON pages.mddoc_id = mddocs.id
+            WHERE mddocs.filename = ?;`,
         )
         .get(filename) as
         | { id: number; mddoc_id: number; pathname: string; filename: string; katex_macros: string }
@@ -39,7 +40,8 @@ export function getPageFilename(db: Database, pathname: string): string | undefi
     const out = db
         .prepare(
             `SELECT mddocs.filename
-            FROM pages INNER JOIN mddocs ON pages.mddoc_id = mddocs.id WHERE pathname = ?;`,
+            FROM mddocs INNER JOIN pages ON mddocs.id = pages.mddoc_id
+            WHERE pages.pathname = ?;`,
         )
         .get(pathname) as { filename: string } | undefined;
     if (out) {
@@ -47,77 +49,34 @@ export function getPageFilename(db: Database, pathname: string): string | undefi
     }
 }
 
-export function foldKatexMacros(
-    db: Database,
-    mddocId: number,
-    katexMacros: KatexMacros,
-): KatexMacros {
-    // try and see if this document is a statement
-    const out = db
-        .prepare(
-            `SELECT m.katex_macros, m.id
-            FROM mddocs m INNER JOIN pages p INNER JOIN statements s
-            ON m.id = p.mddoc_id AND p.id = s.parent_page_id
-            WHERE s.mddoc_id = ?;`,
-        )
-        .get(mddocId) as { katex_macros: string; id: number };
-
-    // if this document is a statement, test if its parent is within a sequence
+export function getPagePathname(db: Database, id: number): string | undefined {
+    const out = db.prepare('SELECT pathname FROM pages WHERE id = ?').get(id) as
+        | { pathname: string }
+        | undefined;
     if (out) {
-        return foldSequencePageMacros(db, out.id, {
-            ...JSON.parse(out.katex_macros),
-            ...katexMacros,
-        });
+        return out.pathname;
     }
-
-    // if this document is not a statement, test if it is within a sequence
-    return foldSequencePageMacros(db, mddocId, katexMacros);
 }
 
-function foldSequencePageMacros(
+export function touchPageReference(
     db: Database,
-    mddocId: number,
-    katexMacros: KatexMacros,
-): KatexMacros {
-    // try and see if this document is a sequence child
-    const out = db
-        .prepare(
-            `SELECT m.katex_macros, m.id
-            FROM
-                mddocs m
-                INNER JOIN pages p
-                INNER JOIN sequence_pages sp
-                INNER JOIN pages pp
-            ON
-                m.id = p.mddoc_id
-                AND p.id = sp.parent_page_id
-                AND sp.page_id = pp.id
-            WHERE pp.mdoc_id = ?;`,
-        )
-        .get(mddocId) as { katex_macros: string; id: number } | undefined;
-
-    // if so, recurse and see if its parent is also a sequence child
-    if (out) {
-        return foldSequencePageMacros(db, out.id, {
-            ...JSON.parse(out.katex_macros),
-            ...katexMacros,
-        });
-    }
-
-    // if it is not a sequence child, we are done folding
-    return katexMacros;
-}
-
-export function touchPageReference(db: Database, sourceMddocId: number, targetPageId: number) {
+    sourceMddocId: number,
+    targetPagePathname: string,
+): boolean {
     try {
-        db.prepare('INSERT INTO page_refs (source_mddoc_id, target_page_id) VALUES (?, ?);').run(
-            sourceMddocId,
-            targetPageId,
-        );
+        const out = db
+            .prepare(
+                `INSERT INTO page_refs (source_mddoc_id, target_page_id)
+                SELECT ?, id
+                FROM pages WHERE pages.pathname = ?`,
+            )
+            .run(sourceMddocId, targetPagePathname);
+        return out.changes > 0;
     } catch (e) {
         if (!isUniqueConstraintError(e)) {
             throw e;
         }
+        return true;
     }
 }
 

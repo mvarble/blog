@@ -1,4 +1,4 @@
-import { KatexMacros, getStatementParentFilename, getParentSequenceFilename } from '.';
+import { KatexMacros } from '.';
 import { type Database } from '../types';
 
 export interface Mddoc {
@@ -20,18 +20,6 @@ export function getMddoc(db: Database, filename: string): Mddoc | undefined {
     }
 }
 
-export function getRootDescendant(db: Database, filename: string): string {
-    const statementParentFilename = getStatementParentFilename(db, filename);
-    if (statementParentFilename) {
-        return getRootDescendant(db, statementParentFilename);
-    }
-    const sequenceFilename = getParentSequenceFilename(db, filename);
-    if (sequenceFilename) {
-        return getRootDescendant(db, sequenceFilename);
-    }
-    return filename;
-}
-
 export function getRelevantPathname(db: Database, mddocId: number): string | undefined {
     let out = db
         .prepare(`SELECT pages.pathname FROM pages WHERE pages.mddoc_id = ?;`)
@@ -42,9 +30,8 @@ export function getRelevantPathname(db: Database, mddocId: number): string | und
     out = db
         .prepare(
             `SELECT pages.pathname
-            FROM pages INNER JOIN statements
-            ON pages.id = statements.parent_page_id
-            WHERE pages.mddoc_id = ?`,
+            FROM pages INNER JOIN page_mddocs ON page_mddocs.parent_page_id = pages.id
+            WHERE page_mddocs.imported_mddoc_id = ?`,
         )
         .get(mddocId) as { pathname: string } | undefined;
     if (out) {

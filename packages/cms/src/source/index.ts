@@ -10,9 +10,6 @@ import {
     prepareDb,
     connect,
     cacheDir,
-    getPage,
-    getImportedStatements,
-    isPost,
 } from '../db';
 import { hasStringField } from '../util';
 
@@ -128,39 +125,7 @@ export function cmsSource(): Plugin {
         const module = server.moduleGraph.getModuleById(file);
         if (module) server.moduleGraph.invalidateModule(module);
 
-        const parentFilename = getStatementParentFilename(db, filename);
-        if (parentFilename) {
-            invalidate(parentFilename, server);
-            return;
-        }
-
-        const page = getPage(db, filename);
-        if (page) {
-            for (const child of getImportedStatements(db, page.id)) {
-                const file = path.join(path.resolve('.'), child.filename);
-                const module = server.moduleGraph.getModuleById(file);
-                if (module) server.moduleGraph.invalidateModule(module);
-            }
-            if (isPost(db, page.id)) {
-                let module = server.moduleGraph.getModuleById(
-                    path.resolve('./src/routes/posts/[...path]/+page.ts'),
-                );
-                if (module) server.moduleGraph.invalidateModule(module);
-                module = server.moduleGraph.getModuleById(
-                    path.resolve('./src/routes/posts/[...path]/+page.svelte'),
-                );
-                if (module) server.moduleGraph.invalidateModule(module);
-            } else {
-                let module = server.moduleGraph.getModuleById(
-                    path.resolve('./src/routes/sequences/[...path]/+page.ts'),
-                );
-                if (module) server.moduleGraph.invalidateModule(module);
-                module = server.moduleGraph.getModuleById(
-                    path.resolve('./src/routes/sequences/[...path]/+page.svelte'),
-                );
-                if (module) server.moduleGraph.invalidateModule(module);
-            }
-        }
+        // TODO: implement invalidation in a way that actually works
     }
 
     // return the plugin

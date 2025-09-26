@@ -15,6 +15,7 @@ export interface TouchPostInput extends PostBase {
 }
 
 export interface Post extends PostBase {
+    mddocId: number;
     pageId: number;
     pathname: string;
 }
@@ -69,7 +70,7 @@ export function touchPost(db: Database, { descriptionId, ...post }: TouchPostInp
             throw e;
         }
     }
-    return { pageId, pathname, ...post };
+    return { mddocId, pageId, pathname, ...post };
 }
 
 export interface PostReference {
@@ -83,8 +84,9 @@ export function getPostReferences(db: Database, sourceMddocId: number): PostRefe
     const outputs = db
         .prepare(
             `SELECT post_page.id, post_page.pathname, post.title
-            FROM posts post INNER JOIN pages post_page INNER JOIN page_refs refs
-            ON refs.target_page_id = post_page.id AND post_page.id = post.page_id
+            FROM posts post
+            INNER JOIN pages post_page ON post.page_id = post_page.id
+            INNER JOIN page_refs refs ON post_page.id = refs.target_page_id
             WHERE refs.source_mddoc_id = ?`,
         )
         .all(sourceMddocId);
@@ -109,7 +111,8 @@ export function getPostInfos(db: Database): PostInfo[] {
     const outputs = db
         .prepare(
             `SELECT posts.title, posts.created, posts.edited, pages.pathname
-            FROM posts INNER JOIN pages ON posts.page_id = pages.id ORDER BY posts.edited DESC;`,
+            FROM posts INNER JOIN pages ON posts.page_id = pages.id
+            ORDER BY posts.edited DESC;`,
         )
         .all() as {
             title: string;

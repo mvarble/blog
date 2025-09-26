@@ -1,4 +1,4 @@
-import { getPage, touchPost, type Database } from '../../db';
+import { getPage, touchPost, type TouchPostInput, type Database } from '../../db';
 import { hasDateField, hasObjectField, hasStringField, slugFromFilename } from '../../util';
 import { nodeParser, edgeParser } from '../parsers';
 import { type FileHooks } from '..';
@@ -18,13 +18,10 @@ const hooks: FileHooks = {
     },
 };
 
-async function initialize(
-    db: Database,
+function parsePostInput(
     filename: string,
     frontmatter: Record<'type', string>,
-    contents: string,
-) {
-    // touch post data from frontmatter
+): TouchPostInput | undefined {
     if (!hasStringField(frontmatter, 'title') || !frontmatter.title) {
         console.error('Posts must have a `title` string-field in the frontmatter.');
         return;
@@ -45,20 +42,31 @@ async function initialize(
     if (hasDateField(frontmatter, 'edited')) {
         edited = frontmatter.edited;
     }
-
-    const post = touchPost(db, {
+    return {
         title: frontmatter.title,
         created: frontmatter.created,
         slug,
         edited,
         filename,
         katexMacros,
-    });
+    };
+}
+
+async function initialize(
+    db: Database,
+    filename: string,
+    frontmatter: Record<'type', string>,
+    contents: string,
+) {
+    // touch post data
+    const input = parsePostInput(filename, frontmatter);
+    if (!input) return;
+    const post = touchPost(db, input);
 
     // parse the mdast
     await nodeParser(
         db,
-        { id: post.pageId, pathname: post.pathname, filename },
+        { mddocId: post.mddocId, relevantPageId: post.pageId, pathname: post.pathname, filename },
         contents,
         post.pageId,
         undefined,
@@ -68,7 +76,11 @@ async function initialize(
 function crossReference(db: Database, filename: string, contents: string) {
     const page = getPage(db, filename);
     if (page) {
-        edgeParser(db, page, contents);
+        edgeParser(
+            db,
+            { mddocId: page.mddocId, relevantPageId: page.id, pathname: page.pathname, filename },
+            contents,
+        );
     }
 }
 

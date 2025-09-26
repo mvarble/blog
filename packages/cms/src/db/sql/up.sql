@@ -12,6 +12,14 @@ CREATE TABLE IF NOT EXISTS pages (
     pathname TEXT UNIQUE NOT NULL
 );
 
+-- The markdown document associated with a page may import other markdown
+-- documents whose content we manage.
+CREATE TABLE IF NOT EXISTS page_mddocs (
+    parent_page_id INTEGER NOT NULL REFERENCES pages(id),
+    imported_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id)
+    UNIQUE (parent_page_id, imported_mddoc_id)
+);
+
 -- Posts are pages on the website which are primarily self-contained.
 CREATE TABLE IF NOT EXISTS posts (
     page_id INTEGER NOT NULL REFERENCES pages(id),
@@ -55,7 +63,6 @@ CREATE TABLE IF NOT EXISTS sequence_pages (
 CREATE TABLE IF NOT EXISTS statements (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
-    parent_page_id INTEGER NOT NULL REFERENCES pages(id),
     slug TEXT UNIQUE NOT NULL,
     label TEXT UNIQUE NOT NULL
     kind TEXT NOT NULL,
@@ -64,30 +71,9 @@ CREATE TABLE IF NOT EXISTS statements (
 -- Equations within a page can be numbered and referenced throughout the site.
 CREATE TABLE IF NOT EXISTS equations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    parent_page_id INTEGER NOT NULL REFERENCES pages(id),
+    parent_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
     slug TEXT UNIQUE NOT NULL,
     label TEXT NOT NULL
-);
-
--- Track whenever a document references a page.
-CREATE TABLE IF NOT EXISTS page_refs (
-    source_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
-    target_page_id INTEGER NOT NULL REFERENCES pages(id),
-    UNIQUE (source_mddoc_id, target_page_id)
-);
-
--- Track whenever a document references a statement.
-CREATE TABLE IF NOT EXISTS statement_refs (
-    source_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
-    target_statement_id INTEGER NOT NULL REFERENCES statements(id),
-    UNIQUE (source_mddoc_id, target_statement_id)
-);
-
--- Track whenever a document references an equation.
-CREATE TABLE IF NOT EXISTS equation_refs (
-    source_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
-    target_equation_id INTEGER NOT NULL REFERENCES equations(id),
-    UNIQUE (source_mddoc_id, target_equation_id)
 );
 
 -- A bibtex reference.
@@ -117,4 +103,32 @@ CREATE TABLE IF NOT EXISTS citation_authors (
     item INTEGER NOT NULL,
     lastname TEXT NOT NULL,
     fullname TEXT NOT NULL
+);
+
+-- Track whenever a document references a page.
+CREATE TABLE IF NOT EXISTS page_refs (
+    source_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
+    target_page_id INTEGER NOT NULL REFERENCES pages(id),
+    UNIQUE (source_mddoc_id, target_page_id)
+);
+
+-- Track whenever a document references a statement.
+CREATE TABLE IF NOT EXISTS statement_refs (
+    source_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
+    target_statement_id INTEGER NOT NULL REFERENCES statements(id),
+    UNIQUE (source_mddoc_id, target_statement_id)
+);
+
+-- Track whenever a document references an equation.
+CREATE TABLE IF NOT EXISTS equation_refs (
+    source_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
+    target_equation_id INTEGER NOT NULL REFERENCES equations(id),
+    UNIQUE (source_mddoc_id, target_equation_id)
+);
+
+-- Track whenever a document makes a citation.
+CREATE TABLE IF NOT EXISTS citation_refs (
+    source_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
+    target_citation_id INTEGER NOT NULL REFERENCES citations(id),
+    UNIQUE (source_mddoc_id, target_citation_id)
 );

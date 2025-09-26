@@ -1,5 +1,5 @@
-import { getStatementFromSlug, KatexMacros, touchStatementDependency } from '../../db';
-import { hasArrayField, hasObjectField, hasStringField, slugFromFilename } from '../../util';
+import { getPagePathname, getStatementFromSlug, KatexMacros } from '../../db';
+import { hasObjectField, hasStringField, slugFromFilename } from '../../util';
 import { edgeParser } from '../parsers';
 import { type FileHooks } from '..';
 
@@ -13,24 +13,18 @@ const hooks: FileHooks = {
         if (!statement) {
             return;
         }
-        if (hasArrayField(frontmatter, 'dependencies')) {
-            frontmatter.dependencies.forEach((dep) => {
-                if (typeof dep != 'string' || !dep) {
-                    console.error('Statement has dependency which is not a string: ', dep);
-                    return;
-                }
-                const childStatement = getStatementFromSlug(db, dep);
-                if (!childStatement) {
-                    console.error(`Statement has dependency '${dep}' which does not exist.`);
-                    return;
-                }
-                touchStatementDependency(db, statement.id, childStatement.id);
-            });
+        const pathname = getPagePathname(db, statement.parentPageId);
+        if (!pathname) {
+            return;
         }
-
         edgeParser(
             db,
-            { id: statement.pageId, pathname: statement.pathname, filename: statement.filename },
+            {
+                mddocId: statement.mddocId,
+                relevantPageId: statement.parentPageId,
+                pathname,
+                filename,
+            },
             contents,
         );
     },

@@ -124,3 +124,58 @@ export function getCitations(db: Database): Citation[] {
     }
     return Object.values(citations);
 }
+
+export function touchCitationReference(db: Database, mddocId: number, key: string): boolean {
+    try {
+        const out = db
+            .prepare(
+                `INSERT INTO citation_refs (source_mddoc_id, target_citation_id)
+                SELECT ?, id FROM citations
+                WHERE key = ?;`,
+            )
+            .run(mddocId, key);
+        return out.changes > 0;
+    } catch (e) {
+        if (!isUniqueConstraintError(e)) {
+            throw e;
+        }
+        return true;
+    }
+}
+
+export interface CitationReference {
+    id: number;
+    key: string;
+    label: string;
+    pathname: string;
+}
+
+export function getCitationReferences(db: Database, mddocId: number): CitationReference[] {
+    interface Select {
+        id: number;
+        key: string;
+        year: number;
+        lastname: string;
+    }
+    const citations = db
+        .prepare(
+            `SELECT c.id, c.key, c.year, ca.lastname
+            FROM citations c
+            INNER JOIN citation_refs cr ON c.id = cr.target_citation_id
+            LEFT JOIN citation_authors ca ON c.id = ca.citation_id
+            WHERE cr.source_mddoc_id = ?
+            AND ca.id = (
+                SELECT MIN(item)
+                FROM citation_authors
+                WHERE citation_authors.citation_id = c.id
+            )`,
+        )
+        .all(mddocId) as Select[];
+
+    return citations.map(({ id, key, year, lastname }) => ({
+        id,
+        key,
+        label: `${lastname.slice(0, 4)}${String(year).slice(-2)}`,
+        pathname: `/citations#${key}`,
+    }));
+}

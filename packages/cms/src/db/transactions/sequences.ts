@@ -20,8 +20,9 @@ export interface TouchSequenceInput extends TouchSequenceChildInputBase {
     enumerate: boolean;
 }
 
-interface SequenceChildBase {
+export interface SequenceChildBase {
     pageId: number;
+    mddocId: number;
     title: string;
     slug: string;
     pathname: string;
@@ -65,8 +66,7 @@ export function touchSequence(
         const out = db
             .prepare(
                 `INSERT INTO sequences (
-                    page_id, description_id, title,
-                    created, edited, slug, enumerate)
+                    page_id, description_id, title, created, edited, slug, enumerate)
                 VALUES (?, ?, ?, ?, ?, ?)
                 RETURNING id;`,
             )
@@ -95,7 +95,7 @@ export function touchSequence(
             const out = db
                 .prepare(
                     `UPDATE sequences
-                        SET title = ?, created = ?, edited = ?, slug = ?, enumerate = ?
+                    SET title = ?, created = ?, edited = ?, slug = ?, enumerate = ?
                     WHERE page_id = ?
                     RETURNING id;`,
                 )
@@ -140,6 +140,7 @@ export function touchSequence(
         ...sequence,
         id,
         pageId,
+        mddocId,
         pathname,
         children: children.length != 0 ? children : undefined,
     };
@@ -233,6 +234,7 @@ export function touchSequenceChild(
     }
     return {
         ...input,
+        mddocId,
         pageId,
         pathname,
         children,
@@ -243,19 +245,12 @@ export function getParentSequenceFilename(db: Database, filename: string): strin
     const output = db
         .prepare(
             `SELECT parent_mddocs.filename
-            FROM
-                mddocs parent_mddocs
-                INNER JOIN pages parent_pages
-                INNER JOIN sequences
-                INNER JOIN sequence_pages
-                INNER JOIN pages
-                INNER JOIN mddocs
-            ON
-                mddocs.id = pages.mddoc_id
-                AND pages.id = sequence_pages.page_id
-                AND sequence_pages.sequence_id = sequences.id
-                AND sequences.page_id = parent_pages.id
-                AND parent_pages.mddoc_id = parent_mddocs.id
+            FROM mddocs parent_mddocs
+            INNER JOIN pages parent_pages ON parent_mddocs.id = parent_pages.mddoc_id
+            INNER JOIN sequences ON parent_pages.id = sequences.page_id
+            INNER JOIN sequence_pages ON sequences.id = sequence_pages.sequence_id
+            INNER JOIN pages ON sequence_pages.page_id = pages.id
+            INNER JOIN mddocs ON pages.mddoc_id = mddocs.id
             WHERE mddocs.filename = ?`,
         )
         .get(filename) as { filename: string } | undefined;
@@ -265,52 +260,83 @@ export function getParentSequenceFilename(db: Database, filename: string): strin
 }
 
 export function getSequence(db: Database, filename: string): Sequence | undefined {
-    const sequenceRes = db
+    interface Select {
+        id: number;
+        page_id: number;
+        mddoc_id: number;
+        title: string;
+        slug: string;
+        created: string;
+        edited: string;
+        enumerate: number;
+        pathname: string;
+        filename: string;
+        katex_macros: string;
+    }
+
+    // first try to see if the file is a direct sequence child
+    let sequenceRes = db
         .prepare(
             `SELECT
-                s.id, s.page_id, s.title, s.slug, s.created, s.edited, s.enumerate,
-                pp.pathname, mm.filename, mm.katex_macros
-            FROM
-                sequences s
-                INNER JOIN sequence_pages sp
-                INNER JOIN pages p
-                INNER JOIN mddocs m
-                INNER JOIN pages pp
-                INNER JOIN mddocs mm
-            ON s.page_id = pp.id AND pp.mddoc_id = mm.id
-            WHERE
-                m.filename = ?
-                AND (
-                    (m.id = p.mddoc_id AND p.id = sp.page_id AND sp.sequence_id = s.id)
-                    OR (m.id = p.mddoc_id AND p.id = s.page_id)
-                );`,
+                seq.id, seq.page_id, spage.mddoc_id, seq.title, seq.slug, seq.created, seq.edited,
+                seq.enumerate, spage.pathname, smddoc.filename, smddoc.katex_macros
+            FROM sequences seq
+            INNER JOIN pages spage ON seq.page_id = spage.id
+            INNER JOIN pages smddoc ON spage.mddoc_id = smddoc.id
+            INNER JOIN sequence_pages child ON seq.id = child.sequence_id
+            INNER JOIN pages cpage ON child.page_id = cpage.id
+            INNER JOIN mddocs cmddoc ON cpage.mddoc_id = cmddoc.id
+            WHERE cmddoc.filename = ?`,
         )
-        .get(filename) as
-        | {
-            id: number;
-            page_id: number;
-            title: string;
-            slug: string;
-            created: string;
-            edited: string;
-            enumerate: number;
-            pathname: string;
-            filename: string;
-            katex_macros: string;
+        .get(filename) as Select | undefined;
+
+    // if it is not a direct sequence child, try to see if it is the root
+    if (!sequenceRes) {
+        sequenceRes = db
+            .prepare(
+                `SELECT
+                    seq.id, seq.page_id, spage.mddoc_id, seq.title, seq.slug, seq.created, seq.edited,
+                    seq.enumerate, spage.pathname, smddoc.filename, smddoc.katex_macros
+                FROM sequences seq
+                INNER JOIN pages spage ON seq.page_id = spage.id
+                INNER JOIN pages smddoc ON spage.mddoc_id = smddoc.id
+                WHERE smddoc.filename = ?`,
+            )
+            .get(filename) as Select | undefined;
+    }
+
+    // if it is still not a sequence child, see if it is in some other non-page document
+    if (!sequenceRes) {
+        const statementParent = db
+            .prepare(
+                `SELECT m.filename
+                FROM statements s
+                INNER JOIN pages p ON s.parent_page_id = p.id
+                INNER JOIN mddocs m ON p.mddoc_id = m.id
+                INNER JOIN mddocs mm ON mm.id = s.mddoc_id
+                WHERE mm.filename = ?`,
+            )
+            .get(filename) as { filename: string } | undefined;
+        if (statementParent) {
+            return getSequence(db, statementParent.filename);
         }
-        | undefined;
+    }
+
     if (sequenceRes) {
         const sequencePages = db
             .prepare(
                 `SELECT
-                    sp.page_id, sp.parent_page_id, sp.title, sp.slug, sp.item,
+                    sp.page_id, p.mddoc_id, sp.parent_page_id, sp.title, sp.slug, sp.item,
                     sp.label, sp.appendix, p.pathname, m.filename, m.katex_macros
-                FROM sequence_pages sp INNER JOIN pages p INNER JOIN mddocs m
-                ON sp.page_id = p.id AND p.mddoc_id = m.id WHERE sp.sequence_id = ?; `,
+                FROM sequence_pages sp
+                INNER JOIN pages p ON sp.page_id = p.id
+                INNER JOIN mddocs m ON p.mddoc_id = m.id
+                WHERE sp.sequence_id = ?; `,
             )
             .all(sequenceRes.id) as IntermediateSequenceChild[];
         return {
             id: sequenceRes.id,
+            mddocId: sequenceRes.mddoc_id,
             pageId: sequenceRes.page_id,
             slug: sequenceRes.slug,
             title: sequenceRes.title,
@@ -327,6 +353,7 @@ export function getSequence(db: Database, filename: string): Sequence | undefine
 
 interface IntermediateSequenceChild {
     page_id: number;
+    mddoc_id: number;
     parent_page_id: number;
     title: string;
     slug: string;
@@ -354,6 +381,7 @@ function buildTree(items: IntermediateSequenceChild[], rootId: number): Sequence
         for (const child of childrenRes) {
             children.push({
                 pageId: child.page_id,
+                mddocId: child.mddoc_id,
                 title: child.title,
                 slug: child.slug,
                 pathname: child.pathname,
@@ -394,8 +422,10 @@ export function getSequenceChildReferences(
     const out = db
         .prepare(
             `SELECT p.id as pageId, p.pathname, sp.title, sp.label, s.title as sequence
-            FROM sequences s INNER JOIN sequence_pages sp INNER JOIN pages p INNER JOIN page_refs pr
-            ON s.id = sp.sequence_id AND sp.page_id = p.id AND p.id = pr.target_page_id
+            FROM sequences s
+            INNER JOIN sequence_pages sp ON s.id = sp.sequence_id
+            INNER JOIN pages p ON sp.page_id = p.id
+            INNER JOIN page_refs pr ON p.id = pr.target_page_id
             WHERE pr.source_mddoc_id = ?`,
         )
         .all(sourceMddocId) as SCRNoFull[];
@@ -404,8 +434,9 @@ export function getSequenceChildReferences(
         ...(db
             .prepare(
                 `SELECT p.id as pageId, p.pathname, s.title, '' as label, s.title as sequence
-                FROM sequences s INNER JOIN pages p INNER JOIN page_refs pr
-                ON s.page_id = p.id AND p.id = pr.target_page_id
+                FROM sequences s
+                INNER JOIN pages p ON s.page_id = p.id
+                INNER JOIN page_refs pr ON p.id = pr.target_page_id
                 WHERE pr.source_mddoc_id = ?`,
             )
             .all(sourceMddocId) as SCRNoFull[]),
