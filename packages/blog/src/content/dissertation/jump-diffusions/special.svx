@@ -10,7 +10,7 @@ title: Special jump-diffusions
 We now turn our focus to $(\Prb, \scrF)$ jump-diffusions which are additionally _special_ in the sense of them having a semimartingale decomposition in which the finite-variation term is predictable.
 When looking at the canonical representation of a jump-diffusion $\X$ with $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$, it is clear how to make this predictable.
 $$
-  @tag(eq-jump-diffusion-special)
+  @tag(jump-diffusion-special)
   \begin{aligned}
     \X_t
     &= \X_0 + \affDrift^\trunc(\X) \shortInt \leb_t + \X^\rmc_t + \trunc \ast \compensate{\jumpMeas^\X} + (\id_\vecSpace - \trunc) \ast \jumpMeas^\X \\
@@ -20,21 +20,21 @@ $$
 $$
 In such a case, it is nice to define the function $\affDrift: \stateSpace \rightarrow \vecSpace$,
 $$
-  @tag(eq-jump-diffusion-drift)
+  @tag(jump-diffusion-drift)
   \affDrift(\stateVar) \defeq \affDrift^\trunc(\stateVar) + \int_\vecSpace \big(\markVar - \trunc(\markVar)\big) \affJump(\stateVar, \rmd\markVar),
 $$
-so that [](tag:eq-jump-diffusion-special) may be simplified to a concise special semimartingale decomposition.
+so that [](eq:jump-diffusion-special) may be simplified to a concise special semimartingale decomposition.
 $$
   \X_t = \X_0 + \affDrift(\X) \shortInt \leb + \X^\rmc + \id_\vecSpace \ast \compensate{\jumpMeas^\X}_t
 $$
-We call the triplet $(\affDrift, \affDiff, \affJump)$ that results from [](tag:eq-jump-diffusion-drift) the _special differential characteristics_ and its components $\affDrift, \affDiff, \affJump$ the _drift_, _diffusion_, and _jump kernel_, respectively.
+We call the triplet $(\affDrift, \affDiff, \affJump)$ that results from [](eq:jump-diffusion-drift) the _special differential characteristics_ and its components $\affDrift, \affDiff, \affJump$ the _drift_, _diffusion_, and _jump kernel_, respectively.
 
-The calculus of [](tag:eq-jump-diffusion-special) begs the question that $(\id_\vecSpace - \trunc) \ast \jumpMeas^\X$ can be compensated which is not generally the case---otherwise, the term _special_ would be a misnomer!
+The calculus of [](eq:jump-diffusion-special) begs the question that $(\id_\vecSpace - \trunc) \ast \jumpMeas^\X$ can be compensated which is not generally the case---otherwise, the term _special_ would be a misnomer!
 The next result specifies conditions on which we may perform the above calculus.
 
 <Statement {...jumpDiffusionSpecial} />
 
-Seeing as $(\id_\vecSpace - \trunc) \ast \jumpMeas^\X$ may be compensated for special jump-diffusions $X$, all the characterizing objects of [%full](/statements/jump-diffusion-characterization) may be rewritten in terms of our drift $\affDrift$&mdash;effectively, $\trunc$ becomes the identity.
+Seeing as $(\id_\vecSpace - \trunc) \ast \jumpMeas^\X$ may be compensated for special jump-diffusions $X$, all the characterizing objects of [%full](statement:jump-diffusion-characterization) may be rewritten in terms of our drift $\affDrift$&mdash;effectively, $\trunc$ becomes the identity.
 $$
   \begin{gathered}
     \begin{aligned}

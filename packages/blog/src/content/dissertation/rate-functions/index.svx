@@ -2,7 +2,7 @@
 title: Large deviation rate functions
 ---
 
-We dedicate this final chapter to interpreting the rate function [](tag:eq-rf-integral) from [%full](/statements/ldp-integral) and deriving a semi-closed form for $\ode^*$ which illustrates more on the nature of our distributions $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$.
+We dedicate this final chapter to interpreting the rate function [](eq:rf-integral) from [%full](statement:ldp-integral) and deriving a semi-closed form for $\ode^*$ which illustrates more on the nature of our distributions $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$.
 Before doing this, let us establish some intuition with what our integral form _already_ tells us.
 
 Firstly, we recognize that a large deviation principle introduces a first-order exponential asymptotic;
@@ -22,12 +22,12 @@ $$
 $$
 By ignoring this expression $o(\epsilon, \delta)$, we are concerning ourselves with a first-order exponential approximation of the following probabilities.
 $$
-  @tag(eq-asymptotic-intuition)
+  @tag(asymptotic-intuition)
   \Prb^\epsilon_{\stateVar}\Big( \Xe \in \ball{\pathVar}{\delta} \Big) \approx
   \exp\Big( -\frac1\epsilon\rf_{\stateVar}(\pathVar) \Big)
 $$
 To this end, $\rf_\stateVar$ interprets properties of $\pathVar$ that the family $(\Xe)_{\epsilon>0}$ is systematically trending towards/against.
-Should $\rf_\stateVar(\pathVar)$ be large, the decay of [](tag:eq-asymptotic-intuition) is faster, demonstrating that $\pathVar$ exhibits some property that the family $(\Xe)_{\epsilon>0}$ does not tend to satisfy.
+Should $\rf_\stateVar(\pathVar)$ be large, the decay of [](eq:asymptotic-intuition) is faster, demonstrating that $\pathVar$ exhibits some property that the family $(\Xe)_{\epsilon>0}$ does not tend to satisfy.
 Thus is the notion of $\rf_\stateVar$ governing a _principle_ for what behaviors make a path $\pathVar$ _largely deviate_ from the typical behavior of $(\Xe)_{\epsilon>0}$.
 
 The integral nature of $\rf_\stateVar$ indicates to us that there are local properties that the family $(\Xe)_{\epsilon>0}$ systematically exhibits which lends to faster/slower decay from some $\pathVar$.
@@ -44,7 +44,7 @@ $$
     &= \prj{\momentVar}{\diffVar} -  \bprj{\momentVar}{\affDrift^\trunc(\stateVar)} - \frac12\bprj{\momentVar}{\affDiff(\stateVar)} - \int_\vecSpace \big( e^\prj{\momentVar}{\markVar} - 1 - \prj{\momentVar}{\trunc(\markVar)} \big) \affJump(\stateVar, \rmd\markVar),
   \end{aligned}
 $$
-However, by looking to existing rate functions from the literature [](/citations#duffy2004), [](/citations#dembo2010), [](/citations#kang2014), [](/citations#gao2018b), we will be able to build an intuition and a toolbox for developing a semi-closed form for $\ode*$.
+However, by looking to existing rate functions from the literature [](cite:duffy2004), [](cite:dembo2010), [](cite:kang2014), [](cite:gao2018b), we will be able to build an intuition and a toolbox for developing a semi-closed form for $\ode*$.
 We find this result remarkable for multiple reasons.
 
 - The representation of $\ode^*$ will feel familiar to already-known results

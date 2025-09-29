@@ -28,10 +28,10 @@ $$
 
 <Proof>
 
-Note that [%full](/statements/jump-diffusion-lk-exponential-martingale) gives us the $(\Prb, \scrF)$ local martingale property, so our $\Prb$ uniform-integrability assumption serves to give us a $(\Prb, \scrF)$ uniformly-integrable martingale $\mgDensity^\twistFunc$ on $[0,\tau]$.
+Note that [%full](statement:jump-diffusion-lk-exponential-martingale) gives us the $(\Prb, \scrF)$ local martingale property, so our $\Prb$ uniform-integrability assumption serves to give us a $(\Prb, \scrF)$ uniformly-integrable martingale $\mgDensity^\twistFunc$ on $[0,\tau]$.
 Now, evaluating the $(\mgPrb^\twistFunc_\tau, (\scrF_t)_{t\in[0,\tau]})$ dynamics of $\X$ amount to applying Girsanov's theorem for semimartingales.
-Specifically we use [Theorem III.3.24](/citations#jacod2003) and verify that our proposed differential characteristics align with the identities of [III.3.28](/citations#jacod2003).
-For any $\scrF$ predictable $H: \Omega \times \bbR_+ \times \vecSpace \rightarrow \bbR_+$, we apply [Remark I.4.36](/citations#jacod2003) to see that the following identities hold.
+Specifically we use [Theorem III.3.24](cite:jacod2003) and verify that our proposed differential characteristics align with the identities of [III.3.28](cite:jacod2003).
+For any $\scrF$ predictable $H: \Omega \times \bbR_+ \times \vecSpace \rightarrow \bbR_+$, we apply [Remark I.4.36](cite:jacod2003) to see that the following identities hold.
 $$
   \begin{aligned}
     &\Exp_\Prb \big( (\mgDensity^\twistFunc H) \ast \jumpMeas^\X \big) \\
@@ -48,7 +48,7 @@ $$
 $$
 This first part indicates that our $\affJump^\twistFunc$ is as described.
 Now, let us establish the drift by looking at the continuous predictable projections.
-First, we recall [](tag:eq-jump-diffusion-exponentially-special) and the calculations below it to note that $\mgDensity^\twistFunc$ has the following continuous local martingale component.
+First, we recall [](eq:jump-diffusion-exponentially-special) and the calculations below it to note that $\mgDensity^\twistFunc$ has the following continuous local martingale component.
 $$
   \begin{aligned}
     \mgDensity^{\twistFunc,\rmc}_t
@@ -56,8 +56,8 @@ $$
     &= \mgDensity^\twistFunc_- \twistFunc(\leb, \X_-) \shortInt \X^\rmc_t
   \end{aligned}
 $$
-Note that we applied our usual calculus operation [Remark I.4.37](/citations#jacod2003) above.
-Using this calculus operation once more, in addition to that in [Theorem I.4.40](/citations#jacod2003), we get our desired predictable quadratic covariation.
+Note that we applied our usual calculus operation [Remark I.4.37](cite:jacod2003) above.
+Using this calculus operation once more, in addition to that in [Theorem I.4.40](cite:jacod2003), we get our desired predictable quadratic covariation.
 $$
   \begin{aligned}
     \bprj{\mgDensity^{\twistFunc,\rmc}}{\X^{\rmc,j}}

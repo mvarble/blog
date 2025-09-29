@@ -21,7 +21,7 @@ to evaluate real moments $\momentVar \in \vecSpace$.
 The above expression may be infinite, as the final term includes an unbounded integral over a possibly infinite measure.
 That said, we find it imperative to denote the following sets of finiteness.
 $$
-  @tag(eq-odeSpace-general)
+  @tag(odeSpace-general)
   \odeSpace(\stateVar) \defeq \Big\{ \momentVar \in \vecSpace : \ode(\momentVar, \stateVar) < \infty \Big\}, \qquad
   \odeSpace \defeq \bigcap_{\stateVar \in \stateSpace} \odeSpace(\stateVar)
 $$
@@ -32,10 +32,10 @@ Note that there is no loss of generality in selecting this truncation function, 
 <Statement {...odeSpaceConvex} />
 <Statement {...jumpDiffusionOdeDifferentiable} />
 
-As we have seen in Lemmas [%label](/statements/jump-diffusion-special) and [%label](/statements/jump-diffusion-countable), if we have local boundedness of certain integrals of a jump kernel $\affJump$, we can leverage these to $(\Prb, \scrF)$ local conditions of the associated jump-diffusion $\X$.
+As we have seen in Lemmas [%label](statement:jump-diffusion-special) and [%label](statement:jump-diffusion-countable), if we have local boundedness of certain integrals of a jump kernel $\affJump$, we can leverage these to $(\Prb, \scrF)$ local conditions of the associated jump-diffusion $\X$.
 Throughout the remainder of this section, we impose the following uniform-boundedness principle for the kernel $\affJump$.
 $$
-  @tag(eq-affJump-regularity)
+  @tag(affJump-regularity)
   \begin{aligned}
     &f \in \scrB(\vecSpace)/\scrB(\bbR), ~ \int_\vecSpace |f(\markVar)| \affJump(\stateVar, \rmd\markVar) < \infty \text{ for all } \stateVar \in \stateSpace \\
     &\quad\Longrightarrow\quad \stateVar \mapsto \int_\vecSpace |f(\markVar)| \affJump(\stateVar, \rmd\markVar) \text{ bounded on compact sets}

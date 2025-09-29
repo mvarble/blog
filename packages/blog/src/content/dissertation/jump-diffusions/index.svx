@@ -3,12 +3,12 @@ title: Jump diffusions
 ---
 
 In order to discuss jump-diffusions on a finite-dimensional real vector space, one must have a decent understanding of semimartingales.
-A great text for a comprehensive study of this is [](/citations#jacod2003), which we will refer to in our proofs.
+A great text for a comprehensive study of this is [](cite:jacod2003), which we will refer to in our proofs.
 In terms of notational differences, we choose our probability space $(\Omega, \Sigma, \Prb)$ and filtration $\scrF=(\scrF_t)_{t\geq0}$, where $\scrF_\infty \subseteq \Sigma$ denotes the joined space.
 Furthermore, we do not explicitly write processes to take values in $\bbR^d$, but rather some vector space $\vecSpace$ with dimension $d \defeq \operatorname{dim}\vecSpace$ and inner-product $\prj\cdot\cdot$.
 Surely---due to our isometric isomorphism $\vecSpace \equiv \bbR^d$---any componentwise or linear notion, such as integration or differentiation may be taken as equivalent.
 Furthermore, we sometimes specify that a stochastic process $\X$ has a Borel state space $\stateSpace\subseteq \vecSpace$, as this is the case when studying affine processes.
-We find it important to highlight the following important notation of objects introduced in [Chapters I-II](/citations#jacod2003).
+We find it important to highlight the following important notation of objects introduced in [Chapters I-II](cite:jacod2003).
 
 - Given $(\Prb,\scrF)$ locally square-integrable martingales $M, N: \Omega \times \bbR_+ \rightarrow \bbR$, denote $\prj{M}{N}$ the predictable quadratic covariation.
 - Given $H,\X: \Omega \times \bbR_+ \rightarrow \bbR$ with $H$ being $\scrF$ predictable and $(\Prb, \scrF)$ locally bounded and $\X$ a $(\Prb, \scrF)$ semimartingale, denote the stochastic integral process as follows.
@@ -35,7 +35,7 @@ We find it important to highlight the following important notation of objects in
     \Exp_\Prb\big( H \ast \jumpMeas_\infty \big)
     = \Exp_\Prb\big( H \ast \predproj{\jumpMeas}_\infty \big)
   $$
-  Also denote $H \ast \compensate{\jumpMeas}$ the compensated local martingale process for suitable $H \in G_\loc(\jumpMeas)$, as constructed in [Definition II.1.27](/citations#jacod2003).
+  Also denote $H \ast \compensate{\jumpMeas}$ the compensated local martingale process for suitable $H \in G_\loc(\jumpMeas)$, as constructed in [Definition II.1.27](cite:jacod2003).
   Lift these integration notions to vector-valued $H$ componentwise.
   Instead of choosing a canonical variable for integrating expressions in this form, we use the identity maps $\id_\vecSpace$ or $\leb$.
   $$

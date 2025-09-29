@@ -3,12 +3,12 @@ type: statement
 kind: example
 ---
 
-Consider our sequence $(\epsilon\N_{\cdot/\epsilon})_{\epsilon>0}$ derived from a Poisson process $\N$, as in [%full](/statements/poisson).
+Consider our sequence $(\epsilon\N_{\cdot/\epsilon})_{\epsilon>0}$ derived from a Poisson process $\N$, as in [%full](statement:poisson).
 Denoting $\Prb^\epsilon$ and $\scrF^\epsilon$ the distribution and filtration, respectively, of each $J^\epsilon \defeq \epsilon\N_{\cdot/\epsilon}$, we may construct a measure $\mgPrb^\epsilon_\tau \ll \Prb^\epsilon|_{\scrF^\epsilon_\tau}$ for each $\tau > 0$, in which $\frac1\epsilon J^\epsilon$ has $\mgPrb^\epsilon$ intensity $\frac1\epsilon\affInt(J^\epsilon)$ for affine function $\affInt$.
 $$
   \affInt: \bbR_+ \rightarrow \bbR_+, \quad \affInt(\stateVar) = \affIntPart_0 + \affIntPart_1 \stateVar
 $$
-The martingale that induces this change of measure is familiar from [%full](/statements/jump-diffusion-lk-girsanov), selecting $\twistFunc(s, \stateVar) = \log\affInt(\stateVar)$.
+The martingale that induces this change of measure is familiar from [%full](statement:jump-diffusion-lk-girsanov), selecting $\twistFunc(s, \stateVar) = \log\affInt(\stateVar)$.
 The Lévy-Khintchine map associated with $\frac1\epsilon J^\epsilon$ is $\ode(\momentVar, \stateVar) = \frac1\epsilon (e^\momentVar - 1)$, and it resolves to the following.
 $$
   \mgDensity^\epsilon \defeq \exp\bigg( \frac1\epsilon \log\affInt(J^\epsilon_-) \shortInt J^\epsilon + \frac1\epsilon\big( 1 - \affInt(J^\epsilon) \big) \shortInt \leb \bigg)
@@ -50,8 +50,8 @@ $$
 From here, we lift our large deviation principle back to the interval $[0,\infty)$ by another application of Dawson-Gärtner.
 
 Of course, many technical details are missing in the above argument, but we again reiterate that this is merely to gather intuition on rate functions.
-For a rigorous proof involving such analysis, we refer the reader to [](/citations#gao2018b), where they prove a large deviation principle for an asymptotic family of nonlinear Hawkes processes.
-In any case, we again note that [%full](/statements/ldp-integral) covers the large deviation principle and rate function mentioned above.
+For a rigorous proof involving such analysis, we refer the reader to [](cite:gao2018b), where they prove a large deviation principle for an asymptotic family of nonlinear Hawkes processes.
+In any case, we again note that [%full](statement:ldp-integral) covers the large deviation principle and rate function mentioned above.
 A continuous-branching process $\X$ with intensity $\affInt(\X)$ has special semimartingale decomposition as below,
 $$
   \X = 1 \ast \jumpMeas^{\X} = 1 \ast \predproj{\jumpMeas^{\X}} + 1 \ast \compensate{\jumpMeas^{\X}} = \affInt(\X) \shortInt \leb + 1 \ast \compensate{\jumpMeas^{\X}}
@@ -62,7 +62,7 @@ $$
   \affDiff(\stateVar) = 0, \quad
   \affJump(\stateVar, \rmd\markVar) = \affInt(\stateVar) \delta_1(\rmd\markVar)
 $$
-and so the corresponding integrand in [](tag:eq-rf-integral) evaluates the following function.
+and so the corresponding integrand in [](eq:rf-integral) evaluates the following function.
 $$
   \begin{aligned}
     \ode^*\big(\diffVar, \stateVar \big)
@@ -97,4 +97,4 @@ $$
     \end{array}\right.
   \end{aligned}
 $$
-which is similar to the linear case of [](/citations#gao2018b).
+which is similar to the linear case of [](cite:gao2018b).

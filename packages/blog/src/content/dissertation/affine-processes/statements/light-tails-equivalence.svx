@@ -16,12 +16,12 @@ $$
 <Proof>
 
 For sufficiency, first see that any $\momentVar \in \vecSpace$ is such that $\closedBall{\momentVar}{1} \subseteq \vecSpace = \odeSpace^\circ$ is compact.
-By [%full](/statements/compact-ode-existence), we then have some $\tau > 0$ so that $\momentVar \in \closedBall{\momentVar}{1} \subseteq \momentSpace(\tau)$.
-Then, [%full(a)](/statements/keller-ressel-mayerhofer) gives us the desired finiteness condition.
+By [%full](statement:compact-ode-existence), we then have some $\tau > 0$ so that $\momentVar \in \closedBall{\momentVar}{1} \subseteq \momentSpace(\tau)$.
+Then, [%full(a)](statement:keller-ressel-mayerhofer) gives us the desired finiteness condition.
 $$
   \Exp_{\Prb_\stateVar}\exp\prj{\momentVar}{\X_\tau} = \exp\aff(\tau, \momentVar, \stateVar) < \infty, \quad \stateVar \in \stateSpace
 $$
-Conversely, if $\momentVar \in \vecSpace$ satisfies $\Exp_{\Prb_\stateVar}\exp\prj{\momentVar}{\X_\tau} < \infty$ for all $\stateVar \in \stateSpace$, then it certainly does for some $\stateVar \in \stateSpace^\circ$, and so [%full(b)](/statements/keller-ressel-mayerhofer) gives us $(\tau, \momentVar) \in \momentSpace$.
+Conversely, if $\momentVar \in \vecSpace$ satisfies $\Exp_{\Prb_\stateVar}\exp\prj{\momentVar}{\X_\tau} < \infty$ for all $\stateVar \in \stateSpace$, then it certainly does for some $\stateVar \in \stateSpace^\circ$, and so [%full(b)](statement:keller-ressel-mayerhofer) gives us $(\tau, \momentVar) \in \momentSpace$.
 Surely, this then means that $\momentVar \in \momentSpace(\tau) \subseteq \odeSpace$.
 
 </Proof>

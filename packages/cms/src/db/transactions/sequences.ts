@@ -67,7 +67,7 @@ export function touchSequence(
             .prepare(
                 `INSERT INTO sequences (
                     page_id, description_id, title, created, edited, slug, enumerate)
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 RETURNING id;`,
             )
             .get(
@@ -238,6 +238,7 @@ export function touchSequenceChild(
         pageId,
         pathname,
         children,
+        label: enumerate ? label : undefined,
     };
 }
 
@@ -282,7 +283,7 @@ export function getSequence(db: Database, filename: string): Sequence | undefine
                 seq.enumerate, spage.pathname, smddoc.filename, smddoc.katex_macros
             FROM sequences seq
             INNER JOIN pages spage ON seq.page_id = spage.id
-            INNER JOIN pages smddoc ON spage.mddoc_id = smddoc.id
+            INNER JOIN mddocs smddoc ON spage.mddoc_id = smddoc.id
             INNER JOIN sequence_pages child ON seq.id = child.sequence_id
             INNER JOIN pages cpage ON child.page_id = cpage.id
             INNER JOIN mddocs cmddoc ON cpage.mddoc_id = cmddoc.id
@@ -299,7 +300,7 @@ export function getSequence(db: Database, filename: string): Sequence | undefine
                     seq.enumerate, spage.pathname, smddoc.filename, smddoc.katex_macros
                 FROM sequences seq
                 INNER JOIN pages spage ON seq.page_id = spage.id
-                INNER JOIN pages smddoc ON spage.mddoc_id = smddoc.id
+                INNER JOIN mddocs smddoc ON spage.mddoc_id = smddoc.id
                 WHERE smddoc.filename = ?`,
             )
             .get(filename) as Select | undefined;

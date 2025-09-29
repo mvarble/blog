@@ -7,14 +7,14 @@ kind: lemma
   import Proof from '$lib/components/proof.svelte';
 </script>
 
-For each $\pathVar \in \acpathSpace{[0,\infty)}{\stateSpace}$, $\underline t \vdash [0,\infty)$ and $\underline\twistVar \in \momentSpace(\underline t)$, we have an identity similar to that of [%full](/statements/prb-equivalence).
+For each $\pathVar \in \acpathSpace{[0,\infty)}{\stateSpace}$, $\underline t \vdash [0,\infty)$ and $\underline\twistVar \in \momentSpace(\underline t)$, we have an identity similar to that of [%full](statement:prb-equivalence).
 $$
     \fddRf(\pathVar, \underline t, \underline\twistVar) = \mgRf\big(\pathVar, \twistFunc(\cdot, \underline t, \underline\twistVar)\big) = \int_0^\infty \Big( \bprj{\twistFunc(t, \underline t, \underline\twistVar)}{\dot\pathVar(t)} - \ode\big(\twistFunc(t, \underline t, \underline\twistVar), \pathVar(t)\big) \Big) \rmd t.
 $$
 
 <Proof>
 
-Similar to as in [%full](/statements/prb-equivalence), we use Propositions [%label (c)](/statements/momentSpace-facts) and [%label (a)](/statements/real-moments-revisit) and apply the fundamental theorem of calculus and integration by parts.
+Similar to as in [%full](statement:prb-equivalence), we use Propositions [%label (c)](statement:momentSpace-facts) and [%label (a)](statement:real-moments-revisit) and apply the fundamental theorem of calculus and integration by parts.
 $$
   \begin{aligned}
     \fddRf(\pathVar, \underline t, \underline\twistVar)

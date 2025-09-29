@@ -20,8 +20,8 @@ Observe that if $\aff\big(\underline t, \underline\momentVar, \pathVar(0)\big) =
 $$
   \bprj{\underline\momentVar}{\pathVar(\underline t)} - \aff\big(\underline t, \underline\momentVar, \pathVar(0)\big) = -\infty \leq 0 = \int_0^\infty \ode^*\big(\dot\pathVar(t), \pathVar(t)\big) \rmd t
 $$
-Otherwise, [%full](/statements/mgf-fdds) tells us that $\underline\momentVar = \twistToMoment_{\underline t}(\underline\twistVar)$ for some $\underline\twistVar \in \momentSpace(\underline t)$.
-By [%full](/statements/fdd-rf-as-integral), we now see the same inequality.
+Otherwise, [%full](statement:mgf-fdds) tells us that $\underline\momentVar = \twistToMoment_{\underline t}(\underline\twistVar)$ for some $\underline\twistVar \in \momentSpace(\underline t)$.
+By [%full](statement:fdd-rf-as-integral), we now see the same inequality.
 $$
   \begin{aligned}
     \bprj{\underline\momentVar}{\pathVar(\underline t)} - \aff\big(\underline t, \underline\momentVar, \pathVar(0)\big)

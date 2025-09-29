@@ -24,7 +24,7 @@ $$
 
 <Proof>
 
-Apply Itô's formula [Theorem I.4.57](/citations#jacod2003) and use the predictable covariation identity in [](tag:eq-jump-diffusion-canonical) to get the following.
+Apply Itô's formula [Theorem I.4.57](cite:jacod2003) and use the predictable covariation identity in [](eq:jump-diffusion-canonical) to get the following.
 $$
   \begin{aligned}
     f(\X_t)
@@ -34,7 +34,7 @@ $$
       &\quad + \Big( f(\X_-+\id_\vecSpace) - f(\X_-) - \Der f(\X_-) \cdot \id_\vecSpace \Big) \ast \jumpMeas^\X_t
   \end{aligned}
 $$
-Using the iterated stochastic integral formula [Remark I.4.37](/citations#jacod2003), we may simplify the above equation to the following.
+Using the iterated stochastic integral formula [Remark I.4.37](cite:jacod2003), we may simplify the above equation to the following.
 $$
  \begin{aligned}
   f(\X_t)
@@ -42,7 +42,7 @@ $$
     &\quad + \Big( f(\X_-+\id_\vecSpace) - f(\X_-) - \Der f(\X_-) \cdot \id_\vecSpace \Big) \ast \jumpMeas^\X_t
   \end{aligned}
 $$
-Now substitute our representation of [](tag:eq-jump-diffusion-canonical) and repeat the iterated stochastic integral to get the following.
+Now substitute our representation of [](eq:jump-diffusion-canonical) and repeat the iterated stochastic integral to get the following.
 $$
 \begin{aligned}
   f(\X_t)
@@ -59,7 +59,7 @@ $$
 $$
 Furthermore, since $\X_- = \X$ on all but a countable amount of jumps, we may rewrite the Lebesgue integrals.
 $$
-  @tag(eq-ito-pause)
+  @tag(ito-pause)
   \begin{aligned}
     f(\X_t)
     &= f(\X_0)
@@ -72,18 +72,18 @@ $$
 $$
 For the remaining equality, we construct localizing sequence $(T_n)_{n\in\bbN}$ of $\scrF$ stopping times,
 $$
-  @tag(eq-stopping-times)
+  @tag(stopping-times)
   T_n(\omega) \defeq \inf \big\{ t > 0 : \X_t(\omega) > n \big\} \wedge n, \quad \omega \in \Omega, ~ n \in \bbN,
 $$
 to see that $\Der f(\X_-)$ is $(\Prb, \scrF)$ locally bounded.
 $$
   \big|\Der f(\X^{T_n}_{s-})\big| \leq \sup_{|\stateVar| \leq n} \big| \Der f(\stateVar) \big|
 $$
-Thus, by [Proposition II.1.30](/citations#jacod2003), we may rewrite the following.
+Thus, by [Proposition II.1.30](cite:jacod2003), we may rewrite the following.
 $$
   \Der f(\X_-) \shortInt \big( \trunc \ast \compensate{\jumpMeas^\X} \big)_t
   = \big( \Der f(\X_-) \cdot \trunc \big) \ast \compensate{\jumpMeas^\X}_t ,
 $$
-which when substituted into [](tag:eq-ito-pause) gives us our desired identity.
+which when substituted into [](eq:ito-pause) gives us our desired identity.
 
 </Proof>

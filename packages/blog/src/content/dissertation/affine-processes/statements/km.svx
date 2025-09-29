@@ -15,13 +15,13 @@ slug: keller-ressel-mayerhofer
    such that, for each $(\tau,\momentVar) \in \momentSpace$, $\aff(\cdot,\momentVar,\cdot)$ is a solution to $\system(\ode,\tau,\momentVar)$ dominated by all other such solutions.
    Moreover, this map satisfies the following for each $(\tau, \momentVar) \in \momentSpace$ and $\stateVar \in \stateSpace$.
    $$
-     @tag(eq-km-moments)
+     @tag(km-moments)
      \Exp_{\Prb_\stateVar}\exp\prj{\momentVar}{\X_t} = \exp\aff(t, \momentVar, \stateVar), \quad t \in [0,\tau]
    $$
 2. If $\tau \geq 0$, $\momentVar \in \vecSpace$, and $\stateVar \in \stateSpace^\circ$ are such that  $\Exp_{\Prb_\stateVar}\exp\prj{\momentVar}{\X_\tau} < \infty$, then $(\tau, \momentVar) \in \momentSpace$.
 
 <Proof>
 
-  With [%full](/statements/riccati-affine-formulation), this is the same as [Theorem 2.14](/citations#keller2015).
+  With [%full](statement:riccati-affine-formulation), this is the same as [Theorem 2.14](cite:keller2015).
 
 </Proof>

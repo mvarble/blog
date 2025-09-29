@@ -14,7 +14,7 @@ title: Asymptotic family
 <!-- declare asymptotic family -->
 Fix family $(\Xe)_{\epsilon>0}$ of affine processes $\Xe$ with associated conditional distributions $(\Prb^\epsilon_\stateVar)_{\stateVar\in\stateSpace}$ such that the differential $\trunc$-characteristics $(\affDrift^{\trunc,\epsilon}, \affDiff^\epsilon, \affJump^\epsilon)$ relate through the following parameterization.
 $$
-  @tag(eq-characteristic-asymptotics)
+  @tag(characteristic-asymptotics)
   \affDrift^{\trunc,\epsilon}(\stateVar) = \frac1\epsilon \affDrift^{\trunc,1}(\epsilon\stateVar), \quad
   \affDiff^\epsilon(\stateVar) = \frac1\epsilon \affDiff^1(\epsilon\stateVar), \quad
   \affJump^\epsilon(\stateVar, \rmd\markVar) = \frac1\epsilon \affJump^1(\epsilon\stateVar, \rmd\markVar), \quad \stateVar \in \stateSpace
@@ -22,22 +22,22 @@ $$
 In effect, for each $\stateVar \in \stateSpace$, the family $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ is induced by a _base distribution_ $\Prb_\stateVar \defeq \Prb^1_\stateVar$ associated with _base affine process_ $\X \defeq \X^1$ and _base differential characteristics_ $(\affDrift^\trunc, \affDiff, \affJump) \defeq (\affDrift^{\trunc,1}, \affDiff^1, \affJump^1)$.
 This also implies a similar parameterization for the Lévy-Khintchine maps $\ode^\epsilon$ associated with $(\affDrift^{\trunc,\epsilon}, \affDiff^\epsilon, \affJump^\epsilon)$ in terms of the base map $\ode$ from $(\affDrift^\trunc, \affDiff, \affJump)$.
 $$
-  @tag(eq-LK-asymptotics)
+  @tag(LK-asymptotics)
   \ode^\epsilon(\momentVar, \stateVar) = \frac1\epsilon \ode(\momentVar, \epsilon \stateVar), \quad \momentVar \in \vecSpace, ~ \stateVar \in \stateSpace
 $$
-Using the notation of [%full](/statements/jump-diffusions-real-moments), we see that the set $\odeSpace(\stateVar)$ of finite points of $\ode(\cdot, \stateVar)$ is identical to that $\odeSpacee(\epsilon\stateVar)$ of $\ode^\epsilon(\cdot, \epsilon\stateVar)$.
+Using the notation of [%full](statement:jump-diffusions-real-moments), we see that the set $\odeSpace(\stateVar)$ of finite points of $\ode(\cdot, \stateVar)$ is identical to that $\odeSpacee(\epsilon\stateVar)$ of $\ode^\epsilon(\cdot, \epsilon\stateVar)$.
 So long that $\stateSpace$ is a cone&mdash;which is to say that $\stateSpace$ an additive set, closed under non-negative-scalar multiplication&mdash;we have $\stateSpace = \epsilon\stateSpace$, and so the following sets agree.
 $$
   \odeSpace = \bigcap_{\stateVar \in \stateSpace} \odeSpace(\stateVar) = \bigcap_{\stateVar \in \stateSpace} \odeSpacee(\epsilon\stateVar) = \bigcap_{\stateVar \in \stateSpace} \odeSpacee(\stateVar) = \odeSpacee
 $$
 
 <!-- show parameterization for \aff -->
-Note that a parameterization like [](tag:eq-characteristic-asymptotics) or [](tag:eq-LK-asymptotics) may exist irrespective of the affine property on $(\affDrift^\trunc, \affDiff, \affJump)$.
-However, affine processes are distinct in the existence (from [%full](/statements/keller-ressel-mayerhofer)) of an affine map $\aff^\epsilon: \momentSpacee \rightarrow \bbR$ respective to $\Xee$,
+Note that a parameterization like [](eq:characteristic-asymptotics) or [](eq:LK-asymptotics) may exist irrespective of the affine property on $(\affDrift^\trunc, \affDiff, \affJump)$.
+However, affine processes are distinct in the existence (from [%full](statement:keller-ressel-mayerhofer)) of an affine map $\aff^\epsilon: \momentSpacee \rightarrow \bbR$ respective to $\Xee$,
 $$
   \aff^\epsilon(t, \momentVar, \stateVar) = \affPart^\epsilon_0(t,\momentVar) + \bprj{\affPart^\epsilon(t,\momentVar)}{\stateVar},
 $$
-in which $\aff^\epsilon(\cdot, \momentVar, \cdot)$ is the minimal solution of $\system(\ode^\epsilon, \tau, \momentVar)$ (from [%full](/statements/keller-ressel-mayerhofer)) for each $(\tau, \momentVar) \in \momentSpacee$,
+in which $\aff^\epsilon(\cdot, \momentVar, \cdot)$ is the minimal solution of $\system(\ode^\epsilon, \tau, \momentVar)$ (from [%full](statement:keller-ressel-mayerhofer)) for each $(\tau, \momentVar) \in \momentSpacee$,
 $$
   \forall~ \stateVar \in \stateSpace, \quad \left\{\begin{array}{ll}
     \displaystyle \dot\aff^\epsilon(t, \momentVar, \stateVar) = \ode^\epsilon\big( \affPart^\epsilon(t, \momentVar), \stateVar \big), & t \in [0,\tau] \\
@@ -49,7 +49,7 @@ $$
   \Exp_{\Prb^\epsilon_\stateVar} \exp\prj{\momentVar}{\Xee_\tau} = \exp\aff^\epsilon(\tau, \momentVar, \stateVar/\epsilon), \quad (\tau, \momentVar) \in \momentSpace, ~ \stateVar \in \stateSpace
 $$
 Above, note that the $\stateVar/\epsilon$ in the last coordinate is because $\Prb^\epsilon_\stateVar$ is the distribution associated with $\Xe$, not $\Xee$.
-The following result shows us that our parameterization in [](tag:eq-characteristic-asymptotics) and [](tag:eq-LK-asymptotics) applies these cumulant generating functions, where $\aff \defeq \aff^1$ and $\momentSpace \defeq \momentSpace^1$.
+The following result shows us that our parameterization in [](eq:characteristic-asymptotics) and [](eq:LK-asymptotics) applies these cumulant generating functions, where $\aff \defeq \aff^1$ and $\momentSpace \defeq \momentSpace^1$.
 
 <Statement {...affAsymptotics} />
 <Statement {...affAsymptoticsRemark} />
@@ -71,9 +71,9 @@ The first of which is immediate from our preceding result, but it only makes sen
 
 <!-- show parameterization for Brownian motion and Poisson random measure -->
 We may also intuitively understand the relationship of $(\Prb^\epsilon_\stateVar)_{\stateVar\in\stateSpace}$ from a dynamical system perspective.
-In [%full](/statements/jump-diffusion-characterizations), we see how jump-diffusions $\X$ always correspond to a weak solution of some stochastic differential equation driven by standard Brownian motion $\W$ and Poisson random measure $\poisRM$.
+In [%full](statement:jump-diffusion-characterizations), we see how jump-diffusions $\X$ always correspond to a weak solution of some stochastic differential equation driven by standard Brownian motion $\W$ and Poisson random measure $\poisRM$.
 $$
-  @tag(eq-sde-reminder)
+  @tag(sde-reminder)
   \begin{gathered}
     \X_t = \X_0 + \affDrift^\trunc(\X) \shortInt \leb_t + \affDiffSqrt(\X) \shortInt \W_t + \trunc \circ \thinner(\X, \id_\vecSpace) \ast \compensate{\poisRM}_t  + \trunc' \circ \thinner(\X, \id_\vecSpace) \ast \poisRM_t \\
     \forall ~ \stateVar \in \stateSpace, \quad \left\{\begin{aligned}

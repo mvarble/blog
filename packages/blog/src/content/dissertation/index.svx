@@ -127,32 +127,32 @@ katex_macros:
 
 This collection of pages is a transcription of my [PhD thesis](https://escholarship.org/uc/item/6xk7n2f2), which aims to develop a comprehensive picture of large deviations of affine processes.
 Affine processes have been studied so extensively, that it would not be foolish to admit that their theory is somewhat complete.
-Though some questions still remain, the thesis of [](/citations#cuchiero2011) establishes a comprehensive understanding of affine processes on general convex state spaces.
+Though some questions still remain, the thesis of [](cite:cuchiero2011) establishes a comprehensive understanding of affine processes on general convex state spaces.
 Starting with the basic definition of an affine process as a time-homogeneous Markov process with conditional marginal distributions having a characteristic function with log-affine dependence on the initial state, this paper establishes numerous useful properties of the process.
 Among these properties include that affine processes have càdlàg modifications (paths have left-limits and are right-continuous), and such modifications are themselves jump-diffusions with respect to their natural filtration.
-This result allowed [](/citations#keller2015) to prove the transform formula for the real and complex moments, which establishes existence of the process and its finite moments, so long as a system of generalized Riccati differential equations have some solution (which need not be unique).
+This result allowed [](cite:keller2015) to prove the transform formula for the real and complex moments, which establishes existence of the process and its finite moments, so long as a system of generalized Riccati differential equations have some solution (which need not be unique).
 
 Despite this very comprehensive understanding, large deviation asymptotics of families of affine processes do not have a similar general approach.
 Seeing as the class of affine processes is quite general, surely there are large deviation principles for _certain_ families of affine processes.
-The simplest of which include families of state-independent processes like the Brownian motion or Poisson process, whose large deviations are understood asymptotically $\epsilon \rightarrow 0$ as time and space are scaled linearly with respective factors $1/\epsilon$ and $\epsilon$; this is a simple consequence of the _classical_ Mogulskii's theorem (see [](/citations#dembo2010)).
-More general results indeed exist, like [](/citations#kang2014) which proves a large deviation principle for continuous affine processes on the so-called _canonical_ state space.
+The simplest of which include families of state-independent processes like the Brownian motion or Poisson process, whose large deviations are understood asymptotically $\epsilon \rightarrow 0$ as time and space are scaled linearly with respective factors $1/\epsilon$ and $\epsilon$; this is a simple consequence of the _classical_ Mogulskii's theorem (see [](cite:dembo2010)).
+More general results indeed exist, like [](cite:kang2014) which proves a large deviation principle for continuous affine processes on the so-called _canonical_ state space.
 We are concerned with large deviation principles of similar asymptotics--those which could be interpreted as regularizing the noise of a dynamical system--but on the level of generality that affine processes are already understood.
 
 Though our original intent was to prove a large deviation principle for the general class of affine processes on convex state spaces, we discovered other remarkable facts along the way.
 The following two are of key interest.
 Firstly, the measure-change techniques one often uses in large deviations are typically split into those of a finite-dimensional (_twisting/tilting_) and infinite-dimensional (_exponential martingale_) flavor, but for affine processes one may in fact parameterize the finite-dimensional measure-densities in terms of the infinite-dimensional ones.
-This was not a fact seen in [](/citations#kang2014), which--as they mentioned--forced them to choose a proof using exponential martingales.
+This was not a fact seen in [](cite:kang2014), which--as they mentioned--forced them to choose a proof using exponential martingales.
 We show how their original finite-dimensional approach was sufficient in establishing an integral form for their rate function.
 Secondly, seeing as no large deviations result has been made on the general level of affine processes, there has been no attempt at understanding the structure of the associated rate functions.
-In our work of developing a proof for the principle, we saw the techniques mentioned in [](/citations#duffy2004), which ultimately inspired us to develop a calculus associated with our rate functions.
+In our work of developing a proof for the principle, we saw the techniques mentioned in [](cite:duffy2004), which ultimately inspired us to develop a calculus associated with our rate functions.
 These results remarkably have no dependence on the affine assumption, and so if a future large deviation principle is to be proved for asymptotic families of jump-diffusions of the same regularization, this thesis will have already established semi-closed forms for the associated rate function.
 
 All this said, we do still prove a large deviation principle for the general class of affine processes on convex state spaces.
-While we require usual light-tail assumptions, we feel the generality is comparable to the treatment of affine processes in [](/citations#cuchiero2011) and [](/citations#keller2015).
+While we require usual light-tail assumptions, we feel the generality is comparable to the treatment of affine processes in [](cite:cuchiero2011) and [](cite:keller2015).
 In fact, we even choose to present affine processes with similar generality up until the point of us needing the assumption.
 At this juncture, we are able to represent the affine processes as special jump-diffusions, which have representations that are far more familiar to the larger audience that have studied Itô processes.
 For those that have only seen continuous diffusions, we also offer an Appendix which we feel is a great reference to the calculus associated with jump-diffusions.
 
 It goes without saying that our proof is not without the incredible theory of large deviations that already exists.
-We in particular discuss it at the level of understanding one has from reading [](/citations#dembo2010), but we for the most part cite [](/citations#feng2006) and its large deviation results on the Skorokhod space.
-We also use [](/citations#puhalskii2001) to use a _density argument_ in developing an integral form for our rate function.
+We in particular discuss it at the level of understanding one has from reading [](cite:dembo2010), but we for the most part cite [](cite:feng2006) and its large deviation results on the Skorokhod space.
+We also use [](cite:puhalskii2001) to use a _density argument_ in developing an integral form for our rate function.

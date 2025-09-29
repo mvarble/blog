@@ -1,0 +1,114 @@
+:root {
+    --raised-border: var(--border);
+    --raised-highlight: hsl(0, 0%, 95%);
+    --raised-shadow: hsl(0, 0%, 86%);
+
+    /* raised buttons */
+    --raised-color: var(--raised-highlight) var(--raised-border) var(--raised-border) var(--raised-highlight);
+    --raised-hover-color: var(--raised-border) var(--raised-shadow) var(--raised-shadow) var(--raised-border);
+    --raised-active-color: var(--raised-shadow) var(--raised-border) var(--raised-border) var(--raised-shadow);
+    --raised-width: 1px 2px 2px 1px;
+    --raised-active-width: 2px 1px 1px 2px;
+
+    &.dark {
+        --raised-highlight: hsl(var(--bg-hue), 15%, 32%);
+        --raised-shadow: var(--bg-3);
+
+        /* raised buttons */
+        --raised-color: var(--raised-border) var(--raised-shadow) var(--raised-shadow) var(--raised-border);
+        --raised-hover-color: var(--raised-highlight) var(--raised-shadow) var(--raised-shadow) var(--raised-highlight);
+        --raised-active-color: var(--raised-shadow) var(--raised-highlight) var(--raised-highlight) var(--raised-shadow);
+    }
+}
+
+.raised {
+    border-radius: var(--border-radius);
+    border-style: solid;
+    border-color: var(--raised-color);
+    border-width: var(--raised-width);
+
+    &.primary {
+        --raised-color: hsla(12, 93%, 60%) hsla(12, 93%, 35%) hsla(12, 93%, 35%) hsla(12, 93%, 60%);
+        --raised-hover-color: hsla(12, 93%, 70%) hsla(12, 93%, 30%) hsla(12, 93%, 30%) hsla(12, 93%, 70%);
+        --raised-active-color: hsla(12, 93%, 30%) hsla(12, 93%, 70%) hsla(12, 93%, 70%) hsla(12, 93%, 30%);
+        background: var(--bg-accent);
+        color: white;
+
+        :root.dark & {
+            --raised-color: hsla(12, 93%, 60%) hsla(12, 93%, 30%) hsla(12, 93%, 30%) hsla(12, 93%, 60%);
+            --raised-hover-color: hsla(12, 93%, 65%) hsla(12, 93%, 27%) hsla(12, 93%, 27%) hsla(12, 93%, 65%);
+            --raised-active-color: hsla(12, 93%, 25%) hsla(12, 93%, 70%) hsla(12, 93%, 70%) hsla(12, 93%, 25%);
+        }
+    }
+
+    &:hover {
+        border-color: var(--raised-hover-color);
+    }
+
+    &:active {
+        border-color: var(--raised-active-color);
+        border-width: var(--raised-active-width);
+    }
+
+    &:disabled {
+        border-color: var(--raised-border);
+        border-width: 1px;
+    }
+}
+
+button.icon,
+summary.icon,
+button:has(> span.icon) {
+    position: relative;
+    width: 3.2rem;
+    height: 3.2rem;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: 2.3rem 2.3rem;
+}
+
+button>span.icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    mask-repeat: no-repeat;
+    mask-position: 50% 50%;
+    mask-size: 2.3rem 2.3rem;
+    background: var(--fg-3);
+}
+
+button:where(.tooltip, .tooltip-left)[aria-label]:where(:hover, :focus) {
+    --arrow-size: 1rem;
+
+    &::before {
+        content: '';
+        width: var(--arrow-size);
+        height: var(--arrow-size);
+        position: absolute;
+        background: var(--fg-3);
+        top: calc(100% + var(--arrow-size) * 0.5);
+        left: calc(50% - var(--arrow-size) * 0.5);
+        rotate: 45deg;
+    }
+
+    &::after {
+        content: attr(aria-label);
+        position: absolute;
+        top: calc(100% + var(--arrow-size));
+        left: 50%;
+        translate: -50% 0;
+        background: var(--fg-3);
+        color: var(--bg-4);
+        padding: 0.5em 0.8em;
+        border-radius: var(--border-radius);
+        font: var(--font-ui-small);
+        text-transform: none;
+        white-space: pre;
+    }
+
+    &.tooltip-left::after {
+        translate: calc(-100% + 2rem) 0;
+    }
+}

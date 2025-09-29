@@ -9,7 +9,7 @@ kind: theorem
 
 For each $\stateVar \in \stateSpace^\circ$, the family $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ satisfies a large deviation principle on $\pathSpace{[0,\infty)}{\stateSpace}$ with good rate function $\rf_\stateVar: \pathSpace{[0,\infty)}{\stateSpace} \rightarrow [0,\infty]$ as follows.
 $$
-  @tag(eq-rf-integral)
+  @tag(rf-integral)
   \rf_\stateVar(\pathVar) = \left\{\begin{array}{ll}
     \displaystyle\int_0^\infty \ode^*\big(\dot\pathVar(t), \pathVar(t)\big) \rmd t & \pathVar \in \acpathSpace{[0,\infty)}{\stateSpace}, ~ \pathVar(0) = \stateVar \\
     \infty & \text{otherwise}
@@ -18,24 +18,24 @@ $$
 
 <Proof>
 
-[%full](/statements/ldp) gives us our large deviation principle with rate function $\rf_\stateVar$ as in [](tag:eq-rf).
+[%full](statement:ldp) gives us our large deviation principle with rate function $\rf_\stateVar$ as in [](eq:rf).
 Fix $\pathVar \in \pathSpace{[0,\infty)}{\stateSpace}$.
 If $\pathVar(0) \neq \stateVar$, then we already have $\rf_\stateVar(\pathVar)=\infty$.
-Otherwise, $\rf_\stateVar(\pathVar) = \rf_{\pathVar(0)}(\pathVar) = \rf(\pathVar)$, and so [%full](/statements/need-ac) tells us $\rf_\stateVar(\pathVar) = \infty$ if $\pathVar \not\in \acpathSpace{[0,\infty)}{\stateSpace}$.
-If $\pathVar \in \acpathSpace{[0,\infty)}{\stateSpace}$, then Propositions [%label](/statements/rf-upper-bound) and [%label](/statements/rf-lower-bound) tell us that
+Otherwise, $\rf_\stateVar(\pathVar) = \rf_{\pathVar(0)}(\pathVar) = \rf(\pathVar)$, and so [%full](statement:need-ac) tells us $\rf_\stateVar(\pathVar) = \infty$ if $\pathVar \not\in \acpathSpace{[0,\infty)}{\stateSpace}$.
+If $\pathVar \in \acpathSpace{[0,\infty)}{\stateSpace}$, then Propositions [%label](statement:rf-upper-bound) and [%label](statement:rf-lower-bound) tell us that
 $$
   \rf_\stateVar(\pathVar) = \int_0^\infty \ode^*\big( \dot\pathVar(t), \pathVar(t) \big) \rmd t.
 $$
-This concludes that $\rf$ can be written as in [](tag:eq-rf-integral).
+This concludes that $\rf$ can be written as in [](eq:rf-integral).
 
 
 $$
-  @tag(eq-hi-ldp)
+  @tag(hi-ldp)
   f(x)
 $$
 
 $$
-  @tag(eq-hi-ldp2)
+  @tag(hi-ldp2)
   f(x)
 $$
 

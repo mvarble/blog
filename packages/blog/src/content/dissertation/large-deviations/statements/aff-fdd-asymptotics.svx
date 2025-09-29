@@ -8,7 +8,7 @@ kind: proposition
 </script>
 
 Assume $\stateSpace$ is a cone with $\operatorname{span}\stateSpace = \vecSpace$.
-Fix $\underline t \vdash [0,\infty)$, $\stateVar_0 \in \stateSpace^\circ$, and $\epsilon > 0$ and define $\twistToMoment_{\underline t}$ as in [%full](/statements/twist-to-moment).
+Fix $\underline t \vdash [0,\infty)$, $\stateVar_0 \in \stateSpace^\circ$, and $\epsilon > 0$ and define $\twistToMoment_{\underline t}$ as in [%full](statement:twist-to-moment).
 Each $\underline\momentVar \in \vecSpace^{|\underline t|}$ satisfying $\underline\momentVar = \twistToMoment_{\underline t}(\underline\twistVar)$ for some $\underline\twistVar \in \momentSpace(\underline t)$ satisfies
 $$
   \aff^\epsilon\big(\underline t, \twistToMoment_{\underline t}(\underline\twistVar), \stateVar_0\big) = \frac1\epsilon \aff\big(\underline t, \twistToMoment_{\underline t}(\underline\twistVar), \epsilon\stateVar_0\big) < \infty,
@@ -21,16 +21,16 @@ $$
 <Proof>
 
 We start by recognizing two facts.
-Firstly, from [%full](/statements/aff-asymptotics), we have an identity of the following sets.
+Firstly, from [%full](statement:aff-asymptotics), we have an identity of the following sets.
 $$
-  @tag(eq-momentSpace-fdd-identity)
+  @tag(momentSpace-fdd-identity)
   \momentSpacee(\underline t) = \prod_{k=1}^{|\underline t|} \momentSpacee(\Delta t_k) = \prod_{k=1}^{|\underline t|} \momentSpace(\Delta t_k) = \momentSpace(\underline t),
 $$
-Secondly, [%full](/statements/aff-asymptotics) also shows us that the $\twistToMoment^\epsilon_{\underline t}$ associated with $\Xee$ is identical to that $\twistToMoment_{\underline t}$ of $\X$, as $\affPart^\epsilon = \affPart$.
+Secondly, [%full](statement:aff-asymptotics) also shows us that the $\twistToMoment^\epsilon_{\underline t}$ associated with $\Xee$ is identical to that $\twistToMoment_{\underline t}$ of $\X$, as $\affPart^\epsilon = \affPart$.
 We now show the desired identity by fixing $\underline\momentVar \in \vecSpace^{|\underline t|}$ and considering each case.
 
 First suppose $\underline\momentVar = \twistToMoment_{\underline t}(\underline\twistVar)$ for some $\underline\twistVar \in \momentSpace(\underline t)$.
-The identity of [](tag:eq-momentSpace-fdd-identity) tells us $\underline\twistVar \in \momentSpacee(\underline t)$ and so Propositions [%label](/statements/twist-to-moment) and [%label](/statements/aff-asymptotics) give us the following.
+The identity of [](eq:momentSpace-fdd-identity) tells us $\underline\twistVar \in \momentSpacee(\underline t)$ and so Propositions [%label](statement:twist-to-moment) and [%label](statement:aff-asymptotics) give us the following.
 $$
   \begin{aligned}
   \aff^\epsilon(\underline t, \underline\momentVar, \stateVar_0)
@@ -44,9 +44,9 @@ $$
 
 On the other hand, suppose $\underline\momentVar$ is not in the image of $\momentSpace(\underline t)$ under $\twistToMoment_{\underline t}$.
 Seeing as $\stateVar_0 \in \stateSpace^\circ$ and $\stateSpace$ is a cone, we have $\epsilon\stateVar_0 \in \stateSpace^\circ$.
-Applying [%full](/statements/mgf-fdds), we then have $\aff(\underline t, \underline\momentVar, \epsilon\stateVar_0) = \infty$.
-The identity in [](tag:eq-momentSpace-fdd-identity) also tells us that $\underline\momentVar$ is not in the image of $\momentSpace(\underline t)$ under $\twistToMoment_{\underline t}$.
-[%full](/statements/mgf-fdds) now tell us $\aff^\epsilon(\underline t, \underline\momentVar, \stateVar_0) = \infty$.
+Applying [%full](statement:mgf-fdds), we then have $\aff(\underline t, \underline\momentVar, \epsilon\stateVar_0) = \infty$.
+The identity in [](eq:momentSpace-fdd-identity) also tells us that $\underline\momentVar$ is not in the image of $\momentSpace(\underline t)$ under $\twistToMoment_{\underline t}$.
+[%full](statement:mgf-fdds) now tell us $\aff^\epsilon(\underline t, \underline\momentVar, \stateVar_0) = \infty$.
 We conclude our final identity.
 $$
   \aff^\epsilon(\underline t, \underline\momentVar, \stateVar_0) = \frac1\epsilon \aff(\underline t, \underline\momentVar, \epsilon\stateVar_0) = \infty

@@ -16,14 +16,14 @@ $$
 <Proof>
 
 For a fixed $\momentVar \in \im\vecSpace$, note that the map $f_\momentVar$, defined by $f_\momentVar(\vecVar) = \exp\prj{\momentVar}{\vecVar}$ is bounded.
-Thus, by [%full](/statements/jump-diffusion-ito-bounded), we have
+Thus, by [%full](statement:jump-diffusion-ito-bounded), we have
 $$
   f_\momentVar(\X_t) = f_\momentVar(\X_0) +  \generator f_\momentVar(\X) \shortInt \leb_t + M_t,
 $$
 where $M$ is a $(\Prb, \scrF)$ local martingale.
 Observe that the partial derivatives of $f$ are as follows,
 $$
-  @tag(eq-exponential-derivatives)
+  @tag(exponential-derivatives)
   \Der_i f_\momentVar(\stateVar) = f_\momentVar(\stateVar) \momentVar_i, \qquad \Der_{ij} f_\momentVar(\stateVar) = f_\momentVar(\stateVar) \momentVar_i\momentVar_j,
 $$
 so we have the following equation.
@@ -38,7 +38,7 @@ $$
     &= f_\momentVar(\stateVar) \cdot \ode(\momentVar, \stateVar)
   \end{aligned}
 $$
-Denoting $A = f_\momentVar(\X) = \exp\prj\momentVar\X$ and $B = \exp\big(-\ode(\momentVar, \X) \shortInt \leb\big)$, we now use the fact that $B$ is $\scrF$ predictable and of finite-variation, so [Proposition I.4.49(b)](/citations#jacod2003) gives us the following.
+Denoting $A = f_\momentVar(\X) = \exp\prj\momentVar\X$ and $B = \exp\big(-\ode(\momentVar, \X) \shortInt \leb\big)$, we now use the fact that $B$ is $\scrF$ predictable and of finite-variation, so [Proposition I.4.49(b)](cite:jacod2003) gives us the following.
 $$
   \begin{aligned}
     &\exp\Big(\prj{\momentVar}{\X} - \ode(\momentVar, \X) \shortInt \leb \Big) \\
@@ -49,6 +49,6 @@ $$
     &= \exp\prj{\momentVar}{\X_0} + B\shortInt M_t
   \end{aligned}
 $$
-This identity and [Remark I.4.34(b)](/citations#jacod2003) concludes the proof.
+This identity and [Remark I.4.34(b)](cite:jacod2003) concludes the proof.
 
 </Proof>

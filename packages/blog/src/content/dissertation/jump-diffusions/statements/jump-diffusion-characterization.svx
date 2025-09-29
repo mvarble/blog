@@ -25,7 +25,7 @@ The following statements are equivalent for a stochastic process $\X$ on state s
   $$
 - Denoting $(\Prb_\stateVar)_{\stateVar\in\stateSpace}$ the $\Prb$-conditional distributions of $\X$ factored through the initial state $\X_0$ and selecting Borel functions $\affDiffSqrt, \thinner$ to satisfy,
   $$
-    @tag(eq-sde-terms)
+    @tag(sde-terms)
     \begin{aligned}
       \affDiffSqrt: \stateSpace \rightarrow \bbL(\vecSpace) &&\quad \affDiffSqrt\affDiffSqrt^*(\stateVar) &= \affDiff(\stateVar) \\
       \thinner: \stateSpace \times \vecSpace \rightarrow \vecSpace &&\quad \affJump(\stateVar, \Gamma) &= \int_\vecSpace 1_\Gamma\big( \thinner(\stateVar, \markVar) \big) \rmd\markVar
@@ -38,7 +38,7 @@ The following statements are equivalent for a stochastic process $\X$ on state s
 
 <Proof>
 
-This is simply restating [Theorems II.2.42, II.2.49, and III.2.26](/citations#jacod2003) in terms of our identities from the previous propositions and lemmas.
-The choice of standard intensity $\rmd t \otimes \rmd\markVar$ for the Poisson random measure is such that the jump factor $\rmd\markVar$ satisfies the atom-free and infinite properties in [Remark III.2.28(3)](/citations#jacod2003).
+This is simply restating [Theorems II.2.42, II.2.49, and III.2.26](cite:jacod2003) in terms of our identities from the previous propositions and lemmas.
+The choice of standard intensity $\rmd t \otimes \rmd\markVar$ for the Poisson random measure is such that the jump factor $\rmd\markVar$ satisfies the atom-free and infinite properties in [Remark III.2.28(3)](cite:jacod2003).
 
 </Proof>

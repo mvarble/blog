@@ -9,7 +9,7 @@ kind: proposition
 
 For each $\hat\stateVar \in \hat\stateSpace$, the process $\hat\X$ is a $(\hat\Prb_{\hat\stateVar}, \scrF)$ special jump-diffusion with affine special differential characteristics $(\hat\affDrift, \hat\affDiff, \hat\affJump)$ as below.
 $$
-  @tag(eq-joint-characteristics)
+  @tag(joint-characteristics)
   \begin{gathered}
     \hat\affDrift(\hat\stateVar) = \begin{pmatrix} \affDrift(\stateVar_1) \\ 0 \\ 0 \\ \affInt(\stateVar_1) \end{pmatrix}, \quad
     \hat\affDiff(\hat\stateVar) = \begin{pmatrix} \affDiff(\stateVar_1) & \affDiff(\stateVar_1) & 0 & 0 \\ \affDiff(\stateVar_1) & \affDiff(\stateVar_1) & 0 & 0 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \end{pmatrix}, \\
@@ -65,8 +65,8 @@ $$
     \end{pmatrix} \ast \compensate{\jumpMeas^\X}_t
   \end{aligned}
 $$
-Observe that the first term establishes the drift $\hat\affDrift$ as in [](tag:eq-joint-characteristics).
-The diffusion $\hat\affDiff$ in [](tag:eq-joint-characteristics) is verified by the following identities.
+Observe that the first term establishes the drift $\hat\affDrift$ as in [](eq:joint-characteristics).
+The diffusion $\hat\affDiff$ in [](eq:joint-characteristics) is verified by the following identities.
 $$
   \begin{aligned}
     \Bprj{\hat\X^{\rmc,1i}}{\hat\X^{\rmc,1j}} &= \Bprj{\X^{\rmc,i}}{\X^{\rmc,j}} = \affDiff_{ij}(\X) \shortInt \leb, &
@@ -90,7 +90,7 @@ $$
     &= \Exp_{\Prb_\stateVar} \int_0^\infty \int_{\hat\vecSpace} H(\cdot, s, \hat\markVar) \affInt(\X_s) \affDist(\X_s, \rmd\markVar_1) \delta_{0,\markVar_1,1}(\rmd\markVar_2,\rmd\markVar_3,\rmd\markVar_3)  \rmd s
   \end{aligned}
 $$
-This concludes that, $\predproj{\jumpMeas^{\hat\X}}(\rmd s, \rmd\hat\markVar) = \hat\affJump(\hat\X_s, \rmd\hat\markVar) \rmd s$, where $\hat\affJump$ is as in [](tag:eq-joint-characteristics).
+This concludes that, $\predproj{\jumpMeas^{\hat\X}}(\rmd s, \rmd\hat\markVar) = \hat\affJump(\hat\X_s, \rmd\hat\markVar) \rmd s$, where $\hat\affJump$ is as in [](eq:joint-characteristics).
 This work shows that $\hat\X$ is a $(\hat\Prb_{\hat\stateVar\in\hat\stateSpace}, \scrF)$ special jump-diffusion; its special differential characteristics are also affine.
 $$
   \begin{aligned}
@@ -108,7 +108,7 @@ $$
     &= e^{\momentVar_4} \int_\vecSpace e^{\prj{\momentVar_1+\momentVar_3}{\markVar}} \affJump(\stateVar_1, \rmd\markVar)
   \end{aligned}
 $$
-Because we have $\affJump(\stateVar_1, \vecSpace) < \infty$ and $\odeSpace = \vecSpace$, [%full](/statements/odeSpace-rationale) tells us (using it twice) that the above expression is finite and that $\odeSpaceJoint = \hat\vecSpace$.
+Because we have $\affJump(\stateVar_1, \vecSpace) < \infty$ and $\odeSpace = \vecSpace$, [%full](statement:odeSpace-rationale) tells us (using it twice) that the above expression is finite and that $\odeSpaceJoint = \hat\vecSpace$.
 We may also simplify $\hat\ode$ to the desired expression.
 $$
   \begin{aligned}

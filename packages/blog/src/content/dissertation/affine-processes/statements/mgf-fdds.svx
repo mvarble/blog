@@ -18,8 +18,8 @@ $$
 
 <Proof>
 
-By [%full](/statements/twist-to-moment), we have that $\twistToMoment$ is indeed a continuous map from $\momentSpace(\underline t)$ into the finite domain of $\aff(\underline t, \cdot, \stateVar_0)$.
-Conversely, [%full](/statements/moment-to-twist) indicates to us that, on the finite domain of $\aff(\underline t, \cdot, \stateVar_0)$, a recursively-defined map $\momentToTwist_{\underline t}$ from [](tag:eq-moment-to-twist) exists.
+By [%full](statement:twist-to-moment), we have that $\twistToMoment$ is indeed a continuous map from $\momentSpace(\underline t)$ into the finite domain of $\aff(\underline t, \cdot, \stateVar_0)$.
+Conversely, [%full](statement:moment-to-twist) indicates to us that, on the finite domain of $\aff(\underline t, \cdot, \stateVar_0)$, a recursively-defined map $\momentToTwist_{\underline t}$ from [](eq:moment-to-twist) exists.
 Denoting $n \defeq |\underline t|$, we see that this map is continuous by induction and continuity of compositions.
 $$
   \momentToTwist_{\underline t}(\underline\momentVar) = \Big( \momentToTwist_{\underline t, 1}(\underline\momentVar_{1:n}), \ldots, \momentToTwist_{\underline t, n}(\underline\momentVar_{n:n}) \Big),  \quad

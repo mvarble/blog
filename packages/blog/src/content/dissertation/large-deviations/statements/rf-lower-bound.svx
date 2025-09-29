@@ -14,7 +14,7 @@ $$
 
 <Proof>
 
-We proceed in a way similar to that of [](/citations#puhalskii2001).
+We proceed in a way similar to that of [](cite:puhalskii2001).
 Define a map $f: [0,\infty) \times \vecSpace \rightarrow \bbR$ as below.
 $$
   f(t, \twistVar) \defeq \bprj{\twistVar}{\dot\pathVar(t)} - \ode\big(\twistVar, \pathVar(t)\big)
@@ -26,36 +26,36 @@ $$
 Continuity of $f(t,\cdot)$ and the least upper bound property guarantees $\Gamma^\epsilon_t$ is nonempty and measurable.
 Thus, we may construct a measurable selection $\twistFunc: [0,\infty) \rightarrow \vecSpace$ for $\Gamma^\epsilon$, which is to say $\twistFunc$ is Lebesgue measurable and the following holds.
 $$
-  @tag(eq-measurable-in-gamma)
+  @tag(measurable-in-gamma)
   f\big(t, \twistFunc(t)\big) \in \Gamma^\epsilon_t, \quad t \in [0,\infty)
 $$
 We now use Luzin's theorem to approximate $\twistFunc|_{[0,1/\epsilon]}$ with $\tilde\twistFunc \in \cpathSpace{[0,1/\epsilon]}{\vecSpace}$ to the following extent.
 $$
-  @tag(eq-luzin)
+  @tag(luzin)
   \int_{\tilde\twistFunc\neq\twistFunc}\rmd t < \epsilon^2
 $$
-Now, we combine our inequalities from [](tag:eq-measurable-in-gamma) and [](tag:eq-luzin) to see that
+Now, we combine our inequalities from [](eq:measurable-in-gamma) and [](eq:luzin) to see that
 $$
   \begin{aligned}
     &\hspace{-1em}\int_0^{1/\epsilon} \Big( f\big(t, \tilde\twistFunc(t)\big) \vee 0 \Big) \rmd t \\
     &= \int_0^{1/\epsilon}  f\big(t, \twistFunc(t)\big) \rmd t + \int_{\tilde\twistFunc\neq\twistFunc} \bigg(\Big( f\big(t, \tilde\twistFunc(t)\big) \vee 0 \Big) - f(t, \twistFunc(t)\big) \bigg)\rmd t \\
     &\geq \int_0^{1/\epsilon}  \bigg( \Big( \sup_{\twistVar\in\vecSpace} f(t, \twistVar) - \epsilon \Big) \wedge \frac1\epsilon \bigg) \rmd t - \int_{\tilde\twistFunc\neq\twistFunc} \frac1\epsilon \rmd t \\
     &= \int_0^{1/\epsilon} \bigg( \Big( \ode^*\big(\dot\pathVar(t),\pathVar(t)\big) - \epsilon \Big) \wedge \frac1\epsilon \bigg) \rmd t - \epsilon
-    @tag(eq-reduce-to-continuous)
+    @tag(reduce-to-continuous)
   \end{aligned}
 $$
-By [%full](/statements/span-affPart-dense), the fact that each $f(t,0) = 0$, and continuity of each $f(t,\cdot)$, we may now use Fatou's lemma to guarantee some $\underline t \vdash [0,\infty)$ and $\underline\twistVar \in \momentSpace(\underline t)$ such that
+By [%full](statement:span-affPart-dense), the fact that each $f(t,0) = 0$, and continuity of each $f(t,\cdot)$, we may now use Fatou's lemma to guarantee some $\underline t \vdash [0,\infty)$ and $\underline\twistVar \in \momentSpace(\underline t)$ such that
 $$
-  @tag(eq-reduce-to-affPart-span)
+  @tag(reduce-to-affPart-span)
   \int_0^{1/\epsilon} f\big(t, \twistFunc(t, \underline t, \underline\twistVar)\big) \rmd t
   \geq \int_0^{1/\epsilon} \Big( f\big(t, \tilde\twistFunc(t)\big) \vee 0 \Big) \rmd t - \epsilon
 $$
-Combining [](tag:eq-reduce-to-continuous) and [](tag:eq-reduce-to-affPart-span), we now see that
+Combining [](eq:reduce-to-continuous) and [](eq:reduce-to-affPart-span), we now see that
 $$
     \int_0^{1/\epsilon} f\big(t, \twistFunc(t, \underline t, \underline\twistVar)\big) \rmd t
     \geq \int_0^{1/\epsilon} \bigg( \Big( \ode^*\big(\dot\pathVar(t),\pathVar(t)\big) - \epsilon \Big) \wedge \frac1\epsilon \bigg) \rmd t - 2\epsilon.
 $$
-By [%full](/statements/mgf-fdds) and Lemmas [%label](/statements/need-ac) and [%label](/statements/fdd-rf-as-integral), the above inequality gives us the following.
+By [%full](statement:mgf-fdds) and Lemmas [%label](statement:need-ac) and [%label](statement:fdd-rf-as-integral), the above inequality gives us the following.
 $$
   \begin{aligned}
     \rf_\stateVar(\pathVar)

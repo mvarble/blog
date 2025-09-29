@@ -7,16 +7,16 @@ kind: proposition
   import Proof from '$lib/components/proof.svelte';
 </script>
 
-Let $\X$ and $f$ as in [%full](/statements/jump-diffusion-ito), and further impose $f$ is bounded.
-Then the composition $f(\X)$ is a special semimartingale with the decomposition as in [](tag:eq-jump-diffusion-generator).
+Let $\X$ and $f$ as in [%full](statement:jump-diffusion-ito), and further impose $f$ is bounded.
+Then the composition $f(\X)$ is a special semimartingale with the decomposition as in [](eq:jump-diffusion-generator).
 
 <Proof>
 
-Seeing as $f$ is bounded, [Lemma I.4.24](/citations#jacod2003) tells us that $f(\X)$ is a special semimartingale.
-By [Proposition I.4.23](/citations#jacod2003), it is then the case that the following term is locally integrable.
+Seeing as $f$ is bounded, [Lemma I.4.24](cite:jacod2003) tells us that $f(\X)$ is a special semimartingale.
+By [Proposition I.4.23](cite:jacod2003), it is then the case that the following term is locally integrable.
 $$
   \Big( f(\X_-+\id_\vecSpace) - f(\X_-) - \Der f(\X_-) \cdot \trunc \Big) \ast \jumpMeas^\X_t
 $$
-By our discussion above, this suffices to conclude [](tag:eq-jump-diffusion-generator).
+By our discussion above, this suffices to conclude [](eq:jump-diffusion-generator).
 
 </Proof>

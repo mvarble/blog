@@ -21,7 +21,7 @@ Also, $N$ has $(\Prb, \scrF)$ intensity $\affInt(\X)$.
 
 <Proof>
 
-Select the sequence $(T_n)_{n\in\bbN}$ as in [](tag:eq-stopping-times).
+Select the sequence $(T_n)_{n\in\bbN}$ as in [](eq:stopping-times).
 Note now that, since the constant function $1$ is predictable,
 $$
   \Exp_\Prb \N^\X_{T_n}
@@ -31,7 +31,7 @@ $$
   \leq n \cdot \sup_{|\stateVar| \leq n} \affJump(\stateVar, \vecSpace) < \infty
   $$
 This means that $\N^\X$ is locally integrable, making $\X$ locally countable.
-Moreover, by [Theorem II.1.8](/citations#jacod2003),
+Moreover, by [Theorem II.1.8](cite:jacod2003),
 $$
   \N^\X - \int_0^t \affInt(\X_s) \rmd s
   = 1 \ast \jumpMeas^\X - \int_0^t \int_\vecSpace \affJump(\X_s, \rmd\markVar) \rmd s

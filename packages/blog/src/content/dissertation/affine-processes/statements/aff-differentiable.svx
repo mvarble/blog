@@ -16,7 +16,7 @@ $$
 <Proof>
 
 Let $K \subseteq \momentSpace^\circ$ be compact.
-By  [%full](/statements/riccati-affine-formulation) and [%full(c)](/statements/momentSpace-facts), we have that the functions $\affPart_i$ for $i = 0, \ldots, d$ are continuously differentiable on $\momentSpace^\circ$.
+By  [%full](statement:riccati-affine-formulation) and [%full(c)](statement:momentSpace-facts), we have that the functions $\affPart_i$ for $i = 0, \ldots, d$ are continuously differentiable on $\momentSpace^\circ$.
 Thus, we may define the following positive numbers.
 $$
   \begin{gathered}

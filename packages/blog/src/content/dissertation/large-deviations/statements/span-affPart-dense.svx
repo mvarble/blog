@@ -16,7 +16,7 @@ $$
 <Proof>
 
 Denote $M \defeq \sup_{t\in[0,\tau]} |\twistFunc(t)|$ and fix $\epsilon > 0$.
-We start by using [%full (d)](/statements/real-moments-revisit) to guarantee $\delta_0 > 0$ and $C_M > 0$ such that the following bound holds.
+We start by using [%full (d)](statement:real-moments-revisit) to guarantee $\delta_0 > 0$ and $C_M > 0$ such that the following bound holds.
 $$
   \big|\aff(t,\momentVar,\stateVar)-\aff(0,\momentVar,\stateVar)\big| \leq C_M \cdot t \cdot \big(1 + |\stateVar|\big), \quad  t \in [0,\delta_0], ~ \momentVar \in  \closedBall{0}{M}, ~\stateVar \in \stateSpace
 $$

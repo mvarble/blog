@@ -5,7 +5,7 @@ kind: definition
 
 For each $\tau \geq 0$ and $\momentVar \in \odeSpace$, we say $Q^\momentVar: [0,\tau] \times \stateSpace \rightarrow \bbR$ satisfies $\system(\ode, \tau,\momentVar)$ if the following hold.
 $$
-  @tag(eq-riccati-system)
+  @tag(riccati-system)
   \begin{aligned}
     \forall\, t \in [0,\tau], ~ \stateVar \in \stateSpace, \quad
     & Q^\momentVar(t, \stateVar) = q_0^\momentVar(t) + \prj{q^\momentVar(t)}{\stateVar},  \\

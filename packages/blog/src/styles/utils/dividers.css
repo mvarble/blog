@@ -1,0 +1,7 @@
+svelte-split-pane-divider {
+    z-index: 2;
+
+    &::after {
+        background-color: var(--border) !important;
+    }
+}

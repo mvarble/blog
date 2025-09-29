@@ -25,7 +25,7 @@ $$
 Denote $n \defeq |\underline t|$ for brevity.
 We first show the following conditional expectation for any $m = n-1,\ldots, 1$.
 $$
-  @tag(eq-fddDensity-conditional-expectation)
+  @tag(fddDensity-conditional-expectation)
   \Exp_{\Prb^\epsilon_\stateVar}\big(\fddDensity^{\epsilon,\underline t, \underline\twistVar} | \scrF^\epsilon_{t_m} \big) = \prod_{k=1}^m \big( \prj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}} - \affShift^\epsilon(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}})\big),
 $$
 by iteratively projecting onto $\scrF^\epsilon_{t_n}, \ldots, \scrF^\epsilon_{t_{m+1}}$.
@@ -42,8 +42,8 @@ $$
     &= \Exp_{\Prb^\epsilon_\stateVar}\Big( H \prod_{k=1}^m \exp\big(  \prj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}} - \affShift^\epsilon(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}})\big) \Big)
   \end{aligned}
 $$
-which indicates that [](tag:eq-fddDensity-conditional-expectation) is true.
-Now choosing $H \in \scrF^\epsilon_{t_{\ell-1}}/\scrB(\bbR_+)$, we apply [](tag:eq-fddDensity-conditional-expectation) for $m=\ell$ and $m=\ell-1$ to see that the following holds.
+which indicates that [](eq:fddDensity-conditional-expectation) is true.
+Now choosing $H \in \scrF^\epsilon_{t_{\ell-1}}/\scrB(\bbR_+)$, we apply [](eq:fddDensity-conditional-expectation) for $m=\ell$ and $m=\ell-1$ to see that the following holds.
 $$
   \begin{aligned}
     &\Exp_{\fddPrb^{\epsilon, \underline t, \underline\twistVar}_\stateVar}\Big( \exp\prj{\twistVar}{\Xee_{t_\ell}-\Xee_{t_{\ell-1}}} H \Big) \\
@@ -66,7 +66,7 @@ $$
       &\hspace{1cm} = \exp\big(\affShift^\epsilon(\Delta t_\ell, \twistVar_\ell + \twistVar, \Xee_{t_{\ell-1}})-\affShift^\epsilon(\Delta t_\ell, \twistVar_\ell, \Xee_{t_{\ell-1}})\big)
     \end{aligned}
 $$
-  Now that this identity is established, we appeal to Propositions [%label (a)](/statements/real-moments-revisit), [%label](/statements/aff-differentiable), and [%label](/statements/aff-asymptotics) in specifying an open ball $\ball{\twistVar_k}{\delta} \subseteq \momentSpace(\Delta t_k)$ on which we may apply derivatives to get the following identity.
+  Now that this identity is established, we appeal to Propositions [%label (a)](statement:real-moments-revisit), [%label](statement:aff-differentiable), and [%label](statement:aff-asymptotics) in specifying an open ball $\ball{\twistVar_k}{\delta} \subseteq \momentSpace(\Delta t_k)$ on which we may apply derivatives to get the following identity.
 $$
   \begin{aligned}
     &\Exp_{\fddPrb^{\epsilon, \underline t,\underline\twistVar}_\stateVar} \Big( \Xe_{t_\ell} - \Xe_{t_{\ell-1}} | \scrF^\epsilon_{t_{\ell-1}} \Big)  \\

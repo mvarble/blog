@@ -17,7 +17,7 @@ is also affine, making all the special differential characteristics $(\affDrift,
 
 <Proof>
 
-By combining [%full](/statements/aff-jump-regularity) and[%full](/statements/jump-diffusion-lk-special), we get that $\X$ is special.
+By combining [%full](statement:aff-jump-regularity) and[%full](statement:jump-diffusion-lk-special), we get that $\X$ is special.
 Now, we perform the algebra to see the affine structure of $\affDrift$.
 $$
   \begin{aligned}

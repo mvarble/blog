@@ -14,7 +14,7 @@ title: Finite-dimensional distributions
 
 <!-- mention how we are effectively repeating  -->
 With a good grasp of the finite real moments associated with our affine process $\X$ and their correspondence with $\aff$, we now leverage these results to the finite-dimensional distributions.
-In other words, this section serves to lift [%full](/statements/keller-ressel-mayerhofer) on marginals $\X_t$ to one on finite-dimensional distributions $(\X_{t_1}, \ldots, \X_{t_n})$.
+In other words, this section serves to lift [%full](statement:keller-ressel-mayerhofer) on marginals $\X_t$ to one on finite-dimensional distributions $(\X_{t_1}, \ldots, \X_{t_n})$.
 Let us establish some notation.
 
 For any space $\bbA$, positive integer $n\in\bbN$, and $\underline a \in \bbA^n$, adopt the convention of denoting $\underline a = (a_1, \ldots, a_n)$ and
@@ -44,7 +44,7 @@ $$
   \prj{\underline\momentVar}{\underline\vecVar} \defeq \sum_{k=1}^n \prj{\momentVar_k}{\vecVar_k}
 $$
 
-We now clearly specify the extension of $\aff$ to finite-dimensional projections from the perspective of [%full](/statements/keller-ressel-mayerhofer) and equation [](tag:eq-km-moments).
+We now clearly specify the extension of $\aff$ to finite-dimensional projections from the perspective of [%full](statement:keller-ressel-mayerhofer) and equation [](eq:km-moments).
 Note that this specifically _permits_ infinite values.
 
 <Statement {...affFdds} />
@@ -56,8 +56,8 @@ This will give us intuition for the objects we create in the sequel.
 <Statement {...affFddsComplex} />
 
 As the preceding result shows, the $\stateSpace$-affine structure of $\aff$ allows us to iteratively factor the exponentials in our expectation.
-The problem with extending this to real moments like in [%full](/statements/keller-ressel-mayerhofer) is that each of the produced quantities $\twistVar_k$ need not produce an integrable exponential on which we apply the transform formula.
-The next result is our way of coercing such a property to occur; the map $\twistToMoment_{\underline t}$ serves to parameterize those moments $\underline\momentVar \in \vecSpace^{|\underline t|}$ which the resulting $\underline\twistVar$ is in $\prod_{k=1}^{|\underline t|} \momentSpace(\Delta t_k)$, since this is precisely the set on which we may perform the calculations between [](tag:eq-complex-tower-start) and [](tag:eq-complex-tower-end).
+The problem with extending this to real moments like in [%full](statement:keller-ressel-mayerhofer) is that each of the produced quantities $\twistVar_k$ need not produce an integrable exponential on which we apply the transform formula.
+The next result is our way of coercing such a property to occur; the map $\twistToMoment_{\underline t}$ serves to parameterize those moments $\underline\momentVar \in \vecSpace^{|\underline t|}$ which the resulting $\underline\twistVar$ is in $\prod_{k=1}^{|\underline t|} \momentSpace(\Delta t_k)$, since this is precisely the set on which we may perform the calculations between [](eq:complex-tower-start) and [](eq:complex-tower-end).
 This set turns out to be important in our discussion, so we will reserve it special notation.
 $$
   \momentSpace(\underline t) \defeq \prod_{k=1}^{|\underline t|} \momentSpace(\Delta t_k), \quad \underline t \vdash [0,\infty)
@@ -65,7 +65,7 @@ $$
 
 <Statement {...twistToMoment} />
 
-We now turn to the analogue of [%full(b)](/statements/keller-ressel-mayerhofer), in which $\Prb_\stateVar$-finite moments $\underline\momentVar \in \vecSpace^{|\underline t|}$ for initial points $\stateVar \in \stateSpace^\circ$ are precisely those $\underline\momentVar \in \momentSpace(\underline t)$.
+We now turn to the analogue of [%full(b)](statement:keller-ressel-mayerhofer), in which $\Prb_\stateVar$-finite moments $\underline\momentVar \in \vecSpace^{|\underline t|}$ for initial points $\stateVar \in \stateSpace^\circ$ are precisely those $\underline\momentVar \in \momentSpace(\underline t)$.
 
 <Statement {...momentToTwist} />
 

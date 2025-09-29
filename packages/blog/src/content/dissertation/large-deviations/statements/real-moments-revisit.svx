@@ -8,7 +8,7 @@ kind: proposition
 </script>
 
 - For each $\tau > 0$, $\momentSpace(\tau)$ is open; in particular, there exists $\delta > 0$ such that $\ball{0}{\delta} \subseteq \momentSpace(\tau)$.
-- For each $\tau > 0$ and $\momentVar \in \momentSpace(\tau)$, $\aff(\cdot,\momentVar,\cdot)$ from [%full](/statements/keller-ressel-mayerhofer) is the unique solution to $\system(\ode, \tau, \momentVar)$.
+- For each $\tau > 0$ and $\momentVar \in \momentSpace(\tau)$, $\aff(\cdot,\momentVar,\cdot)$ from [%full](statement:keller-ressel-mayerhofer) is the unique solution to $\system(\ode, \tau, \momentVar)$.
 - For each $M > 0$, there exists $\delta > 0$ such that $\closedBall{0}{M} \subseteq \momentSpace(\delta)$.
 - For each $M > 0$, there exist $\delta > 0$ and $C_M$ such that the following holds.
   $$
@@ -18,13 +18,13 @@ kind: proposition
 
 <Proof>
 
-- [%full (a)](/statements/momentSpace-facts) tells us that $\momentSpace(\tau)$ is open in $\odeSpace^\circ$, which is now $\vecSpace$ by our assumption.
+- [%full (a)](statement:momentSpace-facts) tells us that $\momentSpace(\tau)$ is open in $\odeSpace^\circ$, which is now $\vecSpace$ by our assumption.
   Also, seeing as $\Exp_{\Prb_\stateVar}\exp\prj{0}{\X_\tau} = 1 < \infty$ for all $\stateVar \in \stateSpace$, $0 \in \momentSpace(\tau)$.
   Openness of $\momentSpace(\tau)$ now grants some $\ball{0}{\delta} \subseteq \momentSpace(\tau)$.
-- [%full (b)](/statements/momentSpace-facts) gives us uniqueness of $\aff(\cdot, \momentVar, \cdot)$ as a solution to $\system(\ode, \tau, \momentVar)$ for any $\momentVar \in \momentSpace(\tau) \cap \odeSpace^\circ$, which is now the same thing as $\momentVar \in \momentSpace(\tau)$.
-- Seeing as $\odeSpace = \vecSpace$, we now have $\closedBall{0}{M} \subseteq \odeSpace^\circ$, so [%full](/statements/compact-ode-existence) gives us $\delta > 0$ such that $\closedBall{0}{M} \subseteq \momentSpace(\delta)$.
+- [%full (b)](statement:momentSpace-facts) gives us uniqueness of $\aff(\cdot, \momentVar, \cdot)$ as a solution to $\system(\ode, \tau, \momentVar)$ for any $\momentVar \in \momentSpace(\tau) \cap \odeSpace^\circ$, which is now the same thing as $\momentVar \in \momentSpace(\tau)$.
+- Seeing as $\odeSpace = \vecSpace$, we now have $\closedBall{0}{M} \subseteq \odeSpace^\circ$, so [%full](statement:compact-ode-existence) gives us $\delta > 0$ such that $\closedBall{0}{M} \subseteq \momentSpace(\delta)$.
 - Fix $M > 0$.
   By part (c), there exists $\delta > 0$ such that $\closedBall{0}{2M} \subseteq \momentSpace(2\delta)$.
-  Now, $[0,\delta] \times \closedBall{0}{M}$ is a compact subset of $\momentSpace^\circ$, and so [%full](/statements/aff-differentiable) gives us our desired $C_M$.
+  Now, $[0,\delta] \times \closedBall{0}{M}$ is a compact subset of $\momentSpace^\circ$, and so [%full](statement:aff-differentiable) gives us our desired $C_M$.
 
 </Proof>

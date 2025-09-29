@@ -11,7 +11,7 @@ For each $\stateVar \in \stateSpace$, $\odeSpace(\stateVar)$ is convex.
 
 <Proof>
 
-We use our characterization of $\odeSpace(\stateVar)$ from [%full](/statements/odeSpace-rationale).
+We use our characterization of $\odeSpace(\stateVar)$ from [%full](statement:odeSpace-rationale).
 Let $\momentVar, \momentVar' \in \odeSpace(\stateVar)$, $\gamma \in (0,1)$, and use Hölder's inequality to see the following.
 $$
   \begin{aligned}

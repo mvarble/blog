@@ -76,7 +76,7 @@ export const remarkCms: Plugin<[undefined?], Root, Root> = () => {
                                 node.data.hProperties
                             ) {
                                 // @ts-expect-error: weird typing of remark-math@3.0.0
-                                node.data.hProperties.id = slug;
+                                node.data.hProperties.id = `eq:${slug}`;
                             }
                         }
                     }
@@ -104,7 +104,7 @@ export const remarkCms: Plugin<[undefined?], Root, Root> = () => {
                     const slug = node.url.slice('eq:'.length);
                     const eq = eqReferences[slug];
                     if (!eq) continue;
-                    node.url = `/${eq.pathname}#${slug}`;
+                    node.url = eq.pathname;
                     node.children = [{ type: 'text', value: `(${eq.label})` }];
                 }
 

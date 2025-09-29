@@ -1,2 +1,12 @@
+/* Adapted from svelte-kit docs:
+ * https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/styles/index.css
+ */
+
+@import './tokens.css';
+@import './base.css';
+@import './text.css';
+@import './utils/buttons.css';
+@import './utils/dividers.css';
+@import './utils/nav.css';
+
 @import './katex.css';
-@import './palette.css';

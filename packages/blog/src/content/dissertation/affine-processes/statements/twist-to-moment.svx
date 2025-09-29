@@ -15,7 +15,7 @@ $$
 $$
 Moreover, for each $\stateVar \in \stateSpace$ and $\underline\twistVar \in \momentSpace(\underline t)$, we have the following (finite) identity.
 $$
-  @tag(eq-aff-extension)
+  @tag(aff-extension)
   \aff\big(\underline t, \twistToMoment_{\underline t}(\underline\twistVar), \stateVar\big)
   = \sum_{k=1}^{|\underline t|} \affPart_0(\Delta t_k, \twistVar_k) + \bprj{\affPart(\Delta t_1, \twistVar_1)}{\stateVar}
 $$
@@ -30,9 +30,9 @@ The final component of $\twistToMoment_{\underline t}$ ensures that $\twistVar_n
 $$
   \twistVar_{k-1} - \affPart(\Delta t_k, \twistVar_k) = \twistToMoment_{\underline t,k-1}(\underline\twistVar) = \twistToMoment_{\underline t,k-1}(\underline\twistVar')   = \twistVar_{k-1}' - \affPart(\Delta t_k, \twistVar_k')
 $$
-This indicates to us that $\twistToMoment_{\underline t}$ is an injection, and continuity comes simply from continuity of each $\affPart(\Delta t_k, \cdot)$ via [%full(c)](/statements/momentSpace-facts).
+This indicates to us that $\twistToMoment_{\underline t}$ is an injection, and continuity comes simply from continuity of each $\affPart(\Delta t_k, \cdot)$ via [%full(c)](statement:momentSpace-facts).
 
-It now remains to show the identity in [](tag:eq-aff-extension).
+It now remains to show the identity in [](eq:aff-extension).
 This reduces down to repeatedly applying iterated expectations; fix $\stateVar \in \stateSpace$ and observe the following.
 
 
@@ -58,7 +58,7 @@ $$
 <span></span>
 
 $$
-  @tag(eq-tower-start)
+  @tag(tower-start)
   = \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \bprj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \exp\bprj{\twistVar_n}{\X_{t_n}} \right)
 $$
 
@@ -94,7 +94,7 @@ $$
 <span></span>
 
 $$
-    @tag(eq-tower-end)
+    @tag(tower-end)
     = \begin{aligned}
       &\affPart_0(\Delta t_n, \twistVar_n) \\
       &+ \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-2} \prj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \exp\Big( \bprj{\twistVar_{n-1}}{\X_{t_{n-1}}} \Big)   \right)
@@ -106,7 +106,7 @@ $$
 <span></span>
 </div>
 
-The final term of [](tag:eq-tower-end) is identical to that of [](tag:eq-tower-start), where we have reduced $k = n$ to $k = n-1$.
+The final term of [](eq:tower-end) is identical to that of [](eq:tower-start), where we have reduced $k = n$ to $k = n-1$.
 Repeating these equalities inductively $k = n -1, \ldots, 1$ will result in the desired identity.
 $$
   \begin{aligned}

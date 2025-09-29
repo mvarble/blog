@@ -13,7 +13,7 @@ title: Integral representation of rate function
 </script>
 
 <!-- discuss how we intend to get integral form of rate function -->
-So far, for each $\stateVar \in \stateSpace^\circ$, [%full](/statements/ldp) provides us a large deviation principle for $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ with good rate function $\rf_\stateVar$ as in [](tag:eq-rf).
+So far, for each $\stateVar \in \stateSpace^\circ$, [%full](statement:ldp) provides us a large deviation principle for $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ with good rate function $\rf_\stateVar$ as in [](eq:rf).
 This section is concerned with simplifying the nature of $\rf_\stateVar$ to take a more explicit integral form, comparable to existing principles for other families of stochastic processes.
 $$
   \rf_\stateVar(\pathVar) = \left\{\begin{array}{ll}
@@ -21,11 +21,11 @@ $$
     \infty & \text{otherwise}
   \end{array}\right.
 $$
-To show this, we start by defining a map $\rf$ which composes the initial state through our rate functions $(\rf_\stateVar)_{\stateVar\in\stateSpace}$, to remove the finiteness condition of each $\rf_\stateVar$ in [](tag:eq-rf).
+To show this, we start by defining a map $\rf$ which composes the initial state through our rate functions $(\rf_\stateVar)_{\stateVar\in\stateSpace}$, to remove the finiteness condition of each $\rf_\stateVar$ in [](eq:rf).
 $$
   \rf(\pathVar) \defeq \rf_{\pathVar(0)}(\pathVar) = \sup_{\underline t \vdash \Delta_\pathVar^c} \aff^*\big(\underline t, \pathVar(\underline t), \pathVar(0) \big)
 $$
-In the following results, we will--without mention--assume evaluations of $\rf(\pathVar)$ for $\pathVar(0) \in \stateSpace^\circ$, so that we can use [%full](/statements/mgf-fdds).
+In the following results, we will--without mention--assume evaluations of $\rf(\pathVar)$ for $\pathVar(0) \in \stateSpace^\circ$, so that we can use [%full](statement:mgf-fdds).
 Note that this is at no loss of generality, since we are resolving our rate function $\rf_\stateVar$ for a large deviation principle that already requires $\stateVar \in \stateSpace^\circ$.
 
 <!-- Show that we need \pathVar to be absolutely continuous for it to have finite rate. -->

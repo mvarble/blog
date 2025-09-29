@@ -18,7 +18,7 @@ $$
     \end{aligned}\right.
   \end{gathered}
 $$
-Then we have the remaining necessary condition of [%full](/statements/affine-process-definition).
+Then we have the remaining necessary condition of [%full](statement:affine-process-definition).
 $$
     \Exp_{\Prb_\stateVar}\exp\prj{\momentVar}{\X_t} = \exp\aff(t, \momentVar, \stateVar), \quad t \geq 0, ~ \momentVar \in\boundedSpace, ~ \stateVar \in \stateSpace
 $$
@@ -26,7 +26,7 @@ $$
 <Proof>
 
 Fix $\tau \geq 0$, $\momentVar \in \boundedSpace$, and $\stateVar \in \stateSpace$ and denote $M_t = \exp\aff(\tau-t, \momentVar, \X_t)$.
-We now apply our jump-diffusion version of Itô's formula for jump-diffusions as in [%full](/statements/jump-diffusion-ito), indifferently treating an element of $\vecSpace$ as one of $\bbL(\vecSpace, \bbR)$ in the canonical way.
+We now apply our jump-diffusion version of Itô's formula for jump-diffusions as in [%full](statement:jump-diffusion-ito), indifferently treating an element of $\vecSpace$ as one of $\bbL(\vecSpace, \bbR)$ in the canonical way.
 $$
   \begin{aligned}
     M_t
@@ -44,7 +44,7 @@ $$
     &\quad+ M_- \Big( \exp\prj{\affPart(\tau-\leb,\momentVar)}{\id_\vecSpace} - 1 - \bprj{\affPart(\tau-\leb, \momentVar)}{\id_\vecSpace} \Big) \ast \jumpMeas^\X
   \end{aligned}
 $$
-Now, we use [%full](/statements/aff-part-bounded) to claim that $M$ is bounded, and so it is special by [Lemma I.4.24](/citations#jacod2003), so we may compensate our jump integrals above.
+Now, we use [%full](statement:aff-part-bounded) to claim that $M$ is bounded, and so it is special by [Lemma I.4.24](cite:jacod2003), so we may compensate our jump integrals above.
 $$
   \begin{aligned}
     M_t

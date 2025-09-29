@@ -10,7 +10,7 @@ kind: theorem
 
 For each $\stateVar \in \stateSpace^\circ$, the family $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ satisfies a large deviation principle on $\pathSpace{[0,\infty)}{\stateSpace}$ with good rate function $\rf_\stateVar: \pathSpace{[0,\infty)}{\stateSpace} \rightarrow [0,\infty]$ as follows.
 $$
-  @tag(eq-rf)
+  @tag(rf)
   \rf_\stateVar(\pathVar) = \left\{\begin{array}{ll}
     \displaystyle\sup_{\underline t\vdash \Delta_\pathVar^c} \aff^*\big(\underline t, \pathVar(\underline t), \pathVar(0)\big) & \pathVar(0) = \stateVar \\
     \infty & \text{otherwise}
@@ -28,13 +28,13 @@ induces the following finite-dimensional distributions.
 $$
   \push{\Prb^\epsilon_\stateVar}{\pi_{\hat{\underline t}}} = \delta_\stateVar \otimes \push{\Prb^\epsilon_\stateVar}{\pi_{\underline t}}
 $$
-For these partitions, it is easy to see from [%full](/statements/ldp-fdds) that the large deviations principle for $(\push{\Prb^\epsilon_\stateVar}{\pi_{\hat{\underline t}}})_{\epsilon>0}$ has good rate function as below.
+For these partitions, it is easy to see from [%full](statement:ldp-fdds) that the large deviations principle for $(\push{\Prb^\epsilon_\stateVar}{\pi_{\hat{\underline t}}})_{\epsilon>0}$ has good rate function as below.
 $$
   (\stateVar_0, \stateVar_1, \ldots, \stateVar_{|\underline t|}) \mapsto \left\{\begin{array}{ll}
     \aff^*(\underline t, \underline\stateVar, \stateVar_0), & \stateVar_0 = \stateVar \\
     \infty & \text{otherwise}
   \end{array}\right.
 $$
-By [Theorem 4.28](/citations#feng2006), we now use [%full](/statements/ldp-fdds) and [%full](/statements/exponential-tightness) to get a large deviations principle for the family $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ with good rate function $\rf_\stateVar$.
+By [Theorem 4.28](cite:feng2006), we now use [%full](statement:ldp-fdds) and [%full](statement:exponential-tightness) to get a large deviations principle for the family $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ with good rate function $\rf_\stateVar$.
 
 </Proof>

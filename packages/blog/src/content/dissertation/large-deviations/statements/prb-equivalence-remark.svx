@@ -10,7 +10,7 @@ $$
     \ode(\momentVar, \stateVar) &= \bprj{\momentVar}{\affDrift(\stateVar)} + \frac12\bprj{\momentVar}{\affDrift(\stateVar)\momentVar} + \int_\vecSpace \Big( e^\prj{\momentVar}{\markVar} - 1 - \bprj{\momentVar}{\markVar} \Big) \affJump(\stateVar, \rmd\markVar)
   \end{aligned}
 $$
-Furthermore, we may always construct (local) measure changes like $\fddDensity^{\underline t, \underline\twistVar}$ and $\mgDensity^{\twistFunc}$ in [](tag:eq-densities-side-by-side) and postulate an equivalence like [%full](/statements/prb-equivalence).
+Furthermore, we may always construct (local) measure changes like $\fddDensity^{\underline t, \underline\twistVar}$ and $\mgDensity^{\twistFunc}$ in [](eq:densities-side-by-side) and postulate an equivalence like [%full](statement:prb-equivalence).
 $$
   \begin{aligned}
     &\exp \sum_{k=1}^{|\underline t|}\Big( \bprj{\twistVar_k}{\X_{t_k}-\X_{t_{k-1}}} - \affShift^\epsilon\big(\Delta t_k, \twistVar_k, \X_{t_{k-1}} \big) \Big)  \\
@@ -18,4 +18,4 @@ $$
   \end{aligned}
 $$
 This is the very result which would _generally_ prove that the approaches of twisting/tilting and martingales are in fact identical.
-However, our construction in [](tag:eq-resolve-twists) clearly uses $\affPart$, an object that only exists in the affine context.
+However, our construction in [](eq:resolve-twists) clearly uses $\affPart$, an object that only exists in the affine context.

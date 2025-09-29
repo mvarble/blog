@@ -8,7 +8,7 @@ kind: proposition
 </script>
 
 Fix a probability space $(\Omega, \Sigma, \Prb)$ equipped with standard Brownian motion $\W$ on $\vecSpace$ and Poisson random measure $\poisRM$ on $\scrB(\bbR_+\times\vecSpace)$.
-Let $\affDiffSqrt: \stateSpace \rightarrow \bbL(\vecSpace)$ and $\thinner: \stateSpace \times \vecSpace \rightarrow \vecSpace$ satisfy [](tag:eq-sde-reminder) for the $\trunc$-differential characteristics $(\affDrift^\trunc, \affDiff, \affJump)$, as granted by [%full](/statements/jump-diffusion-characterization).
+Let $\affDiffSqrt: \stateSpace \rightarrow \bbL(\vecSpace)$ and $\thinner: \stateSpace \times \vecSpace \rightarrow \vecSpace$ satisfy [](eq:sde-reminder) for the $\trunc$-differential characteristics $(\affDrift^\trunc, \affDiff, \affJump)$, as granted by [%full](statement:jump-diffusion-characterization).
 For each $\stateVar \in \stateSpace$, the family $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ of distributions $\Prb^\epsilon_\stateVar$ may be recognized as each $\Prb^\epsilon_\stateVar$ being a weak solution to the respective _scaled_ stochastic dynamical system,
 $$
     \Xe_t = \stateVar + \affDrift^\trunc(\Xe) \shortInt \leb_t + \sqrt\epsilon \affDiffSqrt(\X) \shortInt \W_t + \trunc \circ \epsilon\thinner\big(\Xe, \sqrt[d]{\epsilon} \cdot \id_\vecSpace\big) \ast \compensate{\poisRM}_t + \trunc' \circ \epsilon\thinner\big(\Xe, \sqrt[d]{\epsilon} \cdot \id_\vecSpace\big) \ast \poisRM_t,
@@ -24,14 +24,14 @@ $$
 
 <Proof>
 
-By [III.2.26](/citations#jacod2003), it suffices to check if the characteristics of the above dynamical systems match those of $\Xe$.
-We will instead match those of the scaled $\Xee$; recall its characteristics, as specified by [](tag:eq-characteristic-asymptotics).
+By [III.2.26](cite:jacod2003), it suffices to check if the characteristics of the above dynamical systems match those of $\Xe$.
+We will instead match those of the scaled $\Xee$; recall its characteristics, as specified by [](eq:characteristic-asymptotics).
 $$
   \bprj{{\Xee}^{,\rmc,i}}{{\Xee}^{,\rmc,j}} = \frac1\epsilon\affDiff_{i,j}(\Xe) \shortInt \leb, \quad
   \predproj{\jumpMeas^{\Xee}}(\rmd s, \rmd\markVar) = \frac1\epsilon \affJump(\Xe, \rmd\markVar) \rmd s
 $$
 Let us first address the first system.
-Note that for any $i, j = 1, \ldots, d$, we use [Theorem I.4.40(d)](/citations#jacod2003) to resolve the predictable quadratic covariation of the continuous local martingale part $\frac{1}{\sqrt\epsilon} \affDiffSqrt(\Xe) \shortInt \W$ of $\Xee$.
+Note that for any $i, j = 1, \ldots, d$, we use [Theorem I.4.40(d)](cite:jacod2003) to resolve the predictable quadratic covariation of the continuous local martingale part $\frac{1}{\sqrt\epsilon} \affDiffSqrt(\Xe) \shortInt \W$ of $\Xee$.
 $$
   \begin{aligned}
     &\Bprj{\big(\frac{1}{\sqrt\epsilon} \affDiffSqrt(\Xe) \shortInt\W\big)^i}{\big(\frac{1}{\sqrt\epsilon} \affDiffSqrt(\Xe) \shortInt\W\big)^j} \\

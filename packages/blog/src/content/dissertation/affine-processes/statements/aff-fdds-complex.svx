@@ -25,7 +25,7 @@ We start by recognizing that $\underline\momentVar \in \im\vecSpace$ means the f
 $$
   \big| e^\prj{\momentVar_k}{\stateVar} \big| = \exp\Re\prj{\momentVar_k}{\stateVar} = 1, \quad k = 1, \ldots, n
 $$
-In particular, we have $\twistVar_n = \momentVar_n \in \boundedSpace$; we show $\twistVar_k \in \boundedSpace$ for $k = n-1,\ldots, 1$ by induction and [%full](/statements/aff-part-bounded).
+In particular, we have $\twistVar_n = \momentVar_n \in \boundedSpace$; we show $\twistVar_k \in \boundedSpace$ for $k = n-1,\ldots, 1$ by induction and [%full](statement:aff-part-bounded).
 $$
   \begin{aligned}
     \sup_{\stateVar\in\stateSpace}\exp\Re\prj{\twistVar_k}{\stateVar}
@@ -59,7 +59,7 @@ $$
 <span></span>
 
 $$
-  @tag(eq-complex-tower-start)
+  @tag(complex-tower-start)
   = \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \prj{\momentVar_k}{\X_{t_k}} \cdot \exp\prj{\twistVar_n}{\X_{t_n}} \right)
 $$
 
@@ -106,7 +106,7 @@ $$
 <span></span>
 
 $$
-  @tag(eq-complex-tower-end)
+  @tag(complex-tower-end)
   = \begin{aligned}
     &\affPart_0(\Delta t_n, \twistVar_n) \\
     &+ \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-2} \prj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \exp\Big( \bprj{\twistVar_{n-1}}{\X_{t_{n-1}}} \Big)   \right)
@@ -117,7 +117,7 @@ $$
 
 </div>
 
-The final term of [](tag:eq-complex-tower-start) is identical to that of [](tag:eq-complex-tower-end) where we have reduced $k = n$ to $k = n-1$.
+The final term of [](eq:complex-tower-start) is identical to that of [](eq:complex-tower-end) where we have reduced $k = n$ to $k = n-1$.
 Repeating these equalities inductively $k = n -1, \ldots, 1$ will result in the desired identity.
 $$
   \begin{aligned}

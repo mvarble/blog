@@ -13,7 +13,7 @@ To this end, being special is a condition on the jumps _away_ from the origin.
 We now turn our focus to jump-diffusions $\X$ in which the jumps _near_ the origin behave nicely.
 For any jump-diffusion $\X$, we may count the jumps with the jump process $\N^\X$.
 $$
-  @tag(eq-jump-process)
+  @tag(jump-process)
   \N^\X_t \defeq \sum_{0 < s \leq t} 1_{\Delta\X_s \neq 0} = 1 \ast \jumpMeas^\X_t
 $$
 For many jump diffusions, it may be the case that we $\Prb$-almost-surely have $\N^\X_t = \infty$ for all $t > 0$.

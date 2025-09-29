@@ -27,7 +27,7 @@ $$
 $$
 and each $\momentVar \in \im\vecSpace$ induces the following differential equation.
 $$
-  @tag(eq-complex-riccati-charts)
+  @tag(complex-riccati-charts)
   \left\{\begin{aligned}
     \affPart_0(t,\momentVar) &= \odePart_0\big(\affPart(t, \momentVar)\big) & t \geq 0 \\
     \affPart(t,\momentVar) &= \odePart\big(\affPart(t,\momentVar)\big) & t \geq 0 \\
@@ -38,6 +38,6 @@ $$
 
 <Proof>
 
-  This is simply a restatement of [Theorem 1.5.4](/citations#cuchiero2011).
+  This is simply a restatement of [Theorem 1.5.4](cite:cuchiero2011).
 
 </Proof>

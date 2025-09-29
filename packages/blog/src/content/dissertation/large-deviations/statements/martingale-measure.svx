@@ -22,7 +22,7 @@ Furthermore, $\mgDensity^{\epsilon,\twistFunc}$ is integrable and $t \mapsto \Ex
 <Proof>
 
 We start by establishing the first two identities.
-Realizing $\twistFunc$ as a predictable, finite-variation process, we apply integration by parts (see [Proposition I.4.49(b)](/citations#jacod2003)) to get the following identity.
+Realizing $\twistFunc$ as a predictable, finite-variation process, we apply integration by parts (see [Proposition I.4.49(b)](cite:jacod2003)) to get the following identity.
 $$
   \begin{aligned}
     \frac1\epsilon \mgRf(\Xe, \twistFunc)
@@ -32,8 +32,8 @@ $$
     &= \twistFunc \shortInt \Xee_\infty - \ode^\epsilon(\twistVar, \Xee_-) \shortInt \leb_\infty
   \end{aligned}
 $$
-The remaining identity is a special case of that from [Theorem III.7.24](/citations#jacod2003), but we will perform the Itô calculus here for completion's sake.
-Note that [%full](/statements/jump-diffusion-lk-exponential-martingale) tells us that $\exp(\twistFunc \shortInt \Xee)$ is a $(\Prb_\stateVar, \scrF)$ jump-diffusion, and [](tag:eq-jump-diffusion-exponentially-special) from [%full](/statements/jump-diffusion-lk-exponential-martingale) gives us its special semimartingale decomposition.
+The remaining identity is a special case of that from [Theorem III.7.24](cite:jacod2003), but we will perform the Itô calculus here for completion's sake.
+Note that [%full](statement:jump-diffusion-lk-exponential-martingale) tells us that $\exp(\twistFunc \shortInt \Xee)$ is a $(\Prb_\stateVar, \scrF)$ jump-diffusion, and [](eq:jump-diffusion-exponentially-special) from [%full](statement:jump-diffusion-lk-exponential-martingale) gives us its special semimartingale decomposition.
 $$
   \begin{aligned}
     \exp\big( \twistFunc \shortInt \Xee_t \big)
@@ -67,7 +67,7 @@ $$
     &= \twistFunc \shortInt \Xee_t - \ode^\epsilon(\twistFunc, \Xee) \shortInt \leb_t
   \end{aligned}
 $$
-Note that this is one argument that $\mgDensity^{\epsilon,\twistFunc} = \calE(H)_\infty$ corresponds to a $(\Prb, \scrF)$ local martingale, since $H$ is (see [Theorem I.4.61(b)](/citations#jacod2003)).
-In any case, the martingale nature comes from [%full](/statements/jump-diffusion-lk-exponential-martingale).
+Note that this is one argument that $\mgDensity^{\epsilon,\twistFunc} = \calE(H)_\infty$ corresponds to a $(\Prb, \scrF)$ local martingale, since $H$ is (see [Theorem I.4.61(b)](cite:jacod2003)).
+In any case, the martingale nature comes from [%full](statement:jump-diffusion-lk-exponential-martingale).
 
 </Proof>

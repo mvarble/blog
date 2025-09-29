@@ -9,23 +9,23 @@ kind: proposition
 
 
 1. For each $\tau > 0$, $\momentSpace(\tau)$ is open in $\odeSpace^\circ$,
-2. For each $\tau > 0$ and $\momentVar \in \momentSpace(\tau) \cap \odeSpace^\circ$, $\aff(\cdot,\momentVar,\cdot)$ from [%full](/statements/keller-ressel-mayerhofer) is the unique solution to $\system(\ode,\tau,\momentVar)$.
+2. For each $\tau > 0$ and $\momentVar \in \momentSpace(\tau) \cap \odeSpace^\circ$, $\aff(\cdot,\momentVar,\cdot)$ from [%full](statement:keller-ressel-mayerhofer) is the unique solution to $\system(\ode,\tau,\momentVar)$.
 3. $\aff$ is continuously differentiable on $\momentSpace^\circ \times \stateSpace$.
 
 <Proof>
 
   Fix $\tau > 0$ and $\momentVar \in \momentSpace(\tau) \cap \odeSpace^\circ$.
   Because $\momentVar \in \momentSpace(\tau)$, $\aff(\cdot,\momentVar,\cdot)$ exists on $[0,\tau]\times\stateSpace$ as a solution to $\system(\ode,\tau,\momentVar)$.
-  As mentioned in [%full](/statements/riccati-affine-formulation), the function $\affPart(\cdot,\momentVar)$ associated with $\aff(\cdot,\momentVar,\cdot)$ is a solution to the following equation,
+  As mentioned in [%full](statement:riccati-affine-formulation), the function $\affPart(\cdot,\momentVar)$ associated with $\aff(\cdot,\momentVar,\cdot)$ is a solution to the following equation,
   $$
-    @tag(eq-riccati-system0)
+    @tag(riccati-system0)
     \left\{\begin{array}{ll}
       \dot\affPart(t,\momentVar) = f\big(t, \affPart(t,\momentVar)\big) & t \in [0,\tau] \\
       \affPart(0,\momentVar) = \momentVar
     \end{array}\right.
   $$
   where $f: \bbR \times \odeSpace^\circ \rightarrow \vecSpace$ is defined by $f(t, \momentVar) \defeq \odePart(\momentVar)$.
-  Seeing as $f$ is continuously differentiable on $\bbR \times \odeSpace^\circ$ by [%full](/statements/jump-diffusion-ode-differentiable), we may use [III.13 Theorem X](/citations#walter1998) to ensure some $\epsilon > 0$ such that the band
+  Seeing as $f$ is continuously differentiable on $\bbR \times \odeSpace^\circ$ by [%full](statement:jump-diffusion-ode-differentiable), we may use [III.13 Theorem X](cite:walter1998) to ensure some $\epsilon > 0$ such that the band
   $$
     S_\epsilon \defeq \Big\{ (t, \vecVar) \in [0,\tau] \times \vecSpace : |\vecVar-\affPart(t,\momentVar)| \leq \epsilon \Big\}
   $$
@@ -76,9 +76,9 @@ kind: proposition
   $$
   By linearity, $Q(\cdot,\vecVar,\cdot)$ is a solution to $\system(\ode, \tau, \vecVar)$ and so $\vecVar \in \momentSpace(\tau)$.
   We now have $B(\momentVar,\epsilon) \subseteq \momentSpace(\tau)$, concluding part (a).
-  Meanwhile, any solution $Q^\momentVar$ to $\system(\ode,\tau,\momentVar)$ is such that the associated $q^\momentVar$ solves [](tag:eq-riccati-system0) and so $q^\momentVar = q(\cdot,\momentVar)$.
+  Meanwhile, any solution $Q^\momentVar$ to $\system(\ode,\tau,\momentVar)$ is such that the associated $q^\momentVar$ solves [](eq:riccati-system0) and so $q^\momentVar = q(\cdot,\momentVar)$.
   From here, it is thus the case that $Q^\momentVar = Q(\cdot,\momentVar,\cdot)$.
-  This means $\aff$ from [%full](/statements/keller-ressel-mayerhofer) is such that $\aff(\cdot,\momentVar,\cdot)$ is the unique solution to $\system(\ode,\momentVar,\tau)$, concluding part (b).
+  This means $\aff$ from [%full](statement:keller-ressel-mayerhofer) is such that $\aff(\cdot,\momentVar,\cdot)$ is the unique solution to $\system(\ode,\momentVar,\tau)$, concluding part (b).
   Lastly, for each $\stateVar\in\stateSpace$, linearity also shows us that $\aff(\cdot,\cdot,\stateVar)$ is continuously differentiable in a neighborhood of $(t, \momentVar)$, with derivative in the second coordinate $\Der\aff(\cdot,\cdot,\stateVar)$ satisfying the following.
   $$
     \begin{aligned}

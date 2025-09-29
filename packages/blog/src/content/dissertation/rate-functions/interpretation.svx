@@ -10,7 +10,7 @@ $$
 $$
 so $\hat\rf_{\hat\stateVar}(\hat\pathVar)$ gives us an exponential rate of decay of probabilities of the family $\hat\Xe$ being near $\hat\pathVar$.
 In terms of components $\hat\pathVar = (\pathVar, \omega, \gamma, \eta)$, the function $\hat\rf_{\hat\stateVar}$ thus reads properties of $\pathVar, \omega, \gamma, \eta$ and communicates to us how unlikely they are to be exhibited by $\Xe$, ${\Xe}^{,\rmc}$, ${\Xe}^{,\rmd}$, and $\epsilon\N^{\Xe}$, respectively.
-Our semi-closed form in [%full](/statements/ldp-closed-form) tells us a lot.
+Our semi-closed form in [%full](statement:ldp-closed-form) tells us a lot.
 
 Let us first elaborate on the conditions of $\hat\pathVar$ which allow $\hat\rf_{\hat\stateVar}(\hat\pathVar)$ to evaluate as a (possibly infinite) integral.
 Should any of these properties not be satisfied, we would have $\hat\rf_{\hat\stateVar}(\hat\pathVar) = \infty$, which means super-exponential decay of $\hat\Xe$ being within a neighborhood of $\hat\pathVar$.
@@ -24,7 +24,7 @@ Throughout, notice we establish an intuition with $\hat\pathVar$ being a proxy f
 - $\hat\pathVar \in \acpathSpace{[0,\infty)}{\hat\stateSpace}$.
 
   This tells us that the paths of $\hat\Xe$ become smoother as $\epsilon \rightarrow 0$.
-  This should make sense when we look at [%full](/statements/sde-asymptotics), where $\Xe$ is a dynamical system with perturbations on the scale of $\epsilon$.
+  This should make sense when we look at [%full](statement:sde-asymptotics), where $\Xe$ is a dynamical system with perturbations on the scale of $\epsilon$.
 
 - $\dot\pathVar(t) = \affDrift\big(\pathVar(t)\big) + \dot\omega(t) + \dot\gamma(t)$.
 
@@ -117,27 +117,27 @@ Each of these interpretations explains its respective integral term, as we expla
   $$
   This takes larger values when $\big(\dot\gamma(t)+\affInt(\pathVar(t))\overline{\affDist(\pathVar(t), \cdot)}\big)/\dot\eta(t)$ is a rare sample of $\affDist(\pathVar(t), \cdot)$, and the prefactor $\dot\eta(t)$ serves to express the increased rarity of unlikely jumps occurring with high-frequency.
 
-We also would like to mention that [%full](/statements/ldp-closed-form) can take many equivalent forms, depending on which quantities we couple with $\Xe$ and which parameters $\affDiff, \affJump$ are non-zero..
+We also would like to mention that [%full](statement:ldp-closed-form) can take many equivalent forms, depending on which quantities we couple with $\Xe$ and which parameters $\affDiff, \affJump$ are non-zero..
 For instance, as demonstrated by the redundancy,
 $$
   \dot\pathVar(t) = \affDrift\big(\pathVar(t)\big) + \dot\omega(t) + \dot\gamma(t),
 $$
 we may have considered the smaller tuple $(\Xe, {\Xe}^{,\rmd}, \N^{\Xe})$ and the subsequent rate function would have the following substitution in the first integral.
 $$
-  @tag(eq-Xc-redundancy)
+  @tag(Xc-redundancy)
   \dot\omega(t) = \dot\pathVar(t) - \affDrift\big(\pathVar(t)\big) - \dot\gamma(t),
 $$
 Note that in the case of $\affJump=0$ (diffusions), each of ${\Xe}^{,\rmd}$ and $\N^{\Xe}$ constantly take zero-value, and so we need no coupling; the principle for $\Xe$ already has a closed form.
-This is hinted at in [](tag:eq-Xc-redundancy), which suggests the ultimate rate function.
+This is hinted at in [](eq:Xc-redundancy), which suggests the ultimate rate function.
 $$
   \dot\omega(t) =\dot\pathVar(t) - \affDrift(\pathVar(t)) \quad\leadsto\quad \int_0^\infty \frac12 \Bprj{\dot\pathVar(t)-\affDrift\big(\pathVar(t)\big)}{\affDiff\big(\pathVar(t)\big)^\dagger \Big(\dot\pathVar(t)-\affDrift\big(\pathVar(t)\big)\Big)} \rmd t,
 $$
 Similarly, we may have considered another tuple $(\Xe, {\Xe}^{,\rmc}, \N^{\Xe})$ and the subsequent rate function would have the following substitution in the last integral.
 $$
-  @tag(eq-Xd-redundancy)
+  @tag(Xd-redundancy)
   \dot\gamma(t) = \dot\pathVar(t) - \affDrift\big(\pathVar(t)\big) - \dot\omega(t)
 $$
-Note that in the case of $\affDiff=0$ (pure-jump processes), ${\Xe}^{,\rmc}$ constantly takes zero-value, and so we only need coupling $(\Xe, \N^{\Xe})$, as hinted at in [](tag:eq-Xd-redundancy).
+Note that in the case of $\affDiff=0$ (pure-jump processes), ${\Xe}^{,\rmc}$ constantly takes zero-value, and so we only need coupling $(\Xe, \N^{\Xe})$, as hinted at in [](eq:Xd-redundancy).
 This covers the case of our compund-Poisson and Hawkes processes.
 Lastly, we could have alternatively coupled $(\Xe, {\Xe}^{,\rmc}, \id_\vecSpace \ast \jumpMeas^{\Xe}, \N^{\Xe})$ so that the final integral term will clean up a bit,
 $$

@@ -17,7 +17,7 @@ export function touchEquation(db: Database, eq: TouchEquation): Equation {
         const out = db
             .prepare(
                 `INSERT INTO equations (parent_page_id, source_mddoc_id, slug, label)
-                VALUES (?, ?, ?) RETURNING id;`,
+                VALUES (?, ?, ?, ?) RETURNING id;`,
             )
             .get(eq.parentPageId, eq.sourceMddocId, eq.slug, eq.label);
         id = (out as { id: number }).id;
@@ -77,6 +77,6 @@ export function getEquationReferences(db: Database, mddocId: number): EquationRe
         id,
         slug,
         label,
-        pathname: `${parentPathname}#${slug}`,
+        pathname: `/${parentPathname}#eq:${slug}`,
     }));
 }

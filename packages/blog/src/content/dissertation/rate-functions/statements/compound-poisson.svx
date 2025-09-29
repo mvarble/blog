@@ -13,7 +13,7 @@ $$
   \epsilon A^\epsilon_t \defeq \epsilon \sum_{k=1}^{[t/\epsilon]} \V_k, \quad
   \epsilon \N^\epsilon_t \defeq \epsilon\N_{t/\epsilon}
 $$
-Note that the deviations of $\epsilon A^\epsilon$ are understood by Mogulskii's theorem, while $\epsilon \N^\epsilon$ are understood from [%full](/statements/poisson).
+Note that the deviations of $\epsilon A^\epsilon$ are understood by Mogulskii's theorem, while $\epsilon \N^\epsilon$ are understood from [%full](statement:poisson).
 Moreover, these processes are independent, so it is easy to see that $(\epsilon A^\epsilon, \epsilon \N^\epsilon)_{\epsilon>0}$ satisfies a large deviation principle with rate function in which the finite points evaluate as the following integral.
 $$
   \rf_{A\N}(\gamma, \eta) = \int_0^\infty \bigg( \dot\eta(t)\log\dot\eta(t) - \dot\eta(t) + 1 + \ode_\affDist^*\big(\dot\gamma(t)\big) \bigg) \rmd t
@@ -25,7 +25,7 @@ $$
 $$
 From here, we recognize that the condition $\pathVar = \gamma \circ \eta$ implies $\dot\gamma = \frac{\dot\pathVar \circ \eta^{-1} }{\dot\eta \circ \eta^{-1}}$ and so substituting this in $\rf_{AB}$ and making a time-change $t \leftarrow \eta^{-1}(t)$ (on only the final term) will reduce to the following expression for finite points.
 $$
-  @tag(eq-rf-compound-poisson)
+  @tag(rf-compound-poisson)
   \rf_{\X\N}(\pathVar, \eta) =
     \int_0^\infty \bigg( \dot\eta(t)\log\dot\eta(t) - \dot\eta(t) + 1 + \dot\eta(t) \ode_\affDist^*\Big( \frac{\dot\pathVar(t)}{\dot\eta(t)} \Big) \bigg) \rmd t
 $$
@@ -33,10 +33,10 @@ This integrand should make intuitive sense when we recognize that $(\pathVar, \e
 The first three terms accumulate rate for deviations in the arrivals of $\N$, while the last term is accumulating rate for deviations in the jump sizes.
 The term $\dot\pathVar(t)/\dot\eta(t)$ is a deviation of $\X$ normalized against one in $\N$, which is effectively a deviation from a jump $\V_k$.
 Deviations of a jump $\V_k$ are measured by $\ode_\affDist^*$, and they are arriving at a rate of $\N$, hence the final expression in the rate function.
-For more detail on how a large deviation principle could be proven with this type of argument, we refer the reader to [](/citations#duffy2004).
+For more detail on how a large deviation principle could be proven with this type of argument, we refer the reader to [](cite:duffy2004).
 In fact, Theorem 4 in this paper inspired us to use coupling as an argument.
 
-In any case, we may still refer to [%full](/statements/ldp-integral) for a rigorous argument.
+In any case, we may still refer to [%full](statement:ldp-integral) for a rigorous argument.
 Denote $(\Omega, \Sigma, \Prb)$ the space that includes all these quantities, $\scrF^\N$ the filtration associated with $\N$, and $\hat\Xee = (\Xee, \N_{\cdot/\epsilon})$.
 It is clear that $\hat\Xee$ is a pure jump process,
 $$
@@ -58,7 +58,7 @@ This means that we have the following predictable compensator,
 $$
   \predproj{\jumpMeas^{\hat\Xee}}(\rmd s, \rmd\hat\markVar) = \frac1\epsilon \affDist(\rmd\markVar_1) \delta_1(\rmd\markVar_2)\rmd s
 $$
-which by our light-tails [](tag:eq-cumulant-generating-function) and [%full](/statements/affine-special) means that $\hat\Xee$ is special and has the following decomposition.
+which by our light-tails [](eq:cumulant-generating-function) and [%full](statement:affine-special) means that $\hat\Xee$ is special and has the following decomposition.
 $$
   \hat\Xee
   = \id_{\vecSpace\times\bbR_+} \ast \predproj{\jumpMeas^{\hat\Xee}}_t + \id_{\vecSpace\times\bbR_+} \ast \compensate{\jumpMeas^{\hat\Xee}}_t
@@ -73,7 +73,7 @@ $$
   \affDiff^\epsilon(\hat\stateVar) = 0, \quad
   \affJump^\epsilon(\hat\stateVar, \rmd\hat\markVar) = \frac1\epsilon \affDist(\rmd\markVar_1) \delta_1(\rmd\markVar_2)
 $$
-This parameterization, along with our light-tails [](tag:eq-cumulant-generating-function) means that we have the hypotheses of [%full](/statements/ldp-integral).
+This parameterization, along with our light-tails [](eq:cumulant-generating-function) means that we have the hypotheses of [%full](statement:ldp-integral).
 Note that the associated Lévy-Khintchine map $\ode$ is as follows.
 $$
 \begin{aligned}
@@ -82,7 +82,7 @@ $$
   &= e^{\ode_\affDist(\momentVar_1)+\momentVar_2} - 1
 \end{aligned}
 $$
-The integrand of our rate function [](tag:eq-rf-integral) thus involves the following expression.
+The integrand of our rate function [](eq:rf-integral) thus involves the following expression.
 $$
   \ode^*\big(\hat\diffVar, \hat\stateVar\big)
   = \sup_{\hat\momentVar\in\vecSpace \times \bbR_+} \bigg( \prj{\momentVar_1}{\diffVar_1} - \momentVar_2\diffVar_2 - e^{\ode_\affDist(\momentVar_1) + \momentVar_2} + 1 \bigg)
@@ -96,7 +96,7 @@ $$
 $$
 Some immediate results come from this; firstly, the second equation gives us that $\diffVar_2 > 0$ and the following.
 $$
-  @tag(eq-compound-poisson-solve-1)
+  @tag(compound-poisson-solve-1)
   \diffVar_2 = e^{\ode_\affDist(\momentVar_1)+\momentVar_2}, \quad \diffVar_2 \ode_\affDist(\momentVar_1) = \diffVar_2\log\diffVar_2 - \momentVar_2\diffVar_2
 $$
 Dividing the common expressions between the two equations results to the following.
@@ -111,9 +111,9 @@ Scooting the expressions around, we get
 $$
   \prj{\momentVar_1}{\diffVar_1} =  \diffVar_2\ode_\affDist^*\Big( \frac{\diffVar_1}{\diffVar_2} \Big) + \diffVar_2\ode(\momentVar_1),
 $$
-which when combined with [](tag:eq-compound-poisson-solve-1), we get the following.
+which when combined with [](eq:compound-poisson-solve-1), we get the following.
 $$
   \prj{\momentVar_1}{\diffVar_1} - \momentVar_2\diffVar_2 - e^{\ode_\affDist(\momentVar_1) + \momentVar_2} + 1
   = \diffVar_2 \log \diffVar_2 - \diffVar_2 + 1 + \ode_\affDist^*\Big(\frac{\diffVar_1}{\diffVar_2} \Big)
 $$
-Observe that this results in the same integral as [](tag:eq-rf-compound-poisson).
+Observe that this results in the same integral as [](eq:rf-compound-poisson).

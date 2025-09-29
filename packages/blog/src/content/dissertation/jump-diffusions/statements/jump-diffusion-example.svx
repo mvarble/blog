@@ -15,7 +15,7 @@ $$
 It is clear that $\W$ is a $(\Prb, \scrF)$ jump-diffusion with differential $\trunc$-characteristics $(0, \affDiff, 0)$, where $\affDiff(\stateVar) = \id_\vecSpace$ for all $\stateVar \in \stateSpace$.
 
 Similarly, we say that $\poisRM$ is a standard $(\Prb, \scrF)$ Poisson random measure on $\scrB(\bbR_+ \times \vecSpace)$ if its $(\Prb, \scrF)$ predictable projection is the Lebesgue measure $\predproj{\poisRM}(\rmd s, \rmd\markVar) = \rmd s \otimes \rmd\markVar$ (identifying measures on $\scrB(\bbR^d)$ as those on $\scrB(\vecSpace)$).
-By [Theorem II.4.8](/citations#jacod2003), this $\poisRM$ is the same as a Poisson point process with Lebesgue intensity, which has infinitely many jumps on any nonempty interval of time.
+By [Theorem II.4.8](cite:jacod2003), this $\poisRM$ is the same as a Poisson point process with Lebesgue intensity, which has infinitely many jumps on any nonempty interval of time.
 The accumulated jumps $\id_\vecSpace \ast \poisRM$ form a $(\Prb, \scrF)$ jump-diffusion with parameters as follows.
 $$
   \affDrift^\trunc(\stateVar) = \int_\vecSpace \trunc(\markVar) \rmd\markVar, \quad

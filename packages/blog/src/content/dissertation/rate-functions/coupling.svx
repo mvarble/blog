@@ -11,10 +11,10 @@ title: Coupling
 <!-- intuitively describe "multiple sources" of randomness -->
 The previous result did not include any examples in which the jump distribution was non-degenerate.
 Intuitively speaking, there is no way to naturally transform a Poisson process to a _compound-_Poisson process, for the distribution of the jumps introduces a new source of randomness.
-This intuition coincides with our difficulties in evaluating our rate function [](tag:eq-rf-integral) for such processes.
+This intuition coincides with our difficulties in evaluating our rate function [](eq:rf-integral) for such processes.
 
 <!-- show technical difficulties in rate function -->
-Consider the simple example of a compound-Poisson process $\X$ driven by standard Poisson process $\N$ and independent jumps $(V_k)_{k\in\bbN}$ distributing with common distribution $\affDist$ satisfying the light-tails condition [](tag:eq-cumulant-generating-function).
+Consider the simple example of a compound-Poisson process $\X$ driven by standard Poisson process $\N$ and independent jumps $(V_k)_{k\in\bbN}$ distributing with common distribution $\affDist$ satisfying the light-tails condition [](eq:cumulant-generating-function).
 $$
   \X_t = \sum_{k=1}^{\N_t} \V_k
 $$
@@ -25,7 +25,7 @@ $$
   \affJump(\stateVar, \rmd\markVar) = \affDist(\rmd\markVar),
 $$
 where $\overline\affDist \defeq \int_\vecSpace \markVar \affDist(\rmd\markVar)$ denotes the mean of $\affDist$.
-Associating an asymptotic family $(\Xe)_{\epsilon>0}$ with this base process $\X$ will result in the large deviation principle of [%full](/statements/ldp-integral), where the rate function [](tag:eq-rf-integral) will involve the following expression,
+Associating an asymptotic family $(\Xe)_{\epsilon>0}$ with this base process $\X$ will result in the large deviation principle of [%full](statement:ldp-integral), where the rate function [](eq:rf-integral) will involve the following expression,
 $$
   \begin{aligned}
     \ode^*(\diffVar, \stateVar)
@@ -44,9 +44,9 @@ From the technical perspective of $\sigma$-algebras, the answer is _no_, since $
 However, as moot of a discussion as this is from a technical perspective, it turns out to head us in the right direction.
 
 We will see in the below examples that coupling $(\X, \N)$ will give us semi-closed forms for our rate function.
-For illustrative purposes, these examples will again include heuristics on how to prove a principle and derive the rate function without [%full](/statements/ldp-integral).
+For illustrative purposes, these examples will again include heuristics on how to prove a principle and derive the rate function without [%full](statement:ldp-integral).
 However, these arguments are no longer backed by results in literature, for we are now entering uncharted territory.
-We reiterate that these results need not extend past heuristics, for [%full](/statements/ldp-integral) already provides us the principle.
+We reiterate that these results need not extend past heuristics, for [%full](statement:ldp-integral) already provides us the principle.
 
 <!-- compound-poisson example -->
 <Statement {...compoundPoisson} />

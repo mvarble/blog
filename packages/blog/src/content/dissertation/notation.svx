@@ -3,7 +3,7 @@ title: Notation
 slug: notation
 ---
 
-Throughout, unless specifically referenced elsewhere, all notions of this text are formally defined and explored in [](/citations#kallenberg2002) or [](/citations#jacod2003).
+Throughout, unless specifically referenced elsewhere, all notions of this text are formally defined and explored in [](cite:kallenberg2002) or [](cite:jacod2003).
 Most of our notation will coincide with these texts (as well as most other literature), except in regards to some particular conventions.
 Let us establish some of these here.
 A stochastic process $\X$ with a marginal-index-set $I$ and state space $(\stateSpace, \stateAlg)$ will be indifferently recognized as:

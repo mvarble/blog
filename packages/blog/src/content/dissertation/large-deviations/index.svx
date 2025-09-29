@@ -23,13 +23,13 @@ $$
 Having the full strength of the Borel space on $\pathSpace{[0,\infty)}{\stateSpace}$, our admissible sets $\Gamma$ can include a variety of tests on $\Xe$.
 For instance, suitable selection of $\Gamma$ allows us to derive asymptotics of probabilities associated with stopping times, path-integrals, and finite-dimensional distributions of $(\Xe)_{\epsilon>0}$.
 
-A great resource for a systematic approach to the theory of large deviations is [](/citations#dembo2010).
+A great resource for a systematic approach to the theory of large deviations is [](cite:dembo2010).
 This text offers comprehension on the subject with both intuitive and technically abstract perspectives, along with providing a descriptive history of the subject.
 While we only use this text to cite Cramér's theorem, its perspective paves the path of our argument.
 In particular, Cramér is credited with the _measure-change argument_ we use throughout, which generally could be explained as defining exponential measure changes,
 $$
   \begin{gathered}
-    @tag(eq-vague-measure-change)
+    @tag(vague-measure-change)
     \mgDensity^{\epsilon,\twistVar} \defeq \exp\Big( A(\Xee, \twistVar) - B(\Xee, \twistVar) \Big) \\
     \notag
     \mgPrb^{\epsilon,\twistVar}(\rmd\omega) \defeq \mgDensity^{\epsilon,\twistVar}(\omega) \cdot \Prb^\epsilon_\stateVar(\rmd\omega),
@@ -39,33 +39,33 @@ where $A$ is some linear form and $B$ is appropriately compensating it to make $
 The object $\twistVar$ in the above expression is a parameter suitably chosen to make the measure $\mgPrb^{\epsilon,\twistVar}(\Xe \in \Gamma^c)$ effectively _small enough_ to neglect.
 We will explain this more in the chapter, but we find it important to state here that the nature of our linear form $A$ can be associated with a _finite-dimensional_ projection of $\Xee$ or be a linear operator on the _infinite-dimensional_ space of paths.
 
-The expression [](tag:eq-vague-measure-change) looks familiar to our local martingale in [%full](/statements/jump-diffusion-lk-exponential-martingale).
+The expression [](eq:vague-measure-change) looks familiar to our local martingale in [%full](statement:jump-diffusion-lk-exponential-martingale).
 Such a measure change is of the _infinite-dimensional_ nature, and is a commonly used tool in the literature of large deviations which we refer to as the _exponential martingale approach_.
-Note that the dynamics in [%full](/statements/jump-diffusion-lk-girsanov) allow for easy calibration our density in [](tag:eq-vague-measure-change).
-A particular case in which this tool is used is [](/citations#kang2014), where they prove a large deviation principle for continuous affine (jump-)diffusions with special differential characteristics $(\affDrift, \affDiff, 0)$.
+Note that the dynamics in [%full](statement:jump-diffusion-lk-girsanov) allow for easy calibration our density in [](eq:vague-measure-change).
+A particular case in which this tool is used is [](cite:kang2014), where they prove a large deviation principle for continuous affine (jump-)diffusions with special differential characteristics $(\affDrift, \affDiff, 0)$.
 This approach lends itself to integral expressions which ultimately find their way in the rate function $\rf_\stateVar$.
 Having a rate $\rf_\stateVar(\pathVar)$ involve an integral of $\pathVar$ is very useful for investigating local properties of the family $(\Xe)_{\epsilon>0}$ and will be explained more in depth in the next chapter.
 
-For the _finite-dimensional_ approach, we may simply use inner-products on $\vecSpace^n$ as our operators $A$ in [](tag:eq-vague-measure-change).
+For the _finite-dimensional_ approach, we may simply use inner-products on $\vecSpace^n$ as our operators $A$ in [](eq:vague-measure-change).
 $$
   \begin{gathered}
-    @tag(eq-vague-measure-change-fdd)
+    @tag(vague-measure-change-fdd)
     \exp\Big( \sum_{k=1}^n \prj{\momentVar_k}{\X_{t_k}} - B(t_1, \ldots, t_n, \momentVar_1, \ldots, \momentVar_n) \Big),\\
     \notag
     \Exp_\Prb\exp\sum_{k=1}^n \prj{\momentVar_k}{\X_{t_k}} \eqdef B(t_1, \ldots, t_n, \momentVar_1, \ldots, \momentVar_n)
   \end{gathered}
 $$
 We refer to this approach as _twisting_ or _tilting_, as each parameter $\momentVar_k$ decides the distribution of the increment $\X_{t_k} - \X_{t_{k-1}}$ for calibration of our density.
-The Dawson-Gärtner theorem [Theorem 4.6.1](/citations#dembo2010) provides a great abstraction on how to achieve from here a full principle on the paths.
+The Dawson-Gärtner theorem [Theorem 4.6.1](cite:dembo2010) provides a great abstraction on how to achieve from here a full principle on the paths.
 This is because a stochastic process $\X=(\X_t)_{t\geq0}$&mdash;at its weakest&mdash;corresponds to a measure on the projective space $(\stateSpace^{[0,\infty)}, \bigotimes_{t\in[0,\infty)}\scrB(\stateSpace))$, and the theorem concerns itself with large deviations of abstract projective limit spaces.
 One issue with this approach is that the resulting rate function $\rf_\stateVar$ does not have an integral form like in the exponential martingale approach.
-In fact, [](/citations#kang2014) specifically mentioned this issue when proving their principle.
+In fact, [](cite:kang2014) specifically mentioned this issue when proving their principle.
 Another issue is that the projective limit space corresponds to a product topology on $\stateSpace^{[0,\infty)}$, which means we cannot get asymptotics for $\Gamma$ described above.
 We need to leverage properties of the Skorokhod topology to then tighten the principle.
 
 We remark in this chapter that, for affine processes, the exponential martingale and twisting approaches are nearly identical.
-The affine map $\aff$ which characterizes an affine process provides us with a way of resolving [](tag:eq-vague-measure-change-fdd) as a specific selection of parameter $\twistVar$ in the exponential-martingale approach.
-In this way, our proof is different from [](/citations#kang2014), in that we use this resolution to derive an integral form for our Dawson-Gärtner rate function.
+The affine map $\aff$ which characterizes an affine process provides us with a way of resolving [](eq:vague-measure-change-fdd) as a specific selection of parameter $\twistVar$ in the exponential-martingale approach.
+In this way, our proof is different from [](cite:kang2014), in that we use this resolution to derive an integral form for our Dawson-Gärtner rate function.
 A summary of the proof is as simple as:
 
 > prove large deviation principles for finite-dimensional distributions, prove exponential tightness, conclude large deviation principle on Skorokhod space
@@ -74,10 +74,10 @@ which can be compared to Prokhorov's theorem for weak convergence of measures on
 
 > prove weak convergence of finite-dimensional distributions, prove tightness, conclude weak convergence
 
-which was the original intent behind defining the Skorokhod topology (see in [](/citations#skorokhod1956).
+which was the original intent behind defining the Skorokhod topology (see in [](cite:skorokhod1956).
 This comparison is not due to us, for researchers are actively studying large deviations theory from a weak convergence perspective.
-Puhalskii has actively developed such approaches, and we manipulate a proof from [](/citations#puhalskii2001) to get the integral representation of our rate function.
-For resources on large deviations on the Skorokhod space, see [](/citations#feng2006), a resource which we use to get some of our results.
+Puhalskii has actively developed such approaches, and we manipulate a proof from [](cite:puhalskii2001) to get the integral representation of our rate function.
+For resources on large deviations on the Skorokhod space, see [](cite:feng2006), a resource which we use to get some of our results.
 
 Now that we have introduced the key ideas, the remainder of this chapter is organized as follows.
 

@@ -12,7 +12,7 @@ For each $t \geq 0$ and $\momentVar \in \boundedSpace$, we have $\affPart(t, \mo
 
 <Proof>
 
-This is an immediate result of [%full](/statements/affine-process-definition).
+This is an immediate result of [%full](statement:affine-process-definition).
 For any $\stateVar \in \stateSpace$, we have the following uniform bound.
 $$
   \begin{aligned}

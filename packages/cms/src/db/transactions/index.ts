@@ -46,7 +46,7 @@ function foldSequencePageMacros(
                 INNER JOIN pages p ON m.id = p.mddoc_id
                 INNER JOIN sequence_pages sp ON p.id = sp.parent_page_id
                 INNER JOIN pages pp ON sp.page_id = pp.id
-            WHERE pp.mdoc_id = ?;`,
+            WHERE pp.mddoc_id = ?;`,
         )
         .get(mddocId) as { katex_macros: string; id: number } | undefined;
 

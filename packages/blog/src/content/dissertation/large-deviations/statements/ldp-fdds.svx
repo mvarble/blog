@@ -15,13 +15,13 @@ $$
 <Proof>
 
 We first prove a principle on the discrete family $(\push{\Prb^{\epsilon_m}_\stateVar}{\pi_{\underline t}})_{m\in\bbN}$ for $\epsilon_m \defeq 1/m$.
-Note that [%full](/statements/mean-field-asymptotics) allows us to consider a space $(\Omega, \Sigma, \Prb)$ equipped with an i.i.d.\ sequence $(\X^{(j)})_{j\in\bbN}$ of elements distributing from $\Prb_\stateVar$ and realize each $\epsilon_m \X^{\epsilon_m}$.
+Note that [%full](statement:mean-field-asymptotics) allows us to consider a space $(\Omega, \Sigma, \Prb)$ equipped with an i.i.d.\ sequence $(\X^{(j)})_{j\in\bbN}$ of elements distributing from $\Prb_\stateVar$ and realize each $\epsilon_m \X^{\epsilon_m}$.
 $$
   \epsilon_m \X^{\epsilon_m} = \frac1m\sum_{j=1}^m \X^{(j)}
 $$
-We now use a specific instance of Cram\'er's theorem [Corollary 6.1.6](/citations#dembo2010) to conclude that if $\underline 0$ is an interior point in the finite domain of $\aff(\underline t, \cdot, \stateVar)$, then our principle is satisfied with good rate function $\aff^*(\underline t, \cdot, \stateVar)$.
-Note that [%full (a)](/statements/real-moments-revisit) tells us that $\underline0 \in \momentSpace(\underline t)$, an open set.
-Denoting some ball $\ball{\underline0}{\delta} \subseteq \momentSpace(\underline t)$, [%full](/statements/mgf-fdds) indicates that $\twistToMoment_{\underline t}\ball{\underline 0}{\delta}$ is an open set containing $\underline0$ in the finite domain of $\aff(\underline t, \cdot, \stateVar)$.
+We now use a specific instance of Cram\'er's theorem [Corollary 6.1.6](cite:dembo2010) to conclude that if $\underline 0$ is an interior point in the finite domain of $\aff(\underline t, \cdot, \stateVar)$, then our principle is satisfied with good rate function $\aff^*(\underline t, \cdot, \stateVar)$.
+Note that [%full (a)](statement:real-moments-revisit) tells us that $\underline0 \in \momentSpace(\underline t)$, an open set.
+Denoting some ball $\ball{\underline0}{\delta} \subseteq \momentSpace(\underline t)$, [%full](statement:mgf-fdds) indicates that $\twistToMoment_{\underline t}\ball{\underline 0}{\delta}$ is an open set containing $\underline0$ in the finite domain of $\aff(\underline t, \cdot, \stateVar)$.
 
 Now that we have established a large deviation principle for $(\push{\Prb^{\epsilon_m}_\stateVar}{\pi_{\underline t}})_{m\in\bbN}$, we seek to establish one for $(\push{\Prb^\epsilon_\stateVar}{\pi_{\underline t}})_{\epsilon>0}$.
 We start by defining a map $\epsilon \mapsto \tilde\epsilon$ which discretizes the nature of $\epsilon > 0$; denoting $[r] \in \bbZ$ the integer part of $r \in \bbR$, define $\tilde\epsilon \defeq [\epsilon^{-1}]^{-1}$.
@@ -45,11 +45,11 @@ $$
 $$
 
 To obtain a large deviation principle for our family $(\push{\Prb^\epsilon_\stateVar}{\pi_{\underline t}})_{\epsilon>0}$, we show regularity $\epsilon \rightarrow \push{\Prb^\epsilon_\stateVar}{\pi_{\underline t}}$ to lift the principle for the discretized family $(\push{\Prb^{\tilde\epsilon}_\stateVar}{\pi_{\underline t}})_{\epsilon>0}$.
-This notion in the literature is known as an _exponential approximation_, which is explored in [Section 4.2.2](/citations#dembo2010).
-From [Theorem 4.2.13](/citations#dembo2010), it suffices to construct a probability space $(\Omega, \Sigma, \Prb)$ such that elements $(\Xe)_{\epsilon>0}$ on this space with distributions $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ satisfy the following exponential equivalence property.
+This notion in the literature is known as an _exponential approximation_, which is explored in [Section 4.2.2](cite:dembo2010).
+From [Theorem 4.2.13](cite:dembo2010), it suffices to construct a probability space $(\Omega, \Sigma, \Prb)$ such that elements $(\Xe)_{\epsilon>0}$ on this space with distributions $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ satisfy the following exponential equivalence property.
 $$
   \limsup_{\epsilon\rightarrow0} \epsilon\log\Prb\Big( |\epsilon\X^\epsilon_{\underline t} - \tilde\epsilon \X^{\tilde\epsilon}_{\underline t}| > \delta \Big) = -\infty
 $$
-The _scaled-dynamics_ realization from [%full](/statements/sde-asymptotics) will do just this.
+The _scaled-dynamics_ realization from [%full](statement:sde-asymptotics) will do just this.
 
 </Proof>

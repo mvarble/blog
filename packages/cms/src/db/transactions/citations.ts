@@ -164,7 +164,7 @@ export function getCitationReferences(db: Database, mddocId: number): CitationRe
             INNER JOIN citation_refs cr ON c.id = cr.target_citation_id
             LEFT JOIN citation_authors ca ON c.id = ca.citation_id
             WHERE cr.source_mddoc_id = ?
-            AND ca.id = (
+            AND ca.item = (
                 SELECT MIN(item)
                 FROM citation_authors
                 WHERE citation_authors.citation_id = c.id

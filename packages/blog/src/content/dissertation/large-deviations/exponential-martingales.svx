@@ -55,7 +55,7 @@ for all $\twistFunc \in \twistSpace$, and so we'd have
 $$
   \lim_{\delta\rightarrow0} \epsilon\log\Prb^\epsilon_\stateVar\big( \Xe \in \ball{\pathVar}{\delta} \big) \leq - \sup_{\twistFunc \in \twistSpace} \mgRf(\pathVar, \twistFunc)
 $$
-Meanwhile, the lower bound would be approached by showing $\twistSpace$ is suitably rich to have a dense family of limit functions $\pathVar_\twistFunc$ as in [](tag:eq-limit-ode) of [%full](/statements/mgPrb-dynamics), on which $\sup_{\twistFunc' \in \twistSpace} \mgRf(\pathVar_\twistFunc, \twistFunc') = \mgRf(\pathVar_\twistFunc, \twistFunc)$, and so a large deviations lower bound is attained from the following bound.
+Meanwhile, the lower bound would be approached by showing $\twistSpace$ is suitably rich to have a dense family of limit functions $\pathVar_\twistFunc$ as in [](eq:limit-ode) of [%full](statement:mgPrb-dynamics), on which $\sup_{\twistFunc' \in \twistSpace} \mgRf(\pathVar_\twistFunc, \twistFunc') = \mgRf(\pathVar_\twistFunc, \twistFunc)$, and so a large deviations lower bound is attained from the following bound.
 $$
   \begin{aligned}
     \epsilon\log\Prb^\epsilon_\stateVar\big( \Xe \in \ball{\pathVar_\twistFunc}{\delta} \big)
@@ -73,7 +73,7 @@ Instead of proving the large deviation principle in this alternative fashion, we
 <!-- resolve the two approaches as one -->
 It is readily evident that $\mgPrb^{\epsilon,\twistFunc}_\stateVar$ is a generalization of $\fddPrb^{\epsilon,\underline t,\underline\twistVar}_\stateVar$, as we are replacing summations in $\fddDensity^{\epsilon, \underline t, \underline\twistVar}$ with integrals in $\mgDensity^{\epsilon,\twistFunc}$.
 $$
-  @tag(eq-densities-side-by-side)
+  @tag(densities-side-by-side)
   \begin{aligned}
     \fddDensity^{\epsilon, \underline t, \underline\twistVar}
     &= \exp \sum_{k=1}^{|\underline t|}\Big( \bprj{\twistVar_k}{\Xee_{t_k}-\Xee_{t_{k-1}}} - \affShift^\epsilon\big(\Delta t_k, \twistVar_k, \Xee_{t_{k-1}} \big) \Big) \\
@@ -94,10 +94,10 @@ $$
   \fddDensity^{\epsilon, \underline t, \underline\twistVar} = \exp\Big( \frac1\epsilon \fddRf\big(\Xe, \underline t, \underline\twistVar\big) \Big), \quad
   \mgDensity^{\epsilon, \twistFunc} = \exp\Big( \frac1\epsilon \mgRf\big(\Xe, \twistFunc\big) \Big)
 $$
-We now state the main theorem of this section, which resolves the _twisting/tilting_ approach of measure changes $\fddPrb^{\epsilon,\underline t,\underline\twistVar}$ in [%full](/statements/aff-twists) with the _exponential martingale_ approach of measure changes $\mgPrb^{\epsilon,\twistFunc}$ in [%full](/statements/mgPrb-dynamics).
+We now state the main theorem of this section, which resolves the _twisting/tilting_ approach of measure changes $\fddPrb^{\epsilon,\underline t,\underline\twistVar}$ in [%full](statement:aff-twists) with the _exponential martingale_ approach of measure changes $\mgPrb^{\epsilon,\twistFunc}$ in [%full](statement:mgPrb-dynamics).
 It relies on the following parameterization of maps $\twistFunc(\cdot,\underline t, \underline\twistVar)$ over $\underline t \vdash [0,\infty)$ and $\underline\twistVar \in \momentSpace(\underline t)$.
 $$
-  @tag(eq-resolve-twists)
+  @tag(resolve-twists)
   \twistFunc(t, \underline t, \underline\twistVar) = \sum_{k=1}^{|\underline t|} 1_{[t_{k-1},t_k)}(t) \affPart(\Delta t_k, \twistVar_k)
 $$
 

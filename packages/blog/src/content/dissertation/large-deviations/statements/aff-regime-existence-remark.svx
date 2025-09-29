@@ -4,7 +4,7 @@ kind: remark
 ---
 
 - If we wanted to show a large deviation principle over only the family $(\epsilon_m \X^{\epsilon_m})_{m\in\bbN}$, then this assumption is unnecessary.
-- Selecting $(\affDrift^\trunc, \affDiff, \affJump)$ parameterizes each $\ode^\epsilon$, which does specify the systems [](tag:eq-complex-riccati-system) and [](tag:eq-riccati-system) associated with complex and real moments, respectively.
+- Selecting $(\affDrift^\trunc, \affDiff, \affJump)$ parameterizes each $\ode^\epsilon$, which does specify the systems [](eq:complex-riccati-system) and [](eq:riccati-system) associated with complex and real moments, respectively.
   There are already many results which allow one to say that $\Xee$ exists in this scenario.
-  For instance, if our state space is $\stateSpace = \bbR^m_+ \times \bbR^n$, then [Proposition 7.4](/citations#duffie2003) provides us the existence we require, so long as the parameters are chosen to be _admissible_.
-  Otherwise, one can specify weaker assumptions on $\stateSpace$ at the expense of choosing diffusions ($\affJump(\cdot, \rmd\markVar) = 0$) or pure-jump processes ($\affDiff = 0$) on certain factors of the space; see [Section 2.5, Section 3.4](/citations#cuchiero2011).
+  For instance, if our state space is $\stateSpace = \bbR^m_+ \times \bbR^n$, then [Proposition 7.4](cite:duffie2003) provides us the existence we require, so long as the parameters are chosen to be _admissible_.
+  Otherwise, one can specify weaker assumptions on $\stateSpace$ at the expense of choosing diffusions ($\affJump(\cdot, \rmd\markVar) = 0$) or pure-jump processes ($\affDiff = 0$) on certain factors of the space; see [Section 2.5, Section 3.4](cite:cuchiero2011).

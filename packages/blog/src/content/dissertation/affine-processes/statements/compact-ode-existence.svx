@@ -9,7 +9,7 @@ slug: compact-ode-existence
 </script>
 
 For each compact set $K \subseteq \odeSpace^\circ$, there exists $\delta > 0$ such that $K \subseteq \momentSpace(\delta)$.
-Moreover, $\aff(\cdot,\momentVar,\cdot)$ from [%full](/statements/keller-ressel-mayerhofer) is the unique solution to $\system(\ode,\delta,\momentVar)$ for each $\momentVar \in K$.
+Moreover, $\aff(\cdot,\momentVar,\cdot)$ from [%full](statement:keller-ressel-mayerhofer) is the unique solution to $\system(\ode,\delta,\momentVar)$ for each $\momentVar \in K$.
 
 <Proof>
 
@@ -28,14 +28,14 @@ Moreover, $\aff(\cdot,\momentVar,\cdot)$ from [%full](/statements/keller-ressel-
 
   With these sets established, we mitigate the task of finding a solution $Q^\momentVar$ to $\system(\ode,\delta,\momentVar)$ to that of finding a solution $q^\momentVar$ to the related equation.
   $$
-    @tag(eq-riccati-system1)
+    @tag(riccati-system1)
     \left\{\begin{array}{ll}
       \dot q^\momentVar(t) = \odePart\big(q^\momentVar(t)\big) & t \in [0,\delta] \\
       q^\momentVar(0) = \momentVar
     \end{array}\right. \\
   $$
-  For a fixed $\momentVar \in \odeSpace^\circ$, the existence of some $\delta_\momentVar > 0$ and solution $q^\momentVar$ to [](tag:eq-riccati-system1) may be obtained from the usual fixed-point method (see [II.6 Theorem III](/citations#walter1998)).
-  Indeed, Remark [%full(d)](/statements/affine-process-definition-remark) and [%full](/statements/jump-diffusion-ode-differentiable) provide us a Lipschitz property for $\odePart$ on $\overline B(\momentVar, \epsilon)$,
+  For a fixed $\momentVar \in \odeSpace^\circ$, the existence of some $\delta_\momentVar > 0$ and solution $q^\momentVar$ to [](eq:riccati-system1) may be obtained from the usual fixed-point method (see [II.6 Theorem III](cite:walter1998)).
+  Indeed, Remark [%full(d)](statement:affine-process-definition-remark) and [%full](statement:jump-diffusion-ode-differentiable) provide us a Lipschitz property for $\odePart$ on $\overline B(\momentVar, \epsilon)$,
   $$
     \begin{aligned}
       \big|\odePart(\vecVar) - \odePart(w)|
@@ -64,13 +64,13 @@ Moreover, $\aff(\cdot,\momentVar,\cdot)$ from [%full](/statements/keller-ressel-
     \leq \frac{1}{2} \lVert f - g \rVert_{\bbB_\momentVar},
   $$
   which induces a unique solution $q^\momentVar \in \cpathSpace{[0,\delta_\momentVar]}{\overline{K^\epsilon}}$ to the associated fixed-point equation, $Tq^\momentVar = q^\momentVar$.
-  This solution $q^\momentVar$ is thus a unique solution to [](tag:eq-riccati-system1).
+  This solution $q^\momentVar$ is thus a unique solution to [](eq:riccati-system1).
 
   From here, we define the following positive $\delta$,
   $$
     \delta \defeq \inf_{\momentVar \in K} \delta_\momentVar \geq 1 \wedge \inf_{\momentVar\in K} \frac{\epsilon}{\sup_{\momentVar' \in \overline B(\momentVar,\epsilon)} |\odePart(\momentVar')|} \geq 1 \wedge \frac{\epsilon}{\sup_{\momentVar' \in \overline K^\epsilon} |\odePart(\momentVar')|} > 0
   $$
-  so that each $\momentVar \in K$ has a unique solution $q^\momentVar$ to [](tag:eq-riccati-system1).
+  so that each $\momentVar \in K$ has a unique solution $q^\momentVar$ to [](eq:riccati-system1).
   This induces the following map $Q^\momentVar: [0,\delta] \times \stateSpace \rightarrow \bbR$ for each $\momentVar \in K$.
   $$
     \begin{aligned}
@@ -79,8 +79,8 @@ Moreover, $\aff(\cdot,\momentVar,\cdot)$ from [%full](/statements/keller-ressel-
     \end{aligned}
   $$
   By linearity, $Q^\momentVar$ is a solution to $\system(\ode, \delta, \momentVar)$ for each $\momentVar \in K$, and so we have $K \subseteq \momentSpace(\delta)$.
-  For each $\momentVar \in K \subseteq \momentSpace(\delta)$, a solution $\tilde Q^\momentVar$ to $\system(\ode,\delta,\momentVar)$ is such that the associated $\tilde q^\momentVar$ solves [](tag:eq-riccati-system1) and so $\tilde q^\momentVar = q^\momentVar$.
+  For each $\momentVar \in K \subseteq \momentSpace(\delta)$, a solution $\tilde Q^\momentVar$ to $\system(\ode,\delta,\momentVar)$ is such that the associated $\tilde q^\momentVar$ solves [](eq:riccati-system1) and so $\tilde q^\momentVar = q^\momentVar$.
   From here, it is thus the case that $\tilde Q^\momentVar = Q^\momentVar$.
-  This means $\aff$ from [%full](/statements/keller-ressel-mayerhofer) is such that $\aff(\cdot,\momentVar,\cdot)$ is the unique solution to $\system(\ode,\momentVar,\delta)$ for all $\momentVar \in K$.
+  This means $\aff$ from [%full](statement:keller-ressel-mayerhofer) is such that $\aff(\cdot,\momentVar,\cdot)$ is the unique solution to $\system(\ode,\momentVar,\delta)$ for all $\momentVar \in K$.
 
 </Proof>

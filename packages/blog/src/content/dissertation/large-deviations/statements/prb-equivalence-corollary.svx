@@ -19,6 +19,6 @@ $$
 
 <Proof>
 
-This is simply substituting $\twistFunc(\cdot, \underline t, \underline\twistVar)$ for $\twistFunc$ in [%full](/statements/mgPrb-dynamics).
+This is simply substituting $\twistFunc(\cdot, \underline t, \underline\twistVar)$ for $\twistFunc$ in [%full](statement:mgPrb-dynamics).
 
 </Proof>

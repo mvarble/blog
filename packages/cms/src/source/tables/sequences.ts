@@ -3,7 +3,6 @@ import fs from 'fs';
 import matter from 'gray-matter';
 
 import {
-    type SequenceChild,
     type TouchSequenceChildInput,
     type SequenceChildBase,
     type Database,
@@ -11,7 +10,6 @@ import {
     getSequence,
 } from '../../db';
 import {
-    buildLabel,
     hasArrayField,
     hasBooleanField,
     hasDateField,
@@ -142,48 +140,28 @@ async function initialize(
         currentItemPrefix,
     );
 
-    const descendants: { data: SequenceChild; itemPrefix?: string }[] = sequence
-        .children!.map((data, i) => ({
-            data,
-            itemPrefix: sequence.enumerate ? String(i) : undefined,
-        }))
-        .toReversed();
+    const descendants = sequence.children!.toReversed();
     while (descendants.length > 0) {
         const descendant = descendants.pop()!;
-        if (
-            typeof descendant.itemPrefix == 'string' &&
-            descendant.itemPrefix != currentItemPrefix
-        ) {
+        if (typeof descendant.label == 'string' && descendant.label != currentItemPrefix) {
             currentItem = 0;
-            currentItemPrefix = descendant.itemPrefix;
+            currentItemPrefix = descendant.label;
         }
-        const contents = await fs.promises.readFile(descendant.data.filename, 'utf8');
+        const contents = await fs.promises.readFile(descendant.filename, 'utf8');
         currentItem += await nodeParser(
             db,
             {
-                mddocId: descendant.data.mddocId,
-                relevantPageId: descendant.data.pageId,
-                pathname: descendant.data.pathname,
-                filename: descendant.data.filename,
+                mddocId: descendant.mddocId,
+                relevantPageId: descendant.pageId,
+                pathname: descendant.pathname,
+                filename: descendant.filename,
             },
             contents,
             currentItem,
             currentItemPrefix,
         );
-        if (descendant.data.children) {
-            descendants.push(
-                ...descendant.data.children
-                    .map((data, i) => ({
-                        data,
-                        itemPrefix:
-                            typeof currentItemPrefix == 'string'
-                                ? currentItemPrefix.includes('.')
-                                    ? currentItemPrefix
-                                    : buildLabel(i, currentItemPrefix)
-                                : undefined,
-                    }))
-                    .toReversed(),
-            );
+        if (descendant.children) {
+            descendants.push(...descendant.children.toReversed());
         }
     }
 }

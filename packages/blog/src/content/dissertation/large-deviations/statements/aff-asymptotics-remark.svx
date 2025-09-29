@@ -22,14 +22,14 @@ This means that $\momentVar \in \momentSpace(\tau)$ and $\aff(\cdot, \momentVar,
 Observe that this implies the following identity for all $\stateVar \in \stateSpace$.
 $$
   \begin{gathered}
-    @tag(eq-aff-dominated-1)
+    @tag(aff-dominated-1)
     \frac{\partial}{\partial t} \frac1\epsilon \aff(t, \momentVar, \epsilon\stateVar) = \frac1\epsilon \dot\aff(t, \momentVar, \epsilon\stateVar) = \frac1\epsilon \ode\big(\affPart(t,\momentVar), \epsilon\stateVar\big) = \ode^\epsilon(\affPart(t, \momentVar), \stateVar), \quad t \in [0,\tau] \\
     \frac1\epsilon\aff(0,\momentVar, \epsilon\stateVar) = \frac1\epsilon\prj{\momentVar}{\epsilon\stateVar} = \prj{\momentVar}{\stateVar}
   \end{gathered}
 $$
 This means that $\frac1\epsilon\aff(\cdot, \momentVar, \epsilon\cdot)$ is a solution to $\system(\ode^\epsilon, \tau, \momentVar)$.
 By definition, existence of a solution means that $\momentVar \in \momentSpacee(\tau)$, and so $(\tau, \momentVar) \in \momentSpacee$.
-[%full](/statements/keller-ressel-mayerhofer) then tells us $\aff^\epsilon(\cdot, \momentVar, \cdot)$ exists and is dominated by the other solution.
+[%full](statement:keller-ressel-mayerhofer) then tells us $\aff^\epsilon(\cdot, \momentVar, \cdot)$ exists and is dominated by the other solution.
 $$
   \aff^\epsilon(t, \momentVar, \stateVar) \leq \frac1\epsilon \aff(t, \momentVar, \epsilon\stateVar), \quad t \in [0,\tau], ~ \stateVar \in \stateSpace
 $$
@@ -45,11 +45,11 @@ $$
 and so $\epsilon\aff^\epsilon(\cdot,\momentVar,\cdot)$ is a solution to $\system(\ode, \tau, \momentVar)$.
 Again, we may conclude from this that $(\tau,\momentVar) \in \momentSpace$ and that $\aff^\epsilon(\cdot, \momentVar, \cdot)$ exists and is dominated by the other solution.
 $$
-  @tag(eq-aff-dominated-2)
+  @tag(aff-dominated-2)
   \aff(t, \momentVar, \stateVar) \leq \epsilon \aff^\epsilon(t, \momentVar, \stateVar/\epsilon), \quad t \in [0,\tau], ~ \stateVar \in \stateSpace
 $$
 
-In total, we have now shown that $\momentSpace = \momentSpacee$, and inequalities [](tag:eq-aff-dominated-1) and [](tag:eq-aff-dominated-2) indicate to us that the following functions agree.
+In total, we have now shown that $\momentSpace = \momentSpacee$, and inequalities [](eq:aff-dominated-1) and [](eq:aff-dominated-2) indicate to us that the following functions agree.
 $$
   \aff^\epsilon(t, \momentVar, \stateVar) = \frac1\epsilon \aff(t, \momentVar, \stateVar), \quad (t, \momentVar) \in \momentSpace, ~ \stateVar \in \stateSpace
   $$

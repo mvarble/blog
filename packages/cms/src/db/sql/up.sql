@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS mddocs (
 -- Page on the website; always associated with a markdown document.
 CREATE TABLE IF NOT EXISTS pages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    mddoc_id INTEGER NOT NULL REFERENCES mddocs(id)
+    mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
     pathname TEXT UNIQUE NOT NULL
 );
 
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS pages (
 -- documents whose content we manage.
 CREATE TABLE IF NOT EXISTS page_mddocs (
     parent_page_id INTEGER NOT NULL REFERENCES pages(id),
-    imported_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id)
+    imported_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
     UNIQUE (parent_page_id, imported_mddoc_id)
 );
 
@@ -64,14 +64,15 @@ CREATE TABLE IF NOT EXISTS statements (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
     slug TEXT UNIQUE NOT NULL,
-    label TEXT UNIQUE NOT NULL
-    kind TEXT NOT NULL,
+    label TEXT UNIQUE NOT NULL,
+    kind TEXT NOT NULL
 );
 
 -- Equations within a page can be numbered and referenced throughout the site.
 CREATE TABLE IF NOT EXISTS equations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    parent_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
+    source_mddoc_id INTEGER NOT NULL REFERENCES mddocs(id),
+    parent_page_id INTEGER NOT NULL REFERENCES pages(id),
     slug TEXT UNIQUE NOT NULL,
     label TEXT NOT NULL
 );

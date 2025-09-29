@@ -13,7 +13,7 @@ While Mogulskii's theorem specifies that the processes $(Y^\epsilon)_{\epsilon>0
 The two ways of leveraging this are via the contraction principle or measure-change arguments.
 
 <!-- discuss transforms -->
-The contraction principle states that mapping the quantities $F(Y^\epsilon)$ via a continuous map $F$ produces a large deviation principle for the family $(\push{\Prb^\epsilon}{F})_{\epsilon>0}$ of measures $\push{\Prb^\epsilon}{F}$ associated with these respective quantities $F(Y^\epsilon)$ (see [Theorem 4.2.1](/citations#dembo2010)).
+The contraction principle states that mapping the quantities $F(Y^\epsilon)$ via a continuous map $F$ produces a large deviation principle for the family $(\push{\Prb^\epsilon}{F})_{\epsilon>0}$ of measures $\push{\Prb^\epsilon}{F}$ associated with these respective quantities $F(Y^\epsilon)$ (see [Theorem 4.2.1](cite:dembo2010)).
 Seeing as this section serves as a survey for intuition on rate functions, we will digress from discussing the specifics of continuity of $F$ on restricted spaces and/or exponentially equivalent families in our example below.
 
 <!-- introduce drift to Brownian motion -->
@@ -22,7 +22,7 @@ Seeing as this section serves as a survey for intuition on rate functions, we wi
 <!-- discuss measure changes -->
 The above result leveraged a large deviation principle for Brownian motions $(\sqrt\epsilon\W)_{\epsilon>0}$ to one on state-dependent diffusions $(\Xe)_{\epsilon>0}$ via the mappings $\Xe = F(\sqrt\epsilon\W)$ for each $\epsilon > 0$.
 The analogue of the Brownian motion $\W$ for jump processes---in the sense of homogeneous independent-increments---is the Poisson process $\N$.
-To introduce state-dependence to our sequence $(\epsilon\N_{\cdot/\epsilon})_{\epsilon>0}$ from [%full](/statements/poisson), we may perform a measure-change argument.
+To introduce state-dependence to our sequence $(\epsilon\N_{\cdot/\epsilon})_{\epsilon>0}$ from [%full](statement:poisson), we may perform a measure-change argument.
 
 <!-- introduce intensity to Poisson -->
 <Statement {...hawkes} />

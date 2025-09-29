@@ -20,7 +20,7 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
     let id: number;
     try {
         const mddoc = db
-            .prepare('INSERT INTO mddocs (filename, katex_macros) VALUES (?) RETURNING id;')
+            .prepare('INSERT INTO mddocs (filename, katex_macros) VALUES (?, ?) RETURNING id;')
             .get(input.filename, JSON.stringify(input.katexMacros));
         mddocId = (mddoc as { id: number }).id;
 
@@ -31,7 +31,7 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
         const out = db
             .prepare(
                 `INSERT INTO statements (mddoc_id, slug, label, kind)
-                VALUES (?, ?, ?) RETURNING id;`,
+                VALUES (?, ?, ?, ?) RETURNING id;`,
             )
             .get(mddocId, input.slug, input.label, input.kind);
         id = (out as { id: number }).id;
@@ -174,7 +174,7 @@ export function getStatementReferences(db: Database, sourceMddocId: number): Sta
             .map((str) => `${str.slice(0, 1).toUpperCase()}${str.slice(1)} `)
             .join(' ');
         const full = `${kind} ${label} `;
-        const pathname = `${parentPathname} #${slug} `;
+        const pathname = `/${parentPathname}#${slug}`;
         return {
             id,
             slug,

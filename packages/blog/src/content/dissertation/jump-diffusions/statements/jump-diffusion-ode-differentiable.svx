@@ -9,7 +9,7 @@ kind: lemma
 
 For each $\stateVar \in \stateSpace$, the map $\ode(\cdot,\stateVar)$ is continuously differentiable on $\odeSpace(\stateVar)^\circ$, with derivative $\Der \ode(\cdot,\stateVar): \odeSpace(\stateVar)^\circ \rightarrow \bbL(\vecSpace, \bbR)$ as follows.
 $$
-  @tag(eq-ode-derivative-truncation)
+  @tag(ode-derivative-truncation)
   \Der \ode(\momentVar,\stateVar) w = \Bprj{\affDrift^\trunc(\stateVar) + \affDiff(\stateVar)\momentVar + \int_\vecSpace \big( e^\prj{\momentVar}{\markVar} \markVar - \trunc(\markVar)\big) \affJump(\stateVar,\rmd\markVar)}{w}, \quad \momentVar \in \odeSpace(\stateVar)^\circ
 $$
 
@@ -19,7 +19,7 @@ Fix $\stateVar \in \stateSpace$, $\momentVar \in \odeSpace(\stateVar)^\circ$.
 Let $\epsilon > 0$ such that $B(\momentVar, \epsilon) \subseteq \odeSpace(\stateVar)$.
 For all $0 < \delta < \epsilon$ and $i = 1, \ldots, d$, we now have the following identity
 $$
-  @tag(eq-difference-quotient)
+  @tag(difference-quotient)
   \begin{aligned}
     \frac{\ode(\momentVar+\delta \basisVec_i,\stateVar) - \ode(\momentVar,\stateVar)}{\delta}
     &= \prj{\basisVec_i}{\affDrift^\trunc(\stateVar)} + \prj{\basisVec_i}{\affDiff(\stateVar)\momentVar} + \frac12\prj{\delta \basisVec_i}{\affDiff(\stateVar)\momentVar} \\
@@ -27,7 +27,7 @@ $$
       &\quad+ \int_{|\markVar| > 1}  \frac1\delta\Big( e^\prj{\momentVar+\delta \basisVec_i}{\markVar} - e^\prj{\momentVar}{\markVar} \Big) \affJump(\stateVar,\rmd\markVar) \\
   \end{aligned}
 $$
-Evaluating the limit of [](tag:eq-difference-quotient) as $\delta \rightarrow 0$ is now a matter of exchanging the limit with integration; we will do this by using the dominated convergence theorem.
+Evaluating the limit of [](eq:difference-quotient) as $\delta \rightarrow 0$ is now a matter of exchanging the limit with integration; we will do this by using the dominated convergence theorem.
 
 For the first integral, Taylor's theorem provides us $\gamma_0, \gamma_1 \in [0,1]$ such that the following hold.
 $$
@@ -54,7 +54,7 @@ $$
   \begin{aligned}
     &\lim_{\delta \rightarrow 0} \int_{|\markVar|\leq 1} \frac1\delta \Big( e^\prj{\momentVar+\delta \basisVec_i}{\markVar} - e^\prj{\momentVar}{\markVar} - \prj{\delta \basisVec_i}{\markVar} \Big) \affJump(\stateVar,\rmd\markVar)  \\
     &\quad= \int_{|\markVar|\leq 1} \lim_{\delta\rightarrow0} \frac{1}{\delta} \Big( e^\prj{\momentVar+\delta \basisVec_i}{\markVar} - e^\prj{\momentVar}{\markVar} - \prj{\delta \basisVec_i}{\markVar} \Big) \affJump(\stateVar,\rmd\markVar)  \\
-    @tag(eq-dct1)
+    @tag(dct1)
     &\quad= \int_{|\markVar|\leq1} \Big( e^\prj{\momentVar}{\markVar} \markVar_i - \markVar_i \Big) \affJump(\stateVar,\rmd\markVar)
   \end{aligned}
 $$
@@ -95,16 +95,16 @@ $$
   \begin{aligned}
     &\lim_{\delta \rightarrow 0} \int_{|\markVar|> 1} \frac1\delta \Big( e^\prj{\momentVar+\delta \basisVec_i}{\markVar} - e^\prj{\momentVar}{\markVar} \Big) \affJump(\stateVar,\rmd\markVar) \\
     &\quad= \int_{|\markVar|> 1} \lim_{\delta\rightarrow0} \frac{1}{\delta} \Big( e^\prj{\momentVar+\delta \basisVec_i}{\markVar} - e^\prj{\momentVar}{\markVar}  \Big) \affJump(\stateVar,\rmd\markVar) \\
-    @tag(eq-dct2)
+    @tag(dct2)
     &\quad= \int_{|\markVar|>1} e^\prj{\momentVar}{\markVar} \markVar_i  \affJump(\stateVar,\rmd\markVar)
   \end{aligned}
 $$
-Combining equations [](tag:eq-difference-quotient), [](tag:eq-dct1), and [](tag:eq-dct2) now yields our desired identity.
+Combining equations [](eq:difference-quotient), [](eq:dct1), and [](eq:dct2) now yields our desired identity.
 $$
   \Der_i \ode(\momentVar,\stateVar)
   = \Bprj{\basisVec_i}{\affDrift^\trunc(\stateVar) + \affDiff(\stateVar)\momentVar + \int_\vecSpace \Big( e^\prj{\momentVar}{\markVar} \markVar - \trunc(\markVar) \Big) \affJump(\stateVar,\rmd\markVar)}
 $$
 Continuity of $\Der_i \ode(\momentVar, \stateVar)$ for $\momentVar \in \odeSpace(\stateVar)^\circ$ involves very similar dominated convergence theorem arguments as above.
-From here, it is clear that $\ode$ is continuously differentiable with the form in [](tag:eq-ode-derivative-truncation).
+From here, it is clear that $\ode$ is continuously differentiable with the form in [](eq:ode-derivative-truncation).
 
 </Proof>

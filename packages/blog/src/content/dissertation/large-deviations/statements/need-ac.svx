@@ -13,7 +13,7 @@ If $\pathVar \not\in \acpathSpace{[0,\infty)}{\stateSpace}$, then $\rf(\pathVar)
 
 Fix some $\pathVar \in \pathSpace{[0,\infty)}{\stateSpace}$ with $\pathVar \not\in \acpathSpace{[0,\infty)}{\stateSpace}$.
 That is to say, there exists some $\tau > 0$ for which $\pathVar \not\in \acpathSpace{[0,\tau]}{\stateSpace}$.
-For any $\rho > 0$, we now use [%full (d)](/statements/real-moments-revisit) to produce some $\delta > 0$ and $C_{\delta,\rho} > 0$ such that the following bound holds.
+For any $\rho > 0$, we now use [%full (d)](statement:real-moments-revisit) to produce some $\delta > 0$ and $C_{\delta,\rho} > 0$ such that the following bound holds.
 $$
   \big|\aff(t, \momentVar, \stateVar) - \aff(0, \momentVar, \stateVar)\big| \leq C_{\delta,\rho} \cdot t \cdot \big( 1 + |\stateVar| \big), \quad t \in [0,\delta], ~ \momentVar \in \closedBall{0}{\rho}, ~ \stateVar \in \stateSpace
 $$
@@ -25,7 +25,7 @@ $$
   \end{gathered}
 $$
 The countable nature of $\Delta_\pathVar$ allows us to further impose that $\underline t^\rho \vdash \Delta_\pathVar^c$.
-This, along with [%full](/statements/mgf-fdds), results in the following inequality.
+This, along with [%full](statement:mgf-fdds), results in the following inequality.
 $$
 \begin{aligned}
   &\sup_{\underline t \vdash [0,\infty)} \aff^*\big( \underline t, \pathVar(\underline t), \pathVar(0) \big) \\

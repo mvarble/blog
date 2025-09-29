@@ -5,7 +5,7 @@ kind: remark
 
 - When we are dealing with the canonical space $\stateSpace = \bbR^m_+ \times \bbR^n$, then $\hat\stateSpace = \bbR^{\hat m}_+ \times \bbR^{\hat n}$, up to reordering the factors.
   In this scenario, we have admissibility conditions on the special differential characteristics which impose existence of the solution, for each $\hat\momentVar \in \boundedSpaceJoint$.
-- Note that we already have a solution to the following equation for each $\momentVar \in \boundedSpace$, by existence of $\X$ as an affine process and [%full](/statements/affine-regularity).
+- Note that we already have a solution to the following equation for each $\momentVar \in \boundedSpace$, by existence of $\X$ as an affine process and [%full](statement:affine-regularity).
   $$
     \begin{aligned}
       &i = 0, \ldots, d \\

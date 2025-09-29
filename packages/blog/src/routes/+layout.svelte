@@ -1,11 +1,14 @@
 <script>
     import '../styles/index.css';
+
+    import Shell from '$lib/components/shell.svelte';
+    import Nav from '$lib/components/nav.svelte';
+
     let { children } = $props();
 </script>
 
-<a href="/posts">posts</a>
-<a href="/sequences">sequences</a>
-<a href="/statements">statements</a>
-<a href="/citations">bibliography</a>
+{#snippet top_nav()}
+    <Nav links={[]} />
+{/snippet}
 
-{@render children()}
+<Shell {top_nav} {children} />

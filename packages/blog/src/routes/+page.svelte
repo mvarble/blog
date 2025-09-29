@@ -1,1 +1,1 @@
-<h1>home</h1>
+<a href="/sequences">sequences</a>

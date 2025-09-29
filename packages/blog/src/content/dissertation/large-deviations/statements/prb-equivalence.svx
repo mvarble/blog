@@ -20,10 +20,10 @@ $$
 <Proof>
 
 It is clear that $\twistFunc(\cdot, \underline t, \underline\twistFunc)$ is compactly supported on the intervals of $\underline t$.
-Meanwhile, [%full (c)](/statements/momentSpace-facts) tells us that $\twistFunc(\cdot, \underline t, \underline\twistVar)$ is differentiable everywhere but potentially the nodes of $\underline t$, and so it is of finite variation.
+Meanwhile, [%full (c)](statement:momentSpace-facts) tells us that $\twistFunc(\cdot, \underline t, \underline\twistVar)$ is differentiable everywhere but potentially the nodes of $\underline t$, and so it is of finite variation.
 This concludes $\twistFunc \in \twistSpace$.
 
-Seeing as $\aff$ is $\stateSpace$-affine and stochastic integration is linear, we can use a simplified version of Itô's formula below (again using [%full (c)](/statements/momentSpace-facts)).
+Seeing as $\aff$ is $\stateSpace$-affine and stochastic integration is linear, we can use a simplified version of Itô's formula below (again using [%full (c)](statement:momentSpace-facts)).
 $$
   \begin{aligned}
     \fddRf(H, \underline t,\underline\twistVar)
@@ -36,7 +36,7 @@ $$
     &= \twistFunc(\cdot, \underline t, \underline\twistVar) \shortInt H_\infty - \ode\big(\twistFunc(\cdot, \underline t, \underline\twistVar), H\big) \shortInt \leb_\infty
   \end{aligned}
 $$
-From here, as we did in [%full](/statements/martingale-measure), we apply integration by parts to complete the equality.
+From here, as we did in [%full](statement:martingale-measure), we apply integration by parts to complete the equality.
 $$
   \begin{aligned}
     \fddRf(H, \underline t,\underline\twistVar)

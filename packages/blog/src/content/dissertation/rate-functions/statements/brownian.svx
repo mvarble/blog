@@ -3,21 +3,21 @@ type: statement
 kind: example
 ---
 
-Applying Mogulskii's theorem when our increment distribution $\affDist$ is $\operatorname{Normal}(0,\id_\vecSpace)$, the integral in our rate function in [](tag:eq-rf-mogulskii) becomes the following.
+Applying Mogulskii's theorem when our increment distribution $\affDist$ is $\operatorname{Normal}(0,\id_\vecSpace)$, the integral in our rate function in [](eq:rf-mogulskii) becomes the following.
 $$
-  @tag(eq-rf-brownian)
+  @tag(rf-brownian)
   \int_0^\infty \frac12\big|\dot\pathVar(t)\big|^2 \rmd t
 $$
 Furthermore, for a Brownian motion $\W$, the process $\sqrt\epsilon\W$ ends up being exponentially equivalent to $Y^\epsilon$,
 $$
   \limsup_{\epsilon\rightarrow0} \epsilon\log \Prb\big( |\sqrt\epsilon\W - Y^\epsilon| \geq \delta \big) = -\infty,
 $$
-which makes the family $\sqrt\epsilon\W$ satisfy the large deviation principle with rate function [](tag:eq-rf-brownian); this result is known as Schilder's theorem (see [Theorem 5.2.3](/citations#dembo2010).
+which makes the family $\sqrt\epsilon\W$ satisfy the large deviation principle with rate function [](eq:rf-brownian); this result is known as Schilder's theorem (see [Theorem 5.2.3](cite:dembo2010).
 
-Note that $(\sqrt\epsilon\W)_{\epsilon>0}$ is a family of affine processes covered [%full](/statements/ldp-integral).
+Note that $(\sqrt\epsilon\W)_{\epsilon>0}$ is a family of affine processes covered [%full](statement:ldp-integral).
 We have $\Xe = \sqrt\epsilon\W$, where the base process $\X$ has special differential characteristics $(0, \id_\vecSpace, 0)$.
-The easiest way to see this is by considering [%full](/statements/sde-asymptotics) with initial state $\stateVar = 0$.
-Our theorem also immediately resolves [](tag:eq-rf-integral) the same rate function.
+The easiest way to see this is by considering [%full](statement:sde-asymptotics) with initial state $\stateVar = 0$.
+Our theorem also immediately resolves [](eq:rf-integral) the same rate function.
 $$
   \ode^*(\diffVar, \stateVar)
   = \sup_{\momentVar \in \vecSpace} \bigg( \prj{\momentVar}{\diffVar} - \frac12\prj{\momentVar}{\id_\vecSpace\cdot \momentVar} \bigg) = \frac12 |\diffVar|

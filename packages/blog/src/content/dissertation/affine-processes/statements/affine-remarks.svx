@@ -4,9 +4,9 @@ kind: remark
 slug: affine-process-definition-remark
 ---
 
-1. See [Remark 2.3](/citations#keller2015) for an argument on how our assumptions on $\stateSpace$ are at no loss of generality; $\stateSpace$ may as well be any nonempty convex set.
-2. Note how equation [](tag:eq-affine-process-definition) specifies the characteristic function of each transition kernel of the Markov process $\X$; thus, should an affine process exist for choice of $\aff$, _only_ one will exist, up to distribution.
-3. See how our notation $(\affPart_0, \affPart)$ differs from that of [](/citations#keller2015) and other papers, which typically use $(\phi, \affPart)$.
+1. See [Remark 2.3](cite:keller2015) for an argument on how our assumptions on $\stateSpace$ are at no loss of generality; $\stateSpace$ may as well be any nonempty convex set.
+2. Note how equation [](eq:affine-process-definition) specifies the characteristic function of each transition kernel of the Markov process $\X$; thus, should an affine process exist for choice of $\aff$, _only_ one will exist, up to distribution.
+3. See how our notation $(\affPart_0, \affPart)$ differs from that of [](cite:keller2015) and other papers, which typically use $(\phi, \affPart)$.
 4. We choose to do this because affine functions prevail throughout our investigation of affine processes, and we saw this an opportunity to have more cohesive notation of all such affine functions.
   $$
     \affDiff(\stateVar) = \affDiffPart_0 + \sum_{i=1}^d \stateVar^i \affDiffPart_i

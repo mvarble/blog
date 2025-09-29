@@ -3,7 +3,7 @@ type: statement
 kind: remark
 ---
 
-- By [%full](/statements/odeSpace-rationale) and [%full](/statements/light-tails-equivalence), this assumption is equivalent to having any of the following statements for any $\momentVar \in \vecSpace$.
+- By [%full](statement:odeSpace-rationale) and [%full](statement:light-tails-equivalence), this assumption is equivalent to having any of the following statements for any $\momentVar \in \vecSpace$.
   - $\int_{|\markVar| > 1} e^\prj{\momentVar}{\markVar} \affJump(\stateVar, \rmd\markVar) < \infty$ for all $\stateVar \in \stateSpace$,
   - There exists $\tau > 0$ such that $\Exp_{\Prb_\stateVar}\exp\prj{\momentVar}{\X_\tau} < \infty$ for all $\stateVar \in \stateSpace$,
   - There exists $\tau > 0$ such that $\system(\ode, \tau, \momentVar)$ has a solution.

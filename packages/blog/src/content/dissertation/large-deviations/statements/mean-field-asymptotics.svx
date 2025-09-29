@@ -18,7 +18,7 @@ $$
 <Proof>
 
 We will prove this by showing that the finite-dimensional distributions agree by identity of their characteristic functions.
-Fixing $\underline t \vdash [0,\infty)$ and $\underline\momentVar \in \vecSpace^{|\underline t|}$, we apply Proposition [%full](/statements/aff-fdds-complex) and [%full](/statements/aff-asymptotics).
+Fixing $\underline t \vdash [0,\infty)$ and $\underline\momentVar \in \vecSpace^{|\underline t|}$, we apply Proposition [%full](statement:aff-fdds-complex) and [%full](statement:aff-asymptotics).
 
 $$
 \begin{aligned}
