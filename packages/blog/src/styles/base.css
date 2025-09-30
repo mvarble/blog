@@ -86,6 +86,7 @@ h3 {
     position: relative;
     text-wrap: balance;
     color: var(--fg-exclaim);
+    margin-bottom: 0.25em;
 }
 
 strong {

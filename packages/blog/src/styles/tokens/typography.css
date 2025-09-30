@@ -34,16 +34,6 @@
         --font-size-body-small: 2rem;
     }
 
-    &.font-boring {
-        --font-family-body: 'Atkinson Hyperlegible', sans-serif;
-        --font-size-body: 1.9rem;
-        --font-size-body-small: 1.7rem;
-
-        p code {
-            font-size: 0.75em;
-        }
-    }
-
     &.dark {
         -webkit-font-smoothing: antialiased;
     }
