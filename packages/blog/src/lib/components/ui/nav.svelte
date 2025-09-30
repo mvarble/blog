@@ -65,7 +65,7 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
     aria-label="Primary"
 >
     <a class="home-link" href="/" title="Home" aria-label="Home">
-        <Icon name="rat" size="100%" />
+        <Icon name="rat" size="var(--nav-height)" /><span>rodent.club</span>
     </a>
 
     <div class="desktop">
@@ -195,11 +195,21 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
     }
 
     .home-link {
-        height: var(--nav-height);
-        padding: 0.25em;
-        width: 4em;
         --rat-stroke: var(--fg-3);
         --rat-fill: var(--bg-1);
+        color: var(--fg-2);
+
+        & > span {
+            top: calc(50% - 0.8 * var(--font-size-body));
+            padding-left: 0.2em;
+            font-size: var(--font-size-body);
+            visibility: hidden;
+        }
+
+        &:hover > span,
+        &:focus > span {
+            visibility: visible;
+        }
     }
 
     :root.dark .home-link {

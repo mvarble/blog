@@ -54,7 +54,7 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/compo
         z-index: 1000;
     }
 
-    a:focus {
+    #skip-to-main:focus {
         transform: translateY(0%);
     }
 
