@@ -14,7 +14,7 @@
 
 <style>
     .container {
-        --sidebar-menu-width: 28rem;
+        --sidebar-menu-width: 18rem;
         --sidebar-width: var(--sidebar-menu-width);
 
         display: flex;
@@ -31,12 +31,6 @@
         all: unset;
     }
 
-    @media (min-width: 832px) {
-        .content {
-            padding-left: calc(var(--sidebar-width) + var(--page-padding-side));
-        }
-    }
-
     .toc-container {
         background: var(--bg-2);
         display: none;
@@ -46,7 +40,10 @@
         }
     }
 
-    @media (min-width: 832px) {
+    @media (min-width: 838px) {
+        .content {
+            padding-left: calc(var(--sidebar-width) + var(--page-padding-side));
+        }
         .toc-container {
             display: block;
             width: var(--sidebar-width);
@@ -75,7 +72,7 @@
     @media (min-width: 1200px) {
         .container {
             --sidebar-width: max(
-                28rem,
+                18rem,
                 calc(
                     0.5 *
                         (

@@ -9,10 +9,10 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/compo
 
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import Icons from './icons.svelte';
-    import ModalOverlay from './modal-overlay.svelte';
 
-    import { overlay_open } from '../stores';
+    import { overlay_open } from '$lib/stores';
+    import ModalOverlay from './modal-overlay.svelte';
+    import Icons from '../icons.svelte';
 
     interface Props {
         top_nav?: Snippet;

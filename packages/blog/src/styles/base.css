@@ -1,7 +1,4 @@
-/*	base reset ----------------------------- */
 html {
-    font-size: 62.5%;
-    -webkit-text-size-adjust: 100%;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     box-sizing: border-box;
     border-collapse: collapse;
@@ -11,6 +8,7 @@ html,
 body {
     height: 100%;
     width: 100%;
+    min-width: 200px;
 }
 
 :root {
@@ -55,6 +53,10 @@ ol {
     }
 }
 
+ul {
+    padding-left: 1em;
+}
+
 a {
     position: relative;
     text-decoration: none;
@@ -83,7 +85,7 @@ h2,
 h3 {
     position: relative;
     text-wrap: balance;
-    color: var(--fg-1);
+    color: var(--fg-exclaim);
 }
 
 strong {
@@ -136,6 +138,12 @@ blockquote {
     position: relative;
     margin: var(--line-height-body) 0;
     max-width: var(--page-content-width);
+    padding: 1em;
+    border-radius: var(--border-radius);
+    border-style: solid;
+    border-color: var(--border);
+    border-width: 1px;
+    background: var(--bg-3);
 }
 
 blockquote :where(p, ul, ol) {

@@ -53,6 +53,9 @@ importers:
       '@fontsource/fira-sans':
         specifier: ^5.2.7
         version: 5.2.7
+      '@fontsource/merriweather':
+        specifier: ^5.2.11
+        version: 5.2.11
     devDependencies:
       '@sveltejs/adapter-auto':
         specifier: ^6.0.0
@@ -446,6 +449,9 @@ packages:
 
   '@fontsource/fira-sans@5.2.7':
     resolution: {integrity: sha512-5DE4AealD/VnbwdzMgnpWfCttMQBbteNiK9DCJE7cVwZEbDTPLUoFDMMvxNQ498nZc5in7Mta9c/s+3Ehh0BAg==}
+
+  '@fontsource/merriweather@5.2.11':
+    resolution: {integrity: sha512-ZiIMeUh5iT8d73o6xlSF8GKgjV5pgiFrufYc5jZTVAfExtWKqM2vQHnsqXSFMv4ELhAcjt6Vf+5T3oVGXhAizQ==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -2100,6 +2106,8 @@ snapshots:
   '@fontsource/fira-mono@5.2.7': {}
 
   '@fontsource/fira-sans@5.2.7': {}
+
+  '@fontsource/merriweather@5.2.11': {}
 
   '@humanfs/core@0.19.1': {}
 

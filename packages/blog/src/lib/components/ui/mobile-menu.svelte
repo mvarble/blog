@@ -1,13 +1,14 @@
 <script lang="ts">
-    import { afterNavigate } from '$app/navigation';
-    import { trap } from '../actions';
-    import { reduced_motion } from '../stores';
     import { tick } from 'svelte';
     import { expoOut, quintOut } from 'svelte/easing';
     import type { TransitionConfig } from 'svelte/transition';
-    import Icon from './icon.svelte';
+    import { afterNavigate } from '$app/navigation';
+
+    import { trap } from '$lib/actions';
+    import { reduced_motion } from '$lib/stores';
+    import type { NavigationLink } from '$lib/types';
+    import Icon from '../icon.svelte';
     import MobileSubMenu from './mobile-submenu.svelte';
-    import type { NavigationLink } from '../types';
     import ModalOverlay from './modal-overlay.svelte';
 
     interface Props {

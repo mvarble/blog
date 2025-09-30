@@ -1,5 +1,38 @@
 @import 'katex/dist/katex.css';
 
+div.math.math-display {
+    overflow-x: auto;
+    --fading-size: 1rem;
+    mask-image: linear-gradient(to right,
+            transparent,
+            black 20px,
+            black calc(100% - 0.5 * var(--fading-size)),
+            transparent);
+    -webkit-mask-image: linear-gradient(to right,
+            transparent,
+            black 20px,
+            black calc(100% - 0.5 * var(--fading-size)),
+            transparent);
+
+    &>.katex-display {
+        margin: 0.75em 0;
+        padding: 0 var(--fading-size);
+
+        & .base:first-child {
+            margin-left: var(--fading-size);
+        }
+
+        & .base:last-child {
+            margin-right: var(--fading-size);
+        }
+
+        & .tag {
+            position: relative;
+            margin: 0 1em;
+        }
+    }
+}
+
 .katex {
     line-height: 1;
     font-size: 1.1rem;

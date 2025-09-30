@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { theme } from '../state';
+    import { theme } from '$lib/state';
 
     function toggle() {
         theme.current = theme.current === 'light' ? 'dark' : 'light';

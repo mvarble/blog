@@ -9,11 +9,11 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
     import { tick } from 'svelte';
     import { page } from '$app/state';
 
-    import { overlay_open, on_this_page_open } from '../stores';
-    import Icon from './icon.svelte';
+    import { overlay_open, on_this_page_open } from '$lib/stores';
+    import { type NavigationLink } from '$lib/types';
     import ThemeToggle from './theme-toggle.svelte';
     import MobileMenu from './mobile-menu.svelte';
-    import { type NavigationLink } from '$lib/types';
+    import Icon from '../icon.svelte';
 
     let { links }: { links: NavigationLink[] } = $props();
 
@@ -81,12 +81,6 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
         </div>
 
         <div class="menu">
-            <div class="external-links">
-                <a href="https://github.com/sveltejs" aria-label="GitHub Organization">
-                    <span data-icon="github"></span>
-                </a>
-            </div>
-
             <ThemeToggle />
         </div>
     </div>
@@ -130,7 +124,7 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
         height: var(--nav-height);
         margin: 0 auto;
         padding: 0 var(--page-padding-side);
-        background-color: var(--bg-1);
+        background-color: var(--bg-4);
         font-family: var(--font-family-body);
         user-select: none;
         isolation: isolate;
@@ -198,16 +192,6 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
         display: flex;
         width: 100%;
         gap: 0.5rem;
-
-        .external-links {
-            display: flex;
-            height: 100%;
-            margin: 0 0.5rem;
-
-            a {
-                outline-offset: -2px;
-            }
-        }
     }
 
     .home-link {
@@ -215,7 +199,7 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
         padding: 0.25em;
         width: 4em;
         --rat-stroke: var(--fg-3);
-        --rat-fill: var(--bg-4);
+        --rat-fill: var(--bg-1);
     }
 
     :root.dark .home-link {
@@ -287,21 +271,6 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
 
         .desktop {
             display: contents;
-
-            [data-icon] {
-                display: flex;
-                background: var(--fg-3);
-                padding: 0 0.5rem;
-                height: 100%;
-                aspect-ratio: 1;
-                mask: no-repeat 50% 50%;
-                mask-size: calc(100% - 1rem) auto;
-            }
-
-            [data-icon='github'] {
-                width: 3rem;
-                mask-image: url(/icons/github.svg);
-            }
         }
 
         nav :global(.small) {

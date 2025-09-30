@@ -33,10 +33,6 @@
 {/if}
 
 <style>
-    blockquote {
-        background: #efefef;
-        padding: 1em;
-    }
     :global(ol) {
         list-style-type: none;
         counter-reset: item;

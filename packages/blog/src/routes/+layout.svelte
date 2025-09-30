@@ -1,8 +1,8 @@
 <script>
     import '../styles/index.css';
 
-    import Shell from '$lib/components/shell.svelte';
-    import Nav from '$lib/components/nav.svelte';
+    import Shell from '$lib/components/ui/shell.svelte';
+    import Nav from '$lib/components/ui/nav.svelte';
 
     let { children } = $props();
 </script>
