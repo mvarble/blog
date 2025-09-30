@@ -64,7 +64,9 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
     style:z-index={$overlay_open && $on_this_page_open ? 80 : null}
     aria-label="Primary"
 >
-    <a class="home-link" href="/" title="Home" aria-label="Home"></a>
+    <a class="home-link" href="/" title="Home" aria-label="Home">
+        <Icon name="rat" size="100%" />
+    </a>
 
     <div class="desktop">
         <div class="links">
@@ -209,13 +211,16 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
     }
 
     .home-link {
-        height: 100%;
+        height: var(--nav-height);
+        padding: 0.25em;
         width: 4em;
-        background: url(/icons/rat.svg) no-repeat 0 50% / auto;
+        --rat-stroke: var(--fg-3);
+        --rat-fill: var(--bg-4);
     }
 
     :root.dark .home-link {
-        background-image: url(/icons/rat-dark.svg);
+        --rat-stroke: var(--fg-3);
+        --rat-fill: var(--bg-4);
     }
 
     .mobile-menu {
