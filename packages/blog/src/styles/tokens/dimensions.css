@@ -1,7 +1,7 @@
 :root {
     --nav-height: 4rem;
     --secondary-nav-height: 5rem;
-    --page-padding-top: 4rem;
+    --page-padding-top: 2rem;
     --page-padding-bottom: 5rem;
     --page-padding-side: 1.2rem;
     --thick-border-width: 0.3rem;
@@ -16,7 +16,7 @@
     }
 
     @media screen and (min-width: 838px) {
-        --page-padding-top: 5rem;
+        --page-padding-top: 3rem;
         --page-padding-side: 5rem;
         --secondary-nav-height: 6rem;
     }

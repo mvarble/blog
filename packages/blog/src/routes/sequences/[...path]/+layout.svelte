@@ -1,10 +1,13 @@
-<script>
-    let { data, children } = $props();
+<script lang="ts">
+    import TableOfContents from '$lib/components/ui/table-of-contents.svelte';
+    import tableOfContents from './table-of-contents';
+
+    let { children } = $props();
 </script>
 
 <div class="container">
     <div class="toc-container" style="order: 1">
-        <pre>{JSON.stringify(data, null, 2)}</pre>
+        <TableOfContents contents={$tableOfContents} />
     </div>
 
     <div class="page content">

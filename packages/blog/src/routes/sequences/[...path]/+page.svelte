@@ -1,9 +1,10 @@
 <script lang="ts">
-    import type { Sequence } from 'cms';
-    import type { SequencePage } from './proxy+page.server';
     import type { Component } from 'svelte';
+    import type { Sequence, SequenceChild } from 'cms';
 
     import Controls from '$lib/components/ui/controls.svelte';
+    import type { DocumentSummary, SequencePage } from '$lib/types';
+    import tableOfContentsStore from './table-of-contents';
 
     interface Data {
         filename: string;
@@ -21,6 +22,34 @@
 
     let prev = $derived(toControl(data.prev));
     let next = $derived(toControl(data.next));
+
+    function toTableOfContents(sequence: Sequence): DocumentSummary[] {
+        const summary: DocumentSummary[] = [];
+        summary.push({
+            title: sequence.title,
+            pathname: sequence.pathname,
+            children: [],
+        });
+
+        function toDocumentSummary(child: SequenceChild): DocumentSummary {
+            return {
+                title: child.title,
+                pathname: child.pathname,
+                children: child.children ? child.children.map(toDocumentSummary) : [],
+            };
+        }
+
+        if (sequence.children) {
+            summary.push(...sequence.children.map(toDocumentSummary));
+        }
+
+        return summary;
+    }
+
+    let tableOfContents = $derived(toTableOfContents(data.sequence));
+    $effect(() => {
+        tableOfContentsStore.set(tableOfContents);
+    });
 </script>
 
 <h1>{data.self.label ? `${data.self.label}. ${data.self.title}` : data.self.title}</h1>

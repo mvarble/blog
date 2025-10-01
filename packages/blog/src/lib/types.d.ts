@@ -15,3 +15,15 @@ export interface NavigationLink {
         }[];
     }[];
 }
+
+export interface DocumentSummary {
+    title: string;
+    pathname: string;
+    children: DocumentSummary[];
+}
+
+export interface SequencePage {
+    label?: string;
+    title: string;
+    pathname: string;
+}

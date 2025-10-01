@@ -2,12 +2,7 @@ import { dev } from '$app/environment';
 import { error, type Load } from '@sveltejs/kit';
 
 import { db, type Sequence, type SequenceChild } from 'cms';
-
-export interface SequencePage {
-    label?: string;
-    title: string;
-    pathname: string;
-}
+import type { SequencePage } from '$lib/types';
 
 export const load: Load = async ({ url }) => {
     // connect to database

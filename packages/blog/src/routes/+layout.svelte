@@ -11,4 +11,6 @@
     <Nav links={[]} />
 {/snippet}
 
-<Shell {top_nav} {children} />
+<Shell {top_nav}>
+    {@render children?.()}
+</Shell>
