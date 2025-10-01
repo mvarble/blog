@@ -260,21 +260,76 @@ export function getParentSequenceFilename(db: Database, filename: string): strin
     }
 }
 
-export function getSequence(db: Database, filename: string): Sequence | undefined {
-    interface Select {
-        id: number;
-        page_id: number;
-        mddoc_id: number;
-        title: string;
-        slug: string;
-        created: string;
-        edited: string;
-        enumerate: number;
-        pathname: string;
-        filename: string;
-        katex_macros: string;
-    }
+interface SequenceSelect {
+    id: number;
+    page_id: number;
+    mddoc_id: number;
+    title: string;
+    slug: string;
+    created: string;
+    edited: string;
+    enumerate: number;
+    pathname: string;
+    filename: string;
+    katex_macros: string;
+}
 
+interface IntermediateSequenceChild {
+    page_id: number;
+    mddoc_id: number;
+    parent_page_id: number;
+    title: string;
+    slug: string;
+    item: number;
+    label?: string;
+    appendix: number;
+    pathname: string;
+    filename: string;
+    katex_macros: string;
+}
+
+export function getSequence(db: Database, slug: string): Sequence | undefined {
+    const sequence = db
+        .prepare(
+            `SELECT
+                seq.id, seq.page_id, spage.mddoc_id, seq.title, seq.slug, seq.created, seq.edited,
+                seq.enumerate, spage.pathname, smddoc.filename, smddoc.katex_macros
+            FROM sequences seq
+            INNER JOIN pages spage ON seq.page_id = spage.id
+            INNER JOIN mddocs smddoc ON spage.mddoc_id = smddoc.id
+            WHERE seq.slug = ?`,
+        )
+        .get(slug) as SequenceSelect | undefined;
+    if (sequence) {
+        const sequencePages = db
+            .prepare(
+                `SELECT
+                    sp.page_id, p.mddoc_id, sp.parent_page_id, sp.title, sp.slug, sp.item,
+                    sp.label, sp.appendix, p.pathname, m.filename, m.katex_macros
+                FROM sequence_pages sp
+                INNER JOIN pages p ON sp.page_id = p.id
+                INNER JOIN mddocs m ON p.mddoc_id = m.id
+                WHERE sp.sequence_id = ?; `,
+            )
+            .all(sequence.id) as IntermediateSequenceChild[];
+        return {
+            id: sequence.id,
+            mddocId: sequence.mddoc_id,
+            pageId: sequence.page_id,
+            slug: sequence.slug,
+            title: sequence.title,
+            enumerate: sequence.enumerate == 0 ? false : true,
+            pathname: sequence.pathname,
+            filename: sequence.filename,
+            created: new Date(sequence.created),
+            edited: new Date(sequence.edited),
+            katexMacros: JSON.parse(sequence.katex_macros),
+            children: buildTree(sequencePages, sequence.page_id),
+        };
+    }
+}
+
+export function getParentSequence(db: Database, filename: string): Sequence | undefined {
     // first try to see if the file is a direct sequence child
     let sequenceRes = db
         .prepare(
@@ -289,7 +344,7 @@ export function getSequence(db: Database, filename: string): Sequence | undefine
             INNER JOIN mddocs cmddoc ON cpage.mddoc_id = cmddoc.id
             WHERE cmddoc.filename = ?`,
         )
-        .get(filename) as Select | undefined;
+        .get(filename) as SequenceSelect | undefined;
 
     // if it is not a direct sequence child, try to see if it is the root
     if (!sequenceRes) {
@@ -303,7 +358,7 @@ export function getSequence(db: Database, filename: string): Sequence | undefine
                 INNER JOIN mddocs smddoc ON spage.mddoc_id = smddoc.id
                 WHERE smddoc.filename = ?`,
             )
-            .get(filename) as Select | undefined;
+            .get(filename) as SequenceSelect | undefined;
     }
 
     // if it is still not a sequence child, see if it is in some other non-page document
@@ -319,7 +374,7 @@ export function getSequence(db: Database, filename: string): Sequence | undefine
             )
             .get(filename) as { filename: string } | undefined;
         if (statementParent) {
-            return getSequence(db, statementParent.filename);
+            return getParentSequence(db, statementParent.filename);
         }
     }
 
@@ -350,20 +405,6 @@ export function getSequence(db: Database, filename: string): Sequence | undefine
             children: buildTree(sequencePages, sequenceRes.page_id),
         };
     }
-}
-
-interface IntermediateSequenceChild {
-    page_id: number;
-    mddoc_id: number;
-    parent_page_id: number;
-    title: string;
-    slug: string;
-    item: number;
-    label?: string;
-    appendix: number;
-    pathname: string;
-    filename: string;
-    katex_macros: string;
 }
 
 function buildTree(items: IntermediateSequenceChild[], rootId: number): SequenceChild[] {

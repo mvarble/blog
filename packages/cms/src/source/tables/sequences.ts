@@ -7,7 +7,7 @@ import {
     type SequenceChildBase,
     type Database,
     touchSequence,
-    getSequence,
+    getParentSequence,
 } from '../../db';
 import {
     hasArrayField,
@@ -167,7 +167,7 @@ async function initialize(
 }
 
 async function crossReference(db: Database, filename: string, contents: string) {
-    const sequence = getSequence(db, filename);
+    const sequence = getParentSequence(db, filename);
     if (sequence) {
         async function recurseFile(child: SequenceChildBase, contents: string) {
             edgeParser(

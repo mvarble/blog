@@ -1,30 +1,18 @@
-import { dev } from '$app/environment';
 import { error, type Load } from '@sveltejs/kit';
 
 import { db, type Sequence, type SequenceChild } from 'cms';
 import type { SequencePage } from '$lib/types';
 
-export const load: Load = async ({ url }) => {
-    // connect to database
-    const conn = db.connect();
+export const load: Load = async (req) => {
+    const { url, parent } = req;
+    const { sequence } = await parent();
 
     // get the filename from the pathname
     const pathname = url.pathname.slice(1, -1);
+    const conn = db.connect();
     const filename = db.getPageFilename(conn, pathname);
     if (!filename) {
         error(404, { message: `Not found ${pathname}` });
-    }
-
-    // get the sequence from the filename
-    const sequence = db.getSequence(conn, filename);
-    if (!sequence) {
-        if (dev) {
-            error(500, {
-                message: `Page found for ${pathname} but no matching sequence. This should never happen.`,
-            });
-        } else {
-            error(404, { message: `Not found ${pathname}` });
-        }
     }
 
     return { filename, sequence, ...findSiblings(sequence, filename) };

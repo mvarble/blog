@@ -139,10 +139,6 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
             height: 4px;
             background: linear-gradient(to top, rgba(0, 0, 0, 0.05), transparent);
         }
-
-        :root.dark & {
-            background-color: var(--bg-3);
-        }
     }
 
     a {
@@ -213,8 +209,7 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
     }
 
     :root.dark .home-link {
-        --rat-stroke: var(--fg-3);
-        --rat-fill: var(--bg-4);
+        --rat-fill: var(--bg-0);
     }
 
     .mobile-menu {

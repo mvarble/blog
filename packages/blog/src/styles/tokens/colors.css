@@ -2,12 +2,15 @@
     color-scheme: light;
 
     /* Foreground colours */
-    --fg-1: hsl(0, 0%, 8%);
-    --fg-2: hsl(0, 0%, 15%);
-    --fg-3: hsl(0, 0%, 40%);
-    --fg-4: hsl(0, 0%, 50%);
-    --fg-accent: hsl(211.1, 94.6%, 29.2%);
-    --fg-exclaim: hsl(250.4, 48.5%, 46.5%);
+    --fg-hue: 0;
+    --fg-accent-hue: 211.1;
+    --fg-exclaim-hue: 250.4;
+    --fg-1: hsl(var(--fg-hue), 0%, 8%);
+    --fg-2: hsl(var(--fg-hue), 0%, 15%);
+    --fg-3: hsl(var(--fg-hue), 0%, 40%);
+    --fg-4: hsl(var(--fg-hue), 0%, 50%);
+    --fg-accent: hsl(var(--fg-accent-hue), 94.6%, 29.2%);
+    --fg-exclaim: hsl(var(--fg-exclaim-hue), 48.5%, 46.5%);
 
     /* Background colours */
     --bg-hue: 46.7;
@@ -32,21 +35,22 @@
 :root.dark {
     color-scheme: dark;
 
-    --bg-hue: 220;
-
     /* Foreground colours */
-    --fg-1: hsl(var(--bg-hue), 2%, 90%);
-    --fg-2: hsl(var(--bg-hue), 3%, 80%);
-    --fg-3: hsl(var(--bg-hue), 5%, 65%);
-    --fg-4: hsl(var(--bg-hue), 5%, 55%);
-    --fg-accent: hsl(12, 94%, 62%);
+    --fg-hue: 46.7;
+    --fg-1: hsl(var(--fg-hue), 2%, 90%);
+    --fg-2: hsl(var(--fg-hue), 3%, 80%);
+    --fg-3: hsl(var(--fg-hue), 5%, 65%);
+    --fg-4: hsl(var(--fg-hue), 5%, 55%);
+    --fg-accent: hsl(var(--fg-accent-hue), 100%, 85%);
+    --fg-exclaim: hsl(var(--fg-exclaim-hue), 100%, 85%);
 
     /* Background colours */
-    --bg-0: hsl(var(--bg-hue), 8%, 10%);
-    --bg-1: hsl(var(--bg-hue), 10%, 12%);
-    --bg-2: hsl(var(--bg-hue), 12%, 14%);
-    --bg-3: hsl(var(--bg-hue), 14%, 16%);
-    --bg-4: hsl(var(--bg-hue), 15%, 21%);
+    --bg-hue: 211.1;
+    --bg-0: hsl(var(--bg-hue), 8%, 22%);
+    --bg-1: hsl(var(--bg-hue), 10%, 20%);
+    --bg-2: hsl(var(--bg-hue), 12%, 25%);
+    --bg-3: hsl(var(--bg-hue), 5%, 22%);
+    --bg-4: hsl(var(--alt-bg-hue), 8%, 20%);
     --bg-accent: hsl(15, 100%, 35%);
     --bg-highlight: hsl(60, 100%, 15%);
 

@@ -1,13 +1,40 @@
 <script lang="ts">
-    import TableOfContents from '$lib/components/ui/table-of-contents.svelte';
-    import tableOfContents from './table-of-contents';
+    import type { Sequence, SequenceChild } from 'cms';
+    import type { DocumentSummary } from '$lib/types';
 
-    let { children } = $props();
+    import TableOfContents from '$lib/components/ui/table-of-contents.svelte';
+
+    let { children, data } = $props();
+
+    function toTableOfContents(sequence: Sequence): DocumentSummary[] {
+        const summary: DocumentSummary[] = [];
+        summary.push({
+            title: sequence.title,
+            pathname: sequence.pathname,
+            children: [],
+        });
+
+        function toDocumentSummary(child: SequenceChild): DocumentSummary {
+            return {
+                title: child.title,
+                pathname: child.pathname,
+                children: child.children ? child.children.map(toDocumentSummary) : [],
+            };
+        }
+
+        if (sequence.children) {
+            summary.push(...sequence.children.map(toDocumentSummary));
+        }
+
+        return summary;
+    }
+
+    let contents = $derived(toTableOfContents(data.sequence));
 </script>
 
 <div class="container">
     <div class="toc-container" style="order: 1">
-        <TableOfContents contents={$tableOfContents} />
+        <TableOfContents {contents} />
     </div>
 
     <div class="page content">
