@@ -4,7 +4,7 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 import remarkMath from 'remark-math';
 import remarkFrontmatter from 'remark-frontmatter';
-import { remarkCms, rehypeCms } from 'cms/mdsvex';
+import { remarkCms, rehypeCms, rehypeKatexBox } from 'cms/mdsvex';
 
 import katex from './katex.js';
 
@@ -14,7 +14,7 @@ const config = {
         vitePreprocess(),
         mdsvex({
             remarkPlugins: [remarkFrontmatter, remarkMath, remarkCms],
-            rehypePlugins: [[rehypeCms, katex]],
+            rehypePlugins: [[rehypeCms, katex], rehypeKatexBox],
         }),
     ],
     kit: {

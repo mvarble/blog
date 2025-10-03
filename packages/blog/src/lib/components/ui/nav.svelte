@@ -196,9 +196,9 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
         color: var(--fg-2);
 
         & > span {
-            top: calc(50% - 0.8 * var(--font-size-body));
+            top: calc(50% - 0.5rem);
             padding-left: 0.2em;
-            font-size: var(--font-size-body);
+            font-size: 1rem;
             visibility: hidden;
         }
 

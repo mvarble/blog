@@ -1,39 +1,54 @@
 @import 'katex/dist/katex.css';
 
-div.math.math-display {
+.math-tag-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.math-tag {
+    margin-left: 2em;
+}
+
+.math-scroll-container {
     overflow-x: auto;
-    --fading-size: 1rem;
+    flex-grow: 1;
+    --fading-size: 3em;
     mask-image: linear-gradient(to right,
-            transparent,
-            black 20px,
-            black calc(100% - 0.5 * var(--fading-size)),
+            transparent 0%,
+            black var(--fading-size),
+            black calc(100% - var(--fading-size)),
             transparent);
     -webkit-mask-image: linear-gradient(to right,
-            transparent,
-            black 20px,
-            black calc(100% - 0.5 * var(--fading-size)),
+            transparent 0%,
+            black var(--fading-size),
+            black calc(100% - var(--fading-size)),
             transparent);
-
-    &>.katex-display {
-        margin: 0.75em 0;
-        padding: 0 var(--fading-size);
-
-        & .base:first-child {
-            margin-left: var(--fading-size);
-        }
-
-        & .base:last-child {
-            margin-right: var(--fading-size);
-        }
-
-        & .tag {
-            position: relative;
-            margin: 0 1em;
-        }
-    }
 }
 
 .katex {
     line-height: 1;
     font-size: 1.1rem;
+}
+
+.katex-display {
+    margin: 0.5em 0 !important;
+
+    & .base:first-child {
+        margin-left: var(--fading-size);
+    }
+
+    & .base:last-child {
+        margin-right: var(--fading-size);
+    }
+}
+
+@media (min-resolution: 1.75x) {
+    .katex {
+        font-size: 1.32rem;
+    }
+}
+
+blockquote .katex {
+    font-size: 0.99rem;
 }

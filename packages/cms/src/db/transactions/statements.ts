@@ -53,7 +53,7 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
                     SET slug = ?, label = ?, kind = ? WHERE mddoc_id = ?
                     RETURNING id;`,
                 )
-                .get(input.parentPageId, input.slug, input.label, input.kind, mddocId);
+                .get(input.slug, input.label, input.kind, mddocId);
             id = (out as { id: number }).id;
         } else {
             throw e;

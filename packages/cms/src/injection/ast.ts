@@ -1,5 +1,6 @@
 import path from 'path';
 import { type RootContent, type Root } from 'mdast';
+import type { RootContent as RehypeContent } from 'hast';
 import { type Plugin } from 'unified';
 import { type VFile } from 'vfile';
 import type { KatexOptions } from 'katex';
@@ -173,5 +174,148 @@ export const rehypeCms: Plugin<[KatexOptions?]> = (options) => {
                 ...katexMacros,
             },
         })(tree);
+    };
+};
+
+export const rehypeKatexBox: Plugin<[]> = () => {
+    interface VisitState {
+        parent: { children: RehypeContent[] };
+        child: RehypeContent;
+        index: number;
+    }
+
+    function visitor({ parent, child, index }: VisitState) {
+        // find any katex display block
+        if (
+            child.type != 'element' ||
+            child.tagName != 'div' ||
+            !('className' in child.properties) ||
+            !Array.isArray(child.properties.className) ||
+            !child.properties.className.includes('math') ||
+            !child.properties.className.includes('math-display')
+        ) {
+            return;
+        }
+
+        // see if it has a tag (super dirty, but what the hell)
+        let tag: string | undefined = undefined;
+        if (
+            child.children.length == 1 &&
+            child.children[0].type == 'text' &&
+            child.children[0].value.startsWith('{@html')
+        ) {
+            const startIndex = child.children[0].value.indexOf('<span class=\\"tag\\"');
+            if (startIndex > 0) {
+                const rest = child.children[0].value.slice(startIndex);
+                let depth = 0;
+                let stopIndex = 0;
+                while (stopIndex < rest.length) {
+                    // Found opening <span
+                    if (rest.slice(stopIndex, stopIndex + 5) === '<span') {
+                        depth++;
+                        stopIndex += 5;
+                        // Skip to end of opening tag
+                        while (stopIndex < rest.length && rest[stopIndex] !== '>') stopIndex++;
+                        stopIndex++; // Skip the '>'
+                    }
+                    // Found closing </span>
+                    else if (rest.slice(stopIndex, stopIndex + 7) === '</span>') {
+                        depth--;
+                        stopIndex += 7;
+                        if (depth === 0) {
+                            break;
+                        }
+                    } else {
+                        stopIndex++;
+                    }
+                }
+                stopIndex += startIndex;
+
+                const beforeText = child.children[0].value.slice(0, startIndex);
+                tag = child.children[0].value.slice(startIndex, stopIndex);
+                const afterText = child.children[0].value.slice(stopIndex);
+                child.children[0].value = beforeText + afterText;
+            }
+        }
+
+        const mathDiv: RehypeContent = {
+            type: 'element',
+            tagName: 'div',
+            properties: {
+                className: ['math-scroll-container'],
+            },
+            children: [
+                {
+                    type: 'element',
+                    tagName: 'div',
+                    properties: {
+                        className: ['math-container'],
+                    },
+                    children: [child],
+                },
+            ],
+        };
+
+        if (tag) {
+            parent.children[index] = {
+                type: 'element',
+                tagName: 'div',
+                properties: {
+                    className: ['math-tag-container'],
+                },
+                children: [
+                    mathDiv,
+                    {
+                        type: 'element',
+                        tagName: 'div',
+                        properties: {
+                            className: ['math-tag'],
+                        },
+                        children: [
+                            {
+                                type: 'text',
+                                value: `{@html "${tag}"}`,
+                            },
+                        ],
+                    },
+                ],
+            };
+        } else {
+            parent.children[index] = mathDiv;
+        }
+    }
+
+    return (tree) => {
+        if (!('children' in tree) || !Array.isArray(tree.children)) {
+            return;
+        }
+
+        const n = tree.children.length - 1;
+        const nodes: VisitState[] = tree.children.toReversed().map(
+            (child, i) =>
+                ({
+                    parent: tree,
+                    child,
+                    index: n - i,
+                }) as VisitState,
+        );
+
+        while (nodes.length > 0) {
+            const node = nodes.pop()!;
+            visitor(node);
+            if ('children' in node.child && Array.isArray(node.child)) {
+                const n = node.child.children.length - 1;
+                nodes.push(
+                    ...node.child.children.toReversed().map(
+                        (child, i) =>
+                            ({
+                                parent: node.child,
+                                child,
+                                index: n - i,
+                            }) as VisitState,
+                    ),
+                );
+            }
+        }
     };
 };

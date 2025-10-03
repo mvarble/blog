@@ -2,6 +2,7 @@ import { error, type Load } from '@sveltejs/kit';
 
 import { db, type Sequence, type SequenceChild } from 'cms';
 import type { SequencePage } from '$lib/types';
+import type { DocumentSummary } from '$lib/types';
 
 export const load: Load = async (req) => {
     const { url, parent } = req;
@@ -15,8 +16,36 @@ export const load: Load = async (req) => {
         error(404, { message: `Not found ${pathname}` });
     }
 
-    return { filename, sequence, ...findSiblings(sequence, filename) };
+    // prepare the page data
+    return {
+        filename,
+        contents: toTableOfContents(sequence),
+        ...findSiblings(sequence, filename),
+    };
 };
+
+function toTableOfContents(sequence: Sequence): DocumentSummary[] {
+    const summary: DocumentSummary[] = [];
+    summary.push({
+        title: sequence.title,
+        pathname: sequence.pathname,
+        children: [],
+    });
+
+    function toDocumentSummary(child: SequenceChild): DocumentSummary {
+        return {
+            title: child.title,
+            pathname: child.pathname,
+            children: child.children ? child.children.map(toDocumentSummary) : [],
+        };
+    }
+
+    if (sequence.children) {
+        summary.push(...sequence.children.map(toDocumentSummary));
+    }
+
+    return summary;
+}
 
 function toSequencePage({ title, pathname, label }: Sequence | SequenceChild): SequencePage {
     return { title, pathname, label };

@@ -10,9 +10,9 @@ kind: theorem
 Fix a $(\Prb, \scrF)$ special jump-diffusion $\X$ with special differential characteristics $(\affDrift, \affDiff, \affJump)$.
 Suppose we have the regularity condition [](eq:affJump-regularity) above.
 For each $(\Prb, \scrF)$ predictable $H$ of finite-variation with image contained in $\odeSpace^\circ$, the process $\exp(H \shortInt \X)$ is special and
-\[
+$$
   \exp\Big(H \shortInt \X - \ode(H, \X) \shortInt \leb\Big)
-\]
+$$
 is a $(\Prb, \scrF)$ local martingale.
 
 
@@ -27,19 +27,19 @@ $$
       &\quad+ \sum_{0<s\leq t} \Big(
         \exp\big(H \shortInt \X_{s-}
         + \Delta\big(H \shortInt \X\big)_s \big)
-        - \exp\big(H\shortInt \X_{s-}\big) \\
-        &\hspace{48mm}- \exp\big(H \shortInt\X_{s-}\big) \Delta \big(H \shortInt \X\big)_s\Big)
+        - \exp\big(H\shortInt \X_{s-}\big)
+        - \exp\big(H \shortInt\X_{s-}\big) \Delta \big(H \shortInt \X\big)_s\Big) \\
     &=
       \Big(\exp\big( H \shortInt \X_- \big) \cdot H \Big) \shortInt \X_t
       + \frac12 \exp\big( H \shortInt \X \big) \bprj{H}{\affDiff(\X)H} \shortInt \leb_t \\
-      &\quad + \exp\big(H\shortInt\X_-\big) \Big( e^{\prj{H}{\id_\vecSpace}} - 1 - \prj{H}{\id_\vecSpace} \Big) \ast \jumpMeas^\X_t \\
+      &\hspace{40mm} + \exp\big(H\shortInt\X_-\big) \Big( e^{\prj{H}{\id_\vecSpace}} - 1 - \prj{H}{\id_\vecSpace} \Big) \ast \jumpMeas^\X_t \\
     @tag(LK-exp-ito-pause)
     &=
       \Big(\exp\big( H \shortInt \X \big) \cdot \prj{H}{\affDrift}
       + \frac12 \exp\big( H \shortInt \X \big) \bprj{H}{\affDiff(\X)H} \Big) \shortInt \leb_t \\
-      &\quad+ \Big( \exp\big( H \shortInt \X_- \big) \cdot H \Big) \shortInt \X^\rmc_t
+      &\hspace{20mm}+ \Big( \exp\big( H \shortInt \X_- \big) \cdot H \Big) \shortInt \X^\rmc_t
       + \exp\big( H \shortInt \X_- \big) \prj{H}{\id_\vecSpace} \ast \compensate{\jumpMeas^\X}_t \\
-      &\quad+ \exp\big(H\shortInt\X_-\big) \Big( e^{\prj{H}{\id_\vecSpace}} - 1 - \prj{H}{\id_\vecSpace} \Big) \ast \jumpMeas^\X_t
+      &\hspace{20mm}+ \exp\big(H\shortInt\X_-\big) \Big( e^{\prj{H}{\id_\vecSpace}} - 1 - \prj{H}{\id_\vecSpace} \Big) \ast \jumpMeas^\X_t
   \end{aligned}
 $$
 Now, choosing our $(\Prb, \scrF)$ localizing sequence $(T_n)_{n\in\bbN}$ as in [](eq:stopping-times), we have the following bound.
@@ -58,8 +58,8 @@ $$
   \begin{aligned}
   \exp\big( H \shortInt \X_t \big)
   &=
-    &\quad\Big(\exp\big( H \shortInt \X \big) \cdot \ode(H, \X) \Big) \shortInt \leb_t + \Big( \exp\big( H \shortInt \X_- \big) \cdot H \Big) \shortInt \X^\rmc_t \\
-    &\quad+ \exp\big(H\shortInt\X_-\big) \Big( e^{\prj{H}{\id_\vecSpace}} - 1 \Big) \ast \compensate{\jumpMeas^\X}_t
+    \Big(\exp\big( H \shortInt \X \big) \cdot \ode(H, \X) \Big) \shortInt \leb_t + \Big( \exp\big( H \shortInt \X_- \big) \cdot H \Big) \shortInt \X^\rmc_t \\
+    &\hspace{10mm}+ \exp\big(H\shortInt\X_-\big) \Big( e^{\prj{H}{\id_\vecSpace}} - 1 \Big) \ast \compensate{\jumpMeas^\X}_t
   \end{aligned}
 $$
 The decomposition of $\exp(H \shortInt \X)$ into a predictable finite-variation process and a  local martingale implies that it is special.

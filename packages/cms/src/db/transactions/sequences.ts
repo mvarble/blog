@@ -200,7 +200,7 @@ export function touchSequenceChild(
             db.prepare(
                 `UPDATE sequence_pages
                 SET sequence_id = ?, parent_page_id = ?, title = ?, slug = ?,
-                    item = ?, appendix = ?, label = ?, enumerate = ?
+                    item = ?, appendix = ?, label = ?
                 WHERE page_id = ?;`,
             ).run(
                 sequenceId,

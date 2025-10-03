@@ -1,1 +1,1 @@
-export { remarkCms, rehypeCms } from '../injection/ast';
+export { remarkCms, rehypeCms, rehypeKatexBox } from '../injection/ast';
