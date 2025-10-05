@@ -142,14 +142,6 @@
                                 </li>
                             {/each}
                         </ul>
-
-                        <hr />
-
-                        <ul>
-                            <li>
-                                <a href="https://github.com/sveltejs">GitHub</a>
-                            </li>
-                        </ul>
                     </div>
                 </div>
 

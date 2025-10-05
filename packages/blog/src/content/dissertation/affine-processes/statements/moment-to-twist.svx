@@ -21,26 +21,20 @@ $$
 <Proof>
 
 Consider $\underline\momentVar \in \vecSpace^{|\underline t|}$ from which we may not construct the recursion in [](eq:moment-to-twist).
-In other words, there exists maximal $j \in \{1, \ldots, n\}$ in the recursion which fails; i.e.\ $\twistVar_k \in \momentSpace(\Delta t_k)$ for all $k = n, \ldots, j+1$ and $\twistVar_j \not\in\momentSpace(\Delta t_j)$.
-We now repeat the work as in [](eq:tower-start)-[](eq:tower-end) for a fixed $\stateVar \in \stateSpace^\circ$ to get the following identity.
+In other words, there exists maximal $j \in \{1, \ldots, n\}$ in the recursion which fails; i.e. $\twistVar_k \in \momentSpace(\Delta t_k)$ for all $k = n, \ldots, j+1$ and $\twistVar_j \not\in\momentSpace(\Delta t_j)$.
+We now repeat the work as in [](eq:tower) for a fixed $\stateVar \in \stateSpace^\circ$ to get the following identity.
 $$
   \begin{aligned}
     &\log\Exp_{\Prb_\stateVar}\exp\prj{\underline\momentVar}{\X_{\underline t}} \\
     &= \log\Exp_{\Prb_\stateVar}\bigg( \exp\Big(\sum_{k=1}^{n-1} \prj{\momentVar_k}{\X_{t_k}}\Big) \cdot \Exp_{\Prb_\stateVar}\Big( \exp\bprj{\momentVar_n}{\X_{t_n}} |\scrF_{t_{n-1}} \Big) \bigg) \\
-    &= \begin{aligned}
-      &\affPart_0(\Delta t_n, \momentVar_n)
-      + \log\Exp_{\Prb_\stateVar}\bigg( \exp\Big(\sum_{k=1}^{n-2} \prj{\momentVar_k}{\X_{t_k}}\Big) \\
-      &\hspace{50mm} \cdot \Exp_{\Prb_\stateVar}\Big( \exp\bprj{\momentVar_{n-1} + \affPart(\Delta t_n, \momentVar_n)}{\X_{t_{n-1}}} | \scrF_{t_{n-2}} \Big)  \bigg)
-    \end{aligned} \\
-    &= \begin{aligned}
-      &\affPart_0\big(\Delta t_n, \twistVar_n) \\
-      &+ \log\Exp_{\Prb_\stateVar}\bigg( \exp\Big(\sum_{k=1}^{n-2} \prj{\momentVar_k}{\X_{t_k}}\Big) \cdot \Exp_{\Prb_\stateVar}\Big( \exp\bprj{\twistVar_{n-1}}{\X_{t_{n-1}}} | \scrF_{t_{n-2}} \Big)  \bigg)
-    \end{aligned} \\
+    &= \affPart_0(\Delta t_n, \momentVar_n)
+      + \log\Exp_{\Prb_\stateVar}\bigg( \exp\Big(\sum_{k=1}^{n-2} \prj{\momentVar_k}{\X_{t_k}}\Big)
+       \cdot \Exp_{\Prb_\stateVar}\Big( \exp\bprj{\momentVar_{n-1} + \affPart(\Delta t_n, \momentVar_n)}{\X_{t_{n-1}}} | \scrF_{t_{n-2}} \Big)  \bigg) \\
+    &= \affPart_0\big(\Delta t_n, \twistVar_n)
+      + \log\Exp_{\Prb_\stateVar}\bigg( \exp\Big(\sum_{k=1}^{n-2} \prj{\momentVar_k}{\X_{t_k}}\Big) \cdot \Exp_{\Prb_\stateVar}\Big( \exp\bprj{\twistVar_{n-1}}{\X_{t_{n-1}}} | \scrF_{t_{n-2}} \Big)  \bigg) \\
     & \quad\vdots \\
-    &= \begin{aligned}
-      &\sum_{k=j+1}^n \affPart_0(\Delta t_k, \twistVar_k) \\
-      &+ \log\Exp_{\Prb_\stateVar}\bigg( \exp\Big(\sum_{k=1}^{j-1} \prj{\momentVar_k}{\X_{t_k}}\Big) \cdot \Exp_{\Prb_\stateVar}\Big( \exp\bprj{\twistVar_j}{\X_{t_j}} |\scrF_{t_{j-1}} \Big) \bigg)
-    \end{aligned} \\
+    &= \sum_{k=j+1}^n \affPart_0(\Delta t_k, \twistVar_k)
+      + \log\Exp_{\Prb_\stateVar}\bigg( \exp\Big(\sum_{k=1}^{j-1} \prj{\momentVar_k}{\X_{t_k}}\Big) \cdot \Exp_{\Prb_\stateVar}\Big( \exp\bprj{\twistVar_j}{\X_{t_j}} |\scrF_{t_{j-1}} \Big) \bigg) \\
     &= \sum_{k=j+1}^n \affPart_0(\Delta t_k, \twistVar_k) + \log\Exp_{\Prb_\stateVar}\bigg( \exp\Big(\sum_{k=1}^{j-1} \prj{\momentVar_k}{\X_{t_k}}\Big) \cdot \Exp_{\Prb_{\X_{t_{j-1}}}} \exp\bprj{\twistVar_j}{\X_{\Delta t_j}} \bigg)
   \end{aligned}
 $$

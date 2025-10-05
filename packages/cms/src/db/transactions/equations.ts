@@ -70,9 +70,16 @@ export function getEquationReferences(db: Database, mddocId: number): EquationRe
             FROM equations e
             INNER JOIN equation_refs er ON e.id = er.target_equation_id
             INNER JOIN pages p ON e.parent_page_id = p.id
-            WHERE er.source_mddoc_id = ?`,
+            WHERE er.source_mddoc_id = ?
+
+            UNION
+
+            SELECT e.id, e.slug, e.label, p.pathname
+            FROM equations e
+            INNER JOIN pages p ON e.parent_page_id = p.id
+            WHERE e.source_mddoc_id = ?`,
         )
-        .all(mddocId) as EquationReference[];
+        .all(mddocId, mddocId) as EquationReference[];
     return out.map(({ id, slug, label, pathname: parentPathname }) => ({
         id,
         slug,

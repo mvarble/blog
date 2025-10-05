@@ -3,6 +3,7 @@ import { type KatexMacros } from '.';
 
 export interface TouchStatementInput {
     parentPageId: number;
+    root: number;
     slug: string;
     label: string;
     kind: string;
@@ -20,8 +21,10 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
     let id: number;
     try {
         const mddoc = db
-            .prepare('INSERT INTO mddocs (filename, katex_macros) VALUES (?, ?) RETURNING id;')
-            .get(input.filename, JSON.stringify(input.katexMacros));
+            .prepare(
+                'INSERT INTO mddocs (filename, root, katex_macros) VALUES (?, ?, ?) RETURNING id;',
+            )
+            .get(input.filename, input.root, JSON.stringify(input.katexMacros));
         mddocId = (mddoc as { id: number }).id;
 
         db.prepare(
@@ -38,8 +41,10 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
     } catch (e) {
         if (isUniqueConstraintError(e)) {
             const mddoc = db
-                .prepare('UPDATE mddocs SET katex_macros = ? WHERE filename = ? RETURNING id;')
-                .get(JSON.stringify(input.katexMacros), input.filename);
+                .prepare(
+                    'UPDATE mddocs SET katex_macros = ?, root = ?  WHERE filename = ? RETURNING id;',
+                )
+                .get(JSON.stringify(input.katexMacros), input.root, input.filename);
             mddocId = (mddoc as { id: number }).id;
 
             db.prepare('UPDATE page_mddocs SET parent_page_id = ? WHERE imported_mddoc_id = ?').run(
@@ -69,6 +74,7 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
 function getStatementFromKey(db: Database, key: string, value: string): Statement | undefined {
     interface Select {
         parent_page_id: number;
+        root: number;
         id: number;
         mddoc_id: number;
         slug: string;
@@ -79,7 +85,9 @@ function getStatementFromKey(db: Database, key: string, value: string): Statemen
     }
     const out = db
         .prepare(
-            `SELECT pm.parent_page_id, s.id, s.mddoc_id, s.slug, s.label, s.kind, m.katex_macros, m.filename
+            `SELECT
+                pm.parent_page_id, s.id, s.mddoc_id, s.slug, s.label, s.kind,
+                m.katex_macros, m.filename, m.root
             FROM mddocs m
             INNER JOIN statements s ON m.id = s.mddoc_id
             INNER JOIN page_mddocs pm ON m.id = pm.imported_mddoc_id
@@ -89,6 +97,7 @@ function getStatementFromKey(db: Database, key: string, value: string): Statemen
     if (out) {
         return {
             id: out.id,
+            root: out.root,
             parentPageId: out.parent_page_id,
             mddocId: out.mddoc_id,
             slug: out.slug,

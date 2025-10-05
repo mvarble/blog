@@ -28,15 +28,4 @@ $$
 $$
 This concludes that $\rf$ can be written as in [](eq:rf-integral).
 
-
-$$
-  @tag(hi-ldp)
-  f(x)
-$$
-
-$$
-  @tag(hi-ldp2)
-  f(x)
-$$
-
 </Proof>

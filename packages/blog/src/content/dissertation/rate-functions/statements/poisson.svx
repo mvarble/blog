@@ -10,7 +10,7 @@ $$
   \int_0^\infty \Big( \dot\pathVar(t)  \log\big(\dot\pathVar(t)\big) - \dot\pathVar(t) + 1 \Big) \rmd t,
 $$
 so long as $\pathVar(t) \geq 0$ for Lebesgue-almost-every $t \geq 0$ (otherwise, it is infinite).
-In the case that $\pathVar(t) = 0$, we are taking the continuous extension of the integrand, i.e.\ $0\log(0) \defeq 0$.
+In the case that $\pathVar(t) = 0$, we are taking the continuous extension of the integrand, i.e. $0\log(0) \defeq 0$.
 Similar to the work of Schilder's theorem, we may show, for a standard Poisson process $\N$, $\epsilon\N_{\cdot/\epsilon}$ is exponentially equivalent to this $Y^\epsilon$, which makes the family satisfy a large deviation principle with rate function [](eq:rf-poisson).
 In fact and exercise of our reference text, [Exercise 5.2.12](cite:dembo2010), suggests the reader to show just this.
 

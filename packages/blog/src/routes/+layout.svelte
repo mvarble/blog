@@ -8,7 +8,12 @@
 </script>
 
 {#snippet top_nav()}
-    <Nav links={[]} />
+    <Nav
+        links={[
+            { title: 'Posts', slug: 'posts' },
+            { title: 'Sequences', slug: 'sequences' },
+        ]}
+    />
 {/snippet}
 
 <Shell {top_nav}>

@@ -55,12 +55,8 @@ This chapter is very example heavy, and so we find it to be the most intuitive o
 By the end, we hope rate functions, as well as large deviations, will be better understood from a general perspective.
 All this said, let us now proceed to our final chapter, which is organized as follows.
 
-[Section %label](./mogulskii) Introduces an important large deviation principle for stochastic processes with independent increments.
-
-[Section %label](./transformations) Introduces tools which allow us to lift the preceding principles to stochastic processes with state-dependence.
-
-[Section %label](./coupling) Introduces a trick which allows one to evaluate rate functions in the case of there being _multiple sources_ of randomness.
-
-[Section %label](./main) Establishes our main result of developing a semi-closed form for $\ode^*$.
-
-[Section %label](./interpretation) Discusses the intuition and potential extensions of our result.
+- [Section %label](./mogulskii) Introduces an important large deviation principle for stochastic processes with independent increments.
+- [Section %label](./transformations) Introduces tools which allow us to lift the preceding principles to stochastic processes with state-dependence.
+- [Section %label](./coupling) Introduces a trick which allows one to evaluate rate functions in the case of there being _multiple sources_ of randomness.
+- [Section %label](./main) Establishes our main result of developing a semi-closed form for $\ode^*$.
+- [Section %label](./interpretation) Discusses the intuition and potential extensions of our result.

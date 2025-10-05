@@ -81,12 +81,8 @@ For resources on large deviations on the Skorokhod space, see [](cite:feng2006),
 
 Now that we have introduced the key ideas, the remainder of this chapter is organized as follows.
 
-[Section %label](./asymptotics) Describes our parameterization $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$,
-
-[Section %label](./assumptions) Delineates our assumptions for the result.
-
-[Section %label](./dawson-gaertner) Proves our principle via twisting.
-
-[Section %label](./exponential-martingales) Resolves the approach of twisting with that of exponential martingales.
-
-[Section %label](./rate-function) Simplifies our rate function to an integral form.
+- [Section %label](./asymptotics) Describes our parameterization $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$,
+- [Section %label](./assumptions) Delineates our assumptions for the result.
+- [Section %label](./dawson-gaertner) Proves our principle via twisting.
+- [Section %label](./exponential-martingales) Resolves the approach of twisting with that of exponential martingales.
+- [Section %label](./rate-function) Simplifies our rate function to an integral form.

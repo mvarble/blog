@@ -17,6 +17,21 @@ Should any of these properties not be satisfied, we would have $\hat\rf_{\hat\st
 That said, we interpret these conditions as minimum requirements on $\hat\pathVar$ to even be considered _possible_.
 Throughout, notice we establish an intuition with $\hat\pathVar$ being a proxy for $\hat\Xe$.
 
+
+<style>
+  ul {
+    li {
+      margin: 1em 0;
+    }
+    li > p {
+      margin: 0;
+    }
+    li > p:first-child {
+      margin-bottom: 0.5em;
+    }
+  }
+</style>
+
 - $\hat\pathVar(0) = \hat\stateVar$.
 
   Seeing as we $\hat\Prb^\epsilon_{\hat\stateVar}$-almost-surely have $\epsilon\hat\X^\epsilon_0 = \hat\stateVar$, we insist $\hat\pathVar(0) = \hat\stateVar$.
@@ -41,10 +56,13 @@ Throughout, notice we establish an intuition with $\hat\pathVar$ being a proxy f
 
   Seeing as $\epsilon \affDiff(\Xe) \shortInt \leb$ is the predictable quadratic covariation process associated with $\epsilon\X^{\epsilon,\rmc}$, we see the following moments of an increment $\epsilon\X^{\epsilon,\rmc}_{t+\tau}-\epsilon\X^{\epsilon,\rmc}_t$.
   $$
-    \begin{gathered}
-      \Exp_{\Prb_\stateVar}\big( \epsilon\X^{\epsilon,\rmc}_{t+\Delta t} - \epsilon\X^{\epsilon,\rmc}_t  | \scrF^\epsilon_t \big) = 0, \\
-      \Exp_{\Prb_\stateVar}\Big(\big( \epsilon\X^{\epsilon,i,\rmc}_{t+\Delta t} -  \epsilon\X^{\epsilon,i,\rmc}_t \big) \big( \epsilon\X^{\epsilon,j,\rmc}_{t+\Delta t} -  \epsilon\X^{\epsilon,j,\rmc}_t \big) | \scrF^\epsilon_t \Big) = \Exp_{\Prb_{\Xe_t}} \int_t^{t+\Delta t} \epsilon\affDiff_{ij}\big(\Xe_s\big) \rmd s
-    \end{gathered}
+    \Exp_{\Prb_\stateVar}\big( \epsilon\X^{\epsilon,\rmc}_{t+\Delta t} - \epsilon\X^{\epsilon,\rmc}_t  | \scrF^\epsilon_t \big) = 0, \\
+  $$
+  $$
+    \begin{aligned}
+      &\Exp_{\Prb_\stateVar}\Big(\big( \epsilon\X^{\epsilon,i,\rmc}_{t+\Delta t} -  \epsilon\X^{\epsilon,i,\rmc}_t \big) \big( \epsilon\X^{\epsilon,j,\rmc}_{t+\Delta t} -  \epsilon\X^{\epsilon,j,\rmc}_t \big) | \scrF^\epsilon_t \Big) \\
+      &\quad= \Exp_{\Prb_{\Xe_t}} \int_t^{t+\Delta t} \epsilon\affDiff_{ij}\big(\Xe_s\big) \rmd s
+    \end{aligned}
   $$
   Thus, on an infinitesimal level, the increment $\dot\omega(t)$ of our continuous noise $\omega$ can be thought of as distributing $\operatorname{Normal}(0, \affDiff(\pathVar(t)))$, which begs the question of $\dot\omega(t) \in \operatorname{image}\big(\affDiff(\pathVar(t))\big)$.
 

@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS mddocs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     filename TEXT UNIQUE NOT NULL,
+    root INTEGER REFERENCES mddocs(id),
     katex_macros TEXT
 );
 

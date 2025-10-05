@@ -10,6 +10,7 @@ import { getPostReferences, getSequenceChildReferences, type KatexMacros } from 
 export interface Page {
     id: number;
     mddocId: number;
+    root: number | null;
     pathname: string;
     filename: string;
     katexMacros: KatexMacros;
@@ -18,16 +19,24 @@ export interface Page {
 export function getPage(db: Database, filename: string): Page | undefined {
     const out = db
         .prepare(
-            `SELECT pages.id, pages.pathname, pages.mddoc_id, mddocs.filename, mddocs.katex_macros
-            FROM pages INNER JOIN mddocs ON pages.mddoc_id = mddocs.id
-            WHERE mddocs.filename = ?;`,
+            `SELECT p.id, p.pathname, p.mddoc_id, m.filename, m.katex_macros, m.root
+            FROM pages p INNER JOIN mddocs m ON p.mddoc_id = m.id
+            WHERE m.filename = ?;`,
         )
         .get(filename) as
-        | { id: number; mddoc_id: number; pathname: string; filename: string; katex_macros: string }
+        | {
+            id: number;
+            mddoc_id: number;
+            pathname: string;
+            filename: string;
+            katex_macros: string;
+            root: number | null;
+        }
         | undefined;
     if (out) {
         return {
             id: out.id,
+            root: out.root,
             mddocId: out.mddoc_id,
             pathname: out.pathname,
             filename: out.filename,
@@ -39,7 +48,7 @@ export function getPage(db: Database, filename: string): Page | undefined {
 export function getPageFilename(db: Database, pathname: string): string | undefined {
     const out = db
         .prepare(
-            `SELECT mddocs.filename
+            `SELECT filename
             FROM mddocs INNER JOIN pages ON mddocs.id = pages.mddoc_id
             WHERE pages.pathname = ?;`,
         )

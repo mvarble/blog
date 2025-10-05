@@ -21,7 +21,7 @@ import {
     touchCitationReference,
 } from '../db';
 import { buildLabel, eqRegex, resolvePathname } from '../util';
-import { parseStatementFrontmatter } from './tables/statements';
+import { parseStatementFrontmatter } from './doctypes/statements';
 
 const remark = unified().use(remarkParse).use(remarkFrontmatter).use(remarkMath);
 const rehype = unified().use(rehypeParse);
@@ -31,6 +31,7 @@ const componentRegex = /<(\w+)\s+\{\.\.\.(\w+)\}\s*(\/?)>/g;
 export interface DocumentInPage {
     mddocId: number;
     relevantPageId: number;
+    root: number | null;
     pathname: string;
     filename: string;
 }
@@ -162,8 +163,8 @@ export function edgeParser(db: Database, doc: DocumentInPage, contents: string) 
                     console.error(`'${key}' does not resolve to a citation in the site.`);
                 }
             }
-            if (node.url.startsWith('tag:')) {
-                const slug = node.url.slice('tag:'.length);
+            if (node.url.startsWith('eq:')) {
+                const slug = node.url.slice('eq:'.length);
                 const exists = touchEquationReference(db, doc.mddocId, slug);
                 if (!exists) {
                     console.error(`'${slug}' does not resolve to an equation in the site.`);
@@ -258,6 +259,7 @@ async function recurseNodeChild(
         const statement = touchStatement(db, {
             ...statementFrontmatter,
             parentPageId: doc.relevantPageId,
+            root: doc.root || doc.mddocId,
             kind: frontmatter.kind,
             label: buildLabel(item + itemsAdded++, itemPrefix),
             filename,
@@ -267,6 +269,7 @@ async function recurseNodeChild(
             {
                 mddocId: statement.mddocId,
                 relevantPageId: statement.parentPageId,
+                root: doc.root || doc.mddocId,
                 pathname: doc.pathname,
                 filename: statement.filename,
             },

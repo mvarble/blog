@@ -65,7 +65,20 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
     aria-label="Primary"
 >
     <a class="home-link" href="/" title="Home" aria-label="Home">
-        <Icon name="rat" size="var(--nav-height)" /><span>rodent.club</span>
+        <Icon name="rat" size="var(--nav-height)" />
+        <svg
+            width="var(--nav-height)"
+            height="var(--nav-height)"
+            style:margin-left="-2em"
+            viewBox="0 0 48 48"
+        >
+            <text fill="var(--rat-stroke)" transform="translate(17, 25)">.</text>
+            <text fill="var(--rat-stroke)" transform="translate(18, 28) rotate(40)">c</text>
+            <text fill="var(--rat-stroke)" transform="translate(23, 32.5) rotate(30)">l</text>
+            <text fill="var(--rat-stroke)" transform="translate(27, 34.5) rotate(15)">u</text>
+            <text fill="var(--rat-stroke)" transform="translate(36, 37)">b</text>
+            <path stroke="var(--rat-hover-stroke)" fill="none" d="M 16,25 Q 20,40 46,38"></path>
+        </svg>
     </a>
 
     <div class="desktop">
@@ -192,24 +205,22 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
 
     .home-link {
         --rat-stroke: var(--fg-3);
+        --rat-hover-stroke: rgba(0, 0, 0, 0);
         --rat-fill: var(--bg-1);
+        display: flex;
         color: var(--fg-2);
 
-        & > span {
-            top: calc(50% - 0.5rem);
-            padding-left: 0.2em;
-            font-size: 1rem;
-            visibility: hidden;
-        }
-
-        &:hover > span,
-        &:focus > span {
-            visibility: visible;
+        &:hover {
+            --rat-hover-stroke: var(--rat-stroke);
         }
     }
 
     :root.dark .home-link {
         --rat-fill: var(--bg-0);
+
+        &:hover {
+            --rat-hover-stroke: var(--rat-stroke);
+        }
     }
 
     .mobile-menu {

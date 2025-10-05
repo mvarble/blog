@@ -4,19 +4,14 @@ import fs from 'fs';
 import glob from 'fast-glob';
 import matter from 'gray-matter';
 
-import {
-    getParentSequenceFilename,
-    getStatementParentFilename,
-    prepareDb,
-    connect,
-    cacheDir,
-} from '../db';
+import { prepareDb, connect, cacheDir, getPage, getRoot } from '../db';
+import { edgeParser } from './parsers';
 import { hasStringField } from '../util';
 
-import post from './tables/posts';
-import sequence from './tables/sequences';
-import statement from './tables/statements';
-import citation from './tables/citations';
+import post from './doctypes/posts';
+import sequence from './doctypes/sequences';
+import statement from './doctypes/statements';
+import bibtex from './doctypes/bibtex';
 
 import { type Database } from '../db';
 
@@ -49,8 +44,26 @@ const HOOKS: { [key: string]: FileHooks } = {
     post,
     sequence,
     statement,
-    citation,
+    bibtex,
 };
+
+export async function defaultCrossReference(db: Database, filename: string, contents: string) {
+    // otherwise, we use the default
+    const page = getPage(db, filename);
+    if (page) {
+        edgeParser(
+            db,
+            {
+                mddocId: page.mddocId,
+                root: page.root,
+                relevantPageId: page.id,
+                pathname: page.pathname,
+                filename,
+            },
+            contents,
+        );
+    }
+}
 
 // Vite plugin which exposes a virtual module for access to a database that is populated from
 // project files. These files are watched in development mode to hot-update the database, which
@@ -74,49 +87,39 @@ export function cmsSource(): Plugin {
     }
 
     // helper function called on each file during second-pass of adding "edges"
-    async function crossReference(
-        filename: string,
-        frontmatter: object & {},
-        contents: string,
-        checkParents = false,
-    ) {
+    async function crossReference(filename: string, frontmatter: object & {}, contents: string) {
+        // if we have a custom cross-referencing procedure, we run that.
         if (hasStringField(frontmatter, 'type') && frontmatter.type in HOOKS) {
             const hook = HOOKS[frontmatter.type];
             if (hook.crossReference) {
                 await hook.crossReference(db, filename, frontmatter, contents);
             }
-        } else if (checkParents) {
-            const parentFilename = getParentSequenceFilename(db, filename);
-            if (parentFilename) {
-                await crossReference(
-                    parentFilename,
-                    matter(await fs.promises.readFile(parentFilename, 'utf8')).data,
-                    contents,
-                    false,
-                );
-            }
+            return;
         }
+        // otherwise, use the default
+        defaultCrossReference(db, filename, contents);
     }
 
     // helper function called during hot-updates to file which updates database
     async function hmr(filename: string, frontmatter: object & {}, contents: string) {
-        if (hasStringField(frontmatter, 'type') && frontmatter.type in HOOKS) {
-            const hook = HOOKS[frontmatter.type];
-            if ('hmr' in hook && typeof hook.hmr == 'function') {
-                hook.hmr(db, filename, frontmatter, contents);
-                return;
-            }
+        // just use the initialization for bibtex documents
+        if ('type' in frontmatter && frontmatter.type == 'bibtex') {
+            await initialize(filename, frontmatter, contents);
+            return;
         }
-        // if the page is a sequence-page or a statement, we grab its parent from the database to trigger the correct node resolution.
-        let parentFilename = getParentSequenceFilename(db, filename);
-        if (!parentFilename) {
-            parentFilename = getStatementParentFilename(db, filename);
+
+        // otherwise, find the root document and initialize it
+        const root = getRoot(db, filename);
+        if (root) {
+            const contents = await fs.promises.readFile(root.filename, 'utf8');
+            const frontmatter = matter(contents).data;
+            await initialize(root.filename, frontmatter, contents);
+        } else {
+            initialize(filename, frontmatter, contents);
         }
-        if (parentFilename) {
-            const parentContents = await fs.promises.readFile(parentFilename, 'utf8');
-            const parentFrontmatter = matter(parentContents).data;
-            await hmr(parentFilename, parentFrontmatter, parentContents);
-        }
+
+        // finally, perform cross-referencing on this document once more
+        await crossReference(filename, frontmatter, contents);
     }
 
     // helper function called during hot-updates to file which invalidates
@@ -124,8 +127,6 @@ export function cmsSource(): Plugin {
         const file = path.join(path.resolve('.'), filename);
         const module = server.moduleGraph.getModuleById(file);
         if (module) server.moduleGraph.invalidateModule(module);
-
-        // TODO: implement invalidation in a way that actually works
     }
 
     // return the plugin
@@ -149,7 +150,7 @@ export function cmsSource(): Plugin {
             }
             for (const filename of bibFilenames) {
                 const file = await fs.promises.readFile(filename, 'utf8');
-                await initialize(filename, { type: 'citation' }, file);
+                await initialize(filename, { type: 'bibtex' }, file);
             }
 
             // second pass
@@ -167,7 +168,7 @@ export function cmsSource(): Plugin {
             const isBib = filename.endsWith('.bib');
             if (inContent && (isSvx || isBib)) {
                 const file = await fs.promises.readFile(filename, 'utf8');
-                const frontmatter = isSvx ? matter(file).data : { type: 'citation' };
+                const frontmatter = isSvx ? matter(file).data : { type: 'bibtex' };
                 await hmr(filename, frontmatter, file); // this will update the database
                 invalidate(filename, server);
             }

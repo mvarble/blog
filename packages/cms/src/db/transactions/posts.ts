@@ -110,7 +110,7 @@ export interface PostInfo {
 export function getPostInfos(db: Database): PostInfo[] {
     const outputs = db
         .prepare(
-            `SELECT posts.title, posts.created, posts.edited, pages.pathname
+            `SELECT title, created, edited, pathname
             FROM posts INNER JOIN pages ON posts.page_id = pages.id
             ORDER BY posts.edited DESC;`,
         )

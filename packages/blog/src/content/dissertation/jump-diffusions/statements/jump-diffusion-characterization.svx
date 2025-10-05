@@ -19,7 +19,7 @@ The following statements are equivalent for a stochastic process $\X$ on state s
         &\quad + \int_\vecSpace \Big( f(\stateVar + \markVar) - f(\stateVar) - \Der f(\stateVar) \cdot \trunc(\markVar) \Big) \affJump(\stateVar, \rmd\markVar)
     \end{aligned}
   $$
-- For each $\momentVar \in \im\vecSpace$, the process $\exp\Big(\prj{\momentVar}{\X} - \ode(\momentVar, \X) \shortInt \leb \Big)$ is a $(\Prb, \scrF)$ local martingale, where $\ode$ is our L\'evy-Khintchine map.
+- For each $\momentVar \in \im\vecSpace$, the process $\exp\Big(\prj{\momentVar}{\X} - \ode(\momentVar, \X) \shortInt \leb \Big)$ is a $(\Prb, \scrF)$ local martingale, where $\ode$ is our Lévy-Khintchine map.
   $$
     \ode(\momentVar, \stateVar) = \bprj{\momentVar}{\affDrift^\trunc(\stateVar)} + \frac12\bprj{\momentVar}{\affDiff(\stateVar)} + \int_\vecSpace \big( e^\prj{\momentVar}{\markVar} - 1 - \prj{\momentVar}{\trunc(\markVar)} \big) \affJump(\stateVar, \rmd\markVar),
   $$

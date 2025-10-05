@@ -6,10 +6,6 @@
     align-items: center;
 }
 
-.math-tag {
-    margin-left: 2em;
-}
-
 .math-scroll-container {
     overflow-x: auto;
     flex-grow: 1;
@@ -26,6 +22,10 @@
             transparent);
 }
 
+.math-tag {
+    margin-left: 2em !important;
+}
+
 .katex {
     line-height: 1;
     font-size: 1.1rem;
@@ -35,11 +35,11 @@
     margin: 0.5em 0 !important;
 
     & .base:first-child {
-        margin-left: var(--fading-size);
+        margin-left: var(--fading-size) !important;
     }
 
     & .base:last-child {
-        margin-right: var(--fading-size);
+        margin-right: var(--fading-size) !important;
     }
 }
 

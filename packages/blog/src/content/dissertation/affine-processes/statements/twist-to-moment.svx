@@ -36,78 +36,23 @@ It now remains to show the identity in [](eq:aff-extension).
 This reduces down to repeatedly applying iterated expectations; fix $\stateVar \in \stateSpace$ and observe the following.
 
 
-<div class="aligned-left">
-
-<span>
-<span></span>
-
 $$
-  \aff\big(\underline t, \twistToMoment_{\underline t}(\underline\twistVar), \stateVar\big)
-$$
-
-</span>
-<span>
-<span></span>
-
-$$
-  =\log\Exp_{\Prb_\stateVar} \exp\bprj{\twistToMoment_{\underline t}(\underline\twistVar)}{\X_{\underline t}}
-$$
-
-</span>
-<span>
-<span></span>
-
-$$
-  @tag(tower-start)
-  = \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \bprj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \exp\bprj{\twistVar_n}{\X_{t_n}} \right)
-$$
-
-</span>
-<span>
-<span></span>
-
-$$
-  = \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \bprj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \Exp_{\Prb_\stateVar}\Big(\exp\bprj{\twistVar_n}{\X_{t_n}} |\scrF_{t_{n-1}} \Big) \right)
-$$
-
-</span>
-<span>
-<span></span>
-
-$$
-  = \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \bprj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \exp\aff(\Delta t_n, \twistVar_n, \X_{t_{n-1}})\right)
-$$
-
-</span>
-<span>
-<span></span>
-
-$$
- = \begin{aligned}
-   &\affPart_0(\Delta t_n, \twistVar_n) \\
-   &+ \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \bprj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \exp\Big( \bprj{\affPart(\Delta t_n, \twistVar_n)}{\X_{t_{n-1}}} \Big)   \right)
-    \end{aligned}
-$$
-
-</span>
-<span>
-<span></span>
-
-$$
-    @tag(tower-end)
-    = \begin{aligned}
-      &\affPart_0(\Delta t_n, \twistVar_n) \\
+  @tag(tower)
+  \begin{aligned}
+    &\aff\big(\underline t, \twistToMoment_{\underline t}(\underline\twistVar), \stateVar\big) \\
+    &=\log\Exp_{\Prb_\stateVar} \exp\bprj{\twistToMoment_{\underline t}(\underline\twistVar)}{\X_{\underline t}} \\
+    &= \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \bprj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \exp\bprj{\twistVar_n}{\X_{t_n}} \right) \\
+    &= \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \bprj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \Exp_{\Prb_\stateVar}\Big(\exp\bprj{\twistVar_n}{\X_{t_n}} |\scrF_{t_{n-1}} \Big) \right) \\
+    &= \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \bprj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \exp\aff(\Delta t_n, \twistVar_n, \X_{t_{n-1}})\right) \\
+    &=\affPart_0(\Delta t_n, \twistVar_n) \\
+   &+ \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-1} \bprj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \exp\Big( \bprj{\affPart(\Delta t_n, \twistVar_n)}{\X_{t_{n-1}}} \Big)   \right) \\
+    &= \affPart_0(\Delta t_n, \twistVar_n) \\
       &+ \log\Exp_{\Prb_\stateVar}\left( \exp\sum_{k=1}^{n-2} \prj{\twistVar_k - \affPart(\Delta t_{k+1}, \twistVar_{k+1})}{\X_{t_k}} \cdot \exp\Big( \bprj{\twistVar_{n-1}}{\X_{t_{n-1}}} \Big)   \right)
     \end{aligned}
 $$
 
-</span>
-<span>
-<span></span>
-</div>
-
-The final term of [](eq:tower-end) is identical to that of [](eq:tower-start), where we have reduced $k = n$ to $k = n-1$.
-Repeating these equalities inductively $k = n -1, \ldots, 1$ will result in the desired identity.
+The final expression of [](eq:tower) takes an identical form to an expansion at the beginning, where we decremented $n$ to $n-1$.
+Repeating these equalities inductively will result in the desired identity.
 $$
   \begin{aligned}
     \aff\big(\underline t, \twistToMoment_{\underline t}(\underline\twistVar), \stateVar\big)

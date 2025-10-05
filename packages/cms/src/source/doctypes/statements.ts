@@ -21,6 +21,7 @@ const hooks: FileHooks = {
             db,
             {
                 mddocId: statement.mddocId,
+                root: statement.root,
                 relevantPageId: statement.parentPageId,
                 pathname,
                 filename,

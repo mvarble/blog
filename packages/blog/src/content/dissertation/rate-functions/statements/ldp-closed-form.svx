@@ -97,7 +97,7 @@ We now evaluate the expression depending on different scenarios.
   $$
     \begin{aligned}
       \hat\ode^*(\hat{\diffVar}, \hat\stateVar)
-      = \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg)
+      &= \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
       &\geq \sup_{\substack{\hat\momentVar=(0, 0, \momentVar, 0)  \\ \momentVar = \rho \diffVar_3 \\ \rho \in \bbR}} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
       &= \sup_{\rho\in\bbR} \rho\big|\diffVar_3\big|^2 \\
       &= \infty
@@ -108,7 +108,7 @@ We now evaluate the expression depending on different scenarios.
   $$
     \begin{aligned}
       \hat\ode^*(\hat{\diffVar}, \hat\stateVar)
-      = \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg)
+      &= \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
       &\geq \sup_{\substack{\hat\momentVar=(0, 0, 0, \rho)  \\ \rho \in \bbR}} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
       &= \sup_{\rho\in\bbR} \bigg( \rho\diffVar_4 + \affInt(\stateVar_1) (1 - e^\rho) \bigg) \\
       &= \lim_{\rho\rightarrow-\infty} \bigg( \rho\diffVar_4 + \affInt(\stateVar_1) (1 - e^\rho) \bigg) \\
@@ -120,7 +120,7 @@ We now evaluate the expression depending on different scenarios.
   $$
     \begin{aligned}
       \hat\ode^*(\hat{\diffVar}, \hat\stateVar)
-      = \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg)
+      &= \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
       &\geq \sup_{\substack{\hat\momentVar=(0, 0, 0, \rho)  \\ \rho \in \bbR}} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg) \\
       &= \sup_{\rho\in\bbR} \bigg( \rho\diffVar_4 + \affInt(\stateVar_1) (1 - e^\rho) \bigg) \\
       &= \lim_{\rho\rightarrow\infty} \bigg( \rho\diffVar_4 + \affInt(\stateVar_1) (1 - e^\rho) \bigg) \\
@@ -153,14 +153,14 @@ We now evaluate the expression depending on different scenarios.
   Seeing as $\ode_{\affDist(\stateVar_1,\cdot)}$ is a convex function, the last equality of [](eq:semi-closed-algebra) corresponds to the unique extreme point of the Fenchel-Legendre transform.
   $$
     \begin{aligned}
-      &\Bprj{\momentVar_1 + \momentVar_3}{\frac{\diffVar_3+\affInt(\stateVar_1)\overline{\affDist(\stateVar_1,\cdot)}}{\diffVar_4}} - \ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3) \\
-      &\hspace{55mm}= \ode_{\affDist(\stateVar_1,\cdot)}^*\Big(\frac{\diffVar_3+\affInt(\stateVar_1)\overline{\affDist(\stateVar_1,\cdot)}}{\diffVar_4}\Big)
+      &\ode_{\affDist(\stateVar_1,\cdot)}^*\Big(\frac{\diffVar_3+\affInt(\stateVar_1)\overline{\affDist(\stateVar_1,\cdot)}}{\diffVar_4}\Big) \\
+      &=\Bprj{\momentVar_1 + \momentVar_3}{\frac{\diffVar_3+\affInt(\stateVar_1)\overline{\affDist(\stateVar_1,\cdot)}}{\diffVar_4}} - \ode_{\affDist(\stateVar_1,\cdot)}(\momentVar_1+\momentVar_3)
     \end{aligned}
   $$
   Combining this equality with those of [](eq:semi-closed-algebra) now gives us the following identity.
   $$
     \begin{aligned}
-      \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big)
+      &\bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \\
       &=\prj{\momentVar_1}{\diffVar_1}
         + \prj{\momentVar_2}{\diffVar_2}
         + \prj{\momentVar_3}{\diffVar_3}
@@ -179,7 +179,7 @@ We now evaluate the expression depending on different scenarios.
   For this, we start by greedily optimizing in the $\momentVar_4$ coordinate in [](eq:optimizing-integrand).
   $$
     \begin{aligned}
-      \hat\ode^*(\hat{\diffVar}, \hat\stateVar)
+      &\hat\ode^*(\hat{\diffVar}, \hat\stateVar) \\
       &= \sup_{\hat\momentVar \in \hat\vecSpace} \bigg( \bprj{\hat\momentVar}{\hat\diffVar} - \hat\ode\big(\hat\momentVar, \hat\stateVar\big) \bigg)  \\
       &= \sup_{\momentVar_1,\momentVar_2,\momentVar_3 \in \vecSpace} \bigg[
         \bprj{\momentVar_1}{\diffVar_1 - \affDrift(\stateVar_1) - \diffVar_2 - \diffVar_3} \\
@@ -203,7 +203,7 @@ We now evaluate the expression depending on different scenarios.
     \begin{aligned}
       0 &= \diffVar_1 - \affDrift(\stateVar_1) - \affDiff(\stateVar_1) (\momentVar_1 + \momentVar_2) + \affInt(\stateVar_1) \overline{\affDist(\stateVar_1, \cdot)} \\
       0 &= \diffVar_2 - \affDiff(\stateVar_1) ( \momentVar_1 + \momentVar_2 ) \\
-      0 &= \diffVar_3 + \affInt(\stateVar_1) \overline{\affDist(\stateVar_1, \cdot)}
+      0 &= \diffVar_3 + \affInt(\stateVar_1) \overline{\affDist(\stateVar_1, \cdot)} \\
       &\begin{aligned}
         \Longrightarrow\quad
         \prj{\hat\momentVar}{\hat\diffVar} - \hat\ode(\hat\momentVar,\hat\stateVar)

@@ -123,6 +123,7 @@ export function touchSequence(
                 touchSequenceChild(
                     db,
                     id,
+                    mddocId,
                     sequence.enumerate,
                     pageId,
                     pathname,
@@ -149,6 +150,7 @@ export function touchSequence(
 export function touchSequenceChild(
     db: Database,
     sequenceId: number,
+    sequenceMddocId: number,
     enumerate: boolean,
     parentPageId: number,
     parentPathname: string,
@@ -162,8 +164,10 @@ export function touchSequenceChild(
     const children: SequenceChild[] = [];
     try {
         const mddoc = db
-            .prepare('INSERT INTO mddocs (filename, katex_macros) VALUES (?, ?) RETURNING id;')
-            .get(input.filename, JSON.stringify(input.katexMacros));
+            .prepare(
+                'INSERT INTO mddocs (filename, root, katex_macros) VALUES (?, ?, ?) RETURNING id;',
+            )
+            .get(input.filename, sequenceMddocId, JSON.stringify(input.katexMacros));
         mddocId = (mddoc as { id: number }).id;
 
         const page = db
@@ -188,8 +192,10 @@ export function touchSequenceChild(
     } catch (e) {
         if (isUniqueConstraintError(e)) {
             const mddoc = db
-                .prepare('UPDATE mddocs SET katex_macros = ? WHERE filename = ? RETURNING id;')
-                .get(JSON.stringify(input.katexMacros), input.filename);
+                .prepare(
+                    'UPDATE mddocs SET katex_macros = ?, root = ? WHERE filename = ? RETURNING id;',
+                )
+                .get(JSON.stringify(input.katexMacros), sequenceMddocId, input.filename);
             mddocId = (mddoc as { id: number }).id;
 
             const page = db
@@ -222,6 +228,7 @@ export function touchSequenceChild(
                 touchSequenceChild(
                     db,
                     sequenceId,
+                    sequenceMddocId,
                     enumerate,
                     pageId,
                     pathname,
@@ -330,19 +337,17 @@ export function getSequence(db: Database, slug: string): Sequence | undefined {
 }
 
 export function getParentSequence(db: Database, filename: string): Sequence | undefined {
-    // first try to see if the file is a direct sequence child
+    // check first that it is a child
     let sequenceRes = db
         .prepare(
             `SELECT
-                seq.id, seq.page_id, spage.mddoc_id, seq.title, seq.slug, seq.created, seq.edited,
-                seq.enumerate, spage.pathname, smddoc.filename, smddoc.katex_macros
-            FROM sequences seq
-            INNER JOIN pages spage ON seq.page_id = spage.id
-            INNER JOIN mddocs smddoc ON spage.mddoc_id = smddoc.id
-            INNER JOIN sequence_pages child ON seq.id = child.sequence_id
-            INNER JOIN pages cpage ON child.page_id = cpage.id
-            INNER JOIN mddocs cmddoc ON cpage.mddoc_id = cmddoc.id
-            WHERE cmddoc.filename = ?`,
+            seq.id, seq.page_id, spage.mddoc_id, seq.title, seq.slug, seq.created, seq.edited,
+            seq.enumerate, spage.pathname, smddoc.filename, smddoc.katex_macros
+        FROM sequences seq
+        INNER JOIN pages spage ON seq.page_id = spage.id
+        INNER JOIN mddocs smddoc ON spage.mddoc_id = smddoc.id
+        INNER JOIN mddocs cmddoc ON smddoc.id = cmddoc.root
+        WHERE cmddoc.filename = ?`,
         )
         .get(filename) as SequenceSelect | undefined;
 
@@ -359,23 +364,6 @@ export function getParentSequence(db: Database, filename: string): Sequence | un
                 WHERE smddoc.filename = ?`,
             )
             .get(filename) as SequenceSelect | undefined;
-    }
-
-    // if it is still not a sequence child, see if it is in some other non-page document
-    if (!sequenceRes) {
-        const statementParent = db
-            .prepare(
-                `SELECT m.filename
-                FROM statements s
-                INNER JOIN pages p ON s.parent_page_id = p.id
-                INNER JOIN mddocs m ON p.mddoc_id = m.id
-                INNER JOIN mddocs mm ON mm.id = s.mddoc_id
-                WHERE mm.filename = ?`,
-            )
-            .get(filename) as { filename: string } | undefined;
-        if (statementParent) {
-            return getParentSequence(db, statementParent.filename);
-        }
     }
 
     if (sequenceRes) {

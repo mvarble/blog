@@ -15,11 +15,11 @@ $$
 <Proof>
 
 We first prove a principle on the discrete family $(\push{\Prb^{\epsilon_m}_\stateVar}{\pi_{\underline t}})_{m\in\bbN}$ for $\epsilon_m \defeq 1/m$.
-Note that [%full](statement:mean-field-asymptotics) allows us to consider a space $(\Omega, \Sigma, \Prb)$ equipped with an i.i.d.\ sequence $(\X^{(j)})_{j\in\bbN}$ of elements distributing from $\Prb_\stateVar$ and realize each $\epsilon_m \X^{\epsilon_m}$.
+Note that [%full](statement:mean-field-asymptotics) allows us to consider a space $(\Omega, \Sigma, \Prb)$ equipped with an i.i.d. sequence $(\X^{(j)})_{j\in\bbN}$ of elements distributing from $\Prb_\stateVar$ and realize each $\epsilon_m \X^{\epsilon_m}$.
 $$
   \epsilon_m \X^{\epsilon_m} = \frac1m\sum_{j=1}^m \X^{(j)}
 $$
-We now use a specific instance of Cram\'er's theorem [Corollary 6.1.6](cite:dembo2010) to conclude that if $\underline 0$ is an interior point in the finite domain of $\aff(\underline t, \cdot, \stateVar)$, then our principle is satisfied with good rate function $\aff^*(\underline t, \cdot, \stateVar)$.
+We now use a specific instance of Cramér's theorem [Corollary 6.1.6](cite:dembo2010) to conclude that if $\underline 0$ is an interior point in the finite domain of $\aff(\underline t, \cdot, \stateVar)$, then our principle is satisfied with good rate function $\aff^*(\underline t, \cdot, \stateVar)$.
 Note that [%full (a)](statement:real-moments-revisit) tells us that $\underline0 \in \momentSpace(\underline t)$, an open set.
 Denoting some ball $\ball{\underline0}{\delta} \subseteq \momentSpace(\underline t)$, [%full](statement:mgf-fdds) indicates that $\twistToMoment_{\underline t}\ball{\underline 0}{\delta}$ is an open set containing $\underline0$ in the finite domain of $\aff(\underline t, \cdot, \stateVar)$.
 
