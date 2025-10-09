@@ -39,10 +39,10 @@ $$
       \X \\ \X^\rmc \\ \X^\rmd \\ \N^\X
     \end{pmatrix}
     &= \begin{pmatrix}
-      \stateVar_1 + \affDrift(\X) \shortInt \leb_t + \X^\rmc + \id_\vecSpace \ast \compensate{\jumpMeas^\X}_t \\ \stateVar_2 + \X^\rmc \\ \stateVar_3 + \id_\vecSpace \ast \compensate{\jumpMeas^\X}_t  \\ \stateVar_4 + 1 \ast \jumpMeas^\X_t
+      \stateVar_1 + \affDrift(\X) \shortInt \leb_t + \X^\rmc + \id_\vecSpace \ast \compensate\jumpMeas^\X_t \\ \stateVar_2 + \X^\rmc \\ \stateVar_3 + \id_\vecSpace \ast \compensate\jumpMeas^\X_t  \\ \stateVar_4 + 1 \ast \jumpMeas^\X_t
     \end{pmatrix}  \\
     &= \begin{pmatrix}
-      \stateVar_1 + \affDrift(\X) \shortInt \leb_t + \X^\rmc + \id_\vecSpace \ast \compensate{\jumpMeas^\X}_t \\ \stateVar_2 + \X^\rmc \\ \stateVar_3 + \id_\vecSpace \ast \compensate{\jumpMeas^\X}_t  \\ \stateVar_4 + 1 \ast \predproj{\jumpMeas^\X}_t + 1 \ast \compensate{\jumpMeas^\X}_t
+      \stateVar_1 + \affDrift(\X) \shortInt \leb_t + \X^\rmc + \id_\vecSpace \ast \compensate\jumpMeas^\X_t \\ \stateVar_2 + \X^\rmc \\ \stateVar_3 + \id_\vecSpace \ast \compensate\jumpMeas^\X_t  \\ \stateVar_4 + 1 \ast \predproj\jumpMeas^\X_t + 1 \ast \compensate\jumpMeas^\X_t
     \end{pmatrix}  \\
     &= \hat\stateVar
     + \begin{pmatrix}
@@ -62,7 +62,7 @@ $$
       0 \\
       \id_\vecSpace \\
       1
-    \end{pmatrix} \ast \compensate{\jumpMeas^\X}_t
+    \end{pmatrix} \ast \compensate\jumpMeas^\X_t
   \end{aligned}
 $$
 Observe that the first term establishes the drift $\hat\affDrift$ as in [](eq:joint-characteristics).
@@ -90,7 +90,7 @@ $$
     &= \Exp_{\Prb_\stateVar} \int_0^\infty \int_{\hat\vecSpace} H(\cdot, s, \hat\markVar) \affInt(\X_s) \affDist(\X_s, \rmd\markVar_1) \delta_{0,\markVar_1,1}(\rmd\markVar_2,\rmd\markVar_3,\rmd\markVar_3)  \rmd s
   \end{aligned}
 $$
-This concludes that, $\predproj{\jumpMeas^{\hat\X}}(\rmd s, \rmd\hat\markVar) = \hat\affJump(\hat\X_s, \rmd\hat\markVar) \rmd s$, where $\hat\affJump$ is as in [](eq:joint-characteristics).
+This concludes that, $\predproj\jumpMeas^{\hat\X}(\rmd s, \rmd\hat\markVar) = \hat\affJump(\hat\X_s, \rmd\hat\markVar) \rmd s$, where $\hat\affJump$ is as in [](eq:joint-characteristics).
 This work shows that $\hat\X$ is a $(\hat\Prb_{\hat\stateVar\in\hat\stateSpace}, \scrF)$ special jump-diffusion; its special differential characteristics are also affine.
 $$
   \begin{aligned}

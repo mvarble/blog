@@ -121,8 +121,8 @@ katex_macros:
   \closedBall: '{\overline B(#1,#2)}'
   \push: '{#2}_\#{#1}'
   \shortInt: '\boldsymbol{\cdot}'
-  \predproj: '\hat{#1}'
-  \compensate: '\tilde{#1}'
+  \predproj: '\hat#1'
+  \compensate: '\tilde#1'
 ---
 
 This collection of pages is a transcription of my [PhD thesis](https://escholarship.org/uc/item/6xk7n2f2), which aims to develop a comprehensive picture of large deviations of affine processes.

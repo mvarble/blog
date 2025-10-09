@@ -3,19 +3,19 @@ type: statement
 kind: remark
 ---
 
-- Note that we differ slightly from the definition we reference by imposing a time-homogeneity formulation.
+1. Note that we differ slightly from the definition we reference by imposing a time-homogeneity formulation.
   There is no loss of generality in doing so, because we may always extend the state to $\bbR_+ \times \stateSpace$ via $\hat\X_t = (t, \X_t)$.
-- Note that [](eq:jump-diffusion-characteristics) can be written concisely by using the identity $\leb$ on $\bbR_+$.
+2. Note that [](eq:jump-diffusion-characteristics) can be written concisely by using the identity $\leb$ on $\bbR_+$.
   $$
     B^\trunc_t = \affDrift^\trunc(\X) \shortInt \leb_t, \quad
     A_t = \affDiff(\X) \shortInt \leb_t, \quad
-    \predproj{\jumpMeas^\X}([0,t],\rmd\markVar) = \affJump(\X, \rmd\markVar) \shortInt \leb_t
+    \predproj\jumpMeas^\X([0,t],\rmd\markVar) = \affJump(\X, \rmd\markVar) \shortInt \leb_t
   $$
-- If we have a jump-diffusion with $\trunc$-characteristics in [](eq:jump-diffusion-characteristics), we call $(\affDrift^\trunc, \affDiff, \affJump)$ the _differential $\trunc$-characteristics_.
+3. If we have a jump-diffusion with $\trunc$-characteristics in [](eq:jump-diffusion-characteristics), we call $(\affDrift^\trunc, \affDiff, \affJump)$ the _differential $\trunc$-characteristics_.
   We see from [](eq:jump-diffusion-canonical) that $\affDrift^\trunc$ and $\affDrift^{\hat\trunc}$ relate between different truncation functions $\trunc, \hat\trunc$ with the simple identity.
   $$
     @tag(affDrift-relationship)
     \affDrift^{\hat\trunc}(\stateVar) = \affDrift^\trunc(\stateVar) + \int_\vecSpace \big(\hat\trunc(\markVar) - \trunc(\markVar) \big) \affJump(\stateVar, \rmd\markVar)
   $$
-- The conditions on $\affDiff(\stateVar)$ and $\affJump(\stateVar, \rmd\markVar)$ are immediate consequences of [](eq:jump-diffusion-characteristics).
+4. The conditions on $\affDiff(\stateVar)$ and $\affJump(\stateVar, \rmd\markVar)$ are immediate consequences of [](eq:jump-diffusion-characteristics).
   For the most general setting, see the corresponding result for _any_ semimartingale, in [Proposition II.2.9](cite:jacod2003).

@@ -13,12 +13,12 @@ $$
 $$
 A proof for a large deviation principle of $(\Xe, \epsilon\N^\epsilon)_{\epsilon>0}$ could use the steps of Examples [%label](statement:hawkes) and [%label](statement:compound-poisson), summarized as below.
 
-- Use [%full](statement:compound-poisson) to establish a large deviation principle for the family $(\epsilon K^\epsilon, \epsilon \N^\epsilon)_{\epsilon>0}$ where $\N^\epsilon$ is a Poisson process with rate $1/\epsilon$ and $K^\epsilon = \sum_{k=1}^{\N^\epsilon} V_k$ is the accumulated jump process.
+1. Use [%full](statement:compound-poisson) to establish a large deviation principle for the family $(\epsilon K^\epsilon, \epsilon \N^\epsilon)_{\epsilon>0}$ where $\N^\epsilon$ is a Poisson process with rate $1/\epsilon$ and $K^\epsilon = \sum_{k=1}^{\N^\epsilon} V_k$ is the accumulated jump process.
   The integral in the rate function will be as [](eq:rf-compound-poisson).
   $$
     \rf_{K\N}^\text{pois}(\gamma, \eta) = \int_0^\infty \bigg( \dot\eta(t) \log \dot\eta(t) - \dot\eta(t) + 1 + \dot\eta(t) \ode_\affDist^*\Big(\frac{\dot\gamma(t)}{\dot\eta(t)} \Big) \bigg) \rmd t
   $$
-- We observe that defining the map $F$,
+2. We observe that defining the map $F$,
   $$
     F\gamma(t) = \mu + (\stateVar - \mu)e^{-\hawkesRate t} + \int_0^t e^{-\hawkesRate(t-s)} \rmd\gamma(s),
   $$
@@ -47,7 +47,7 @@ A proof for a large deviation principle of $(\Xe, \epsilon\N^\epsilon)_{\epsilon
   $$
     \rf_{\X\N}^\text{pois}(\pathVar, \eta) = \int_0^\infty \bigg( \dot\eta(t) \log \dot\eta(t) - \dot\eta(t) + 1 + \dot\eta(t) \ode_\affDist^*\Big(\frac{\dot\pathVar(t) - \hawkesRate(\mu-\pathVar(t))}{\dot\eta(t)} \Big) \bigg) \rmd t
   $$
-- At last, we apply our measure-change argument as in [%full](statement:hawkes) to change the intensity of $\N^\epsilon$ to $\frac1\epsilon\affInt(\Xe)$.
+3. At last, we apply our measure-change argument as in [%full](statement:hawkes) to change the intensity of $\N^\epsilon$ to $\frac1\epsilon\affInt(\Xe)$.
   The work is the exact same, and so our rate function associated with $(\Xe, \epsilon\N^\epsilon)_{\epsilon>0}$ will become the following.
   $$
     @tag(rf-compound-hawkes)

@@ -14,7 +14,7 @@ $$
     &\defeq \exp\Big(\frac1\epsilon\mgRf(\Xe,\twistFunc) \Big) \\
     &= \exp\bigg( \bprj{\Xee_0}{\twistFunc(0)} - \int_0^\infty \Xee_{s-} \rmd\twistFunc(s) - \int_0^\infty \ode^\epsilon\big(\twistFunc(s), \Xee_s\big) \rmd s \bigg) \\
     &= \exp\Big( \twistFunc \shortInt \Xee_\infty - \ode^\epsilon\big(\twistFunc, \Xee\big) \shortInt \leb_\infty \Big) \\
-    &= \calE\Big( \twistFunc \shortInt \X^{\epsilon,c} - \big( e^\prj{\twistFunc}{\id_\vecSpace} - 1 \big) \ast \compensate{\jumpMeas^{\Xee}} \Big)_\infty
+    &= \calE\Big( \twistFunc \shortInt \X^{\epsilon,c} - \big( e^\prj{\twistFunc}{\id_\vecSpace} - 1 \big) \ast \compensate\jumpMeas^{\Xee} \Big)_\infty
   \end{aligned}
 $$
 Furthermore, $\mgDensity^{\epsilon,\twistFunc}$ is integrable and $t \mapsto \Exp_{\Prb_\stateVar}(\mgDensity^{\epsilon,\twistFunc}| \scrF_t)$ is a martingale.
@@ -38,19 +38,19 @@ $$
   \begin{aligned}
     \exp\big( \twistFunc \shortInt \Xee_t \big)
     &= \Big(\exp\big( \twistFunc \shortInt \Xee \big) \cdot \ode(\twistFunc, \Xee) \Big) \shortInt \leb_t + \Big( \exp\big( \twistFunc \shortInt \Xee_- \big) \cdot \twistFunc \Big) \shortInt {\Xee}^{,\rmc}_t \\
-      &\quad+ \exp\big(\twistFunc\shortInt\Xee_-\big) \Big( e^{\prj{\twistFunc}{\id_\vecSpace}} - 1 \Big) \ast \compensate{\jumpMeas^{\Xee}}_t
+      &\quad+ \exp\big(\twistFunc\shortInt\Xee_-\big) \Big( e^{\prj{\twistFunc}{\id_\vecSpace}} - 1 \Big) \ast \compensate\jumpMeas^{\Xee}_t
   \end{aligned}
 $$
 Note that this allows us to define the process $H$ inside the alleged Doléans-Dade exponential.
 $$
-  H = \twistFunc \shortInt {\Xee}^{,c} + \big( e^\prj{\twistFunc}{\id_\vecSpace} - 1 \big) \ast \compensate{\jumpMeas^{\Xee}}
+  H = \twistFunc \shortInt {\Xee}^{,c} + \big( e^\prj{\twistFunc}{\id_\vecSpace} - 1 \big) \ast \compensate\jumpMeas^{\Xee}
 $$
 Observe that, by definition of the Doléans-Dade exponential and the special semimartingale decomposition of $\Xee$,
 $$
   \begin{gathered}
-    \Xee_t = \frac1\epsilon \affDrift(\Xe) \shortInt \leb + {\Xee}^{,\rmc}_t + \id_\vecSpace \ast \compensate{\jumpMeas^{\Xee}}_t,  \\
+    \Xee_t = \frac1\epsilon \affDrift(\Xe) \shortInt \leb + {\Xee}^{,\rmc}_t + \id_\vecSpace \ast \compensate\jumpMeas^{\Xee}_t,  \\
     \bprj{{\Xee}^{,\rmc,i}}{{\Xee}^{,\rmc,j}} = \frac1\epsilon\affDiff(\Xe) \shortInt \leb, \\
-    \predproj{\jumpMeas^{\Xee}}(\rmd s, \rmd\markVar) = \frac1\epsilon \affJump(\Xe, \rmd\markVar) \rmd s,
+    \predproj\jumpMeas^{\Xee}(\rmd s, \rmd\markVar) = \frac1\epsilon \affJump(\Xe, \rmd\markVar) \rmd s,
   \end{gathered}
 $$
 we have the following.
@@ -58,12 +58,12 @@ $$
   \begin{aligned}
     \log\calE(H)_t
     &= H_t - H_0 - \frac12 \prj{H^c}{H^c}_t + \big( \log(1+\id_\bbR) - \id_\bbR \big) \ast \jumpMeas^H_t \\
-    &= \twistFunc \shortInt {\Xee_t}^{,c} + \big( e^\prj{\twistFunc}{\id_\vecSpace} - 1 \big) \ast \compensate{\jumpMeas^{\Xee}}_t \\
+    &= \twistFunc \shortInt {\Xee_t}^{,c} + \big( e^\prj{\twistFunc}{\id_\vecSpace} - 1 \big) \ast \compensate\jumpMeas^{\Xee}_t \\
       &\qquad - \frac12 \prj{\twistFunc \shortInt {\Xee}^{,c}}{\twistFunc \shortInt {\Xee}^{,c}}_t - \big( e^\prj{\twistFunc}{\id_\vecSpace} - 1 -\prj{\twistFunc}{\id_\vecSpace}\big) \ast \jumpMeas^{\Xee}_t \\
-    &= \twistFunc \shortInt {\Xee_t}^{,c} - \big( e^\prj{\twistFunc}{\id_\vecSpace} - 1  - \prj{\twistFunc}{\id_\vecSpace}\big) \ast \predproj{\jumpMeas^{\Xee}}_t \\
-      &\qquad - \frac12 \prj{\twistFunc}{\affDiff^\epsilon(\Xee)\twistFunc} \shortInt \leb_t + \prj{\twistFunc}{\id_\vecSpace} \ast \compensate{\jumpMeas^{\Xee}}_t \\
-    &= \twistFunc \shortInt \Xee_t - \affDrift^\epsilon(\Xee) \shortInt \leb_t - \prj{\twistFunc}{\id_\vecSpace} \ast \compensate{\jumpMeas^{\Xee}}_t - \big( e^\prj{\twistFunc}{\id_\vecSpace} - 1  - \prj{\twistFunc}{\id_\vecSpace}\big) \ast \predproj{\jumpMeas^{\Xee}}_t \\
-      &\qquad - \frac12 \prj{\twistFunc}{\affDiff^\epsilon(\Xee)\twistFunc} \shortInt \leb_t + \prj{\twistFunc}{\id_\vecSpace} \ast \compensate{\jumpMeas^{\Xee}}_t \\
+    &= \twistFunc \shortInt {\Xee_t}^{,c} - \big( e^\prj{\twistFunc}{\id_\vecSpace} - 1  - \prj{\twistFunc}{\id_\vecSpace}\big) \ast \predproj\jumpMeas^{\Xee}_t \\
+      &\qquad - \frac12 \prj{\twistFunc}{\affDiff^\epsilon(\Xee)\twistFunc} \shortInt \leb_t + \prj{\twistFunc}{\id_\vecSpace} \ast \compensate\jumpMeas^{\Xee}_t \\
+    &= \twistFunc \shortInt \Xee_t - \affDrift^\epsilon(\Xee) \shortInt \leb_t - \prj{\twistFunc}{\id_\vecSpace} \ast \compensate\jumpMeas^{\Xee}_t - \big( e^\prj{\twistFunc}{\id_\vecSpace} - 1  - \prj{\twistFunc}{\id_\vecSpace}\big) \ast \predproj\jumpMeas^{\Xee}_t \\
+      &\qquad - \frac12 \prj{\twistFunc}{\affDiff^\epsilon(\Xee)\twistFunc} \shortInt \leb_t + \prj{\twistFunc}{\id_\vecSpace} \ast \compensate\jumpMeas^{\Xee}_t \\
     &= \twistFunc \shortInt \Xee_t - \ode^\epsilon(\twistFunc, \Xee) \shortInt \leb_t
   \end{aligned}
 $$

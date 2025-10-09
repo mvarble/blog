@@ -17,7 +17,7 @@ $$
       + \Big( \Der f(\X) \cdot \affDrift^\trunc(\X) \Big) \shortInt \leb_t
       + \frac12 \tr\Big( \Hess f(\X) \circ \affDiff(\X) \Big)  \shortInt \leb_t \\
       &\quad + \Der f(\X_-) \shortInt \X^\rmc
-      + \Big( \Der f(\X_-) \cdot \trunc \Big) \ast \compensate{\jumpMeas^\X}_t \\
+      + \Big( \Der f(\X_-) \cdot \trunc \Big) \ast \compensate\jumpMeas^\X_t \\
       &\quad + \Big( f(\X_-+\id_\vecSpace) - f(\X_-) - \Der f(\X_-) \cdot \trunc \Big) \ast \jumpMeas^\X_t
   \end{aligned}
 $$
@@ -47,13 +47,13 @@ $$
 \begin{aligned}
   f(\X_t)
   &= f(\X_0)
-    + \Der f(\X_-) \shortInt \big( \X_0 + \affDrift^\trunc(\X) \shortInt \leb + \X^\rmc + \trunc \ast \compensate{\jumpMeas^\X} + (\id_\vecSpace-\trunc) \ast \jumpMeas^\X \big)_t \\
+    + \Der f(\X_-) \shortInt \big( \X_0 + \affDrift^\trunc(\X) \shortInt \leb + \X^\rmc + \trunc \ast \compensate\jumpMeas^\X + (\id_\vecSpace-\trunc) \ast \jumpMeas^\X \big)_t \\
     &\quad + \frac12 \tr\Big( \Hess f(\X_-) \circ \affDiff(\X) \Big)  \shortInt \leb_t  \\
     &\quad + \Big( f(\X_-+\id_\vecSpace) - f(\X_-) - \Der f(\X_-) \cdot \id_\vecSpace \Big) \ast \jumpMeas^\X_t \\[1em]
   &= f(\X_0)
     + \Big( \Der f(\X_-) \cdot \affDrift^\trunc(\X) \Big) \shortInt \leb_t + \frac12 \tr\Big( \Hess f(\X_-) \circ \affDiff(\X) \Big)  \shortInt \leb_t \\
     &\quad+ \Der f(\X_-) \shortInt \X^\rmc \\
-    &\quad+ \Der f(\X_-) \shortInt \big( \trunc \ast \compensate{\jumpMeas^\X} \big)_t
+    &\quad+ \Der f(\X_-) \shortInt \big( \trunc \ast \compensate\jumpMeas^\X \big)_t
     + \Big( f(\X_-+\id_\vecSpace) - f(\X_-) - \Der f(\X_-) \cdot \trunc \Big) \ast \jumpMeas^\X_t
 \end{aligned}
 $$
@@ -66,7 +66,7 @@ $$
       + \Big( \Der f(\X) \cdot \affDrift^\trunc(\X) \Big) \shortInt \leb_t
       + \frac12 \tr\Big( \Hess f(\X) \circ \affDiff(\X) \Big)  \shortInt \leb_t \\
     &\quad + \Der f(\X_-) \shortInt \X^\rmc
-      + \Der f(\X_-) \shortInt \big( \trunc \ast \compensate{\jumpMeas^\X} \big)_t \\
+      + \Der f(\X_-) \shortInt \big( \trunc \ast \compensate\jumpMeas^\X \big)_t \\
     &\quad + \Big( f(\X_-+\id_\vecSpace) - f(\X_-) - \Der f(\X_-) \cdot \trunc \Big) \ast \jumpMeas^\X_t
   \end{aligned}
 $$
@@ -81,8 +81,8 @@ $$
 $$
 Thus, by [Proposition II.1.30](cite:jacod2003), we may rewrite the following.
 $$
-  \Der f(\X_-) \shortInt \big( \trunc \ast \compensate{\jumpMeas^\X} \big)_t
-  = \big( \Der f(\X_-) \cdot \trunc \big) \ast \compensate{\jumpMeas^\X}_t ,
+  \Der f(\X_-) \shortInt \big( \trunc \ast \compensate\jumpMeas^\X \big)_t
+  = \big( \Der f(\X_-) \cdot \trunc \big) \ast \compensate\jumpMeas^\X_t ,
 $$
 which when substituted into [](eq:ito-pause) gives us our desired identity.
 

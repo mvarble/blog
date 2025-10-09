@@ -14,7 +14,7 @@ title: Semi-closed form of rate function
 <!-- discuss that we are coming up with semi-closed form -->
 We have now gathered enough familiarity with rate functions that appear in the large deviations literature and the various tools we may use to lift existing principles to new ones.
 This will allow us to more easily understand the nature and derivation of our semi-closed form for [](eq:rf-integral) in [%full](statement:ldp-integral).
-Let us now elaborate on the family on which we derive our semi-closed form; it is assumed that $\X$ is selected with our assumptions of [Section %label](../../../large-deviations/assumptions) that we needed for [%full](statement:ldp-integral).
+Let us now elaborate on the family on which we derive our semi-closed form; it is assumed that $\X$ is selected with our assumptions of [Section %label](../../large-deviations/assumptions) that we needed for [%full](statement:ldp-integral).
 
 <!-- introduce the factors of our new process from the original one -->
 Firstly, in order for us to perform the tricks of coupling we explored in the previous section, we need to couple our arrivals and/or accumulated jumps.
@@ -47,14 +47,14 @@ $$
 Note that this is a stronger restriction than local integrability of the compensated jumps
 $$
   @tag(jumps)
-  \X^\rmd \defeq \id_\vecSpace \ast \compensate{\jumpMeas^\X},
+  \X^\rmd \defeq \id_\vecSpace \ast \compensate\jumpMeas^\X,
 $$
 which we already have from the special property of $\X$.
 
 <!-- technical measure space stuff for joint process -->
 The remainder of this section will assume $\hat\X \defeq (\X, \X^\rmc, \X^\rmd, \N^\X)$ is specified from an affine process $\X$ with the properties discussed above.
 We will also factor our kernel $(\Prb_\stateVar)_{\stateVar\in\stateSpace}$ even further to one $(\hat\Prb_{\hat\stateVar})_{\hat\stateVar\in\hat\stateSpace}$ derived from the regular conditional $\Prb_\stateVar$-distribution of $(\Prb_\stateVar, \scrF)$ time-homogeneous Markov process $(\X^\rmc, \X^\rmd, \N^\X)$.
-We will see in the coming results that $\hat\X$ and its associated kernel $(\hat\Prb_{\hat\stateVar})_{\hat\stateVar\in\hat\stateSpace}$ and filtration $\scrF$ still satisfy the assumptions of Section [%label](../large-deviations/assumptions) needed to apply [%full](statement:ldp-integral); furthermore, its coupling structure will allow us to derive a semi-closed form for [](eq:rf-integral).
+We will see in the coming results that $\hat\X$ and its associated kernel $(\hat\Prb_{\hat\stateVar})_{\hat\stateVar\in\hat\stateSpace}$ and filtration $\scrF$ still satisfy the assumptions of Section [%label](../../large-deviations/assumptions) needed to apply [%full](statement:ldp-integral); furthermore, its coupling structure will allow us to derive a semi-closed form for [](eq:rf-integral).
 This is a process on
 $$
   \hat\stateSpace \defeq \stateSpace \times \vecSpace \times \vecSpace \times \bbR_+,

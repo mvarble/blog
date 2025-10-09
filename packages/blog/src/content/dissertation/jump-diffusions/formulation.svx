@@ -14,12 +14,12 @@ title: Formulation
 </script>
 
 <!-- formulate jump-diffusions in terms of characteristics -->
-As in [Definition III.2.18](cite:jacod2003), a $(\Prb, \scrF)$ jump-diffusion $\X$ on state space $(\stateSpace, \scrB(\stateSpace))$ is a $(\Prb, \scrF)$ semimartingale in which the $\trunc$-characteristics $(B^\trunc, A, \predproj{\jumpMeas^\X})$ have the following decompositions.
+As in [Definition III.2.18](cite:jacod2003), a $(\Prb, \scrF)$ jump-diffusion $\X$ on state space $(\stateSpace, \scrB(\stateSpace))$ is a $(\Prb, \scrF)$ semimartingale in which the $\trunc$-characteristics $(B^\trunc, A, \predproj\jumpMeas^\X)$ have the following decompositions.
 $$
   @tag(jump-diffusion-characteristics)
   B^\trunc_t = \int_0^t \affDrift^\trunc(\X_s) \rmd s, \quad
   A_t = \int_0^t \affDiff(\X_s) \rmd s, \quad
-  \predproj{\jumpMeas^\X}(\rmd s,\rmd\markVar) = \affJump(\X_s, \rmd\markVar) \rmd s,
+  \predproj\jumpMeas^\X(\rmd s,\rmd\markVar) = \affJump(\X_s, \rmd\markVar) \rmd s,
 $$
 where the functions have the following properties.
 
@@ -35,9 +35,9 @@ In other words, our jump-diffusion $\X$ has the following canonical semimartinga
 $$
   @tag(jump-diffusion-canonical)
   \begin{gathered}
-    \X = \X_0 + \affDrift^\trunc(\X) \shortInt \leb + \X^\rmc +  \trunc \ast \compensate{\jumpMeas^\X} + (\id_\vecSpace - \trunc) \ast \jumpMeas^\X \\
+    \X = \X_0 + \affDrift^\trunc(\X) \shortInt \leb + \X^\rmc +  \trunc \ast \compensate\jumpMeas^\X + (\id_\vecSpace - \trunc) \ast \jumpMeas^\X \\
     \prj{\X^{\rmc,i}}{\X^{\rmc,j}} = \affDiff_{ij}(\X) \shortInt \leb \\
-    \predproj{\jumpMeas^\X}(\rmd s, \rmd\markVar) = \affJump(\X_s, \rmd\markVar) \rmd s
+    \predproj\jumpMeas^\X(\rmd s, \rmd\markVar) = \affJump(\X_s, \rmd\markVar) \rmd s
   \end{gathered}
 $$
 
@@ -56,14 +56,14 @@ The following Lemma will be repeatedly used as a shortcut of Itô's formula and 
 In the above lemma, the final term in the semimartingale decomposition of $f(\X)$ is typically not able to be compensated into a local martingale.
 If we did have local integrability of the following quantity,
 $$
-  \Big| f(\X_-+\id_\vecSpace) - f(\X_-) + \Der f(\X_-) \cdot \trunc \Big| \ast \predproj{\jumpMeas^\X},
+  \Big| f(\X_-+\id_\vecSpace) - f(\X_-) + \Der f(\X_-) \cdot \trunc \Big| \ast \predproj\jumpMeas^\X,
 $$
 then by [Proposition II.1.28](cite:jacod2003) we could rewrite $f(\X)$ into a canonical special semimartingale decomposition.
 $$
   @tag(jump-diffusion-generator)
   \begin{aligned}
     f(\X_t)
-    &= f(\X_0) + \generator f(\X) \shortInt \leb_t + \Der f(\X_-) \shortInt \X^\rmc + \big( f(\X_- + \id_\vecSpace) - f(\X_-) \big) \ast \compensate{\jumpMeas^\X}_t \\
+    &= f(\X_0) + \generator f(\X) \shortInt \leb_t + \Der f(\X_-) \shortInt \X^\rmc + \big( f(\X_- + \id_\vecSpace) - f(\X_-) \big) \ast \compensate\jumpMeas^\X_t \\
     \generator f(\stateVar)
     &\defeq \Der f(\stateVar) \cdot \affDrift^\trunc(\stateVar) + \frac12 \tr\Big( \Hess f(\stateVar) \circ \affDiff(\stateVar) \Big) \\
       &\hspace{25mm}+ \int_\vecSpace \Big( f(\stateVar + \markVar) - f(\stateVar) - \Der f(\stateVar) \cdot \trunc(\markVar) \Big) \affJump(\stateVar, \rmd\markVar)
@@ -74,8 +74,8 @@ So long as $f$ is bounded, we can guarantee this special semimartingale property
 <!-- bounded -->
 <Statement {...jumpDiffusionItoBounded} />
 
-This operator $\generator$ in [](eq:jump-diffusion-generator) gives a nice closed from for suitable $f(\X)$, and so we reserve it the term of _generator_ associated with $\X$.
-Note that we do not mark dependence on $\trunc$, as any other truncation function $\hat\trunc$ will produce the same operator; see [%full (c)](statement:jump-diffusions) and note that the displacement from $\affDrift^\trunc$ and $\affDrift^{\hat\trunc}$ would be the same as that in the integral term.
+This operator $\generator$ in [](eq:jump-diffusion-generator) gives a nice closed form for suitable $f(\X)$, and so we reserve it the term of _generator_ associated with $\X$.
+Note that we do not mark dependence on $\trunc$, as any other truncation function $\hat\trunc$ will produce the same operator; see [%full (c)](statement:jump-diffusion-definition-remarks) and note that the displacement from $\affDrift^\trunc$ and $\affDrift^{\hat\trunc}$ would be the same as that in the integral term.
 One particular setting in which this result is useful is establishing a Lévy-Khintchine formula for jump-diffusions.
 
 <!-- Levy-Khintchine -->

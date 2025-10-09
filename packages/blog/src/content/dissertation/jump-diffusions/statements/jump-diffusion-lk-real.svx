@@ -24,14 +24,14 @@ $$
   \begin{aligned}
     \exp\prj{\momentVar}{\X_t}
     &= \exp\prj{\momentVar}{\X_0} + \exp\prj{\momentVar}{\X_t} \Big( \prj{\momentVar}{\affDrift(\X)} + \frac12 \prj{\momentVar}{\affDiff(\X)\momentVar} \Big) \shortInt \leb_t \\
-      &+ \Der f_\momentVar(\X_-) \shortInt \X^\rmc + \Big( \exp\prj{\momentVar}{\X_-} \prj{\momentVar}{\id_\vecSpace} \Big) \ast \compensate{\jumpMeas^\X}_t \\
+      &+ \Der f_\momentVar(\X_-) \shortInt \X^\rmc + \Big( \exp\prj{\momentVar}{\X_-} \prj{\momentVar}{\id_\vecSpace} \Big) \ast \compensate\jumpMeas^\X_t \\
       &+ \exp\prj{\momentVar}{\X_-} \cdot \Big( \exp\prj{\momentVar}{\id_\vecSpace} - 1 - \prj{\momentVar}{\id_\vecSpace} \Big) \ast \jumpMeas^\X
   \end{aligned}
 $$
 Note that localizing our final term on the sequence $(T_n)_{n\in\bbN}$ of stopping times in [](eq:stopping-times), we get the following.
 $$
   \begin{aligned}
-    &\Exp_\Prb  \Big| \exp\prj{\momentVar}{\X_-} \Big( \exp\prj{\momentVar}{\id_\vecSpace} - 1 - \prj{\momentVar}{\id_\vecSpace} \Big) \Big| \ast \predproj{\jumpMeas^\X}_{T_n} \\
+    &\Exp_\Prb  \Big| \exp\prj{\momentVar}{\X_-} \Big( \exp\prj{\momentVar}{\id_\vecSpace} - 1 - \prj{\momentVar}{\id_\vecSpace} \Big) \Big| \ast \predproj\jumpMeas^\X_{T_n} \\
     &= \Exp_\Prb \int_0^{T_n} \int_\vecSpace \Big| \exp\prj{\momentVar}{\X_s} \Big( \exp\prj{\momentVar}{\markVar} - 1 - \prj{\momentVar}{\markVar} \Big) \Big| \affJump(\X_s, \rmd\markVar) \rmd s \\
     &\leq n \cdot \sup_{|\stateVar|\leq n} \bigg( e^\prj\momentVar\stateVar \int_\vecSpace \big| e^\prj{\momentVar}{\markVar} - 1 - \prj{\momentVar}{\markVar} \big| \affJump(\stateVar, \rmd\markVar) \bigg)
   \end{aligned}
@@ -44,7 +44,7 @@ $$
     &= \exp\prj{\momentVar}{\X_0}
       + \Big( \exp\prj{\momentVar}{\X} \cdot \ode(\momentVar, \X) \Big) \shortInt \leb_t
       + \Der f_\momentVar(\X_-) \shortInt \X^\rmc \\
-      &+ \Big( \exp\prj{\momentVar}{\X_-} \prj{\momentVar}{\id_\vecSpace} \Big) \ast \compensate{\jumpMeas^\X}_t
+      &+ \Big( \exp\prj{\momentVar}{\X_-} \prj{\momentVar}{\id_\vecSpace} \Big) \ast \compensate\jumpMeas^\X_t
   \end{aligned}
 $$
 This is a representation of $\exp\prj{\momentVar}{\X}$ as an initial term, predictable term of finite variation, and a local martingale.

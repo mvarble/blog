@@ -26,7 +26,7 @@ $$
   @tag(LK-asymptotics)
   \ode^\epsilon(\momentVar, \stateVar) = \frac1\epsilon \ode(\momentVar, \epsilon \stateVar), \quad \momentVar \in \vecSpace, ~ \stateVar \in \stateSpace
 $$
-Using the notation of [%full](statement:jump-diffusions-real-moments), we see that the set $\odeSpace(\stateVar)$ of finite points of $\ode(\cdot, \stateVar)$ is identical to that $\odeSpacee(\epsilon\stateVar)$ of $\ode^\epsilon(\cdot, \epsilon\stateVar)$.
+Using the notation of [Appendix %label](/sequences/dissertation/jump-diffusions/real-moments), we see that the set $\odeSpace(\stateVar)$ of finite points of $\ode(\cdot, \stateVar)$ is identical to that $\odeSpacee(\epsilon\stateVar)$ of $\ode^\epsilon(\cdot, \epsilon\stateVar)$.
 So long that $\stateSpace$ is a cone&mdash;which is to say that $\stateSpace$ an additive set, closed under non-negative-scalar multiplication&mdash;we have $\stateSpace = \epsilon\stateSpace$, and so the following sets agree.
 $$
   \odeSpace = \bigcap_{\stateVar \in \stateSpace} \odeSpace(\stateVar) = \bigcap_{\stateVar \in \stateSpace} \odeSpacee(\epsilon\stateVar) = \bigcap_{\stateVar \in \stateSpace} \odeSpacee(\stateVar) = \odeSpacee
@@ -72,11 +72,11 @@ The first of which is immediate from our preceding result, but it only makes sen
 
 <!-- show parameterization for Brownian motion and Poisson random measure -->
 We may also intuitively understand the relationship of $(\Prb^\epsilon_\stateVar)_{\stateVar\in\stateSpace}$ from a dynamical system perspective.
-In [%full](statement:jump-diffusion-characterizations), we see how jump-diffusions $\X$ always correspond to a weak solution of some stochastic differential equation driven by standard Brownian motion $\W$ and Poisson random measure $\poisRM$.
+In [%full](statement:jump-diffusion-characterization), we see how jump-diffusions $\X$ always correspond to a weak solution of some stochastic differential equation driven by standard Brownian motion $\W$ and Poisson random measure $\poisRM$.
 $$
   @tag(sde-reminder)
   \begin{gathered}
-    \X_t = \X_0 + \affDrift^\trunc(\X) \shortInt \leb_t + \affDiffSqrt(\X) \shortInt \W_t + \trunc \circ \thinner(\X, \id_\vecSpace) \ast \compensate{\poisRM}_t  + \trunc' \circ \thinner(\X, \id_\vecSpace) \ast \poisRM_t \\
+    \X_t = \X_0 + \affDrift^\trunc(\X) \shortInt \leb_t + \affDiffSqrt(\X) \shortInt \W_t + \trunc \circ \thinner(\X, \id_\vecSpace) \ast \compensate\poisRM_t  + \trunc' \circ \thinner(\X, \id_\vecSpace) \ast \poisRM_t \\
     \forall ~ \stateVar \in \stateSpace, \quad \left\{\begin{aligned}
       \affJump(\stateVar, \Gamma) &= \int_\vecSpace 1_\Gamma\big(\thinner(\stateVar, \markVar)\big) \rmd\markVar, & \Gamma \in \scrB(\vecSpace-\{0\}) \\
       \affDiff(\stateVar) &= \affDiffSqrt\affDiffSqrt^*(\stateVar)

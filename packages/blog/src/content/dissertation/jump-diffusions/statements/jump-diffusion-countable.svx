@@ -26,7 +26,7 @@ Note now that, since the constant function $1$ is predictable,
 $$
   \Exp_\Prb \N^\X_{T_n}
   = \Exp_\Prb 1 \ast \jumpMeas^\X_{T_n}
-  = \Exp_\Prb 1 \ast \predproj{\jumpMeas^\X}_{T_n}
+  = \Exp_\Prb 1 \ast \predproj\jumpMeas^\X_{T_n}
   = \Exp_\Prb \int_0^{T_n} \affJump(\X_t, \vecSpace) \rmd t
   \leq n \cdot \sup_{|\stateVar| \leq n} \affJump(\stateVar, \vecSpace) < \infty
   $$
@@ -35,7 +35,7 @@ Moreover, by [Theorem II.1.8](cite:jacod2003),
 $$
   \N^\X - \int_0^t \affInt(\X_s) \rmd s
   = 1 \ast \jumpMeas^\X - \int_0^t \int_\vecSpace \affJump(\X_s, \rmd\markVar) \rmd s
-  = 1 \ast \jumpMeas^\X - 1 \ast \predproj{\jumpMeas^\X}
+  = 1 \ast \jumpMeas^\X - 1 \ast \predproj\jumpMeas^\X
 $$
 is a $(\Prb, \scrF)$ local martingale, which finishes the proof.
 

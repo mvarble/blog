@@ -54,7 +54,7 @@ For a rigorous proof involving such analysis, we refer the reader to [](cite:gao
 In any case, we again note that [%full](statement:ldp-integral) covers the large deviation principle and rate function mentioned above.
 A continuous-branching process $\X$ with intensity $\affInt(\X)$ has special semimartingale decomposition as below,
 $$
-  \X = 1 \ast \jumpMeas^{\X} = 1 \ast \predproj{\jumpMeas^{\X}} + 1 \ast \compensate{\jumpMeas^{\X}} = \affInt(\X) \shortInt \leb + 1 \ast \compensate{\jumpMeas^{\X}}
+  \X = 1 \ast \jumpMeas^{\X} = 1 \ast \predproj\jumpMeas^{\X} + 1 \ast \compensate\jumpMeas^{\X} = \affInt(\X) \shortInt \leb + 1 \ast \compensate\jumpMeas^{\X}
 $$
 which lends itself to the following special differential characteristics $(\affDrift, \affDiff, \affJump)$,
 $$

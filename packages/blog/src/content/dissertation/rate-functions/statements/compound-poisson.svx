@@ -56,16 +56,16 @@ $$
 $$
 This means that we have the following predictable compensator,
 $$
-  \predproj{\jumpMeas^{\hat\Xee}}(\rmd s, \rmd\hat\markVar) = \frac1\epsilon \affDist(\rmd\markVar_1) \delta_1(\rmd\markVar_2)\rmd s
+  \predproj\jumpMeas^{\hat\Xee}(\rmd s, \rmd\hat\markVar) = \frac1\epsilon \affDist(\rmd\markVar_1) \delta_1(\rmd\markVar_2)\rmd s
 $$
 which by our light-tails [](eq:cumulant-generating-function) and [%full](statement:affine-special) means that $\hat\Xee$ is special and has the following decomposition.
 $$
   \hat\Xee
-  = \id_{\vecSpace\times\bbR_+} \ast \predproj{\jumpMeas^{\hat\Xee}}_t + \id_{\vecSpace\times\bbR_+} \ast \compensate{\jumpMeas^{\hat\Xee}}_t
+  = \id_{\vecSpace\times\bbR_+} \ast \predproj\jumpMeas^{\hat\Xee}_t + \id_{\vecSpace\times\bbR_+} \ast \compensate\jumpMeas^{\hat\Xee}_t
   = \frac1\epsilon\begin{pmatrix}
     \overline\affDist \\
     1
-  \end{pmatrix} \shortInt \leb_t + \id_{\vecSpace\times\bbR_+} \ast \compensate{\jumpMeas^{\hat\Xee}}_t
+  \end{pmatrix} \shortInt \leb_t + \id_{\vecSpace\times\bbR_+} \ast \compensate\jumpMeas^{\hat\Xee}_t
 $$
 This means that the special differential characteristics $(\affDrift^\epsilon, \affDiff^\epsilon, \affJump^\epsilon)$ of $\hat\Xee$ are as follows.
 $$

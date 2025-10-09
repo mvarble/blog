@@ -11,7 +11,7 @@ slug: affine-special
 If $0 \in \odeSpace^\circ$, then $\X$ is a $(\Prb_\stateVar, \scrF)$ special jump-diffusion for each $\stateVar \in \stateSpace$.
 The resulting drift map $\affDrift: \stateSpace \rightarrow \vecSpace$ in the special semimartingale decomposition,
 $$
-  \X_t = \stateVar + \affDrift(\X) \shortInt \leb_t + \X^\rmc + \id_\vecSpace \ast \compensate{\jumpMeas^\X}_t
+  \X_t = \stateVar + \affDrift(\X) \shortInt \leb_t + \X^\rmc + \id_\vecSpace \ast \compensate\jumpMeas^\X_t
 $$
 is also affine, making all the special differential characteristics $(\affDrift, \affDiff, \affJump)$ affine.
 

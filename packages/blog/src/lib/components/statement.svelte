@@ -12,16 +12,18 @@
 </script>
 
 {#snippet component()}
-    {#if !noLabel}
-        <strong>
-            {cms.kind
-                .split(' ')
-                .map((str) => `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`)
-                .join(' ')}
-            {cms.label}
-        </strong>
-    {/if}
-    <StatementComponent></StatementComponent>
+    <div>
+        {#if !noLabel}
+            <strong>
+                {cms.kind
+                    .split(' ')
+                    .map((str) => `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`)
+                    .join(' ')}
+                {cms.label}
+            </strong>
+        {/if}
+        <StatementComponent></StatementComponent>
+    </div>
 {/snippet}
 
 {#if noBlock}

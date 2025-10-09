@@ -38,14 +38,14 @@ $$
       \Big(\exp\big( H \shortInt \X \big) \cdot \prj{H}{\affDrift}
       + \frac12 \exp\big( H \shortInt \X \big) \bprj{H}{\affDiff(\X)H} \Big) \shortInt \leb_t \\
       &\hspace{20mm}+ \Big( \exp\big( H \shortInt \X_- \big) \cdot H \Big) \shortInt \X^\rmc_t
-      + \exp\big( H \shortInt \X_- \big) \prj{H}{\id_\vecSpace} \ast \compensate{\jumpMeas^\X}_t \\
+      + \exp\big( H \shortInt \X_- \big) \prj{H}{\id_\vecSpace} \ast \compensate\jumpMeas^\X_t \\
       &\hspace{20mm}+ \exp\big(H\shortInt\X_-\big) \Big( e^{\prj{H}{\id_\vecSpace}} - 1 - \prj{H}{\id_\vecSpace} \Big) \ast \jumpMeas^\X_t
   \end{aligned}
 $$
 Now, choosing our $(\Prb, \scrF)$ localizing sequence $(T_n)_{n\in\bbN}$ as in [](eq:stopping-times), we have the following bound.
 $$
 \begin{aligned}
-  &\Exp_\Prb \Big| \exp\big(H \shortInt \X_- \big) \Big(e^\prj{H}{\id_\vecSpace} - 1 - \prj{H}{\id_\vecSpace} \Big) \ast \predproj{\jumpMeas^\X}_{T_n} \Big| \\
+  &\Exp_\Prb \Big| \exp\big(H \shortInt \X_- \big) \Big(e^\prj{H}{\id_\vecSpace} - 1 - \prj{H}{\id_\vecSpace} \Big) \ast \predproj\jumpMeas^\X_{T_n} \Big| \\
   &= \Exp_\Prb \int_0^{T_n} \int_\vecSpace \Big| \exp\big(H \shortInt \X_s \big) \Big( e^\prj{H(s)}{\markVar} - 1 - \prj{H(s)}{\markVar} \Big) \Big| \affJump(\X_s, \rmd\markVar) \rmd s \\
   &\leq n \cdot \sup_{|\stateVar| \leq n} \sup_{s \in [0,n]} e^{|\stateVar|\cdot|H(s)|} \int_\vecSpace \big| e^\prj{H(s)}{\markVar} - 1 - \prj{H(s)}{\markVar} \big| \affJump(\stateVar, \rmd\markVar)
 \end{aligned}
@@ -59,7 +59,7 @@ $$
   \exp\big( H \shortInt \X_t \big)
   &=
     \Big(\exp\big( H \shortInt \X \big) \cdot \ode(H, \X) \Big) \shortInt \leb_t + \Big( \exp\big( H \shortInt \X_- \big) \cdot H \Big) \shortInt \X^\rmc_t \\
-    &\hspace{10mm}+ \exp\big(H\shortInt\X_-\big) \Big( e^{\prj{H}{\id_\vecSpace}} - 1 \Big) \ast \compensate{\jumpMeas^\X}_t
+    &\hspace{10mm}+ \exp\big(H\shortInt\X_-\big) \Big( e^{\prj{H}{\id_\vecSpace}} - 1 \Big) \ast \compensate\jumpMeas^\X_t
   \end{aligned}
 $$
 The decomposition of $\exp(H \shortInt \X)$ into a predictable finite-variation process and a  local martingale implies that it is special.

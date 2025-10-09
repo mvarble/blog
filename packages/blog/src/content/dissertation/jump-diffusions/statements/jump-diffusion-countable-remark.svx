@@ -3,7 +3,7 @@ type: statement
 kind: remark
 ---
 
-- Such objects $\affInt, \affDist$ always exist with our assumption of the Lemma.
+1. Such objects $\affInt, \affDist$ always exist with our assumption of the Lemma.
   Seeing as $\affJump$ is a transition kernel from $(\stateSpace, \scrB(\stateSpace))$ to $(\vecSpace, \scrB(\vecSpace))$, we have our desired measurability.
   $$
     \affInt \defeq \affJump(\cdot, \vecSpace) \in \scrB(\stateSpace)/\scrB(\bbR_+)
@@ -22,6 +22,6 @@ kind: remark
   $$
     \affJump(\stateVar, \rmd\markVar) = \affJump(\stateVar,\vecSpace) \frac{\affJump(\stateVar, \rmd\markVar)}{\affJump(\stateVar, \vecSpace)} = \affInt(\stateVar) \affDist(\stateVar, \rmd\markVar).
   $$
-- We call $\affInt$ the _intensity map_ and $\affDist$ the _(conditional) jump distribution_
-- As far as we know, there is no widely accepted source which explores jump-diffusions to the extent of declaring a notion like _locally countable_, as we have.
+2. We call $\affInt$ the _intensity map_ and $\affDist$ the _(conditional) jump distribution_
+3. As far as we know, there is no widely accepted source which explores jump-diffusions to the extent of declaring a notion like _locally countable_, as we have.
   This means that there is likely some clash of terminology, should such a concept already exist.

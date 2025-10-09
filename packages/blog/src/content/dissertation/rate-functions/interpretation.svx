@@ -73,8 +73,8 @@ Throughout, notice we establish an intuition with $\hat\pathVar$ being a proxy f
     \begin{aligned}
       \N^{\Xe}_t - \int_0^t \frac1\epsilon \affInt(\Xe_s) \rmd s
       &= 1 \ast \jumpMeas^{\Xe}_t - \int_0^t \int_\vecSpace \frac1\epsilon\affJump(\Xe_s, \rmd\markVar) \rmd s \\
-      &= 1 \ast \jumpMeas^{\Xe}_t - 1 \ast \predproj{\jumpMeas^{\Xe}}_t \\
-      &= 1 \ast \compensate{\jumpMeas^{\Xe}}_t,
+      &= 1 \ast \jumpMeas^{\Xe}_t - 1 \ast \predproj\jumpMeas^{\Xe}_t \\
+      &= 1 \ast \compensate\jumpMeas^{\Xe}_t,
     \end{aligned}
   $$
   which tells us $\N^{\Xe}$ has intensity $\frac1\epsilon\affInt(\Xe)$.
@@ -97,8 +97,8 @@ Meanwhile, since $\dot\gamma$ is a proxy for an increment of ${\Xe}^{,\rmd}$, we
 $$
   \begin{aligned}
     {\Xe_t}^{,\rmd}
-    &= \id_\vecSpace \ast \compensate{\jumpMeas^{\Xe}}_t \\
-    &= \id_\vecSpace \ast \jumpMeas^{\Xe}_t - \id_\vecSpace \ast \predproj{\jumpMeas^{\Xe}}_t \\
+    &= \id_\vecSpace \ast \compensate\jumpMeas^{\Xe}_t \\
+    &= \id_\vecSpace \ast \jumpMeas^{\Xe}_t - \id_\vecSpace \ast \predproj\jumpMeas^{\Xe}_t \\
     &= \int_{[0,t]\times \vecSpace} \markVar \jumpMeas^{\Xe}(\rmd s, \rmd\markVar) - \int_0^t \int_\vecSpace \epsilon\markVar \frac1\epsilon\affJump(\Xe_s, \rmd\markVar) \rmd s \\
     &= \int_0^t \Delta(\Xe)_s \, \rmd\N^{\Xe}_s  - \int_0^t \affInt(\Xe_s) \overline{\affDist(\Xe_s, \cdot)},
   \end{aligned}

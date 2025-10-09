@@ -18,7 +18,7 @@ Then, $\X$ is special with drift $\affDrift$ as in [](eq:jump-diffusion-drift).
 By choosing a $\scrF$ localizing sequence $(T_n)_{n\in\bbN}$ as in [](eq:stopping-times), our hypothesis gives us the following integrability.
 $$
   \begin{aligned}
-    \Exp_\Prb\big| \id_\vecSpace- \trunc \big| \ast \predproj{\jumpMeas^\X}_{T_n}
+    \Exp_\Prb\big| \id_\vecSpace- \trunc \big| \ast \predproj\jumpMeas^\X_{T_n}
     &= \Exp_\Prb \int_0^{T_n} \int_\vecSpace \big|\markVar - \trunc(\markVar)\big| \affJump(\X_t, \rmd\markVar) \rmd t\\
     &\leq n \cdot \sup_{|\stateVar|\leq n} \int_\vecSpace \big|\markVar-\trunc(\markVar)\big| \affJump(\stateVar, \rmd\markVar) \\
     &< \infty

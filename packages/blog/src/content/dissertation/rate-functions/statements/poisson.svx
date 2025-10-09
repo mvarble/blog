@@ -23,8 +23,8 @@ Setting the initial state $\stateVar = 0$ and looking at [%full](statement:sde-a
 $$
   \begin{aligned}
     \Xe_t
-    &= t + \epsilon 1_{[0,1]}(\id_\bbR) \ast \compensate{\poisRM^\epsilon}_t \\
-    &= t + \epsilon 1_{[0,1]}(\id_\bbR) \ast \poisRM^\epsilon_t - \epsilon 1_{[0,1]}(\id_\bbR) \ast \predproj{\poisRM^\epsilon}_t \\
+    &= t + \epsilon 1_{[0,1]}(\id_\bbR) \ast \compensate\poisRM^\epsilon_t \\
+    &= t + \epsilon 1_{[0,1]}(\id_\bbR) \ast \poisRM^\epsilon_t - \epsilon 1_{[0,1]}(\id_\bbR) \ast \predproj\poisRM^\epsilon_t \\
     &= t + \epsilon \poisRM([0,t/\epsilon] \times [0,1]) - \int_0^{t/\epsilon} \int_\bbR \epsilon 1_{[0,1]}(\markVar) \rmd\markVar \rmd s \\
     &= \epsilon \poisRM([0,t/\epsilon] \times [0,1])
   \end{aligned}

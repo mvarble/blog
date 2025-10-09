@@ -3,9 +3,9 @@ type: statement
 kind: remark
 ---
 
-- By [%full](statement:odeSpace-rationale) and [%full](statement:light-tails-equivalence), this assumption is equivalent to having any of the following statements for any $\momentVar \in \vecSpace$.
+1. By [%full](statement:odeSpace-rationale) and [%full](statement:light-tails-equivalence), this assumption is equivalent to having any of the following statements for any $\momentVar \in \vecSpace$.
   - $\int_{|\markVar| > 1} e^\prj{\momentVar}{\markVar} \affJump(\stateVar, \rmd\markVar) < \infty$ for all $\stateVar \in \stateSpace$,
   - There exists $\tau > 0$ such that $\Exp_{\Prb_\stateVar}\exp\prj{\momentVar}{\X_\tau} < \infty$ for all $\stateVar \in \stateSpace$,
   - There exists $\tau > 0$ such that $\system(\ode, \tau, \momentVar)$ has a solution.
-- It is easy to see in the proofs where we assume $\odeSpace = \vecSpace$ versus simply using $0 \in \odeSpace^\circ$.
-- By imposing even the simpler of the two assumptions that $0 \in \odeSpace^\circ$ immediately tells us that all $\Xee$ are special, and so we proceed the rest of the chapter with a presentation in terms of special differential characteristics $(\affDrift, \affDiff, \affJump)$.
+2. It is easy to see in the proofs where we assume $\odeSpace = \vecSpace$ versus simply using $0 \in \odeSpace^\circ$.
+3. By imposing even the simpler of the two assumptions that $0 \in \odeSpace^\circ$ immediately tells us that all $\Xee$ are special, and so we proceed the rest of the chapter with a presentation in terms of special differential characteristics $(\affDrift, \affDiff, \affJump)$.

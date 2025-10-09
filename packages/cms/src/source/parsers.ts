@@ -182,7 +182,9 @@ export function edgeParser(db: Database, doc: DocumentInPage, contents: string) 
             if (rel) {
                 const ref = touchPageReference(db, doc.mddocId, rel);
                 if (!ref) {
-                    console.error(`'${rel}' does not resolve to a page in the site.`);
+                    console.error(
+                        `'${rel}' does not resolve to a page in the site (see '${doc.filename}').`,
+                    );
                 }
                 continue;
             }

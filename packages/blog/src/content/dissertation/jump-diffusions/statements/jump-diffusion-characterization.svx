@@ -9,8 +9,8 @@ kind: theorem
 
 The following statements are equivalent for a stochastic process $\X$ on state space $(\stateSpace, \scrB(\stateSpace))$.
 
-- $\X$ is a $(\Prb, \scrF)$ jump-diffusion with differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$.
-- For each bounded $f \in \ccpathSpace{2}{\vecSpace}{\bbR}$, the process $f(\X_t) - \generator f(\X_t) \shortInt \leb_t$ is a $(\Prb, \scrF)$ local martingale, where
+1. $\X$ is a $(\Prb, \scrF)$ jump-diffusion with differential $\trunc$-characteristics $(\affDrift^\trunc, \affDiff, \affJump)$.
+2. For each bounded $f \in \ccpathSpace{2}{\vecSpace}{\bbR}$, the process $f(\X_t) - \generator f(\X_t) \shortInt \leb_t$ is a $(\Prb, \scrF)$ local martingale, where
   $$
     \begin{aligned}
       \generator f(\stateVar)
@@ -19,11 +19,11 @@ The following statements are equivalent for a stochastic process $\X$ on state s
         &\quad + \int_\vecSpace \Big( f(\stateVar + \markVar) - f(\stateVar) - \Der f(\stateVar) \cdot \trunc(\markVar) \Big) \affJump(\stateVar, \rmd\markVar)
     \end{aligned}
   $$
-- For each $\momentVar \in \im\vecSpace$, the process $\exp\Big(\prj{\momentVar}{\X} - \ode(\momentVar, \X) \shortInt \leb \Big)$ is a $(\Prb, \scrF)$ local martingale, where $\ode$ is our Lévy-Khintchine map.
+3. For each $\momentVar \in \im\vecSpace$, the process $\exp\Big(\prj{\momentVar}{\X} - \ode(\momentVar, \X) \shortInt \leb \Big)$ is a $(\Prb, \scrF)$ local martingale, where $\ode$ is our Lévy-Khintchine map.
   $$
     \ode(\momentVar, \stateVar) = \bprj{\momentVar}{\affDrift^\trunc(\stateVar)} + \frac12\bprj{\momentVar}{\affDiff(\stateVar)} + \int_\vecSpace \big( e^\prj{\momentVar}{\markVar} - 1 - \prj{\momentVar}{\trunc(\markVar)} \big) \affJump(\stateVar, \rmd\markVar),
   $$
-- Denoting $(\Prb_\stateVar)_{\stateVar\in\stateSpace}$ the $\Prb$-conditional distributions of $\X$ factored through the initial state $\X_0$ and selecting Borel functions $\affDiffSqrt, \thinner$ to satisfy,
+4. Denoting $(\Prb_\stateVar)_{\stateVar\in\stateSpace}$ the $\Prb$-conditional distributions of $\X$ factored through the initial state $\X_0$ and selecting Borel functions $\affDiffSqrt, \thinner$ to satisfy,
   $$
     @tag(sde-terms)
     \begin{aligned}
@@ -33,7 +33,7 @@ The following statements are equivalent for a stochastic process $\X$ on state s
   $$
   each $\Prb_\stateVar$ is a solution to the equation associated with a standard Brownian motion $\W$ and Poisson random measure $\poisRM$, where $\trunc' = \id_\vecSpace - \trunc$.
   $$
-      \X_t = \stateVar + \affDrift^\trunc(\X) \shortInt \leb_t + \sigma(\X_-) \shortInt \W_t + \big( \trunc \circ \thinner(\X_-, \id_\vecSpace) \big) \ast \compensate{\poisRM}_t + \big( \trunc' \circ \thinner(\X_-, \id_\vecSpace) \big) \ast \poisRM_t
+      \X_t = \stateVar + \affDrift^\trunc(\X) \shortInt \leb_t + \sigma(\X_-) \shortInt \W_t + \big( \trunc \circ \thinner(\X_-, \id_\vecSpace) \big) \ast \compensate\poisRM_t + \big( \trunc' \circ \thinner(\X_-, \id_\vecSpace) \big) \ast \poisRM_t
   $$
 
 <Proof>

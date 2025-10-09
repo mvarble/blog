@@ -11,12 +11,12 @@ Fix a probability space $(\Omega, \Sigma, \Prb)$ equipped with standard Brownian
 Let $\affDiffSqrt: \stateSpace \rightarrow \bbL(\vecSpace)$ and $\thinner: \stateSpace \times \vecSpace \rightarrow \vecSpace$ satisfy [](eq:sde-reminder) for the $\trunc$-differential characteristics $(\affDrift^\trunc, \affDiff, \affJump)$, as granted by [%full](statement:jump-diffusion-characterization).
 For each $\stateVar \in \stateSpace$, the family $(\Prb^\epsilon_\stateVar)_{\epsilon>0}$ of distributions $\Prb^\epsilon_\stateVar$ may be recognized as each $\Prb^\epsilon_\stateVar$ being a weak solution to the respective _scaled_ stochastic dynamical system,
 $$
-    \Xe_t = \stateVar + \affDrift^\trunc(\Xe) \shortInt \leb_t + \sqrt\epsilon \affDiffSqrt(\X) \shortInt \W_t + \trunc \circ \epsilon\thinner\big(\Xe, \sqrt[d]{\epsilon} \cdot \id_\vecSpace\big) \ast \compensate{\poisRM}_t + \trunc' \circ \epsilon\thinner\big(\Xe, \sqrt[d]{\epsilon} \cdot \id_\vecSpace\big) \ast \poisRM_t,
+    \Xe_t = \stateVar + \affDrift^\trunc(\Xe) \shortInt \leb_t + \sqrt\epsilon \affDiffSqrt(\X) \shortInt \W_t + \trunc \circ \epsilon\thinner\big(\Xe, \sqrt[d]{\epsilon} \cdot \id_\vecSpace\big) \ast \compensate\poisRM_t + \trunc' \circ \epsilon\thinner\big(\Xe, \sqrt[d]{\epsilon} \cdot \id_\vecSpace\big) \ast \poisRM_t,
 $$
 or the _time-changed_ stochastic dynamical system.
 $$
   \begin{gathered}
-    \Xe_t = \stateVar + \affDrift^\trunc(\Xe) \shortInt \leb_t + \epsilon \affDiffSqrt(\X) \shortInt \W^\epsilon_t + \trunc \circ \epsilon\thinner\big(\Xe, \id_\vecSpace\big) \ast \compensate{\poisRM^\epsilon}_t + \trunc' \circ \epsilon\thinner\big(\Xe, \id_\vecSpace\big) \ast \poisRM^\epsilon_t, \\
+    \Xe_t = \stateVar + \affDrift^\trunc(\Xe) \shortInt \leb_t + \epsilon \affDiffSqrt(\X) \shortInt \W^\epsilon_t + \trunc \circ \epsilon\thinner\big(\Xe, \id_\vecSpace\big) \ast \compensate\poisRM^\epsilon_t + \trunc' \circ \epsilon\thinner\big(\Xe, \id_\vecSpace\big) \ast \poisRM^\epsilon_t, \\
     \W^\epsilon_t \defeq \W_{t/\epsilon} \\
     \poisRM^\epsilon([0,t]\times \Gamma) \defeq \poisRM([0,t/\epsilon] \times \Gamma)
   \end{gathered}
@@ -28,7 +28,7 @@ By [III.2.26](cite:jacod2003), it suffices to check if the characteristics of th
 We will instead match those of the scaled $\Xee$; recall its characteristics, as specified by [](eq:characteristic-asymptotics).
 $$
   \bprj{{\Xee}^{,\rmc,i}}{{\Xee}^{,\rmc,j}} = \frac1\epsilon\affDiff_{i,j}(\Xe) \shortInt \leb, \quad
-  \predproj{\jumpMeas^{\Xee}}(\rmd s, \rmd\markVar) = \frac1\epsilon \affJump(\Xe, \rmd\markVar) \rmd s
+  \predproj\jumpMeas^{\Xee}(\rmd s, \rmd\markVar) = \frac1\epsilon \affJump(\Xe, \rmd\markVar) \rmd s
 $$
 Let us first address the first system.
 Note that for any $i, j = 1, \ldots, d$, we use [Theorem I.4.40(d)](cite:jacod2003) to resolve the predictable quadratic covariation of the continuous local martingale part $\frac{1}{\sqrt\epsilon} \affDiffSqrt(\Xe) \shortInt \W$ of $\Xee$.

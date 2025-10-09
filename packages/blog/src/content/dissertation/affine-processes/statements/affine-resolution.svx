@@ -39,7 +39,7 @@ $$
       - M \ode\big(\affPart(\tau-\leb, \momentVar), \X\big) \shortInt \leb_t \\
     &\quad+ M \bigg( \bprj{\affPart(\tau-\leb, \momentVar)}{\affDrift^\trunc(\X)} + \frac12 \prj{\affPart(\tau-\leb,\momentVar)}{\affDiff(\X)\affPart(\tau-\leb,\momentVar)} \bigg) \shortInt \leb_t \\
     &\quad+ M_- \affPart(\tau-\leb, \momentVar) \shortInt \X^\rmc
-      + M_- \bprj{\affPart(\tau-\leb,\momentVar)}{\trunc} \ast \compensate{\jumpMeas^\X}_t  \\
+      + M_- \bprj{\affPart(\tau-\leb,\momentVar)}{\trunc} \ast \compensate\jumpMeas^\X_t  \\
     &\quad+ M_- \bprj{\affPart(\tau-\leb, \momentVar)}{\id_\vecSpace-\trunc} \ast \jumpMeas^\X_t  \\
     &\quad+ M_- \Big( \exp\prj{\affPart(\tau-\leb,\momentVar)}{\id_\vecSpace} - 1 - \bprj{\affPart(\tau-\leb, \momentVar)}{\id_\vecSpace} \Big) \ast \jumpMeas^\X
   \end{aligned}
@@ -52,13 +52,13 @@ $$
       - M \ode\big(\affPart(\tau-\leb, \momentVar), \X\big) \shortInt \leb_t \\
     &\quad+ M \bigg( \bprj{\affPart(\tau-\leb, \momentVar)}{\affDrift^\trunc(\X)} + \frac12 \prj{\affPart(\tau-\leb,\momentVar)}{\affDiff(\X)\affPart(\tau-\leb,\momentVar)} \bigg) \shortInt \leb_t \\
     &\quad+ M_- \affPart(\tau-\leb, \momentVar) \shortInt \X^\rmc
-      + M_- \bprj{\affPart(\tau-\leb,\momentVar)}{\trunc} \ast \compensate{\jumpMeas^\X}_t \\
-    &\quad+ M_- \Big( \exp\prj{\affPart(\tau-\leb,\momentVar)}{\id_\vecSpace} - 1 - \bprj{\affPart(\tau-\leb,\momentVar)}{\trunc} \Big) \ast \predproj{\jumpMeas^\X}_t \\
-    &\quad+ M_- \Big( \exp\prj{\affPart(\tau-\leb,\momentVar)}{\id_\vecSpace} - 1 - \bprj{\affPart(\tau-\leb,\momentVar)}{\trunc} \Big) \ast \compensate{\jumpMeas^\X}_t
+      + M_- \bprj{\affPart(\tau-\leb,\momentVar)}{\trunc} \ast \compensate\jumpMeas^\X_t \\
+    &\quad+ M_- \Big( \exp\prj{\affPart(\tau-\leb,\momentVar)}{\id_\vecSpace} - 1 - \bprj{\affPart(\tau-\leb,\momentVar)}{\trunc} \Big) \ast \predproj\jumpMeas^\X_t \\
+    &\quad+ M_- \Big( \exp\prj{\affPart(\tau-\leb,\momentVar)}{\id_\vecSpace} - 1 - \bprj{\affPart(\tau-\leb,\momentVar)}{\trunc} \Big) \ast \compensate\jumpMeas^\X_t
     \\
     &= \exp\aff(\tau, \momentVar, \stateVar)
       + M_- \affPart(\tau-\leb, \momentVar) \shortInt \X^\rmc \\
-    &\quad+ M_- \Big( \exp\prj{\affPart(\tau-\leb,\momentVar)}{\id_\vecSpace} - 1 \Big) \ast \compensate{\jumpMeas^\X}_t
+    &\quad+ M_- \Big( \exp\prj{\affPart(\tau-\leb,\momentVar)}{\id_\vecSpace} - 1 \Big) \ast \compensate\jumpMeas^\X_t
   \end{aligned}
 $$
 This shows that $M$ is a local martingale; because it is bounded, it is a martingale, and we have our desired transform.

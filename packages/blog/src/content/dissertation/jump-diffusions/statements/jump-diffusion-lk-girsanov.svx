@@ -41,7 +41,7 @@ $$
       \exp\Big( \twistFunc(\leb, \X_-) \shortInt \X_{s-} + \Delta\big(\twistFunc(\leb, \X_-) \shortInt \X\big)_s - \ode\big( \twistFunc(\leb, \X), \X \big) \shortInt \leb_s \Big)  \\
       &\hspace{80mm} \cdot H(\cdot, s, \markVar) \jumpMeas^\X(\rmd s, \rmd\markVar)  \\
     &= \Exp_\Prb \int_{\bbR_+ \times \vecSpace} \mgDensity^\twistFunc_{s-} e^\prj{\twistFunc(s, \X_{s-})}{\markVar} H(\cdot, s, \markVar) \jumpMeas^\X(\rmd s, \rmd\markVar)  \\
-    &= \Exp_\Prb \int_{\bbR_+ \times \vecSpace} \mgDensity^\twistFunc_{s-} e^\prj{\twistFunc(s, \X_{s-})}{\markVar} H(\cdot, s, \markVar) \predproj{\jumpMeas^\X}(\rmd s, \rmd\markVar)  \\
+    &= \Exp_\Prb \int_{\bbR_+ \times \vecSpace} \mgDensity^\twistFunc_{s-} e^\prj{\twistFunc(s, \X_{s-})}{\markVar} H(\cdot, s, \markVar) \predproj\jumpMeas^\X(\rmd s, \rmd\markVar)  \\
     &= \Exp_\Prb \int_{\bbR_+ \times \vecSpace} \mgDensity^\twistFunc_{s-} e^\prj{\twistFunc(s, \X_{s-})}{\markVar} H(\cdot, s, \markVar) \affJump(\X_s, \rmd\markVar) \rmd s  \\
     &= \Exp_\Prb \int_{\bbR_+ \times \vecSpace} \mgDensity^\twistFunc_s e^\prj{\twistFunc(s, \X_s)}{\markVar} H(\cdot, s, \markVar) \affJump(\X_s, \rmd\markVar) \rmd s
   \end{aligned}

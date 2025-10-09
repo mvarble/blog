@@ -29,13 +29,13 @@ We find it important to highlight the following important notation of objects in
   $$
     H \ast \jumpMeas_t = \int_{[0,t] \times \vecSpace} H_s(\markVar) \jumpMeas(\rmd s, \rmd\markVar)
   $$
-  Denote its $(\Prb, \scrF)$ predictable projection by $\predproj{\jumpMeas}$ and the compensated measure $\compensate{\jumpMeas} = \jumpMeas - \predproj{\jumpMeas}$.
-  We will frequently use, without mention, that $\predproj{\jumpMeas}$ is characterized by the property that any $\scrF$ predictable $H: \Omega \times \bbR_+ \times \vecSpace \rightarrow \bbR_+$ is such that
+  Denote its $(\Prb, \scrF)$ predictable projection by $\predproj\jumpMeas$ and the compensated measure $\compensate\jumpMeas = \jumpMeas - \predproj\jumpMeas$.
+  We will frequently use, without mention, that $\predproj\jumpMeas$ is characterized by the property that any $\scrF$ predictable $H: \Omega \times \bbR_+ \times \vecSpace \rightarrow \bbR_+$ is such that
   $$
     \Exp_\Prb\big( H \ast \jumpMeas_\infty \big)
-    = \Exp_\Prb\big( H \ast \predproj{\jumpMeas}_\infty \big)
+    = \Exp_\Prb\big( H \ast \predproj\jumpMeas_\infty \big)
   $$
-  Also denote $H \ast \compensate{\jumpMeas}$ the compensated local martingale process for suitable $H \in G_\loc(\jumpMeas)$, as constructed in [Definition II.1.27](cite:jacod2003).
+  Also denote $H \ast \compensate\jumpMeas$ the compensated local martingale process for suitable $H \in G_\loc(\jumpMeas)$, as constructed in [Definition II.1.27](cite:jacod2003).
   Lift these integration notions to vector-valued $H$ componentwise.
   Instead of choosing a canonical variable for integrating expressions in this form, we use the identity maps $\id_\vecSpace$ or $\leb$.
   $$
