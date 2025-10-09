@@ -93,8 +93,8 @@ export function cmsSource(): Plugin {
             const hook = HOOKS[frontmatter.type];
             if (hook.crossReference) {
                 await hook.crossReference(db, filename, frontmatter, contents);
+                return;
             }
-            return;
         }
         // otherwise, use the default
         defaultCrossReference(db, filename, contents);
