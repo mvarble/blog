@@ -20,6 +20,45 @@ export interface Post extends PostBase {
     pathname: string;
 }
 
+export function getPost(db: Database, pathname: string): Post | undefined {
+    const obj = db
+        .prepare(
+            `SELECT
+                p.page_id as pageId, p.title, p.created, p.edited, p.slug, pp.pathname,
+                pm.id as mddocId, pm.filename, pm.katex_macros
+            FROM posts p
+            INNER JOIN pages pp ON p.page_id = pp.id
+            INNER JOIN mddocs pm ON pp.mddoc_id = pm.id
+            WHERE pp.pathname = ?;`,
+        )
+        .get(pathname) as
+        | {
+            pageId: number;
+            title: string;
+            created: string;
+            edited: string;
+            slug: string;
+            pathname: string;
+            mddocId: number;
+            filename: string;
+            katex_macros: string;
+        }
+        | undefined;
+    if (obj) {
+        return {
+            pageId: obj.pageId,
+            title: obj.title,
+            created: new Date(obj.created),
+            edited: new Date(obj.edited),
+            slug: obj.slug,
+            pathname: obj.pathname,
+            mddocId: obj.mddocId,
+            filename: obj.filename,
+            katexMacros: JSON.parse(obj.katex_macros),
+        };
+    }
+}
+
 export function touchPost(db: Database, { descriptionId, ...post }: TouchPostInput): Post {
     let mddocId: number;
     let pageId: number;
