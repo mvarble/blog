@@ -3,6 +3,7 @@ type: post
 title: Notes on Riemannian geometry
 created: 2025-11-28
 description: ./description.svx
+tags: [foo, bar, baz]
 ---
 
 <script>

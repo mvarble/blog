@@ -54,6 +54,18 @@ function parsePostInput(
         edited = frontmatter.edited;
     }
 
+    let tags: string[] | undefined = undefined;
+    if ('tags' in frontmatter) {
+        if (
+            !Array.isArray(frontmatter.tags) ||
+            frontmatter.tags.some((tag) => typeof tag != 'string')
+        ) {
+            console.error('Posts frontmatter field `tags` must be a list of strings.');
+            return;
+        }
+        tags = frontmatter.tags;
+    }
+
     let descriptionFilename: string | undefined = undefined;
     if ('description' in frontmatter) {
         if (typeof frontmatter.description != 'string') {
@@ -83,6 +95,7 @@ function parsePostInput(
         edited,
         filename,
         katexMacros,
+        tags,
     };
 }
 

@@ -2,6 +2,16 @@
     let { data } = $props();
 </script>
 
-<h1>{data.title}</h1>
+<div class="page">
+    <h1>{data.title}</h1>
+    <data.component />
+</div>
 
-<data.component />
+<style>
+    .page {
+        padding: var(--page-padding-top) var(--page-padding-side) var(--page-padding-bottom);
+        min-width: 0 !important;
+        margin: 0 auto;
+        max-width: var(--max-width);
+    }
+</style>

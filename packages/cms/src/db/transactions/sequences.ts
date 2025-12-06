@@ -19,6 +19,7 @@ export interface TouchSequenceInput extends TouchSequenceChildInputBase {
     enumerate: boolean;
     descriptionFilename?: string;
     imageFilename?: string;
+    tags?: string[];
 }
 
 export interface SequenceChildBase {
@@ -44,11 +45,12 @@ export interface Sequence extends SequenceChildBase {
     enumerate: boolean;
     descriptionId?: number;
     imageFilename?: string;
+    tags: string[];
 }
 
 export function touchSequence(
     db: Database,
-    { descriptionFilename, ...sequence }: TouchSequenceInput,
+    { descriptionFilename, tags, ...sequence }: TouchSequenceInput,
 ): Sequence {
     let mddocId: number;
     let pageId: number;
@@ -75,6 +77,12 @@ export function touchSequence(
             .prepare('INSERT INTO pages (mddoc_id, pathname) VALUES (?, ?) RETURNING id;')
             .get(mddocId, pathname);
         pageId = (page as { id: number }).id;
+
+        if (tags) {
+            const qmarks = tags.map(() => '(?, ?)').join(', ');
+            const values = tags.flatMap((tag) => [pageId, tag]);
+            db.prepare(`INSERT OR IGNORE INTO tags (page_id, tag) VALUES ${qmarks}`).run(...values);
+        }
 
         const out = db
             .prepare(
@@ -112,6 +120,13 @@ export function touchSequence(
                 .prepare('UPDATE pages SET pathname = ? WHERE mddoc_id = ? RETURNING id;')
                 .get(pathname, mddocId);
             pageId = (page as { id: number }).id;
+
+            db.prepare('DELETE FROM tags WHERE page_id = ?;').run(pageId);
+            if (tags) {
+                const qmarks = tags.map(() => '(?, ?)').join(', ');
+                const values = tags.flatMap((tag) => [pageId, tag]);
+                db.prepare(`INSERT tags (page_id, tag) VALUES ${qmarks}`).run(...values);
+            }
 
             const out = db
                 .prepare(
@@ -168,6 +183,7 @@ export function touchSequence(
         pathname,
         descriptionId,
         children: children.length != 0 ? children : undefined,
+        tags: tags || [],
     };
 }
 
@@ -361,6 +377,11 @@ export function getSequence(db: Database, slug: string): Sequence | undefined {
             edited: new Date(sequence.edited),
             katexMacros: JSON.parse(sequence.katex_macros),
             children: buildTree(sequencePages, sequence.page_id),
+            tags: (
+                db.prepare('SELECT tag FROM tags WHERE page_id = ?;').all(sequence.page_id) as {
+                    tag: string;
+                }[]
+            ).map(({ tag }) => tag),
         };
     }
 }

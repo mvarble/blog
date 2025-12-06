@@ -13,6 +13,13 @@ CREATE TABLE IF NOT EXISTS pages (
     pathname TEXT UNIQUE NOT NULL
 );
 
+-- Tag associated with a page on the website.
+CREATE TABLE IF NOT EXISTS tags (
+    page_id INTEGER NOT NULL REFERENCES pages(id),
+    tag TEXT NOT NULL,
+    UNIQUE (page_id, tag)
+);
+
 -- The markdown document associated with a page may import other markdown
 -- documents whose content we manage.
 CREATE TABLE IF NOT EXISTS page_mddocs (

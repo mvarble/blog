@@ -73,6 +73,19 @@ const hooks: FileHooks = {
             katexMacros = frontmatter.katex_macros;
         }
 
+        // check frontmatter for tags
+        let tags: string[] | undefined = undefined;
+        if ('tags' in frontmatter) {
+            if (
+                !Array.isArray(frontmatter.tags) ||
+                frontmatter.tags.some((tag) => typeof tag != 'string')
+            ) {
+                console.error('Posts frontmatter field `tags` must be a list of strings.');
+                return;
+            }
+            tags = frontmatter.tags;
+        }
+
         // if frontmatter does not have children, then the sequence is done
         if (!('children' in frontmatter)) {
             const sequence = touchSequence(db, {
@@ -85,6 +98,7 @@ const hooks: FileHooks = {
                 katexMacros,
                 descriptionFilename,
                 imageFilename,
+                tags,
             });
 
             await nodeParser(
@@ -126,6 +140,7 @@ const hooks: FileHooks = {
             children,
             descriptionFilename,
             imageFilename,
+            tags,
         });
 
         let currentItemPrefix = enumerate ? '0' : undefined;

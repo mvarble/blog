@@ -13,6 +13,7 @@ interface PostBase {
 
 export interface TouchPostInput extends PostBase {
     descriptionFilename?: string;
+    tags?: string[];
 }
 
 export interface Post extends PostBase {
@@ -20,6 +21,7 @@ export interface Post extends PostBase {
     descriptionId?: number;
     pageId: number;
     pathname: string;
+    tags: string[];
 }
 
 export function getPost(db: Database, pathname: string): Post | undefined {
@@ -61,11 +63,19 @@ export function getPost(db: Database, pathname: string): Post | undefined {
             mddocId: obj.mddocId,
             filename: obj.filename,
             katexMacros: JSON.parse(obj.katex_macros),
+            tags: (
+                db.prepare('SELECT tag FROM tags WHERE page_id = ?;').all(obj.page_id) as {
+                    tag: string;
+                }[]
+            ).map(({ tag }) => tag),
         };
     }
 }
 
-export function touchPost(db: Database, { descriptionFilename, ...post }: TouchPostInput): Post {
+export function touchPost(
+    db: Database,
+    { descriptionFilename, tags, ...post }: TouchPostInput,
+): Post {
     let mddocId: number;
     let pageId: number;
     let descriptionId: number | undefined = undefined;
@@ -89,6 +99,12 @@ export function touchPost(db: Database, { descriptionFilename, ...post }: TouchP
             .prepare('INSERT INTO pages (mddoc_id, pathname) VALUES (?, ?) RETURNING id;')
             .get(mddocId, pathname);
         pageId = (page as { id: number }).id;
+
+        if (tags) {
+            const qmarks = tags.map(() => '(?, ?)').join(', ');
+            const values = tags.flatMap((tag) => [pageId, tag]);
+            db.prepare(`INSERT OR IGNORE INTO tags (page_id, tag) VALUES ${qmarks}`).run(...values);
+        }
 
         db.prepare(
             'INSERT INTO posts (page_id, description_id, image_filename, title, slug, created, edited) VALUES (?, ?, ?, ?, ?, ?, ?);',
@@ -120,6 +136,13 @@ export function touchPost(db: Database, { descriptionFilename, ...post }: TouchP
                 .get(pathname, mddocId);
             pageId = (page as { id: number }).id;
 
+            db.prepare('DELETE FROM tags WHERE page_id = ?;').run(pageId);
+            if (tags) {
+                const qmarks = tags.map(() => '(?, ?)').join(', ');
+                const values = tags.flatMap((tag) => [pageId, tag]);
+                db.prepare(`INSERT INTO tags (page_id, tag) VALUES ${qmarks}`).run(...values);
+            }
+
             db.prepare(
                 'UPDATE posts SET title = ?, description_id = ?, created = ?, edited = ?, slug = ? WHERE page_id = ?;',
             ).run(
@@ -134,7 +157,7 @@ export function touchPost(db: Database, { descriptionFilename, ...post }: TouchP
             throw e;
         }
     }
-    return { mddocId, pageId, descriptionId, pathname, ...post };
+    return { mddocId, pageId, descriptionId, pathname, tags: tags || [], ...post };
 }
 
 export interface PostReference {
