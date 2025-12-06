@@ -26,7 +26,6 @@
 
     .page {
         padding: var(--page-padding-top) var(--page-padding-side) var(--page-padding-bottom);
-
         min-width: 0 !important;
     }
 

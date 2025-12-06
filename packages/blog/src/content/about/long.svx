@@ -1,0 +1,74 @@
+# About this blog
+
+I am passionately interested in teaching mathematics and probability theory intuitively without compromising on the technicalities.
+I also take great interest in programming and believe it is a creative and aesthetic outlet for deconstructing complex ideas, particularly when expressed with typed languages.
+I also take great joy in applying these subjects to personal electronics projects.
+My intent for this blog is for it to be a place to share these interests and teach my favorite concepts.
+Hopefully, this will be done in a unique way: for it to be more technical than popular-science YouTube channels, more interactive and example-driven than textbooks, and less stuffy than research papers [[1](#paper-joke1), [2](#paper-joke2), [3](#paper-joke3), [4](#paper-joke4), [5](#paper-joke5)].
+
+<div class="citation" id="paper-joke1">
+  <span>[1]</span>
+  <span>Matthew Varble.</span>
+  <i>A very specific result.</i>
+  <span>American Journal of Doing Mathematics.</span>
+  <span>2021.</span>
+</div>
+<div class="citation" id="paper-joke2">
+  <span>[2]</span>
+  <span>Matthew Varble.</span>
+  <i>A carefully crafted example showing one case where my work is superior.</i>
+  <span>arXiv.</span>
+  <span>2022.</span>
+</div>
+<div class="citation" id="paper-joke3">
+  <span>[3]</span>
+  <span>Matthew Varble.</span>
+  <i>A huge (tiny) extension of my result.</i>
+  <span>arXiv.</span>
+  <span>2022.</span>
+</div>
+<div class="citation" id="paper-joke4">
+  <span>[4]</span>
+  <span>Matthew Varble.</span>
+  <i>Tasteless neural-network that relates to my work which is otherwise obselete.</i>
+  <span>arXiv.</span>
+  <span>2023.</span>
+</div>
+<div class="citation" id="paper-joke5">
+  <span>[5]</span>
+  <span>Distinguished Professor,</span>
+  <span>Potential Reviewer.</span>
+  <i>Some paper I haven't read but makes me look smart.</i>
+  <span>The Annals of Probability.</span>
+  <span>2017.</span>
+</div>
+
+> I honestly am impressed by academics and envy the collaboration involved with research papers--but seriously--who wants to pay $50 for a PDF that is most likely going to lead to a goose-chase of searching for more papers?
+
+# Who am I?
+
+I live in Santa Barbara where I work for [Toyon Research Corporation](https://www.toyon.com/) as a Senior Analyst, solving navigation problems for the Antennas and RF-systems team.
+Prior to this, I was a Ph.D. student in mathematics at UCSB.
+Rats are my favorite animals, but nowadays my animal-time is spent with my girlfriend's crazy dog.
+I enjoy cooking, playing the drums, hiking, bicycling (casually, not a speed-racer), snowboarding, and--dare I say it--long walks on the beach (except for the sand between my toes).
+I have always had a habit of mindlessly spending hours focused on math and programming problems, so I take great solace in meditation and the cognitive framing it offers for best enjoying life.
+
+## Connect with me!
+
+I am not on social media, I am bad at texting, and I have a very dense work schedule.
+However, I would love to connect and collaborate on projects with anyone who is interested in the same topics as me.
+I would also appreciate any sort of feedback for this blog or hear of other related resources.
+Feel free to email me at `matthew@URL-OF-THIS-WEBSITE` to reach out.
+
+> I often see people offering their email in a cryptic fashion, e.g. above or `matthew at rodent dot club`.
+> Is that because there are actually that many bots looking to email me junk?
+> I actually rarely get junk mail, but I may as well play it safe like the cool kids.
+> My phone on the other hand?
+> Awful. I get like 100 junk calls and texts per day, now matter how many numbers I block.
+
+# Let's goooo! 🏂
+
+The site is split into _posts_ and _sequences_.
+Posts are bite-sized musings that one would typically see in a blog.
+Sequences are more long-form writings that are comparable to a book.
+While I will try to keep pages consistent for posterity, I expect that some posts will be combined over time into sequences.

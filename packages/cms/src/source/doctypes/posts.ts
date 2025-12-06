@@ -21,7 +21,7 @@ const hooks: FileHooks = {
                 filename,
             },
             contents,
-            post.pageId,
+            0,
             undefined,
         );
     },
