@@ -14,10 +14,11 @@ export interface TouchSequenceChildInput extends TouchSequenceChildInputBase {
 }
 
 export interface TouchSequenceInput extends TouchSequenceChildInputBase {
-    descriptionId?: number;
     created: Date;
     edited: Date;
     enumerate: boolean;
+    descriptionFilename?: string;
+    imageFilename?: string;
 }
 
 export interface SequenceChildBase {
@@ -41,15 +42,18 @@ export interface Sequence extends SequenceChildBase {
     created: Date;
     edited: Date;
     enumerate: boolean;
+    descriptionId?: number;
+    imageFilename?: string;
 }
 
 export function touchSequence(
     db: Database,
-    { descriptionId, ...sequence }: TouchSequenceInput,
+    { descriptionFilename, ...sequence }: TouchSequenceInput,
 ): Sequence {
     let mddocId: number;
     let pageId: number;
     let id: number;
+    let descriptionId: number | undefined = undefined;
     const pathname = `sequences/${sequence.slug}`;
     const children: SequenceChild[] = [];
     try {
@@ -57,6 +61,15 @@ export function touchSequence(
             .prepare('INSERT INTO mddocs (filename, katex_macros) VALUES (?, ?) RETURNING id;')
             .get(sequence.filename, JSON.stringify(sequence.katexMacros));
         mddocId = (mddoc as { id: number }).id;
+
+        if (descriptionFilename) {
+            const descriptionMddoc = db
+                .prepare(
+                    "INSERT INTO mddocs (filename, root, katex_macros) VALUES (?, ?, '{}') RETURNING id;",
+                )
+                .get(descriptionFilename, mddocId);
+            descriptionId = (descriptionMddoc as { id: number }).id;
+        }
 
         const page = db
             .prepare('INSERT INTO pages (mddoc_id, pathname) VALUES (?, ?) RETURNING id;')
@@ -66,13 +79,14 @@ export function touchSequence(
         const out = db
             .prepare(
                 `INSERT INTO sequences (
-                    page_id, description_id, title, created, edited, slug, enumerate)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                    page_id, description_id, image_filename, title, created, edited, slug, enumerate)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 RETURNING id;`,
             )
             .get(
                 pageId,
-                typeof descriptionId == 'number' ? descriptionId : null,
+                descriptionId || null,
+                sequence.imageFilename || null,
                 sequence.title,
                 sequence.created.toISOString(),
                 sequence.edited.toISOString(),
@@ -87,6 +101,13 @@ export function touchSequence(
                 .get(JSON.stringify(sequence.katexMacros), sequence.filename);
             mddocId = (mddoc as { id: number }).id;
 
+            if (descriptionFilename) {
+                const descriptionMddoc = db
+                    .prepare('UPDATE mddocs SET root = ? WHERE filename = ? RETURNING id;')
+                    .get(mddocId, descriptionFilename);
+                descriptionId = (descriptionMddoc as { id: number }).id;
+            }
+
             const page = db
                 .prepare('UPDATE pages SET pathname = ? WHERE mddoc_id = ? RETURNING id;')
                 .get(pathname, mddocId);
@@ -95,12 +116,14 @@ export function touchSequence(
             const out = db
                 .prepare(
                     `UPDATE sequences
-                    SET title = ?, created = ?, edited = ?, slug = ?, enumerate = ?
+                    SET title = ?, description_id = ?, image_filename = ?, created = ?, edited = ?, slug = ?, enumerate = ?
                     WHERE page_id = ?
                     RETURNING id;`,
                 )
                 .get(
                     sequence.title,
+                    descriptionId || null,
+                    sequence.imageFilename || null,
                     sequence.created.toISOString(),
                     sequence.edited.toISOString(),
                     sequence.slug,
@@ -143,6 +166,7 @@ export function touchSequence(
         pageId,
         mddocId,
         pathname,
+        descriptionId,
         children: children.length != 0 ? children : undefined,
     };
 }
@@ -269,6 +293,8 @@ export function getParentSequenceFilename(db: Database, filename: string): strin
 
 interface SequenceSelect {
     id: number;
+    description_id: number | null;
+    image_filename: string;
     page_id: number;
     mddoc_id: number;
     title: string;
@@ -299,8 +325,9 @@ export function getSequence(db: Database, slug: string): Sequence | undefined {
     const sequence = db
         .prepare(
             `SELECT
-                seq.id, seq.page_id, spage.mddoc_id, seq.title, seq.slug, seq.created, seq.edited,
-                seq.enumerate, spage.pathname, smddoc.filename, smddoc.katex_macros
+                seq.id, seq.page_id, seq.description_id, seq.image_filename, spage.mddoc_id,
+                seq.title, seq.slug, seq.created, seq.edited, seq.enumerate, spage.pathname,
+                smddoc.filename, smddoc.katex_macros
             FROM sequences seq
             INNER JOIN pages spage ON seq.page_id = spage.id
             INNER JOIN mddocs smddoc ON spage.mddoc_id = smddoc.id
@@ -323,6 +350,8 @@ export function getSequence(db: Database, slug: string): Sequence | undefined {
             id: sequence.id,
             mddocId: sequence.mddoc_id,
             pageId: sequence.page_id,
+            descriptionId: sequence.description_id || undefined,
+            imageFilename: sequence.image_filename,
             slug: sequence.slug,
             title: sequence.title,
             enumerate: sequence.enumerate == 0 ? false : true,
@@ -341,8 +370,9 @@ export function getParentSequence(db: Database, filename: string): Sequence | un
     let sequenceRes = db
         .prepare(
             `SELECT
-            seq.id, seq.page_id, spage.mddoc_id, seq.title, seq.slug, seq.created, seq.edited,
-            seq.enumerate, spage.pathname, smddoc.filename, smddoc.katex_macros
+            seq.id, seq.page_id, seq.description_id, seq.image_filename, spage.mddoc_id, seq.title,
+            seq.slug, seq.created, seq.edited, seq.enumerate, spage.pathname, smddoc.filename,
+            smddoc.katex_macros
         FROM sequences seq
         INNER JOIN pages spage ON seq.page_id = spage.id
         INNER JOIN mddocs smddoc ON spage.mddoc_id = smddoc.id
@@ -356,8 +386,9 @@ export function getParentSequence(db: Database, filename: string): Sequence | un
         sequenceRes = db
             .prepare(
                 `SELECT
-                    seq.id, seq.page_id, spage.mddoc_id, seq.title, seq.slug, seq.created, seq.edited,
-                    seq.enumerate, spage.pathname, smddoc.filename, smddoc.katex_macros
+                    seq.id, seq.page_id, seq.description_id, seq.image_filename, spage.mddoc_id,
+                    seq.title, seq.slug, seq.created, seq.edited, seq.enumerate, spage.pathname,
+                    smddoc.filename, smddoc.katex_macros
                 FROM sequences seq
                 INNER JOIN pages spage ON seq.page_id = spage.id
                 INNER JOIN mddocs smddoc ON spage.mddoc_id = smddoc.id
@@ -382,6 +413,8 @@ export function getParentSequence(db: Database, filename: string): Sequence | un
             id: sequenceRes.id,
             mddocId: sequenceRes.mddoc_id,
             pageId: sequenceRes.page_id,
+            descriptionId: sequenceRes.description_id || undefined,
+            imageFilename: sequenceRes.image_filename,
             slug: sequenceRes.slug,
             title: sequenceRes.title,
             enumerate: sequenceRes.enumerate == 0 ? false : true,
@@ -478,21 +511,28 @@ export function getSequenceChildReferences(
     }));
 }
 
-export function getSequenceInfos(db: Database): PostInfo[] {
+export function getSequenceInfos(db: Database, max?: number): PostInfo[] {
     const outputs = db
         .prepare(
-            `SELECT sequences.title, sequences.created, sequences.edited, pages.pathname
-            FROM sequences INNER JOIN pages ON sequences.page_id = pages.id
-            ORDER BY sequences.edited DESC;`,
+            `SELECT sequences.title, sequences.created, sequences.edited, sequences.image_filename, pages.pathname, mddocs.filename
+            FROM sequences
+            INNER JOIN pages ON sequences.page_id = pages.id
+            LEFT OUTER JOIN mddocs ON sequences.description_id = mddocs.id
+            ORDER BY sequences.edited DESC
+            ${typeof max == 'number' ? 'LIMIT ' + max : ''};`,
         )
         .all() as {
             title: string;
             created: string;
             edited: string;
+            image_filename: string;
             pathname: string;
+            filename: string;
         }[];
-    return outputs.map(({ created, edited, ...post }) => ({
+    return outputs.map(({ created, edited, filename, image_filename, ...post }) => ({
         ...post,
+        descriptionFilename: filename,
+        imageFilename: image_filename,
         created: new Date(created),
         edited: new Date(edited),
     }));

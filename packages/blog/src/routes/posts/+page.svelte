@@ -1,10 +1,17 @@
 <script lang="ts">
+    import Post from '$lib/components/post.svelte';
     let { data } = $props();
 </script>
 
-<h1>Posts</h1>
+<div>
+    <h1>Posts</h1>
+    {#each data.posts as post (post.pathname)}
+        <Post {...post} />
+    {/each}
+</div>
 
-{#each data.posts as post (post.pathname)}
-    <a href={`/${post.pathname}`}>{post.title}</a>
-    <pre>{JSON.stringify(post, null, 2)}</pre>
-{/each}
+<style>
+    div {
+        padding: var(--page-padding-top) var(--page-padding-side) var(--page-padding-bottom);
+    }
+</style>

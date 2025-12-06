@@ -1,6 +1,7 @@
 <script>
     import Short from '../content/about/short.svx';
     import Long from '../content/about/long.svx';
+    import Post from '$lib/components/post.svelte';
     let { data } = $props();
 </script>
 
@@ -18,16 +19,31 @@
         <Long />
         <h2>Posts</h2>
         {#each data.posts as post (post.pathname)}
-            <pre>{JSON.stringify(post, null, 2)}</pre>
+            <Post {...post} />
         {/each}
+        <a class="more" href="/posts">See all posts</a>
         <h2>Sequences</h2>
         {#each data.sequences as sequence (sequence.pathname)}
-            <pre>{JSON.stringify(sequence, null, 2)}</pre>
+            <Post {...sequence} />
         {/each}
+        <a class="more" href="/sequences">See all sequences</a>
     </div>
 </div>
 
 <style>
+    .more {
+        font-size: 1.25rem;
+        font-weight: 500;
+        margin: 1.2rem 0;
+        display: block;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .more:hover {
+        text-decoration: underline;
+    }
+
     .root {
         --max-width: 1200px;
     }

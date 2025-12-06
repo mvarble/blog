@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS page_mddocs (
 CREATE TABLE IF NOT EXISTS posts (
     page_id INTEGER NOT NULL REFERENCES pages(id),
     description_id INTEGER REFERENCES mddocs(id),
+    image_filename TEXT,
     title TEXT NOT NULL,
     created DATE NOT NULL,
     edited DATE NOT NULL,
@@ -38,6 +39,7 @@ CREATE TABLE IF NOT EXISTS sequences (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     page_id INTEGER NOT NULL REFERENCES pages(id),
     description_id INTEGER REFERENCES mddocs(id),
+    image_filename TEXT,
     title TEXT NOT NULL,
     created DATE NOT NULL,
     edited DATE NOT NULL,

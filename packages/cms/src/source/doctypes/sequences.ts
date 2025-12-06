@@ -35,6 +35,28 @@ const hooks: FileHooks = {
             edited = frontmatter.edited;
         }
 
+        // check frontmatter for description (path to SVX file)
+        let descriptionFilename: string | undefined = undefined;
+        if ('description' in frontmatter) {
+            if (typeof frontmatter.description != 'string') {
+                console.error('Sequences frontmatter field `description` must be a string.');
+                return;
+            }
+            descriptionFilename = path.relative(
+                path.resolve('.'),
+                path.resolve(path.dirname(filename), frontmatter.description),
+            );
+        }
+
+        // check frontmatter for image (optional or path to file)
+        let imageFilename: string | undefined = undefined;
+        if ('image' in frontmatter && typeof frontmatter.image == 'string') {
+            imageFilename = path.relative(
+                path.resolve('.'),
+                path.resolve(path.dirname(filename), frontmatter.image),
+            );
+        }
+
         // check frontmatter for enumerate (optional or boolean)
         if ('enumerate' in frontmatter && !hasBooleanField(frontmatter, 'enumerate')) {
             console.error('Sequences field `enumerate` must be boolean.');
@@ -61,6 +83,8 @@ const hooks: FileHooks = {
                 filename,
                 enumerate,
                 katexMacros,
+                descriptionFilename,
+                imageFilename,
             });
 
             await nodeParser(
@@ -100,6 +124,8 @@ const hooks: FileHooks = {
             enumerate,
             katexMacros,
             children,
+            descriptionFilename,
+            imageFilename,
         });
 
         let currentItemPrefix = enumerate ? '0' : undefined;

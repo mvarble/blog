@@ -1,7 +1,7 @@
 import { error, type Load } from '@sveltejs/kit';
 import type { Component } from 'svelte';
 
-export const loaders = Object.fromEntries(
+export const svxLoaders = Object.fromEntries(
     Object.entries(import.meta.glob('../content/**/*.svx')).map(([relfilename, loader]) => {
         const filename = relfilename.replace('..', 'src');
         return [filename, loader];
@@ -9,7 +9,23 @@ export const loaders = Object.fromEntries(
 ) as Record<string, () => Promise<{ default: Component }>>;
 
 export async function getComponent(filename: string): Promise<Component | undefined> {
-    const loader = loaders[filename];
+    const loader = svxLoaders[filename];
+    if (!loader) return;
+    const module = await loader();
+    return module.default;
+}
+
+export const imgLoaders = Object.fromEntries(
+    Object.entries(import.meta.glob('../content/**/*.{png,jpg,jpeg,PNG,JPG,JPEG}')).map(
+        ([relfilename, loader]) => {
+            const filename = relfilename.replace('..', 'src');
+            return [filename, loader];
+        },
+    ),
+) as Record<string, () => Promise<{ default: string }>>;
+
+export async function getImg(filename: string): Promise<string | undefined> {
+    const loader = imgLoaders[filename];
     if (!loader) return;
     const module = await loader();
     return module.default;

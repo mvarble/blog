@@ -8,14 +8,16 @@ interface PostBase {
     slug: string;
     filename: string;
     katexMacros: KatexMacros;
+    imageFilename?: string;
 }
 
 export interface TouchPostInput extends PostBase {
-    descriptionId?: number;
+    descriptionFilename?: string;
 }
 
 export interface Post extends PostBase {
     mddocId: number;
+    descriptionId?: number;
     pageId: number;
     pathname: string;
 }
@@ -24,8 +26,8 @@ export function getPost(db: Database, pathname: string): Post | undefined {
     const obj = db
         .prepare(
             `SELECT
-                p.page_id as pageId, p.title, p.created, p.edited, p.slug, pp.pathname,
-                pm.id as mddocId, pm.filename, pm.katex_macros
+                p.page_id, p.description_id, p.image_filename, p.title, p.created, p.edited,
+                p.slug, pp.pathname, pm.id as mddocId, pm.filename, pm.katex_macros
             FROM posts p
             INNER JOIN pages pp ON p.page_id = pp.id
             INNER JOIN mddocs pm ON pp.mddoc_id = pm.id
@@ -33,7 +35,9 @@ export function getPost(db: Database, pathname: string): Post | undefined {
         )
         .get(pathname) as
         | {
-            pageId: number;
+            page_id: number;
+            description_id: number | null;
+            image_filename: string;
             title: string;
             created: string;
             edited: string;
@@ -46,7 +50,9 @@ export function getPost(db: Database, pathname: string): Post | undefined {
         | undefined;
     if (obj) {
         return {
-            pageId: obj.pageId,
+            pageId: obj.page_id,
+            descriptionId: obj.description_id || undefined,
+            imageFilename: obj.image_filename,
             title: obj.title,
             created: new Date(obj.created),
             edited: new Date(obj.edited),
@@ -59,9 +65,10 @@ export function getPost(db: Database, pathname: string): Post | undefined {
     }
 }
 
-export function touchPost(db: Database, { descriptionId, ...post }: TouchPostInput): Post {
+export function touchPost(db: Database, { descriptionFilename, ...post }: TouchPostInput): Post {
     let mddocId: number;
     let pageId: number;
+    let descriptionId: number | undefined = undefined;
     const pathname = `posts/${post.slug}`;
     try {
         const mddoc = db
@@ -69,16 +76,26 @@ export function touchPost(db: Database, { descriptionId, ...post }: TouchPostInp
             .get(post.filename, JSON.stringify(post.katexMacros));
         mddocId = (mddoc as { id: number }).id;
 
+        if (descriptionFilename) {
+            const descriptionMddoc = db
+                .prepare(
+                    "INSERT INTO mddocs (filename, root, katex_macros) VALUES (?, ?, '{}') RETURNING id;",
+                )
+                .get(descriptionFilename, mddocId);
+            descriptionId = (descriptionMddoc as { id: number }).id;
+        }
+
         const page = db
             .prepare('INSERT INTO pages (mddoc_id, pathname) VALUES (?, ?) RETURNING id;')
             .get(mddocId, pathname);
         pageId = (page as { id: number }).id;
 
         db.prepare(
-            'INSERT INTO posts (page_id, description_id, title, slug, created, edited) VALUES (?, ?, ?, ?, ?, ?);',
+            'INSERT INTO posts (page_id, description_id, image_filename, title, slug, created, edited) VALUES (?, ?, ?, ?, ?, ?, ?);',
         ).run(
             pageId,
-            typeof descriptionId == 'number' ? descriptionId : null,
+            descriptionId || null,
+            post.imageFilename || null,
             post.title,
             post.slug,
             post.created.toISOString(),
@@ -91,15 +108,23 @@ export function touchPost(db: Database, { descriptionId, ...post }: TouchPostInp
                 .get(JSON.stringify(post.katexMacros), post.filename);
             mddocId = (mddoc as { id: number }).id;
 
+            if (descriptionFilename) {
+                const descriptionMddoc = db
+                    .prepare('UPDATE mddocs SET root = ? WHERE filename = ? RETURNING id;')
+                    .get(mddocId, descriptionFilename);
+                descriptionId = (descriptionMddoc as { id: number }).id;
+            }
+
             const page = db
                 .prepare('UPDATE pages SET pathname = ? WHERE mddoc_id = ? RETURNING id;')
                 .get(pathname, mddocId);
             pageId = (page as { id: number }).id;
 
             db.prepare(
-                'UPDATE posts SET title = ?, created = ?, edited = ?, slug = ? WHERE page_id = ?;',
+                'UPDATE posts SET title = ?, description_id = ?, created = ?, edited = ?, slug = ? WHERE page_id = ?;',
             ).run(
                 post.title,
+                descriptionId || null,
                 post.created.toISOString(),
                 post.edited.toISOString(),
                 post.slug,
@@ -109,7 +134,7 @@ export function touchPost(db: Database, { descriptionId, ...post }: TouchPostInp
             throw e;
         }
     }
-    return { mddocId, pageId, pathname, ...post };
+    return { mddocId, pageId, descriptionId, pathname, ...post };
 }
 
 export interface PostReference {
@@ -144,23 +169,32 @@ export interface PostInfo {
     created: Date;
     edited: Date;
     pathname: string;
+    descriptionFilename?: string;
+    imageFilename?: string;
 }
 
-export function getPostInfos(db: Database): PostInfo[] {
+export function getPostInfos(db: Database, max?: number): PostInfo[] {
     const outputs = db
         .prepare(
-            `SELECT title, created, edited, pathname
-            FROM posts INNER JOIN pages ON posts.page_id = pages.id
-            ORDER BY posts.edited DESC;`,
+            `SELECT title, created, edited, pathname, image_filename, mddocs.filename
+            FROM posts
+            INNER JOIN pages ON posts.page_id = pages.id
+            LEFT OUTER JOIN mddocs ON mddocs.id = posts.description_id
+            ORDER BY posts.edited DESC
+            ${typeof max == 'number' ? 'LIMIT ' + max : ''};`,
         )
         .all() as {
             title: string;
             created: string;
             edited: string;
             pathname: string;
+            image_filename: string;
+            filename: string | null;
         }[];
-    return outputs.map(({ created, edited, ...post }) => ({
+    return outputs.map(({ created, edited, filename, image_filename, ...post }) => ({
         ...post,
+        descriptionFilename: filename || undefined,
+        imageFilename: image_filename,
         created: new Date(created),
         edited: new Date(edited),
     }));

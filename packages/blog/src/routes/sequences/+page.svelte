@@ -1,11 +1,17 @@
 <script lang="ts">
-    import type { PostInfo } from 'cms';
-    let { data } = $props<{ data: { sequences: PostInfo[] } }>();
+    import Post from '$lib/components/post.svelte';
+    let { data } = $props();
 </script>
 
-<h1>Sequences</h1>
+<div>
+    <h1>Sequences</h1>
+    {#each data.sequences as sequence (sequence.pathname)}
+        <Post {...sequence} />
+    {/each}
+</div>
 
-{#each data.sequences as sequence (sequence.pageId)}
-    <a href={`/${sequence.pathname}`}>{sequence.title}</a>
-    <pre>{JSON.stringify(sequence, null, 2)}</pre>
-{/each}
+<style>
+    div {
+        padding: var(--page-padding-top) var(--page-padding-side) var(--page-padding-bottom);
+    }
+</style>

@@ -1,3 +1,5 @@
+import path from 'path';
+import fs from 'fs';
 import { touchPost, type TouchPostInput } from '../../db';
 import { hasDateField, hasObjectField, hasStringField, slugFromFilename } from '../../util';
 import { nodeParser } from '../parsers';
@@ -51,8 +53,31 @@ function parsePostInput(
     if (hasDateField(frontmatter, 'edited')) {
         edited = frontmatter.edited;
     }
+
+    let descriptionFilename: string | undefined = undefined;
+    if ('description' in frontmatter) {
+        if (typeof frontmatter.description != 'string') {
+            console.error('Posts frontmatter field `description` must be a string.');
+            return;
+        }
+        descriptionFilename = path.relative(
+            path.resolve('.'),
+            path.resolve(path.dirname(filename), frontmatter.description),
+        );
+    }
+
+    let imageFilename: string | undefined = undefined;
+    if ('image' in frontmatter && typeof frontmatter.image == 'string') {
+        imageFilename = path.relative(
+            path.resolve('.'),
+            path.resolve(path.dirname(filename), frontmatter.image),
+        );
+    }
+
     return {
         title: frontmatter.title,
+        descriptionFilename,
+        imageFilename,
         created: frontmatter.created,
         slug,
         edited,

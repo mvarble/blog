@@ -186,7 +186,7 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
             padding: 0.1rem 0.8rem 0 0.8rem;
 
             &:hover {
-                box-shadow: inset 0 -1px 0 0 var(--border);
+                box-shadow: inset 0 -3px var(--fg-accent);
             }
 
             &[aria-current='page'] {

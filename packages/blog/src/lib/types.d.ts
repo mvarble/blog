@@ -1,3 +1,6 @@
+import type { Component } from 'svelte';
+import type { PostInfo } from 'cms';
+
 export interface NavigationLink {
     title: string;
     slug: string;
@@ -26,4 +29,9 @@ export interface SequencePage {
     label?: string;
     title: string;
     pathname: string;
+}
+
+export interface PostInfoWithDescription extends PostInfo {
+    description?: Component;
+    image?: string;
 }
