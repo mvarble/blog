@@ -194,12 +194,13 @@ export interface PostInfo {
     pathname: string;
     descriptionFilename?: string;
     imageFilename?: string;
+    tags: string[];
 }
 
 export function getPostInfos(db: Database, max?: number): PostInfo[] {
     const outputs = db
         .prepare(
-            `SELECT title, created, edited, pathname, image_filename, mddocs.filename
+            `SELECT title, created, edited, pathname, image_filename, mddocs.filename, page_id
             FROM posts
             INNER JOIN pages ON posts.page_id = pages.id
             LEFT OUTER JOIN mddocs ON mddocs.id = posts.description_id
@@ -213,12 +214,16 @@ export function getPostInfos(db: Database, max?: number): PostInfo[] {
             pathname: string;
             image_filename: string;
             filename: string | null;
+            page_id: number;
         }[];
-    return outputs.map(({ created, edited, filename, image_filename, ...post }) => ({
+    return outputs.map(({ created, edited, filename, image_filename, page_id, ...post }) => ({
         ...post,
         descriptionFilename: filename || undefined,
         imageFilename: image_filename,
         created: new Date(created),
         edited: new Date(edited),
+        tags: (
+            db.prepare('SELECT tag FROM tags WHERE page_id = ?;').all(page_id) as { tag: string }[]
+        ).map(({ tag }) => tag),
     }));
 }

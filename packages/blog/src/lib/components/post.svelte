@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { Component } from 'svelte';
     import { theme } from '$lib/state';
+    import type { PostInfoWithDescription } from '$lib/types';
 
     function hash(str: string) {
         let hash = 0;
@@ -19,15 +19,9 @@
         edited,
         pathname,
         image,
-        ...props
-    }: {
-        title: string;
-        created: Date;
-        edited: Date;
-        pathname: string;
-        description?: Component;
-        image?: string;
-    } = $props();
+        tags,
+        description: DescriptionComponent,
+    }: PostInfoWithDescription = $props();
 
     let hue = Math.abs(hash(title)) % 360;
     let gradient = $derived(
@@ -61,8 +55,13 @@
             <br />
             <span>Last edited: {edited.toDateString()}</span>
         {/if}
-        {#if props.description}
-            <props.description />
+        <div>
+            {#each tags as tag (tag)}
+                <span class="tag">{tag}</span>
+            {/each}
+        </div>
+        {#if DescriptionComponent}
+            <DescriptionComponent />
         {/if}
     </div>
 </a>
@@ -73,7 +72,9 @@
         flex-wrap: wrap;
         text-decoration: none;
         color: inherit;
+        align-items: flex-start;
         margin: 1em;
+        box-sizing: border-box;
     }
 
     .thumb {
@@ -81,7 +82,7 @@
         flex-shrink: 1;
         aspect-ratio: 2 / 1;
         width: 36%;
-        min-width: 250px;
+        min-width: var(--post-photo-min-width, none);
         margin: 0 auto;
         overflow: hidden;
         position: relative;
@@ -106,6 +107,24 @@
         background-position: center;
         background-repeat: no-repeat;
         transition: transform 0.2s;
+    }
+
+    .tag {
+        --hue: var(--fg-exclaim-hue);
+        --color: hsl(var(--hue), 94.6%, 29.2%);
+        border: 1px solid var(--color);
+        color: var(--color);
+        font-size: 8pt;
+        background: hsl(var(--hue), 90%, 95.5%);
+        display: inline-block;
+        margin: 0.25em;
+        padding: 0.25em;
+        border-radius: 5px;
+    }
+
+    :global(html.dark) .tag {
+        --color: hsl(var(--hue), 94.6%, 90%);
+        background: hsl(var(--hue), 30%, 30%);
     }
 
     a:hover {

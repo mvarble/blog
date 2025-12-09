@@ -125,7 +125,7 @@ export function touchSequence(
             if (tags) {
                 const qmarks = tags.map(() => '(?, ?)').join(', ');
                 const values = tags.flatMap((tag) => [pageId, tag]);
-                db.prepare(`INSERT tags (page_id, tag) VALUES ${qmarks}`).run(...values);
+                db.prepare(`INSERT INTO tags (page_id, tag) VALUES ${qmarks}`).run(...values);
             }
 
             const out = db
@@ -540,7 +540,7 @@ export function getSequenceChildReferences(
 export function getSequenceInfos(db: Database, max?: number): PostInfo[] {
     const outputs = db
         .prepare(
-            `SELECT sequences.title, sequences.created, sequences.edited, sequences.image_filename, pages.pathname, mddocs.filename
+            `SELECT title, created, edited, image_filename, pathname, filename, page_id
             FROM sequences
             INNER JOIN pages ON sequences.page_id = pages.id
             LEFT OUTER JOIN mddocs ON sequences.description_id = mddocs.id
@@ -554,12 +554,16 @@ export function getSequenceInfos(db: Database, max?: number): PostInfo[] {
             image_filename: string;
             pathname: string;
             filename: string;
+            page_id: number;
         }[];
-    return outputs.map(({ created, edited, filename, image_filename, ...post }) => ({
+    return outputs.map(({ created, edited, filename, image_filename, page_id, ...post }) => ({
         ...post,
         descriptionFilename: filename,
         imageFilename: image_filename,
         created: new Date(created),
         edited: new Date(edited),
+        tags: (
+            db.prepare('SELECT tag FROM tags WHERE page_id = ?;').all(page_id) as { tag: string }[]
+        ).map(({ tag }) => tag),
     }));
 }

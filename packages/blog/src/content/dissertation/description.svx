@@ -1,1 +1,1 @@
-This collection of pages is a transcription of my [PhD thesis](https://escholarship.org/uc/item/6xk7n2f2), which aims to develop a comprehensive picture of large deviations of affine processes.
+A transcription of my PhD thesis, on large deviations of affine processes.

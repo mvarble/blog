@@ -6,12 +6,14 @@
 </script>
 
 <div class="root">
-    <div class="banner">
-        <div class="content">
-            <img src="/me.jpeg" alt="AI cartoon of Matthew Varble" />
-            <div>
-                <span>Howdy! 🤠</span>
-                <Short />
+    <div class="banner-box">
+        <div class="banner">
+            <div class="content">
+                <img src="/me.jpeg" alt="AI cartoon of Matthew Varble" />
+                <div>
+                    <span>Howdy! 🤠</span>
+                    <Short />
+                </div>
             </div>
         </div>
     </div>
@@ -47,16 +49,37 @@
     .root {
         --max-width: 1200px;
     }
+
     .page {
         padding: var(--page-padding-top) var(--page-padding-side) var(--page-padding-bottom);
         min-width: 0 !important;
         margin: 0 auto;
         max-width: var(--max-width);
+        --post-photo-min-width: 200px;
+    }
+
+    .banner-box {
+        --background: var(--bg-1);
+        background: var(--background);
     }
 
     .banner {
-        background: var(--bg-2);
-        border-bottom: 1px solid var(--border);
+        /* border-bottom: 1px solid var(--border); */
+
+        --grid: 20px;
+        --angle: 15deg;
+        --line: hsl(var(--fg-hue), 0%, 80%);
+
+        background:
+            repeating-linear-gradient(
+                calc(90deg + var(--angle)),
+                var(--line) 0 1px,
+                transparent 1px var(--grid)
+            ),
+            repeating-linear-gradient(var(--angle), var(--line) 0 1px, transparent 1px var(--grid));
+
+        box-shadow: inset 0 -80px 100px var(--background);
+
         & > .content {
             padding: 0 var(--page-padding-side);
             max-width: var(--max-width);
@@ -88,6 +111,10 @@
                 }
             }
         }
+    }
+
+    :global(html.dark) .banner {
+        --line: hsl(var(--fg-hue), 0%, 40%);
     }
 
     @media (min-width: 700px) {

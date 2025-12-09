@@ -5,6 +5,13 @@ title: Large deviations of affine processes
 created: 2025-07-23
 image: ./affine-process-ldp.png
 description: ./description.svx
+tags:
+  - mathematics
+  - probability
+  - stochastic processes
+  - affine processes
+  - large deviations
+  - jump diffusions
 children:
   - filename: ./notation.svx
   - filename: ./affine-processes/index.svx
