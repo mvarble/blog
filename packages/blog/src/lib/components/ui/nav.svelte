@@ -10,18 +10,20 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
     import { page } from '$app/state';
 
     import { overlay_open, on_this_page_open } from '$lib/stores';
-    import { type NavigationLink } from '$lib/types';
+    import { type DocumentSummary } from '$lib/types';
     import ThemeToggle from './theme-toggle.svelte';
     import MobileMenu from './mobile-menu.svelte';
     import Icon from '../icon.svelte';
 
-    let { links }: { links: NavigationLink[] } = $props();
+    let {
+        links,
+        contents,
+    }: { links: { title: string; pathname: string }[]; contents: DocumentSummary[] } = $props();
 
     let visible = $state(true);
 
     // mobile nav stuff
     let open = $state(false);
-    let current = $state.raw<NavigationLink | undefined>();
     let menu_button: HTMLButtonElement;
 
     // Prevents navbar to show/hide when clicking in docs sidebar
@@ -83,10 +85,10 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
 
     <div class="desktop">
         <div class="links">
-            {#each links as link (link.slug)}
+            {#each links as link (link.pathname)}
                 <a
-                    href="/{link.slug}"
-                    aria-current={page.url.pathname.startsWith(`/${link.slug}`) ? 'page' : null}
+                    href="/{link.pathname}"
+                    aria-current={page.url.pathname.startsWith(`/${link.pathname}`) ? 'page' : null}
                 >
                     {link.title}
                 </a>
@@ -107,14 +109,7 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
             aria-expanded={open}
             class="menu-toggle raised icon"
             class:open
-            onclick={() => {
-                open = !open;
-
-                if (open) {
-                    const segment = page.url.pathname.split('/')[1];
-                    current = links.find((link) => link.slug === segment);
-                }
-            }}
+            onclick={() => (open = !open)}
         >
             <Icon name={open ? 'close' : 'menu'} size={16} />
         </button>
@@ -123,7 +118,7 @@ https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/nav/N
 
 {#if open}
     <div class="mobile">
-        <MobileMenu {links} {current} onclose={() => (open = false)} />
+        <MobileMenu {links} {contents} onclose={() => (open = false)} />
     </div>
 {/if}
 

@@ -52,96 +52,25 @@ We now define $\gamma_\epsilon(\delta, \lambda, T) \defeq f_\epsilon\big( \Xe_t,
 
 Note that for all $\lambda, \epsilon, t > 0$, $\delta \in [0,\delta_\lambda]$, and $s \in [0,\delta]$, we use [%full](statement:aff-asymptotics) to get the following.
 
-<div class="aligned-left">
-
-<span>
-<span></span>
-
-$$
-  \Exp_{\Prb_\stateVar}\Big(
-    \exp\big( \epsilon^{-1} \lambda \big( |\Xe_{t+s}-\Xe_t| \wedge 1 \big)
-    | \scrF^\epsilon_t \Big)
-$$
-
-</span>
-<span>
-<span></span>
-
-$$
-  \leq \Exp_{\Prb_\stateVar}\Big(
-    \exp\big( \epsilon^{-1} \lambda \big| \Xe_{t+s}-\Xe_t \big|  \big)
-    | \scrF^\epsilon_t \Big)
-$$
-
-</span>
-<span>
-<span></span>
-
-$$
-  \leq \sum_{\ell=0}^1 \sum_{i=1}^d \Exp_{\Prb_\stateVar}\bigg(
-    \exp\Big( \Bprj{(-1)^\ell\epsilon^{-1}\lambda\sqrt d  \basisVec^i}{\Xe_{t+s}-\Xe_t} \Big)
-    | \scrF^\epsilon_t \bigg)
-$$
-
-</span>
-<span>
-<span></span>
-
-$$
-  = \sum_{\ell=0}^1 \sum_{i=1}^d \exp\bigg(
-    \epsilon^{-1}\aff\Big(s, (-1)^\ell\lambda\sqrt d \basisVec^i, \Xe_t \Big)
-    - \epsilon^{-1}\Bprj{(-1)^\ell\lambda\sqrt d \basisVec^i}{\Xe_t} \bigg)
-$$
-
-</span>
-<span>
-<span></span>
-
-$$
-  \leq 2d \cdot \exp\bigg( \frac1\epsilon \cdot C_\lambda \cdot \delta \cdot \big( 1 + |\Xe_t| \big) \bigg)
-$$
-
-</span>
-<span>
-<span></span>
-
-
 $$
   @tag(verify-gamma-dominating)
-  = \exp f_\epsilon(\Xe_t, \delta, \lambda)
+  \begin{aligned}
+    &\Exp_{\Prb_\stateVar}\Big(
+      \exp\big( \epsilon^{-1} \lambda \big( |\Xe_{t+s}-\Xe_t| \wedge 1 \big)
+      | \scrF^\epsilon_t \Big) \\
+    &\leq \Exp_{\Prb_\stateVar}\Big(
+      \exp\big( \epsilon^{-1} \lambda \big| \Xe_{t+s}-\Xe_t \big|  \big)
+      | \scrF^\epsilon_t \Big) \\
+    &\leq \sum_{\ell=0}^1 \sum_{i=1}^d \Exp_{\Prb_\stateVar}\bigg(
+      \exp\Big( \Bprj{(-1)^\ell\epsilon^{-1}\lambda\sqrt d  \basisVec^i}{\Xe_{t+s}-\Xe_t} \Big)
+      | \scrF^\epsilon_t \bigg) \\
+    &= \sum_{\ell=0}^1 \sum_{i=1}^d \exp\bigg(
+      \epsilon^{-1}\aff\Big(s, (-1)^\ell\lambda\sqrt d \basisVec^i, \Xe_t \Big)
+      - \epsilon^{-1}\Bprj{(-1)^\ell\lambda\sqrt d \basisVec^i}{\Xe_t} \bigg) \\
+    &\leq 2d \cdot \exp\bigg( \frac1\epsilon \cdot C_\lambda \cdot \delta \cdot \big( 1 + |\Xe_t| \big) \bigg) \\
+    & = \exp f_\epsilon(\Xe_t, \delta, \lambda)
+  \end{aligned}
 $$
-
-</span>
-
-</div>
-
-<style>
-
-.aligned-left {
-  display: flex;
-  flex-direction: column;
-
-  > span {
-    display: flex;
-
-    > span {
-      flex-basis: 40%;
-    }
-
-    > div {
-      min-width: 600px;
-      flex-grow: 2;
-    }
-
-  }
-
-
-  :global(.katex-display > .katex) {
-    text-align: left;
-  }
-}
-
-</style>
 
 Note that [](eq:verify-gamma-dominating) makes [](eq:gamma-dominating) true.
 

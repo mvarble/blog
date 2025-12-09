@@ -85,10 +85,8 @@ kind: proposition
       \Der\aff(t,\momentVar,\stateVar)
       &= \Der\affPart_0(t,\momentVar) + \Der\affPart(t,\momentVar)\cdot\stateVar \\
       &= \Der  q_0(t,\momentVar) + \Der q(t,\momentVar)\cdot\stateVar \\
-      &= \begin{aligned}
-        &\int_0^t \Der \odePart_0\big(q(s,\momentVar)\big) \Der q(s,\momentVar) \rmd s \\
-        &\quad+ \left(\id_{\vecSpace} + \int_0^t \Der \odePart\big(q(s,\momentVar)\big)\Der  q(s,\momentVar) \rmd s\right)\cdot\stateVar
-      \end{aligned} \\
+      &= \int_0^t \Der \odePart_0\big(q(s,\momentVar)\big) \Der q(s,\momentVar) \rmd s \\
+      &\qquad+ \left(\id_{\vecSpace} + \int_0^t \Der \odePart\big(q(s,\momentVar)\big)\Der  q(s,\momentVar) \rmd s\right)\cdot\stateVar \\
       &= \stateVar + \int_0^t \Big( \Der \odePart_0\big(q(s,\momentVar) \big) \Der q(s,\momentVar) + \sum_{i=1}^d \stateVar_i \Der \odePart_i\big(q(s,\momentVar) \big) \Der q(s,\momentVar) \Big) \rmd s \\
       &= \stateVar + \int_0^t \Der \Big( \odePart_0 + \sum_{i=1}^d \stateVar_i \odePart_i \Big)\big(q(s,\momentVar)\big) \Der q(s,\momentVar)  \rmd s \\
       &= \stateVar + \int_0^t \Der \ode\big(q(s,\momentVar), \stateVar\big) \Der q(s,\momentVar)  \rmd s \\

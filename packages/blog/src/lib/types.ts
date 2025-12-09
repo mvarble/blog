@@ -1,28 +1,24 @@
 import type { Component } from 'svelte';
 import type { PostInfo } from 'cms';
 
-export interface NavigationLink {
-    title: string;
-    slug: string;
-    sections?: {
-        title: string;
-        path?: string;
-        sections: {
-            title: string;
-            path?: string;
-            sections: {
-                title: string;
-                path: string;
-                badge?: string;
-            }[];
-        }[];
-    }[];
-}
-
 export interface DocumentSummary {
     title: string;
     pathname: string;
     children: DocumentSummary[];
+}
+
+export function isDocumentSummary(obj: unknown): obj is DocumentSummary {
+    return (
+        obj &&
+        typeof obj == 'object' &&
+        'title' in obj &&
+        typeof obj.title == 'string' &&
+        'pathname' in obj &&
+        typeof obj.pathname == 'string' &&
+        'children' in obj &&
+        Array.isArray(obj.children) &&
+        obj.children.every(isDocumentSummary)
+    );
 }
 
 export interface SequencePage {

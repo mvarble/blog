@@ -1,27 +1,21 @@
 <script lang="ts">
-    import { tick } from 'svelte';
     import { expoOut, quintOut } from 'svelte/easing';
     import type { TransitionConfig } from 'svelte/transition';
     import { afterNavigate } from '$app/navigation';
+    import { page } from '$app/state';
 
     import { trap } from '$lib/actions';
     import { reduced_motion } from '$lib/stores';
-    import type { NavigationLink } from '$lib/types';
-    import Icon from '../icon.svelte';
-    import MobileSubMenu from './mobile-submenu.svelte';
+    import type { DocumentSummary } from '$lib/types';
     import ModalOverlay from './modal-overlay.svelte';
 
     interface Props {
-        links: NavigationLink[];
-        current: NavigationLink | undefined;
+        links: { title: string; pathname: string }[];
+        contents: DocumentSummary[];
         onclose: () => void;
     }
 
-    let { links, current, onclose }: Props = $props();
-
-    let show_context_menu = $state(!!current?.sections);
-
-    let nav_context_instance: ReturnType<typeof MobileSubMenu> | undefined = $state();
+    let { links, contents, onclose }: Props = $props();
 
     let menu_height = $state(0);
     let universal_menu_inner_height = $state(0);
@@ -39,30 +33,24 @@
         });
     });
 
-    function popup(node: HTMLElement, { duration = 400, easing = expoOut } = {}): TransitionConfig {
-        const height = current ? node.clientHeight : universal_menu_inner_height;
-
+    function popup(_: HTMLElement, { duration = 400, easing = expoOut } = {}): TransitionConfig {
         return {
             css: (t, u) =>
                 $reduced_motion
                     ? `opacity: ${t}`
-                    : `transform: translate3d(0, ${(height * u) / 0.9}px, 0) scale(${0.9 + 0.1 * t})`,
+                    : `transform: translate3d(0, ${(universal_menu_inner_height * u) / 0.9}px, 0) scale(${0.9 + 0.1 * t})`,
             easing,
             duration,
         };
     }
+    $effect(() => console.log(page.url.pathname));
 </script>
 
 <ModalOverlay {onclose} />
 
 <div class="menu" use:trap={{ reset_focus: false }}>
     <div class="mobile-main-menu" transition:popup={{ duration: 200, easing: quintOut }}>
-        <div
-            class="menu-background"
-            class:ready
-            style:height={show_context_menu ? '100%' : `${universal_menu_inner_height}px`}
-        ></div>
-
+        <div class="menu-background" class:ready style:height="100%"></div>
         <div
             class="clip"
             style:--height-difference="{menu_height - universal_menu_inner_height}px"
@@ -78,8 +66,8 @@
                 const a = 'calc(var(--height-difference) + 1px)';
                 const b = '1px';
 
-                const start = show_context_menu ? a : b;
-                const end = show_context_menu ? b : a;
+                const start = b;
+                const end = a;
 
                 const container = e.currentTarget;
 
@@ -98,73 +86,51 @@
                 e.currentTarget.style.clipPath = '';
 
                 // whenever we transition from one menu to the other, we need to move focus to the first item in the new menu
-                if (!show_context_menu) {
-                    universal_menu?.querySelector('a')?.focus();
-                }
+                universal_menu?.querySelector('a')?.focus();
             }}
         >
             <div
                 class="viewport"
                 class:reduced-motion={$reduced_motion}
-                class:offset={show_context_menu}
                 bind:clientHeight={menu_height}
             >
-                <div class="universal" inert={show_context_menu} bind:this={universal_menu}>
+                <div class="universal" bind:this={universal_menu}>
                     <div class="contents" bind:clientHeight={universal_menu_inner_height}>
                         <ul>
-                            {#each links as link (link.slug)}
+                            {#each links as link (link.pathname)}
                                 <li>
-                                    <a href="/{link.slug}">
+                                    <a href="/{link.pathname}">
                                         {link.title}
                                     </a>
-
-                                    {#if link.sections}
-                                        <button
-                                            class="raised icon"
-                                            onclick={async (event) => {
-                                                event.preventDefault();
-
-                                                current = link;
-
-                                                await tick();
-
-                                                show_context_menu = true;
-
-                                                await tick();
-
-                                                nav_context_instance?.scrollToActive();
-                                            }}
-                                            aria-label="Show {link.title} submenu"
-                                        >
-                                            <Icon name="arrow-right-chevron" size={18} />
-                                        </button>
+                                </li>
+                            {/each}
+                        </ul>
+                        <hr />
+                        <ul>
+                            {#each contents as link (link.pathname)}
+                                <li>
+                                    <a
+                                        href="/{link.pathname}"
+                                        aria-current={`/${link.pathname}/` == page.url.pathname
+                                            ? 'page'
+                                            : undefined}
+                                    >
+                                        {link.title}
+                                    </a>
+                                    {#if link.children.length}
+                                        <ul>
+                                            {#each link.children as child (child.pathname)}
+                                                <li>
+                                                    <a href="/{child.pathname}">{child.title}</a>
+                                                </li>
+                                            {/each}
+                                        </ul>
                                     {/if}
                                 </li>
                             {/each}
                         </ul>
                     </div>
                 </div>
-
-                <div class="context" inert={!show_context_menu}>
-                    {#if current}
-                        <MobileSubMenu
-                            bind:this={nav_context_instance}
-                            title={current.title}
-                            contents={current.sections}
-                        />
-                    {/if}
-                </div>
-
-                <label class="back-button">
-                    <button
-                        class="raised icon"
-                        onclick={() => (show_context_menu = false)}
-                        inert={!show_context_menu}
-                    >
-                        <Icon name="arrow-left" size={18} />
-                    </button>
-                    <span>Back to main menu</span>
-                </label>
             </div>
         </div>
     </div>
@@ -185,14 +151,6 @@
         pointer-events: none;
         transform: translate3d(0, 0, 0);
         filter: var(--shadow);
-    }
-
-    button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        gap: 1.5rem;
     }
 
     .menu-background {
@@ -246,10 +204,6 @@
             transition-duration: 0.01ms;
         }
 
-        &.offset {
-            transform: translate3d(-50%, 0, 0);
-        }
-
         & > * {
             overflow-y: auto;
             transition: inherit;
@@ -273,39 +227,9 @@
         padding: 1rem var(--page-padding-side);
         max-height: 70vh;
         overflow-y: scroll;
-
-        button {
-            /* width: 2.6rem; */
-            height: 2.6rem;
-        }
     }
 
-    .context {
-        position: relative;
-        height: 100%;
-        bottom: -7px;
-        padding-bottom: 2rem;
-    }
-
-    .back-button {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        display: flex;
-        align-items: center;
-        justify-content: start;
-        gap: 1rem;
-        font: var(--font-ui-medium);
-        color: var(--fg-3);
-        background-color: var(--bg-2);
-        width: 50%;
-        height: 4.8rem;
-        padding: 0 var(--page-padding-side);
-    }
-
-    .universal .contents,
-    .context,
-    .back-button {
+    .universal .contents {
         pointer-events: all;
     }
 
@@ -317,6 +241,7 @@
 
         li {
             display: flex;
+            flex-direction: column;
 
             a {
                 flex: 1;

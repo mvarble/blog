@@ -19,7 +19,7 @@
                     .split(' ')
                     .map((str) => `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`)
                     .join(' ')}
-                {cms.label}
+                {cms.label}.
             </strong>
         {/if}
         <StatementComponent></StatementComponent>
@@ -35,6 +35,10 @@
 {/if}
 
 <style>
+    strong {
+        color: var(--fg-accent);
+        font-weight: 500;
+    }
     :global(ol) {
         list-style-type: none;
         counter-reset: item;

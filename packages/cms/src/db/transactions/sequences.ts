@@ -443,6 +443,11 @@ export function getParentSequence(db: Database, filename: string): Sequence | un
             filename: sequenceRes.filename,
             created: new Date(sequenceRes.created),
             edited: new Date(sequenceRes.edited),
+            tags: (
+                db.prepare('SELECT tag FROM tags WHERE page_id = ?;').all(sequenceRes.page_id) as {
+                    tag: string;
+                }[]
+            ).map(({ tag }) => tag),
             katexMacros: JSON.parse(sequenceRes.katex_macros),
             children: buildTree(sequencePages, sequenceRes.page_id),
         };
