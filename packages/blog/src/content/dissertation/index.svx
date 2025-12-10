@@ -2,7 +2,8 @@
 type: sequence
 enumerate: true
 title: Large deviations of affine processes
-created: 2025-07-23
+created: 2022-10-27
+edited: 2025-07-23
 image: ./affine-process-ldp.png
 description: ./description.svx
 tags:

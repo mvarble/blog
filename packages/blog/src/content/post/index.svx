@@ -1,5 +1,0 @@
----
-type: post
-title: My Post
-created: 2025-10-04
----

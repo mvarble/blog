@@ -27,7 +27,7 @@
     let gradient = $derived(
         theme.current == 'light'
             ? `linear-gradient(to bottom, hsl(${hue}, 40%, 98%), hsl(${hue}, 40%, 85%))`
-            : `linear-gradient(to bottom, hsl(${hue}, 40%, 60%), hsl(${hue}, 40%, 50%))`,
+            : `linear-gradient(to bottom, hsl(${hue}, 20%, 80%), hsl(${hue}, 20%, 60%))`,
     );
     let filter = $derived(
         image
@@ -80,7 +80,7 @@
     .thumb {
         flex-grow: 1;
         flex-shrink: 1;
-        aspect-ratio: 2 / 1;
+        aspect-ratio: 3 / 2;
         width: 36%;
         min-width: var(--post-photo-min-width, none);
         margin: 0 auto;

@@ -1,0 +1,1 @@
+A course in probability which is motivated by Monte-Carlo software, then leverages this intuition to explore the underlying abstract concepts.

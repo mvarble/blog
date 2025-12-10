@@ -1,6 +1,0 @@
----
-type: statement
-kind: definition
----
-
-A **smooth structure** on

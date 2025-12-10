@@ -1,0 +1,11 @@
+---
+type: sequence
+enumerate: true
+title: "Probability: software and theory"
+created: 2025-12-09
+image: ./probability.png
+description: ./description.svx
+tags:
+  - mathematics
+  - probability
+---
