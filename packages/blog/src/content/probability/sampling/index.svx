@@ -1,0 +1,6 @@
+---
+title: Probabilistic programs
+---
+
+Probability is a theory of modeling uncertainty in systems with which we engage.
+One of the reasons it is a difficult subject to grasp is that the immutable mathematical object quantifying the likelihoods of all possible outcomes (i.e. a _measure_) is abstract and difficult to compare to actual outcomes it produces.
