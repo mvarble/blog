@@ -2,5 +2,48 @@
 title: Probabilistic programs
 ---
 
-Probability is a theory of modeling uncertainty in systems with which we engage.
+<script>
+  import Statement from '$lib/components/statement.svelte';
+  import * as rngDef from '../statements/rng-definition.svx';
+  import * as rngDefRemark from '../statements/rng-definition-remark.svx';
+  import * as prbDef from '../statements/prb-definition-0.svx';
+  import * as prbDefRemark from '../statements/prb-definition-0-remark.svx';
+</script>
+
+Probability is a theory of modeling uncertainty in systems with which we interact.
 One of the reasons it is a difficult subject to grasp is that the immutable mathematical object quantifying the likelihoods of all possible outcomes (i.e. a _measure_) is abstract and difficult to compare to actual outcomes it produces.
+Subsequently, any concept related to uncertainty--no matter how simple it is to describe intuitively--must be defined in terms of measures and too must be quite technical and abstract.
+To quickly build intuition, we will initially use the mathematical term _probability measure_ to simply identify an object which exhibits intuitive behavior that can be modeled in software without yet worrying about the technical definition.
+From here, we will investigate the consequences of this functionality by building and running programs from it.
+This will pave the way for us to frame our thinking in a _global_ perspective, where we understand probability measures as building-blocks we can compose to build larger hierarchical models.
+Having this global perspective helps us segway into the actual mathematical definitions.
+
+# Sampling
+
+Let's consider the task of building a software library which allows us to simulate uncertain models.
+We would like this library to be able to simulate the effects of anything from coin-flipping to poker hands or even the price of Costco stock in the next year.
+The most natural way to model uncertainty in a computer program is for it produce values in a non-deterministic way.
+From the perspective of a typed language, we would like to offer functionality for users to simulate seemingly random outcomes for all sorts of types--e.g. `bool`, `[Card; 5]`, or `Vec<f64>`.
+Furthermore, the types `T` over which users may simulate random outcomes must be generic.
+This process of randomly generating values `T` is referred to as _sampling_.
+
+## Pseudorandom number generation
+
+The simplest utility we can offer is that of a _pseudorandom number generator_ which acts as a source for users to randomly (at least seemingly) generate bytes for their type `T`.
+
+<Statement {...rngDef} />
+
+<Statement {...rngDefRemark} />
+
+A true random number generator could be implemented by reading voltages from an analog-to-digital circuit, since quantum physics dictates that there is a true source of randomness present in the electronics.
+Thankfully for us non-hardware guys, cryptography research requires psueodorandom number generation that behaves _very_ non-deterministically, so we can leverage some of their work.
+Most of these implementations are hard to reason through, but only because they are highly optimized for hardware; in principle, they only typically involve performing simple addition and simple bitwise operations.
+In this sequence, we will not worry about implementing `Rng` as all further objects will only interface with the trait.
+
+## Probability measures
+
+Returning to the task at hand, we define a probability measure (for now) as the object which serves our sampling desires.
+
+<Statement {...prbDef} />
+
+<Statement {...prbDefRemark} />

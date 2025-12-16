@@ -30,6 +30,7 @@
     "prettier-plugin-svelte": "^3.3.3",
     "remark-frontmatter": "^2.0.0",
     "remark-math": "3.0.0",
+    "shiki": "^3.20.0",
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
     "typescript": "^5.0.0",

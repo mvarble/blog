@@ -23,6 +23,17 @@
 <Controls {prev} {next} />
 
 <style>
+    h1 {
+        text-decoration: underline;
+        font: 500 calc(1.25 * var(--font-size-h1)) / 1.2 var(--font-family-heading);
+    }
+
+    @media screen and (min-width: 838px) {
+        h1 {
+            --font-size-h1: 2.3rem;
+        }
+    }
+
     div {
         padding-bottom: 2em;
         border-bottom: 1px solid var(--border);

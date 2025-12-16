@@ -4,9 +4,9 @@
     --font-family-heading: Merriweather, serif;
     --font-family-mono: 'Fira Mono', monospace;
 
-    --font-size-h1: 2rem;
-    --font-size-h2: 1.8rem;
-    --font-size-h3: 1.5rem;
+    --font-size-h1: 1.9rem;
+    --font-size-h2: 1.5rem;
+    --font-size-h3: 1.3rem;
     --font-size-body: 1rem;
     --font-size-body-small: 0.9rem;
     --font-size-ui-small: 0.6rem;
@@ -36,9 +36,5 @@
 
     &.dark {
         -webkit-font-smoothing: antialiased;
-    }
-
-    @media screen and (min-width: 838px) {
-        --font-size-h1: 2.6rem;
     }
 }

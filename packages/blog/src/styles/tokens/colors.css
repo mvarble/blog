@@ -50,12 +50,12 @@
     --bg-1: hsl(var(--bg-hue), 10%, 20%);
     --bg-2: hsl(var(--bg-hue), 12%, 25%);
     --bg-3: hsl(var(--bg-hue), 5%, 22%);
-    --bg-4: hsl(var(--alt-bg-hue), 8%, 20%);
+    --bg-4: hsl(var(--alt-bg-hue), 8%, 25%);
     --bg-accent: hsl(15, 100%, 35%);
     --bg-highlight: hsl(60, 100%, 15%);
 
     /* Border colour */
-    --border: hsl(var(--bg-hue), 15%, 22%);
+    --border: hsl(var(--bg-hue), 15%, 40%);
 
     /* Misc */
     --scrollbar: rgba(255, 255, 255, 0.3);

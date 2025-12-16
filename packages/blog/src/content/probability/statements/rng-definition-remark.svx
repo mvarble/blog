@@ -1,0 +1,10 @@
+---
+type: statement
+kind: remark
+---
+
+- Note that the multiple trait methods _basically_ serve the same interface, in so far that they take mutable reference to the underlying data and use this to produce bytes.
+- Note that the methods of `Rng` take a mutable reference to the underlying structure.
+  The mutable nature of the reference hints at the impurities which allow for randomness.
+  In other words, because each of the methods mutate the struct, it is reasonable to expect that consecutive calls do not return the same output.
+- The name `Rng` is an acronym for _random number generator_ as opposed to _pseudorandom number generator_, despite the fact that there are no guarantees that the implementation actually produces random data (versus it seemingly doing so, i.e. _pseudo_).

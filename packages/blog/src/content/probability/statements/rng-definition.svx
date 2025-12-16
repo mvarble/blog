@@ -1,0 +1,14 @@
+---
+type: statement
+kind: definition
+---
+
+A _pseudorandom number generator_ is an object which implements the following trait `Rng`.
+
+```rs
+pub trait Rng {
+  fn next_u32(&mut self) -> u32;
+  fn next_u64(&mut self) -> u64;
+  fn fill_bytes(&mut self, dst: &mut [u8]);
+}
+```

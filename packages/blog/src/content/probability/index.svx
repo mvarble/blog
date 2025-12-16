@@ -12,6 +12,10 @@ children:
   - filename: ./sampling/index.svx
 ---
 
+<script>
+  import Quote from '$lib/components/quote.svelte';
+</script>
+
 Probability is a uniquely interesting area of mathematics in how it is taught, because it is approached through two fundamentally different pedagogical frameworks.
 On one hand, the subject may be introduced through simple models counting outcomes associated with coin flips or card games; the other involves understanding very technical objects like sigma-algebras and semimartingales without much in the way of intuition.
 The gap between the two approaches is so substantial that there are few resources which actually seek to build a bridge between the two.
@@ -24,18 +28,19 @@ Unfortunately, this is not the easiest task, for unless you are a graduate stude
 Sure, there are some geniuses who can immediately understand the utility of a localizing sequence of stopping times, but for most, this understanding comes from blood, sweat, and tears.
 I am not the first person to recognize this conundrum:
 
-> _At a purely formal level, one could call probability theory the study of measure spaces with total measure one, but that would be like calling number theory the study of strings of digits which terminate._
->
-> - Terence Tao
+<Quote originator="Terence Tao">
+  At a purely formal level, one could call probability theory the study of measure spaces with total measure one, but that would be like calling number theory the study of strings of digits which terminate.
+</Quote>
 
-> _Probability theory (has two hands): On the right is the rigorous (technical work); the left hand ... reduces problems to gambling situations, coin-tossing, motions of a physical particle._
->
-> - Leo Breiman
+<Quote originator="Leo Breiman">
+  Probability theory (has two hands): On the right is the rigorous (technical work); the left hand ... reduces problems to gambling situations, coin-tossing, motions of a physical particle.
+</Quote>
 
-> _One needs (for stochastic integration) a six months course (to cover only) the definitions. What is there to do?_
->
-> - Paul-André Meyer
+<Quote originator="Paul-André Meyer">
+  One needs (for stochastic integration) a six months course (to cover only) the definitions. What is there to do?
+</Quote>
 
 The point of this sequence of posts is to cover probability topics in a fashion which is intuitive, but does not hide from the technicalities.
 It will hopefully distinguish itself from the many other resources that have a similar objective in its interactivity and its focus on probabilistic programs which can be run and examined.
-It does not seek to be a comprehensive introduction to probability; at many points I will refer the reader to other texts for results and their corresponding proofs.
+It does not seek to be a comprehensive introduction to probability: at points I will refer the reader to other texts for results and their corresponding proofs.
+Throughout, the example programs are written in Rust, understanding the unique ownership concepts of the language is not necessary, so long as users are comfortable with basic concepts of references, mutability, traits, generics, and associated types.
