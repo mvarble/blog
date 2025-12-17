@@ -14,6 +14,9 @@
     let next = $derived(toControl(data.next));
 </script>
 
+<svelte:head>
+    <title>{data.self.title} | rodent.club</title>
+</svelte:head>
 <h1>{data.self.label ? `${data.self.label}. ${data.self.title}` : data.self.title}</h1>
 
 <div>

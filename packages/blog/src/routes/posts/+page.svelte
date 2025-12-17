@@ -3,4 +3,7 @@
     let { data } = $props();
 </script>
 
+<svelte:head>
+    <title>Posts | rodent.club</title>
+</svelte:head>
 <Posts title="Posts" posts={data.posts} />

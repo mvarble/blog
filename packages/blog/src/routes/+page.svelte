@@ -5,6 +5,9 @@
     let { data } = $props();
 </script>
 
+<svelte:head>
+    <title>Home | rodent.club</title>
+</svelte:head>
 <div class="root">
     <div class="banner-box">
         <div class="banner">

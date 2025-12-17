@@ -2,3 +2,15 @@
 type: statement
 kind: remark
 ---
+
+The concept of a probability measure should be invariant of the implementation of the underlying pseudorandom number generator.
+Meanwhile, a probability measure should only have one nominal value type it randomly generates.
+This is why the pseudorandom number generator `R` is a generic and `Sample` is an associated type.
+```rs
+  impl<R: Rng> ProbabilityMeasure<R> for RandomPokerHand {
+    type Sample = [Card; 5];
+    fn sample(&self, rng: &mut R) -> Self::Sample {
+      // implementation over any Rng will sample 5 cards; i.e. [Card; 5]
+    }
+  }
+```

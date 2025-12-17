@@ -5,8 +5,8 @@ kind: definition
 
 A _probability measure_ is an object which implements the following trait `ProbabilityMeasure`.
 ```rs
-pub trait ProbabilityMeasure<Rng> {
+pub trait ProbabilityMeasure<R: Rng> {
   type Sample;
-  fn sample(&self, rng: &mut Rng) -> Self::Sample;
+  fn sample(&self, rng: &mut R) -> Self::Sample;
 }
 ```
