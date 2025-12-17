@@ -1,0 +1,11 @@
+[workspace]
+resolver = "2"
+members = ["packages/blog/src/content/probability/code"]
+
+[workspace.package]
+authors = ["Matthew Varble <matthew@rodent.club>"]
+edition = "2021"
+version = "0.0.0"
+
+[workspace.dependencies]
+rand = "0.9.2"

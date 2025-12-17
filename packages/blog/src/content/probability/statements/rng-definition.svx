@@ -7,8 +7,8 @@ A _pseudorandom number generator_ is an object which implements the following tr
 
 ```rs
 pub trait Rng {
-  fn next_u32(&mut self) -> u32;
-  fn next_u64(&mut self) -> u64;
-  fn fill_bytes(&mut self, dst: &mut [u8]);
+    fn next_u32(&mut self) -> u32;
+    fn next_u64(&mut self) -> u64;
+    fn fill_bytes(&mut self, dst: &mut [u8]);
 }
 ```

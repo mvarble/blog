@@ -1,0 +1,18 @@
+[workspace]
+authors = ["Matthew Varble <matthew@rodent.club>"]
+channels = ["conda-forge"]
+name = "blog"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks.install-wasm-pack]
+cmd = ["cargo", "install", "--locked", "wasm-pack@$(cat .wasm-pack-version)"]
+inputs = [".wasm-pack-version"]
+
+[tasks.install-npm-packages]
+cmd = ["pnpm", "install"]
+inputs = ["package.json"]
+
+[dependencies]
+rust = ">=1.92.0,<1.93"
+pnpm = "==10.26"
