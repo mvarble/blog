@@ -15,6 +15,6 @@ kind: remark
       }
   }
   ```
-- Note that `ProbabilityMeasure<R>::sample` only takes an immutable reference to self.
+- Note that the `sample` method only takes an immutable reference to self.
   This means that any impurities in the implementation are coming solely from the pseudorandom number generator.
   We want this behavior, because the probability measure is intended to reflect a mathematics object, and mathematics operations are always pure.

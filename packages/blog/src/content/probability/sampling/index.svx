@@ -26,7 +26,6 @@ Let's consider the task of building a software library which allows us to simula
 We would like this library to be able to simulate the effects of anything from coin-flipping to poker hands or even the price of Costco stock in the next year.
 The most natural way to model uncertainty in a computer program is for it produce values in a non-deterministic way.
 From the perspective of a typed language, we would like to offer functionality for users to simulate seemingly random outcomes for all sorts of types--e.g. `bool`, `[Card; 5]`, or `Vec<f64>`.
-Furthermore, the types `T` over which users may simulate random outcomes must be generic.
 This process of randomly generating values `T` is referred to as _sampling_.
 
 ## Pseudorandom number generation
@@ -71,7 +70,7 @@ let x = dirac.sample(&mut rng);
 assert_eq!(x, 1.0); // ... wait, why am I sampling if it is always 1.0?
 ```
 
-Is a probability measure with only one sample too simple for our blood?
-Let's come up with one with **two** samples!
+Is a probability measure with only one sample too simple?
+Let's create one with **two** samples!
 
 <Statement {...bernoulli} />
