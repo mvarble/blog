@@ -14,6 +14,7 @@ children:
 
 <script>
   import Quote from '$lib/components/quote.svelte';
+  import lib from './code.svelte';
 </script>
 
 Probability is a uniquely interesting area of mathematics in how it is taught, because it is approached through two fundamentally different pedagogical frameworks.

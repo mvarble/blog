@@ -10,6 +10,9 @@ title: Probabilistic programs
   import * as prbDefRemark from '../statements/prb-definition-0-remark.svx';
   import * as dirac from '../statements/dirac-0.svx';
   import * as bernoulli from '../statements/bernoulli-0.svx';
+
+  import lib from '../code.svelte';
+  let p = $state(0.5);
 </script>
 
 Probability is a theory of modeling uncertainty in systems with which we interact.
@@ -74,3 +77,21 @@ Is a probability measure with only one sample too simple?
 Let's create one with **two** samples!
 
 <Statement {...bernoulli} />
+
+Let's use this to simulate a coin flip!
+Below is a simple function which takes as arguments the parameter $p$ of the Bernoulli measure and the number of samples we will simulate; it then performs simulation and returns the proportion of outcomes in which it sampled `true`.
+
+```
+{../code/src/sampling/examples.rs:5..}
+```
+
+
+{#if lib.loading}
+  <span>Loading...</span>
+{:else if lib.bernoulli_example}
+  <input type="range" min="0" max="1" step="0.01" bind:value={p} />
+  <span>{p}</span>
+  <span>{lib.bernoulli_example(p, 1000)}</span>
+{:else}
+  <span>Library not built</span>
+{/if}
