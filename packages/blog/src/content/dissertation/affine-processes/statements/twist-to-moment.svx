@@ -63,31 +63,3 @@ $$
 
 
 </Proof>
-
-<style>
-
-.aligned-left {
-  display: flex;
-  flex-direction: column;
-
-  > span {
-    display: flex;
-
-    > span {
-      flex-basis: 40%;
-    }
-
-    > div {
-      min-width: 600px;
-      flex-grow: 2;
-    }
-
-  }
-
-
-  :global(.katex-display > .katex) {
-    text-align: left;
-  }
-}
-
-</style>

@@ -35,10 +35,7 @@ impl<R: Rng> ProbabilityMeasure<R> for Uniform {
         // sample a number in [1, 2] by means of grabbing the 52 exponential bits.
         let rand_in_12 = f64::from_bits(rng.next_u64() | (1023 << 52));
 
-        // move the sample to [0, 1] by means of simple subtraction
-        let rand_in_01 = rand_in_12 - 1.0;
-
-        // move the sample to [a, b] by means of scaling and addition
-        rand_in_01 * self.scale + self.low
+        // move the sample to [a, b] by means of an affine transform
+        (rand_in_12 - 1.0) * self.scale + self.low
     }
 }

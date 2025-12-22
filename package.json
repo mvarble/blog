@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "dev-blog": "pnpm run --prefix ./packages/blog dev",
-    "dev-cms": "pnpm run --prefix ./packages/cms dev"
+    "dev-cms": "pnpm run --prefix ./packages/cms dev",
+    "build-blog": "pnpm run --prefix ./packages/blog build"
   },
   "devDependencies": {
     "@eslint/compat": "^1.4.1",
