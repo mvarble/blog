@@ -2,3 +2,9 @@
 type: statement
 kind: definition
 ---
+
+For real numbers $a, b \in \bbR$ with $a \leq b$, we define the uniform probability measure over $[a, b]$ like so.
+
+```
+{../code/src/sampling/uniform.rs:4..}
+```
