@@ -172,6 +172,20 @@ button[disabled] {
     color: var(--fg-4);
 }
 
+.button {
+    background-color: var(--button-bg-0);
+    color: white;
+    border-radius: 8px;
+    padding: 0.5em;
+    color: white;
+}
+
+*[disabled].button {
+    background-color: var(--button-disabled-bg-0);
+    color: rgba(255, 255, 255, 0.8);
+    cursor: not-allowed;
+}
+
 /*  links ------------------------------------- */
 a {
     color: var(--fg-accent);

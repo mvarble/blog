@@ -1,4 +1,5 @@
+# npm
 node_modules
-# pixi environments
-.pixi/*
-!.pixi/config.toml
+
+# cargo
+target

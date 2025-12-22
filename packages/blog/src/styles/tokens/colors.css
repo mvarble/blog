@@ -1,7 +1,7 @@
 :root {
     color-scheme: light;
 
-    /* Foreground colours */
+    /* Foreground colors */
     --fg-hue: 0;
     --fg-accent-hue: 211.1;
     --fg-exclaim-hue: 250.4;
@@ -12,7 +12,7 @@
     --fg-accent: hsl(var(--fg-accent-hue), 94.6%, 29.2%);
     --fg-exclaim: hsl(var(--fg-exclaim-hue), 48.5%, 46.5%);
 
-    /* Background colours */
+    /* Background colors */
     --bg-hue: 46.7;
     --alt-bg-hue: 160;
     --bg-1: hsl(var(--bg-hue), 100%, 99%);
@@ -23,6 +23,10 @@
     --bg-selection: hsla(204, 100%, 63%, 0.3);
     --bg-unfocused-selection: hsla(204, 50%, 63%, 0.2);
     --bg-highlight: hsl(60, 100%, 80%);
+
+    /* Button colors */
+    --button-bg-0: hsl(var(--fg-accent-hue), 80%, 60%);
+    --button-disabled-bg-0: hsl(var(--fg-accent-hue), 30%, 60%);
 
     /* Border color — use this for all borders, except 'active' borders (e.g. current nav) which use `--fg-accent`  */
     --border: hsl(0, 0%, 92%);
@@ -35,7 +39,7 @@
 :root.dark {
     color-scheme: dark;
 
-    /* Foreground colours */
+    /* Foreground colors */
     --fg-hue: 46.7;
     --fg-1: hsl(var(--fg-hue), 2%, 90%);
     --fg-2: hsl(var(--fg-hue), 3%, 80%);
@@ -44,7 +48,7 @@
     --fg-accent: hsl(var(--fg-accent-hue), 100%, 85%);
     --fg-exclaim: hsl(var(--fg-exclaim-hue), 100%, 85%);
 
-    /* Background colours */
+    /* Background colors */
     --bg-hue: 211.1;
     --bg-0: hsl(var(--bg-hue), 8%, 22%);
     --bg-1: hsl(var(--bg-hue), 10%, 20%);
@@ -54,7 +58,11 @@
     --bg-accent: hsl(15, 100%, 35%);
     --bg-highlight: hsl(60, 100%, 15%);
 
-    /* Border colour */
+    /* Button colors */
+    --button-bg-0: hsl(var(--fg-accent-hue), 80%, 40%);
+    --button-disabled-bg-0: hsl(var(--fg-accent-hue), 30%, 40%);
+
+    /* Border color */
     --border: hsl(var(--bg-hue), 15%, 40%);
 
     /* Misc */

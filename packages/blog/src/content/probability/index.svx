@@ -9,7 +9,9 @@ tags:
   - mathematics
   - probability
 children:
-  - filename: ./sampling/index.svx
+  - filename: ./programming/index.svx
+    children:
+      - filename: ./programming/sampling.svx
 ---
 
 <script>

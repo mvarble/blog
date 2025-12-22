@@ -1,6 +1,6 @@
 ---
 type: statement
-kind: example
+kind: definition
 ---
 
 The Bernoulli measure is a probability measure which samples `bool` and--for some $p \in [0, 1]$--samples `true` with proportion $p$ and `false` with proportion $1-p$.

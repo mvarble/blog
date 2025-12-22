@@ -1,0 +1,31 @@
+---
+title: Probabilistic programs
+---
+
+<script>
+  import Statement from '$lib/components/statement.svelte';
+  import * as rngDef from '../statements/rng-definition.svx';
+  import * as rngDefRemark from '../statements/rng-definition-remark.svx';
+  import * as prbDef from '../statements/prb-definition-0.svx';
+  import * as prbDefRemark from '../statements/prb-definition-0-remark.svx';
+  import * as dirac from '../statements/dirac-0.svx';
+  import * as bernoulli from '../statements/bernoulli-0.svx';
+  import * as uniform from '../statements/bernoulli-0.svx';
+  import * as exponential from '../statements/bernoulli-0.svx';
+  import * as gaussian from '../statements/bernoulli-0.svx';
+
+  import CoinFlip from '../components/coin-flip.svelte';
+  import CoinFlipEmpirical from '../components/coin-flip-empirical.svelte';
+</script>
+
+Probability is a theory of modeling uncertainty in systems with which we interact.
+One of the reasons it is a difficult subject to grasp is that the immutable mathematical object quantifying the likelihoods of all possible outcomes (i.e. a _probability measure_) is abstract and difficult to compare to the actual outcomes it produces.
+Subsequently, any concept related to uncertainty--no matter how simple it is to describe intuitively--must be defined in terms of probability measures and too must be quite technical and abstract.
+To quickly build intuition, we will initially use the mathematical term _probability measure_ to simply identify an object which exhibits intuitive behavior that can be modeled in software without yet worrying about the technical definition.
+From here, we will investigate the consequences of this functionality by building and running programs from it.
+This will pave the way for us to frame our thinking in a _global_ perspective, where we understand probability measures as building-blocks we can compose to build larger hierarchical models.
+Having this global perspective helps us segway into the actual mathematical definitions.
+
+In the remainder of this section, we will consider the task of building a software library which allows us to simulate uncertain models, as this will motivate some of the abstractions we will see in the mathematics of probability.
+We would like this library to be able to simulate the effects of anything from coin-flipping to poker hands or even the price of Costco stock in the next year.
+The most natural way to model uncertainty in a computer program is for it produce values in a non-deterministic way, which we refer to as _sampling_ and discuss in the first subsection.

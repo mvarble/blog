@@ -3,15 +3,21 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use super::{Bernoulli, ProbabilityMeasure};
 
 #[wasm_bindgen]
-pub fn bernoulli_example(p: f64, samples: usize) -> f64 {
+pub fn bernoulli_sample(p: f64) -> bool {
+    let mut rng = rand::rng();
+    Bernoulli::new(p).sample(&mut rng)
+}
+
+#[wasm_bindgen]
+pub fn bernoulli_sample_statistic(p: f64, sample_count: usize) -> f64 {
     let mut rng = rand::rng();
     let bernoulli = Bernoulli::new(p);
-    let count = (0..samples).fold(0.0, |count, _| {
+    let count = (0..sample_count).fold(0.0, |count, _| {
         if bernoulli.sample(&mut rng) {
             count + 1.0
         } else {
             count
         }
     });
-    count / samples as f64
+    count / sample_count as f64
 }

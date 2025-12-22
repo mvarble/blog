@@ -1,0 +1,183 @@
+---
+title: Sampling
+---
+
+<script>
+  import Statement from '$lib/components/statement.svelte';
+  import * as rngDef from '../statements/rng-definition.svx';
+  import * as rngDefRemark from '../statements/rng-definition-remark.svx';
+  import * as prbDef from '../statements/prb-definition-0.svx';
+  import * as prbDefRemark from '../statements/prb-definition-0-remark.svx';
+  import * as dirac from '../statements/dirac-0.svx';
+  import * as bernoulli from '../statements/bernoulli-0.svx';
+  import * as uniform from '../statements/uniform-0.svx';
+  import * as exponential from '../statements/exponential-0.svx';
+  import * as gaussian from '../statements/gaussian-0.svx';
+
+  import CoinFlip from '../components/coin-flip.svelte';
+  import CoinFlipEmpirical from '../components/coin-flip-empirical.svelte';
+</script>
+
+The most natural way to model uncertainty in a computer program is for it produce values in a non-deterministic way, a process we refer to as _sampling_.
+From the perspective of a typed language, we would like to offer functionality for users to simulate seemingly random outcomes for all sorts of types--e.g. `bool`, `[Card; 5]`, or `Vec<f64>`.
+This subsection will dive into how we will achieve this.
+
+# Pseudorandom number generation
+
+The simplest utility we can offer is that of a _pseudorandom number generator_ which acts as a source for users to randomly (at least seemingly) generate bytes for their type `T`.
+
+<Statement {...rngDef} />
+
+<Statement {...rngDefRemark} />
+
+A true random number generator could be implemented by reading voltages from an analog-to-digital circuit, since quantum physics dictates that there is a true source of randomness present in the electronics.
+However, the nature of this randomness could vary between hardware devices and be quite difficult to characterize.
+In principle, we would like our psueodorandom number generator to maximize _surprise_ or _entropy_, in the sense that the $2^8$ options of a byte are all seemingly equally likely to occur with repeated calls.
+If someone can guess the value of the next call `rng.next_u32()` given the history of its earlier outcomes, it would no longer be random to them.
+Thankfully, it turns out this property of psueodorandom number generators is extremely important in cryptography, so there are many algorithms at our disposal.
+Most of these implementations are hard to reason through, but only because they are secure and highly optimized for hardware; in principle, they only typically involve performing simple addition and bitwise operations on `u32` instances.
+In this sequence, we will not worry about implementing `Rng` as all subsequent objects will only interface with the trait; instead we will use the Cargo crate [rand](https://docs.rs/rand/latest/rand/index.html) for implementations of random number generators `Rng`.
+
+```rs
+// this is how we will get instances `rng` of some type `R` which implements `Rng`
+let mut rng = rand::rng();
+```
+
+<br />
+
+# Probability measures
+
+Returning to the task at hand, we define a probability measure (for now) as the object which serves our sampling desires.
+
+<Statement {...prbDef} />
+
+<Statement {...prbDefRemark} />
+
+With this (currently) simple interface, we can construct probability measures to our liking by coming up with different sampling mechanisms.
+Since the randomness comes from the underlying bytes produced by the pseudorandom number generator `R`, if we assume the implementation of `R` samples the $2^8$ options of a byte evenly, then we can intuitively produce desired behaviors in the probability measure implementation `ProbabilityMeasure<R>`.
+
+## Examples
+
+The simplest probability measure is one which exhibits no randomness.
+In other words, the sampling mechanism is determinisitic and constant.
+
+<Statement {...dirac} />
+
+Note how the Dirac measure is a pretty useless probability measure as far as building programs goes.
+
+```rs
+let mut rng = rand::rng();
+let dirac = Dirac::new(1.0);
+let x = dirac.sample(&mut rng);
+assert_eq!(x, 1.0); // cool, its 1.0
+let x = dirac.sample(&mut rng);
+assert_eq!(x, 1.0); // cool, its 1.0 again!
+let x = dirac.sample(&mut rng);
+assert_eq!(x, 1.0); // ... wait, why am I sampling if it is always 1.0?
+```
+
+Is a probability measure with only one sample too simple?
+Let's create one with **two** samples!
+
+<Statement {...bernoulli} />
+
+Let's use this to simulate a coin flip!
+
+<CoinFlip />
+
+```
+{../code/src/sampling/examples.rs:5..8}
+```
+
+We can also make a small program which samples many outcomes of the Bernoulli measure; the following example illustrates that the underlying parameter is empirically detectable via observing the proportion of outcomes which turn out to be heads.
+The bar-chart below shows this empirical proportion alongside the parameter $p$ of the Bernoulli measure.
+
+<CoinFlipEmpirical />
+
+```
+{../code/src/sampling/examples.rs:11..}
+```
+
+Notice how the empirical proportion `p_hat` returned by `bernoulli_sample_statistic`, i.e.
+```rs
+let p_hat = bernoulli_sample_statistic(p, sample_count);
+```
+is indeterministic (from the `Rng`) and is often times close to the parameter `p`; this shows us that our implementation of `Bernoulli` is behaving as we intuitively understand it.
+We also see that the frequency with which the output `hat_p` is close to `p` increases with the `sample_count`.
+Additionally, `hat_p` will necessarily look like `n / sample_count` for some integer `n`, so for small `sample_count` it may be _impossible_ for `hat_p == p` (e.g. `sample_count == 1 && p != 0 && p != 1`).
+
+The question of **how often** `p_hat` is within some neighborhood of `p` is something we at this moment cannot really answer, as it would depend on the underlying implementation of `Rng`.
+This example fits into a more general set of problems we can pose in code as tyring to minimimze `simulation::cost_of_guess` below.
+
+```rs
+/// This is a measure with which we are very familiar.
+pub struct SomeMeasure {
+    parameter: P
+}
+impl ProbabilityMeasure<R> for SomeMeasure {
+    type Sample = X;
+    fn sample(&self, rng: &mut R) -> X {
+        // some implementation we know...
+    }
+}
+
+/// This is a function which maps outcomes of `SomeMeasure`.
+pub fn observation(x: X) -> F {
+    // some implementation we know...
+}
+
+/// This gives a cost between two instances of the parameter type.
+pub fn cost(p: P, p_hat: P) -> f64 {
+    // some implementation we know...
+}
+
+/// Randomly generate samples from an instance of `SomeMeasure`, map them via
+/// `observation`, and collect all the observations.
+pub fn get_observations(rng: &mut R, parameter: P, sample_count: usize) -> Vec<F> {
+    let some_measure = SomeMeasure { parameter };
+    let mut out = Vec::with_capacity(sample_count);
+    for _ in 0..sample_count {
+        out.push(observation(some_measure.sample(rng)));
+    }
+    out
+}
+
+/// TODO:
+/// We need to come up with an implementation of this which does a good job
+/// of keeping the cost below low.
+pub fn estimator(observations: Vec<F>) -> P {
+    todo!()
+}
+
+pub mod simulation {
+    const SOME_P: P = // some value we *do not* know
+
+    /// Sample observations from `SomeMeasure` with an unknown parameter, use
+    /// our estimator to guess the parameter, and evaluate the cost of our guess.
+    ///
+    /// Note that, though `cost` may be pure, we do not know the output of this
+    /// function, on account of the indeterminism of `get_observations`.
+    pub fn cost_of_guess(sample_count: usize) -> f64 {
+        let mut rng: R = // some arbitrary random number generator...
+        let observations = get_observations(&mut rng, SOME_P, sample_count);
+        let p_hat = estimator(observations);
+        cost(SOME_P, p_hat)
+    }
+}
+```
+
+Solving this general problem is **precisely** the task of statistics: to use mapped samples of an unknown probability measure to determine its underlying parameters.
+Not until we bridge a philosophical gap between the indeterminism implied by the impurities of `ProbabilityMeasure<R>` and the pure constructs of mathematics could we come up with a rigorous framework which can help us answer such questions.
+
+You or someone you know likely has taken a course in statistics and despised it.
+Introductory statistics typically involves memorizing implementations of `estimator` and subsequent _tests_ which help us determine the effectiveness of `p_hat` at estimating `p`.
+Memorizing these estimators and their tests can feel rather unsubstantiated when foundational questions remain unanswered, such as what it means to "observe" samples and how these tests are derived from facts about `SomeMeasure`.
+
+I purposefully posed the general statistical problem in terms of the trait `ProbabilityMeasure<R>` as opposed to using mathematical notation to avoid the need for answering what it means to "observe".
+However, we will eventually have a rigorous formulation of statistics, as soon as we do so for `ProbabilityMeasure<R>`.
+This will require us to build more intuition with the programs we can build with this trait, which is the point of the next subsections.
+Let us first finish this subsection by familiarizing ourselves with more probability measures.
+
+<Statement {...uniform} />
+<Statement {...exponential} />
+<Statement {...gaussian} />

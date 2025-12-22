@@ -1,11 +1,10 @@
 ---
 type: statement
-kind: example
+kind: definition
 ---
 
-The simplest probability measure is one which exhibits no randomness.
-In other words, the sampling mechanism is determinisitic and constant.
 We define the Dirac measure like so.
+
 ```rs
 {../code/src/sampling/dirac.rs:4..}
 ```
