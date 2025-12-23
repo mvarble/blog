@@ -27,6 +27,14 @@ impl Uniform {
         // these are the parts which help us map [0, 1] => [a, b] linearly
         Self { low, scale }
     }
+
+    pub fn low(&self) -> f64 {
+        self.low
+    }
+
+    pub fn high(&self) -> f64 {
+        self.low + (1.0 - f64::EPSILON) * self.scale
+    }
 }
 
 impl<R: Rng> ProbabilityMeasure<R> for Uniform {

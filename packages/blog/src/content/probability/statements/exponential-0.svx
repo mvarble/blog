@@ -2,3 +2,9 @@
 type: statement
 kind: definition
 ---
+
+The `Exponential` measure is defined like so.
+
+```
+{../code/src/sampling/exponential.rs:4..}
+```
