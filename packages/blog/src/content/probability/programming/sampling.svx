@@ -108,12 +108,12 @@ We also see that the frequency with which the output `hat_p` is close to `p` inc
 Additionally, `hat_p` will necessarily look like `n / sample_count` for some integer `n`, so for small `sample_count` it may be _impossible_ for `hat_p == p` (e.g. `sample_count == 1 && p != 0 && p != 1`).
 
 The question of **how often** `p_hat` is within some neighborhood of `p` is something we at this moment cannot really answer, as it would depend on the underlying implementation of `Rng`.
-This example fits into a more general set of problems we can pose in code as tyring to minimimze `simulation::cost_of_guess` below.
+This example fits into a more general set of problems we can pose in code as trying to minimimze `simulation::cost_of_guess` below.
 
 ```rs
 /// This is a measure with which we are very familiar.
 pub struct SomeMeasure {
-    parameter: P
+    pub parameter: P
 }
 impl ProbabilityMeasure<R> for SomeMeasure {
     type Sample = X;

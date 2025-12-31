@@ -16,9 +16,9 @@ $$
     E(b_{52}, \ldots, b_{62}) &= \sum_{i=0}^{10} b_{52+i} 2^{i}
   \end{aligned}
 $$
-We see that the float $f(b_0, \ldots, b_{63})$ is decomposed into by a _decimal_ or _fractional_ number
+We see that the float $f(b_0, \ldots, b_{63})$ is decomposed into by a _decimal_ or _fractional_ number,
 $$
-  d(b_0, \ldots, b_{51}) \in [1, 2)
+  d(b_0, \ldots, b_{51}) \in [1, 2),
 $$
 and a diadic _exponent_ $E(b_{52}, \ldots, b_{62})$ which provides us a binary order of magnitude.
 This design is to equally allocate 52 bits of information between each diadic interval of the form $[2^n, 2^{n+1})$ or $(-2^{n+1}, -2^n]$ for positive integers $n$ representable with 11 bits of information.
@@ -27,10 +27,10 @@ This design is to equally allocate 52 bits of information between each diadic in
 
 Depending on which interval $[a, b]$ decides our `Uniform` measure, there may be more or less than $2^{52}$ instances `x: f64` satisfying `a <= x && x <= b`.
 This is something we cannot control, simply due to the information available within `f64`.
-For this reason, our implementation decides to sample 64 bits of information $(b_0, \ldots, b_{63})$ from `rng.next_u64`, to only use 52 bits of the `u64` to produce a fractional component $d(b_0, \ldots, b_{51}) \in [1, 2)$ and to scale this interval to $[a, b]$.
+For this reason, our implementation decides to sample 64 bits of information $(b_0, \ldots, b_{63})$ from `rng.next_u64`, only use 52 bits of the `u64` to produce a fractional component $d(b_0, \ldots, b_{51}) \in [1, 2)$, and apply an affine transform mapping $[1, 2)$ to $[a, b]$.
 Lastly, if we scale via
 ```rs
 let rand_in_ab = a + (rand_in_12 - 1) * (b - a)
 ```
-the rounding implicit in `f64` multiplication may produce numbers `rand_in_ab > b`.
+the rounding rules of `f64` multiplication may produce numbers `rand_in_ab > b`.
 This is why we change `scale` in the constructor `Uniform::new`.
