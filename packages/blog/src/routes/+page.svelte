@@ -71,7 +71,7 @@
 
         --grid: 20px;
         --angle: 15deg;
-        --line: hsl(var(--fg-hue), 0%, 80%);
+        --line: hsl(var(--fg-hue), 0%, 85%);
 
         background:
             repeating-linear-gradient(
@@ -117,7 +117,7 @@
     }
 
     :global(html.dark) .banner {
-        --line: hsl(var(--fg-hue), 0%, 40%);
+        --line: hsl(var(--fg-hue), 0%, 30%);
     }
 
     @media (min-width: 700px) {

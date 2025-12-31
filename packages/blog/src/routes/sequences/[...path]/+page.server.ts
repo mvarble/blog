@@ -1,8 +1,16 @@
 import { error, type Load } from '@sveltejs/kit';
+import type { EntryGenerator } from './$types';
 
 import { db, type Sequence, type SequenceChild } from 'cms';
 import type { SequencePage } from '$lib/types';
 import type { DocumentSummary } from '$lib/types';
+
+export const entries: EntryGenerator = () => {
+    const conn = db.connect();
+    return db
+        .getSequenceInfos(conn)
+        .map((sequence) => ({ path: sequence.pathname.split('/').slice(1).join('/') }));
+};
 
 export const load: Load = async (req) => {
     const { url, parent } = req;

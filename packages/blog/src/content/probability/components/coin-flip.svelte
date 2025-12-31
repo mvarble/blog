@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onDestroy, untrack } from 'svelte';
+    import { onDestroy, onMount, untrack } from 'svelte';
 
     import {
         Scene,
@@ -43,14 +43,17 @@
     scene.add(ambientLight);
     camera.add(pointLight);
     scene.add(camera);
-    loader.load(gltfPath, (gltf) => {
-        coin = gltf.scene;
-        scene.add(coin);
+    onMount(() => {
+        loader.load(gltfPath, (gltf) => {
+            coin = gltf.scene;
+            scene.add(coin);
+        });
     });
 
     // reactivity
     $effect(() => {
         if (!canvas) return;
+
         const renderer = new WebGLRenderer({ canvas });
         renderer.setClearAlpha(0.0);
         renderer.setAnimationLoop(animate);

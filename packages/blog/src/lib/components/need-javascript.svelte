@@ -14,11 +14,31 @@
 </script>
 
 {#if !ticked}
-    <span>This component is interactive and requires javascript to be enabled.</span>
+    <blockquote class="red">
+        This component is interactive and requires javascript to be enabled.
+    </blockquote>
 {:else if loading && childLoading}
     {@render childLoading()}
 {:else if loading}
-    <span>Loading...</span>
+    <blockquote class="blue">Loading...</blockquote>
 {:else}
     {@render children()}
 {/if}
+
+<style>
+    blockquote {
+        text-align: center;
+    }
+    .red {
+        background: hsl(0, 50%, 93%);
+    }
+    :global(html.dark) .red {
+        background: hsl(0, 40%, 20%);
+    }
+    .blue {
+        background: hsl(210, 50%, 93%);
+    }
+    :global(html.dark) .blue {
+        background: hsl(210, 40%, 20%);
+    }
+</style>

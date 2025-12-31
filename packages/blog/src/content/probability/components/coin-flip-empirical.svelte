@@ -1,7 +1,6 @@
 <script lang="ts">
     import Katex from '$lib/components/katex.svelte';
     import NeedJavascript from '$lib/components/need-javascript.svelte';
-    import { untrack } from 'svelte';
     import lib from '../code.svelte';
 
     // canvas properties
