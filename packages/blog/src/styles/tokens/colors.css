@@ -9,7 +9,7 @@
     --fg-2: hsl(var(--fg-hue), 0%, 15%);
     --fg-3: hsl(var(--fg-hue), 0%, 40%);
     --fg-4: hsl(var(--fg-hue), 0%, 50%);
-    --fg-accent: hsl(var(--fg-accent-hue), 94.6%, 29.2%);
+    --fg-accent: hsl(var(--fg-accent-hue), 94.6%, 34.2%);
     --fg-exclaim: hsl(var(--fg-exclaim-hue), 48.5%, 46.5%);
 
     /* Background colors */

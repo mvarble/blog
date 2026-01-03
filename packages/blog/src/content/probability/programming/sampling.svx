@@ -17,6 +17,7 @@ title: Sampling
 
   import CoinFlip from '../components/coin-flip.svelte';
   import CoinFlipEmpirical from '../components/coin-flip-empirical.svelte';
+  import Uniform from '../components/uniform.svelte';
 </script>
 
 The most natural way to model uncertainty in a computer program is for it produce values in a non-deterministic way, a process we refer to as _sampling_.
@@ -182,6 +183,14 @@ Let us first finish this subsection by familiarizing ourselves with more probabi
 <Statement {...uniform} />
 
 <Statement {...uniformRemark} />
+
+We can test that our `Uniform` distribution indeed samples points in a fashion that maximizes entropy across the interval $[a, b]$.
+
+<Uniform />
+
+```
+{../code/src/sampling/examples.rs:25..33}
+```
 
 <Statement {...exponential} />
 <Statement {...gaussian} />

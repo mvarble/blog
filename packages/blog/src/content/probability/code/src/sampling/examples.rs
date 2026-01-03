@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use super::{Bernoulli, ProbabilityMeasure};
+use super::{Bernoulli, ProbabilityMeasure, Uniform};
 
 #[wasm_bindgen]
 pub fn bernoulli_sample(p: f64) -> bool {
@@ -20,4 +20,13 @@ pub fn bernoulli_sample_statistic(p: f64, sample_count: usize) -> f64 {
         }
     });
     count / sample_count as f64
+}
+
+#[wasm_bindgen]
+pub fn uniform_samples(a: f64, b: f64, sample_count: usize) -> Vec<f64> {
+    let mut rng = rand::rng();
+    let uniform = Uniform::new(a, b);
+    (0..sample_count)
+        .map(|_| uniform.sample(&mut rng))
+        .collect()
 }

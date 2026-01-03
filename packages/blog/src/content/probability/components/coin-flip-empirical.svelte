@@ -6,13 +6,13 @@
     // canvas properties
     const scale = 200;
 
-    // form state
+    // state
     let samples = $state(100);
     let p = $state(0.5);
+    let pEst = $state(0.5);
 
     // derived state
     let pY = $derived((1.0 - p) * 0.75 * scale + 0.1 * scale);
-    let pEst = $state(0.5);
     let headsHeight = $derived(pEst * (0.75 * scale));
     let tailsHeight = $derived(0.75 * scale - headsHeight);
     let headsY = $derived(tailsHeight + 0.1 * scale);

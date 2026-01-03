@@ -5,11 +5,13 @@ export class ProbabilityLibrary {
     bernoulli_sample?: ((p: number) => boolean) | undefined = $state(undefined);
     bernoulli_sample_statistic?: ((p: number, samples: number) => number) | undefined =
         $state(undefined);
+    uniform_samples?: ((a: number, b: number, samples: number) => number[]) | undefined =
+        $state(undefined);
 
     constructor() {
         wasmLoader(
             import.meta.glob('./code/pkg/code.js'),
-            ['bernoulli_sample', 'bernoulli_sample_statistic'],
+            ['bernoulli_sample', 'bernoulli_sample_statistic', 'uniform_samples'],
             this,
         );
     }
