@@ -40,8 +40,17 @@ impl Uniform {
 impl<R: Rng> ProbabilityMeasure<R> for Uniform {
     type Sample = f64;
     fn sample(&self, rng: &mut R) -> f64 {
-        // sample a number in [1, 2] by means of grabbing the 52 exponential bits.
-        let rand_in_12 = f64::from_bits(rng.next_u64() | (1023 << 52));
+        // get 64-bits of randomness from our `Rng` implementation
+        let u = rng.next_u64();
+
+        // apply the following transformation of the bits of our `u64`.
+        //   b_{63}b_{62}...b_{52}b_{51}...b_{0} => 01...1b_{63}...b_{12}
+        let u = (u >> 12) | (1023 << 52);
+
+        // the floating-point representation of
+        //   01...1b_{63}...b_{12}
+        // will necessarily be a member of [1, 2) of the form $1 + k * 2^{-52}$
+        let rand_in_12 = f64::from_bits(u);
 
         // move the sample to [a, b] by means of an affine transform
         (rand_in_12 - 1.0) * self.scale + self.low

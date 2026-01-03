@@ -7,30 +7,34 @@ kind: remark
   import iee754 from '../assets/ieee-754.svg?raw';
 </script>
 
-The implementation looks a little peculiar due to the nature of 64-bit floats `f64`.
-Though `f64` serves to model the real numbers $\bbR$, they are discretely encoded by 64 bits like so.
+This implementation may look a bit peculiar if one is not very familiar with $64$-bit floats `f64`, which serve to encode the real numbers $\bbR$ with $64$ bits $(b_0, \ldots, b_{63}) \in \{0, 1\}^{64}$ like so.
 $$
   \begin{aligned}
-    f(b_0, \ldots, b_{63}) &= (-1)^{b_{63}} \Big( 1 + d(b_0, \ldots, b_{51}) \Big) 2^{E(b_{52}, \ldots, b_{62}) - 1023} \\
-    d(b_0, \ldots, b_{51}) &= \sum_{i=1}^{52} b_{52-i} 2^{-i} \\
-    E(b_{52}, \ldots, b_{62}) &= \sum_{i=0}^{10} b_{52+i} 2^{i}
+    f(b_{63} \cdots b_{0}) &= (-1)^{b_{63}} \Big( 1 + d(b_{51} \cdots b_{0}) \Big) 2^{E(b_{62} \cdots b_{52}) - 1023} \\
+    E(b_{62} \cdots b_{52}) &= \sum_{i=0}^{10} b_{52+i} 2^i \\
+    d(b_{51} \cdots b_{0}) &= \sum_{i=1}^{52} b_{52-i} 2^{-i}
   \end{aligned}
 $$
-We see that the float $f(b_0, \ldots, b_{63})$ is decomposed into by a _decimal_ or _fractional_ number,
-$$
-  d(b_0, \ldots, b_{51}) \in [1, 2),
-$$
-and a diadic _exponent_ $E(b_{52}, \ldots, b_{62})$ which provides us a binary order of magnitude.
-This design is to equally allocate 52 bits of information between each diadic interval of the form $[2^n, 2^{n+1})$ or $(-2^{n+1}, -2^n]$ for positive integers $n$ representable with 11 bits of information.
+This encoding of floating-point numbers $f(b_{63} \cdots b_{0}) \in \bbR$ can be intuitively understood as partitioning the real numbers $\bbR$ first into diadic intervals $[2^n, 2^{n+1})$ and $(-2^{n+1}, -2^n]$ for integers $n$, choosing finitely many of these intervals ($12$ bits worth of them), and distributing $52$ bits of instances to each such interval.
+The bits $b_{63}\cdots b_{0}$ determine the `f64` instance $f(b_{63} \cdots b_{0})$ as such.
+
+- The most significant bit $b_{63}$ determines the sign of the float $f(b_{63} \cdots b_{0})$.
+- The next $11$ most significant bits decide an _exponent_ integer value $0 \leq E(b_{62} \cdots b_{52}) \leq 2047$ which determines the integer scale $-1023 \leq n \leq 1024$ of the diadic interval $f(b_{63} \cdots b_{0}) \in [2^n, 2^{n+1})$ or $f(b_{63}, \ldots, b_{0}) \in (-2^{n+1}, -2^n]$, depending on the sign.
+  $$
+    n = E(b_{62} \cdots b_{52}) - 1023
+  $$
+- The $52$ least significant bits decide the _fractional_ or _decimal_ part $d(b_{51} \cdots b_{0}) \in [1, 2)$, which serves to evenly distribute floats within the diadic interval.
 
 <div>{@html iee754}</div>
 
-Depending on which interval $[a, b]$ decides our `Uniform` measure, there may be more or less than $2^{52}$ instances `x: f64` satisfying `a <= x && x <= b`.
-This is something we cannot control, simply due to the information available within `f64`.
-For this reason, our implementation decides to sample 64 bits of information $(b_0, \ldots, b_{63})$ from `rng.next_u64`, only use 52 bits of the `u64` to produce a fractional component $d(b_0, \ldots, b_{51}) \in [1, 2)$, and apply an affine transform mapping $[1, 2)$ to $[a, b]$.
-Lastly, if we scale via
-```rs
-let rand_in_ab = a + (rand_in_12 - 1) * (b - a)
-```
-the rounding rules of `f64` multiplication may produce numbers `rand_in_ab > b`.
-This is why we change `scale` in the constructor `Uniform::new`.
+This `f64` encoding can be thought of as distributing numbers uniformly within binary orders of magnitude: each diadic interval $[2^n, 2^{n+1})$ or $(-2^{n+1}, -2^n]$ has $2^{52}$ evenly distributed numbers.
+
+Our implementation of `Uniform` is designed to sample $52$ bits with maximum entropy by leveraging `Rng::next_u64` and dropping the $12$ least-significant bits.
+It uses these $52$ bits to generate an output $f(01\cdots1b_{63}\cdots b_{12})$ whose value is one of the uniformly distributed nodes within the dyadic interval $[1, 2)$.
+This value is then scaled to produce $x \in [a, b]$.
+$$
+  x = \Big( f(01\cdots1b_{63} \cdots b_{12}) - 1 \Big) \times (b-a) + a
+$$
+The reason the implementation uses only $52$ bits is that this is the maximum amount of instances within `f64` whose values are uniformly spaced.
+Note that large intervals $[a, b]$ with more than $52$ bits worth of `f64` instances will have "holes" (due to non-surjectivity), while small intervals $[a, b]$ with less than $52$ bits worth of `f64` instances will potentially have outputs of higher likelihood (due to non-injectivity).
+Up to these minor headaches associated `f64`, it is fair to assume that our implementation of `Uniform` leverages the entropy of `Rng` to sample `f64` instances within $[a, b]$ of maximal entropy.

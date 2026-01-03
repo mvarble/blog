@@ -69,7 +69,8 @@
                 >Tails</text
             >
             <path d="M 5 {pY} L {scale} {pY}" stroke="currentColor" />
-            <text x="0" y={pY + 5} text-anchor="end" font-style="italic">p</text>
+            <text x="0" y={pY + 5} text-anchor="end" font-style="italic" fill="currentColor">p</text
+            >
         </svg>
     {/if}
 </NeedJavascript>
