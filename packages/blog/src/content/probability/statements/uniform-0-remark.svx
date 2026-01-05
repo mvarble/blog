@@ -25,7 +25,7 @@ The bits $b_{63}\cdots b_{0}$ determine the `f64` instance $f(b_{63} \cdots b_{0
   $$
 - The $52$ least significant bits decide the _fractional_ or _decimal_ part $d(b_{51} \cdots b_{0}) \in [1, 2)$, which serves to evenly distribute floats within the diadic interval.
 
-<div>{@html iee754}</div>
+<div style:overflow-x="auto">{@html iee754}</div>
 
 This `f64` encoding can be thought of as distributing numbers uniformly within binary orders of magnitude: each diadic interval $[2^n, 2^{n+1})$ or $(-2^{n+1}, -2^n]$ has $2^{52}$ evenly distributed numbers.
 
@@ -38,3 +38,55 @@ $$
 The reason the implementation uses only $52$ bits is that this is the maximum amount of instances within `f64` whose values are uniformly spaced.
 Note that large intervals $[a, b]$ with more than $52$ bits worth of `f64` instances will have "holes" (due to non-surjectivity), while small intervals $[a, b]$ with less than $52$ bits worth of `f64` instances will potentially have outputs of higher likelihood (due to non-injectivity).
 Up to these minor headaches associated `f64`, it is fair to assume that our implementation of `Uniform` leverages the entropy of `Rng` to sample `f64` instances within $[a, b]$ of maximal entropy.
+
+One such instance in which there is a "hole" in the `Uniform` measure is when it is over the interval $[1, 2]$.
+Since there are $52$ bits of information between $[1, 2)$, our measure will never sample $2$.
+Below is a table of all $52$-bit sequences and the corresponding float which would be sampled.
+
+<div style:overflow-x="auto">
+  <div style:display="grid" style:grid-template-columns="1fr 1fr" style:grid-template-rows="2rem" style:justify-items="stretch">
+    <span><code>0b0000000000000000000000000000000000000000000000000000</code></span>
+    <span>
+
+      $1$
+
+    </span>
+    <span><code>0b0000000000000000000000000000000000000000000000000001</code></span>
+    <span>
+
+      $1 + 2^{-52}$
+
+    </span>
+    <span><code>0b0000000000000000000000000000000000000000000000000010</code></span>
+    <span>
+
+      $1 + 2^{-51}$
+
+    </span>
+    <span><code>0b0000000000000000000000000000000000000000000000000011</code></span>
+    <span>
+
+      $1 + 2^{-51} + 2^{-52}$
+
+    </span>
+    <span>⋮</span>
+    <span>⋮</span>
+    <span><code>0b1111111111111111111111111111111111111111111111111110</code></span>
+    <span>
+
+      $1 + 2^{-1} + \cdots + 2^{-51}$
+
+    </span>
+    <span><code>0b1111111111111111111111111111111111111111111111111110</code></span>
+    <span>
+
+      $1 + 2^{-1} + \cdots + 2^{-52} = 2 - 2^{-52}$
+
+    </span>
+  </div>
+</div>
+
+In these events, we do not disambiguate between whether `Uniform` is actually over $[1, 2]$ or $[1, 2)$.
+More generally, we do not disambiguate whether `Uniform` is over $[a, b]$, $[a, b)$, $(a, b]$, or $(a, b)$ for points $a$ and $b$.
+While the implementation _will_ result in one of the four types of intervals on selection of $a$ and $b$, our intervals will typically have $52$ bits of entropy and so misidentifying $[a, b]$ versus $[a, b)$ is only likely to be empirically identied after many samples (like, 3 quadrillion).
+When we get to the mathematical definition of the `Uniform` measure, it too will have this property of being identified between the different interval types.

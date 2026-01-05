@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use super::{Bernoulli, ProbabilityMeasure, Uniform};
+use super::{Bernoulli, Exponential, ProbabilityMeasure, Uniform};
 
 #[wasm_bindgen]
 pub fn bernoulli_sample(p: f64) -> bool {
@@ -26,6 +26,15 @@ pub fn bernoulli_sample_statistic(p: f64, sample_count: usize) -> f64 {
 pub fn uniform_samples(a: f64, b: f64, sample_count: usize) -> Vec<f64> {
     let mut rng = rand::rng();
     let uniform = Uniform::new(a, b);
+    (0..sample_count)
+        .map(|_| uniform.sample(&mut rng))
+        .collect()
+}
+
+#[wasm_bindgen]
+pub fn exponential_samples(lambda: f64, sample_count: usize) -> Vec<f64> {
+    let mut rng = rand::rng();
+    let uniform = Exponential::new(lambda);
     (0..sample_count)
         .map(|_| uniform.sample(&mut rng))
         .collect()

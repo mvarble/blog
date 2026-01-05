@@ -189,8 +189,16 @@ We can test that our `Uniform` distribution indeed samples points in a fashion t
 <Uniform />
 
 ```
-{../code/src/sampling/examples.rs:25..33}
+{../code/src/sampling/examples.rs:25..31}
 ```
 
 <Statement {...exponential} />
+
+The implementation of `Exponential` uses `Uniform` to obtain a sample between $[0, 1)$ and map it via the function $u \mapsto -\frac{1}{\lambda}\log(1-u) \in [0, \infty)$.
+Due to the concavity of the logarithm, the `Exponential` measure tends to accumulate samples near the origin.
+
+```
+{../code/src/sampling/examples.rs:34..40}
+```
+
 <Statement {...gaussian} />
