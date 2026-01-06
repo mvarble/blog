@@ -18,6 +18,8 @@ title: Sampling
   import CoinFlip from '../components/coin-flip.svelte';
   import CoinFlipEmpirical from '../components/coin-flip-empirical.svelte';
   import Uniform from '../components/uniform.svelte';
+
+  import iee754 from '../assets/ieee-754.svg?raw';
 </script>
 
 The most natural way to model uncertainty in a computer program is for it produce values in a non-deterministic way, a process we refer to as _sampling_.
@@ -49,6 +51,8 @@ In this sequence, we will not worry about implementing `Rng` as all subsequent o
 let mut rng = rand::rng();
 ```
 
+# Probability measures
+
 Returning to the task at hand, we define a probability measure (for now) as the object which serves our sampling desires.
 
 <Statement {...prbDef} />
@@ -58,7 +62,7 @@ Returning to the task at hand, we define a probability measure (for now) as the 
 With this (currently) simple interface, we can construct probability measures to our liking by coming up with different sampling mechanisms.
 Since the randomness comes from the underlying bytes produced by the pseudorandom number generator `R`, if we assume the implementation of `R` samples the $2^8$ options of a byte evenly, then we can intuitively produce desired behaviors in the probability measure implementation `ProbabilityMeasure<R>`.
 
-## Examples
+## Simplest examples
 
 The simplest probability measure is one which exhibits no randomness.
 In other words, the sampling mechanism is determinisitic and constant.
@@ -97,8 +101,10 @@ The bar-chart below shows this empirical proportion alongside the parameter $p$ 
 <CoinFlipEmpirical />
 
 ```
-{../code/src/sampling/examples.rs:11..}
+{../code/src/sampling/examples.rs:11..22}
 ```
+
+## On statistics
 
 Notice how the empirical proportion `p_hat` returned by `bernoulli_sample_statistic`, i.e.
 ```rs
@@ -177,8 +183,79 @@ Memorizing these estimators and their tests can feel rather unsubstantiated when
 
 I purposefully posed the general statistical problem in terms of the trait `ProbabilityMeasure<R>` as opposed to using mathematical notation to avoid the need for answering what it means to "observe".
 However, we will eventually have a rigorous formulation of statistics, as soon as we do so for `ProbabilityMeasure<R>`.
-This will require us to build more intuition with the programs we can build with this trait, which is the point of the next subsections.
-Let us first finish this subsection by familiarizing ourselves with more probability measures.
+This will require us to build more intuition with the programs we can build with this trait.
+
+## IEEE-754
+
+With the simple probability measures `Dirac` and `Bernoulli` out of the way, we now seek to explore those over the real numbers $\bbR$.
+The real numbers $\bbR$ are most often encoded by the floating point types like `f64`.
+Since `Rng` will only return (pseudo)random bytes, we need to understand how `f64` is encoded to create a measure on it.
+
+The `f64` type encodes the real numbers $\bbR$ with $64$ bits according to the [IEEE-754 standard](https://en.wikipedia.org/wiki/Double-precision_floating-point_format).
+Given a bit sequence $(b_0, \ldots, b_{63}) \in \{0, 1\}^{64}$, the associated floating point $f(b_{63} \cdots b_{0})$ is calculated like so.
+$$
+  \begin{aligned}
+    f(b_{63} \cdots b_{0}) &= (-1)^{b_{63}} 2^{E(b_{62} \cdots b_{52}) - 1023} \Big( 1 + d(b_{51} \cdots b_{0}) \Big) \\
+    E(b_{62} \cdots b_{52}) &= \sum_{i=0}^{10} b_{52+i} 2^i \\
+    d(b_{51} \cdots b_{0}) &= \sum_{i=1}^{52} b_{52-i} 2^{-i}
+  \end{aligned}
+$$
+This encoding of floating-point numbers $f(b_{63} \cdots b_{0}) \in \bbR$ can be intuitively understood as partitioning the real numbers $\bbR$ first into diadic intervals $[2^k, 2^{k+1})$ and $(-2^{k+1}, -2^k]$ for integers $k$, choosing finitely many of these intervals ($12$ bits worth of them), and distributing $52$ bits of `f64` instances to each such interval.
+From the equations above, we see that the bits $b_{63}\cdots b_{0}$ determine the `f64` instance $f(b_{63} \cdots b_{0})$ as such.
+
+- The most significant bit $b_{63}$ determines the sign of the float $f(b_{63} \cdots b_{0})$.
+- The next $11$ most significant bits decide an _exponent_ integer value $0 \leq E(b_{62} \cdots b_{52}) \leq 2047$ which determines the integer scale $-1023 \leq k \leq 1024$ of the diadic interval $f(b_{63} \cdots b_{0}) \in [2^k, 2^{k+1})$ or $f(b_{63}, \ldots, b_{0}) \in (-2^{k+1}, -2^k]$, depending on the sign.
+  $$
+    k = E(b_{62} \cdots b_{52}) - 1023
+  $$
+- The $52$ least significant bits decide the _fractional_ or _decimal_ part $d(b_{51} \cdots b_{0}) \in [1, 2)$, which serves to evenly distribute floats within the diadic interval.
+
+<div style:overflow-x="auto">{@html iee754}</div>
+
+This `f64` encoding can be thought of as an equidistant placement of numbers within numerous binary orders of magnitude: each diadic interval $[2^k, 2^{k+1})$ or $(-2^{k+1}, -2^k]$ has $2^{52}$ evenly distributed numbers.
+
+As the name _floating_ suggests, `f64` technically encodes equivalence classes of intervals in the extended reals $\bbR \cup \{-\infty, \infty\}$ as opposed to specific points.
+That is to say, numbers of extremely large magnitude are identified with infinite values, while the remainder of numbers are identified with a point representable by a binary expansion as $f(b_{63}\cdots b_{0})$ above.
+For example, if we want to know the `f64` representation of $x \in \bbR$, we perform the following.
+
+- Get a bit value associated to its sign.
+  $$
+    b_{63} = \left\{\begin{array}{rl} 1 & x \geq 0 \\ 0 & x < 0 \end{array}\right.
+  $$
+- Calculate the binary order of magnitude.
+  $$
+    k = \lfloor\log_2|x|\rfloor
+  $$
+  All $k \geq 1024$ get assigned to $\pm\infty$, which has the encoding $f(b_{63}1\cdots10\cdots0)$.
+  All $k < -1023$ get assigned to $\pm0$, which has the encoding $f(b_{63}0\cdots0)$.
+  All $-1023 \leq k < 1024$ are then associated with the respective $11$-bit binary expansion of the exponent part.
+  $$
+    E(b_{62}\cdots b_{52}) = k + 1023 \in \{0, \ldots, 2047\}
+  $$
+- For those numbers $x$ with modest binary orders of magnitude $-1023 \leq k < 1024$, we consider the fractional part of the binary order of magnitude.
+  $$
+     r = |x|2^{-k} \in [1, 2)
+  $$
+  From here, we get the binary representation $d(b_{51}\cdots b_{0})$ of the greatest integer $m$ such that $2^{-52}m < r - 1$.
+  That is to say, the bits $b_{51}\cdots b_{0}$ are decided so that
+  $$
+    r - 1 = d(b_{51}\cdots b_{0}) + \epsilon = \sum_{i=1}^{52} b_{52-i} 2^{-i} + \epsilon
+  $$
+  where $\epsilon \in [0, 2^{-52})$.
+  This decides our encoding $f(b_{63}\cdots b_{0})$.
+
+From cardinalities, it is no surprise that our map $\bbR \cup \{-\infty, \infty\} \rightarrow \{0, 1\}^{64}$ is non-injective.
+However, despite the fact that the encoding intuitively assigns equal amounts of real numbers in each binary order of magnitude, we clearly see some interesting and unavoidable artifacts.
+For instance, there is such a thing as
+$$
+  -0 = f(10\cdots0) \neq f(0\cdots0) = 0
+$$
+and the encodings $f(b_{63}1\cdots 1 b_{51} \cdots b_{0})$ are deemed _not-a-number_ `NaN` for bit sequences $b_{51}\cdots b_{0} \neq 0\cdots 0$.
+
+## More examples
+
+The next measure we introduce is the `Uniform` measure, which seeks to maximize entropy across an interval $[a, b]$.
+Recall that this means to us that the outputs of its sampling implementation will be numbers `x` with `a <= x && x <= b`, and these indeterministic samples will seem to have equal likelihood (hence the name _uniform_) and no sequential pattern with repeated calls to the sampler.
 
 <Statement {...uniform} />
 
@@ -195,7 +272,7 @@ We can test that our `Uniform` distribution indeed samples points in a fashion t
 <Statement {...exponential} />
 
 The implementation of `Exponential` uses `Uniform` to obtain a sample between $[0, 1)$ and map it via the function $u \mapsto -\frac{1}{\lambda}\log(1-u) \in [0, \infty)$.
-Due to the concavity of the logarithm, the `Exponential` measure tends to accumulate samples near the origin.
+Due to the concavity of the logarithm, the `Exponential` measure tends to accumulate samples near the origin, and the typical distance from origin is inversely proportional to the rate parameter $\lambda$.
 
 ```
 {../code/src/sampling/examples.rs:34..40}

@@ -9,6 +9,9 @@ pub struct Exponential {
 
 impl Exponential {
     pub fn new(lambda: f64) -> Self {
+        if lambda <= 0.0 {
+            panic!("Exponential measures require positive rates.");
+        }
         Self {
             lambda,
             inner: Uniform::new(0.0, 1.0),

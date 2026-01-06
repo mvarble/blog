@@ -3,7 +3,7 @@ type: statement
 kind: definition
 ---
 
-The `Exponential` measure is defined like so.
+The `Exponential` measure is defined in terms of a _rate_ $\lambda > 0$ like so.
 
 ```
 {../code/src/sampling/exponential.rs:4..}

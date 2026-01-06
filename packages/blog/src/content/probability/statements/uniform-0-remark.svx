@@ -3,32 +3,6 @@ type: statement
 kind: remark
 ---
 
-<script>
-  import iee754 from '../assets/ieee-754.svg?raw';
-</script>
-
-This implementation may look a bit peculiar if one is not very familiar with $64$-bit floats `f64`, which serve to encode the real numbers $\bbR$ with $64$ bits $(b_0, \ldots, b_{63}) \in \{0, 1\}^{64}$ like so.
-$$
-  \begin{aligned}
-    f(b_{63} \cdots b_{0}) &= (-1)^{b_{63}} 2^{E(b_{62} \cdots b_{52}) - 1023} \Big( 1 + d(b_{51} \cdots b_{0}) \Big) \\
-    E(b_{62} \cdots b_{52}) &= \sum_{i=0}^{10} b_{52+i} 2^i \\
-    d(b_{51} \cdots b_{0}) &= \sum_{i=1}^{52} b_{52-i} 2^{-i}
-  \end{aligned}
-$$
-This encoding of floating-point numbers $f(b_{63} \cdots b_{0}) \in \bbR$ can be intuitively understood as partitioning the real numbers $\bbR$ first into diadic intervals $[2^n, 2^{n+1})$ and $(-2^{n+1}, -2^n]$ for integers $n$, choosing finitely many of these intervals ($12$ bits worth of them), and distributing $52$ bits of instances to each such interval.
-The bits $b_{63}\cdots b_{0}$ determine the `f64` instance $f(b_{63} \cdots b_{0})$ as such.
-
-- The most significant bit $b_{63}$ determines the sign of the float $f(b_{63} \cdots b_{0})$.
-- The next $11$ most significant bits decide an _exponent_ integer value $0 \leq E(b_{62} \cdots b_{52}) \leq 2047$ which determines the integer scale $-1023 \leq n \leq 1024$ of the diadic interval $f(b_{63} \cdots b_{0}) \in [2^n, 2^{n+1})$ or $f(b_{63}, \ldots, b_{0}) \in (-2^{n+1}, -2^n]$, depending on the sign.
-  $$
-    n = E(b_{62} \cdots b_{52}) - 1023
-  $$
-- The $52$ least significant bits decide the _fractional_ or _decimal_ part $d(b_{51} \cdots b_{0}) \in [1, 2)$, which serves to evenly distribute floats within the diadic interval.
-
-<div style:overflow-x="auto">{@html iee754}</div>
-
-This `f64` encoding can be thought of as distributing numbers uniformly within binary orders of magnitude: each diadic interval $[2^n, 2^{n+1})$ or $(-2^{n+1}, -2^n]$ has $2^{52}$ evenly distributed numbers.
-
 Our implementation of `Uniform` is designed to sample $52$ bits with maximum entropy by leveraging `Rng::next_u64` and dropping the $12$ least-significant bits.
 It uses these $52$ bits to generate an output $f(01\cdots1b_{63}\cdots b_{12})$ whose value is one of the equi-distributed instances within the dyadic interval $[1, 2)$.
 This value is then scaled to produce $x \in [a, b]$.
@@ -86,16 +60,6 @@ Below is a table of all $52$-bit sequences and the corresponding float which wou
   </div>
 </div>
 
-In these events, we do not disambiguate between whether `Uniform` is actually over $[1, 2]$ or $[1, 2)$.
-More generally, we do not disambiguate whether `Uniform` is over $[a, b]$, $[a, b)$, $(a, b]$, or $(a, b)$ for points $a$ and $b$.
-While the implementation _will_ result in one of the four types of intervals on selection of $a$ and $b$, our intervals will typically have $52$ bits of entropy and so misidentifying whether or not endpoints will be sampled is only likely to be empirically identified after many samples (like, 3 quadrillion).
-Furthermore, as suggested in the name _floating_ points, `f64` instances could be thought of as equivalence classes of intervals of length $2^{\lfloor\log_2|x|\rfloor-52}$, so we can in a loose sense say that the endpoints of an interval do not matter.
-As example, the floating point representation of $0$ is $f(0\cdots0)$.
-$$
-  \begin{aligned}
-    f(0\cdots0)
-    &= (-1)^0 \Big( 1 + d(0\cdots0) \Big) 2^{E(0\cdots0) - 1023} \\
-    &= 2^{-1023}
-  \end{aligned}
-$$
-When we get to the mathematical definition of the `Uniform` measure, it too will have this property of being identified between the different interval types.
+In these events, we do not disambiguate between whether `Uniform` is actually over $[1, 2]$ or $[1, 2)$, since $2$ is not sampled only due to the nature of its encoding in `f64`; should an endpoint $b$ belong to the interior of the dyadic interval of size $2^{\lfloor\log_2|b|\rfloor-52}$ associated with its `f64` equivalence class, it _would_ be sampleable.
+In other words, `Uniform` _will_ technically sample points within one of $[a, b]$, $[a, b)$, $(a, b]$, or $(a, b)$ for endpoints $a$ and $b$, but _which_ type of interval is sampled is an artifact of the binary encoding of `f64`.
+As we will later see, the mathematical definition of `Uniform` will not be able to disambiguate the difference between $[a, b]$, $[a, b)$, $(a, b]$, or $(a, b)$, so we will not either.
