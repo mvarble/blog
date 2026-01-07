@@ -8,6 +8,10 @@ export class ProbabilityLibrary {
         $state(undefined);
     uniform_samples?: ((a: number, b: number, samples: number) => number[]) | undefined =
         $state(undefined);
+    exponential_samples?: ((lambda: number, samples: number) => number[]) | undefined =
+        $state(undefined);
+    gaussian_samples?: ((mu: number, sigma: number, samples: number) => number[]) | undefined =
+        $state(undefined);
 
     constructor() {
         wasmLoader(
@@ -17,6 +21,8 @@ export class ProbabilityLibrary {
                 'bernoulli_sample',
                 'bernoulli_sample_statistic',
                 'uniform_samples',
+                'exponential_samples',
+                'gaussian_samples',
             ],
             this,
         );

@@ -4,5 +4,5 @@ kind: remark
 ---
 
 One might be tempted to instead map `u` from `Rng::next_u64` via the operation $2^{-64}u$ and compare to $p$, but this implementation would be wrong, because of the fashion in which `f64` instances are allocated in the interval $[0, 1]$.
-There are $1023 \times 2^{52}$ instances of `f64` in $[0, 1]$, because there are $52$ bits of instances in each of the diadic intervals $[2^{-1023}, 2^{-1022}), \ldots, [2^{-1}, 2^0)$, there is $1$, and there is $-0$.
-These instances are not equi-distant (since the diadic intervals are increasing in size), and so there is a bias accumulation of points near $0$.
+There are $1023 \times 2^{52} + 2$ instances of `f64` in $[0, 1]$, because there are $52$ bits of instances in each of the diadic intervals $[2^{-1023}, 2^{-1022}), \ldots, [2^{-1}, 2^0)$, there is $1$, and there is $-0$.
+This map is non-injective, and the `f64` instances in this interval are not equi-distant (since the diadic intervals are increasing in size), and so there is a bias accumulation of points near $0$.

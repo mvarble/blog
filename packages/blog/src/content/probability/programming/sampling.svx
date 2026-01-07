@@ -20,6 +20,8 @@ title: Sampling
   import CoinFlip from '../components/coin-flip.svelte';
   import CoinFlipEmpirical from '../components/coin-flip-empirical.svelte';
   import Uniform from '../components/uniform.svelte';
+  import Exponential from '../components/exponential.svelte';
+  import Gaussian from '../components/gaussian.svelte';
 
   import iee754 from '../assets/ieee-754.svg?raw';
 </script>
@@ -64,7 +66,7 @@ Returning to the task at hand, we define a probability measure (for now) as the 
 With this (currently) simple interface, we can construct probability measures to our liking by coming up with different sampling mechanisms.
 Since the randomness comes from the underlying bytes produced by the pseudorandom number generator `R`, if we assume the implementation of `R` samples the $2^8$ options of a byte evenly, then we can intuitively produce desired behaviors in the probability measure implementation `ProbabilityMeasure<R>`.
 
-## Dirac
+## Dirac measure
 
 The simplest probability measure is one which exhibits no randomness.
 In other words, the sampling mechanism is determinisitic and constant.
@@ -84,7 +86,7 @@ let x = dirac.sample(&mut rng);
 assert_eq!(x, 1.0); // ... wait, why am I sampling if it is always 1.0?
 ```
 
-## Fair Bernoulli
+## Fair Bernoulli measure
 
 Is a probability measure with only one sample too simple?
 Let's create one with **two** samples!
@@ -168,7 +170,7 @@ $$
 $$
 and the encodings $f(b_{63}1\cdots 1 b_{51} \cdots b_{0})$ are deemed _not-a-number_ `NaN` for bit sequences $b_{51}\cdots b_{0} \neq 0\cdots 0$.
 
-## Bernoulli
+## (Unfair) Bernoulli measure
 
 Lets return back to our goal of creating a `Bernoulli` measure which depends on a parameter $p \in [0, 1]$.
 For each $x \in \bbR$, denote the value $\lfloor x \rfloor \in \bbZ$ to be the largest integer which is no greater than $x$.
@@ -270,7 +272,7 @@ I purposefully posed the general statistical problem in terms of the trait `Prob
 However, we will eventually have a rigorous formulation of statistics, as soon as we do so for `ProbabilityMeasure<R>`.
 This will require us to build more intuition with the programs we can build with this trait.
 
-## Uniform
+## Uniform measure
 
 The next measure we introduce is the `Uniform` measure, which seeks to maximize entropy across an interval $[a, b]$.
 Recall that this means to us that the outputs of its sampling implementation will be numbers `x` with `a <= x && x <= b`, and these indeterministic samples will seem to have equal likelihood (hence the name _uniform_) and no sequential pattern with repeated calls to the sampler.
@@ -287,17 +289,43 @@ We can test that our `Uniform` distribution indeed samples points in a fashion t
 {../code/src/sampling/examples.rs:25..31}
 ```
 
-## Exponential
+## Exponential measure
 
 <Statement {...exponential} />
 
-The implementation of `Exponential` uses `Uniform` to obtain a sample between $[0, 1)$ and map it via the function $u \mapsto -\frac{1}{\lambda}\log(1-u) \in [0, \infty)$.
-Due to the concavity of the logarithm, the `Exponential` measure tends to accumulate samples near the origin, and the typical distance from origin is inversely proportional to the rate parameter $\lambda$.
+The implementation of `Exponential` uses `Uniform` to obtain a sample between $(0, 1)$ and map it via the function $u \mapsto -\frac{1}{\lambda}\log(u) \in [0, \infty)$.
+Note that the mapping function returns only positive values, so `Exponential` is a probability measure on $(0, \infty)$.
+Due to the concavity of the logarithm, the `Exponential` measure tends to accumulate samples near the origin.
+
+<Exponential />
 
 ```
 {../code/src/sampling/examples.rs:34..40}
 ```
 
-## Gaussian
+Note how the accumulation of samples near the origin is inversely proportional to $\lambda$.
+To see this, note that for $\alpha > 0$, a sample from `Exponential` with rate $\alpha \lambda$ is the same as scaling a sample from `Exponential` with rate $\lambda$ by $1/\alpha$.
+
+$$
+  -\frac{1}{\alpha\lambda} \log(u) = \frac{1}{\alpha} \Big(-\frac{1}{\lambda}\log(u) \Big)
+$$
+
+## Gaussian measure
 
 <Statement {...gaussian} />
+
+We are seeing a pattern develop, where `Gaussian` too samples using the implementation of `Uniform`.
+Given _two_ samples from `Uniform` on $(0, 1)$, the implementation of `Gaussian` transforms them via the map $(u_0, u_1) \mapsto \mu + \sqrt{-2\sigma\log(u_0)} \cos(2\pi u_1)$.
+
+<Gaussian />
+
+```
+{../code/src/sampling/examples.rs:43..49}
+```
+
+Note samples of `Gaussian` accumulate around the mean $\mu$ with distances monotonically related to $\sigma$.
+This can be supported by the fact that sampling a `Gaussian` with mean $\mu$ and standard-deviation $\sigma$ is the same thing as applying the operation $x \mapsto \mu + \sqrt\sigma x$ to a sample from `Gaussian` with mean $0$ and standard-deviation $1$.
+
+$$
+  \mu + \sqrt{-2\sigma\log(u_0)} \cos(2\pi u_1) = \mu + \sqrt\sigma \Big( \sqrt{-2\log(u_0)} \cos(2\pi u_1) \Big)
+$$

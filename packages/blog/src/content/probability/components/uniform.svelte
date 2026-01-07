@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount, untrack } from 'svelte';
+    import { untrack } from 'svelte';
     import NeedJavascript from '$lib/components/need-javascript.svelte';
     import lib from '../code.svelte';
 

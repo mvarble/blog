@@ -1,0 +1,5 @@
+---
+title: Modeling
+---
+
+In the previous section, we were introduced to the `ProbabilityMeasure` trait and multiple useful implementations, all of which leveraging the impure entropy of a mutable reference to an `Rng`.

@@ -4,7 +4,6 @@ kind: definition
 ---
 
 The Bernoulli measure is a probability measure which samples `bool` and--for some $p \in [0, 1]$--samples `true` with proportion $p$ and `false` with proportion $1-p$.
-This is done by scaling the `f64` interval $[0, 1]$ to the discrete `u64` interval $[0, 2^{64} - 1]$ and leveraging `Rng::next_u64` for our randomness.
 
 ```rs
 {../code/src/sampling/bernoulli.rs:4..}

@@ -2,3 +2,9 @@
 type: statement
 kind: definition
 ---
+
+The `Gaussian` measure is defined in terms of a _mean_ $\mu \in \bbR$ and a _standard-deviation_ $\sigma \in (0, \infty)$ like so.
+
+```
+{../code/src/sampling/gaussian.rs:6..}
+```

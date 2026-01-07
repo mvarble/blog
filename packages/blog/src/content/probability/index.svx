@@ -12,6 +12,7 @@ children:
   - filename: ./programming/index.svx
     children:
       - filename: ./programming/sampling.svx
+      - filename: ./programming/modeling.svx
 ---
 
 <script>

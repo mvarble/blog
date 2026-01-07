@@ -56,3 +56,8 @@ impl<R: Rng> ProbabilityMeasure<R> for Uniform {
         (rand_in_12 - 1.0) * self.scale + self.low
     }
 }
+
+pub const STANDARD_UNIFORM: Uniform = Uniform {
+    low: 0.0,
+    scale: 1.0,
+};
