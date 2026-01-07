@@ -1,11 +1,11 @@
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use super::{Bernoulli, Exponential, ProbabilityMeasure, Uniform};
+use super::{Bernoulli, Exponential, FairBernoulli, ProbabilityMeasure, Uniform};
 
 #[wasm_bindgen]
-pub fn bernoulli_sample(p: f64) -> bool {
+pub fn fair_bernoulli_sample() -> bool {
     let mut rng = rand::rng();
-    Bernoulli::new(p).sample(&mut rng)
+    FairBernoulli.sample(&mut rng)
 }
 
 #[wasm_bindgen]

@@ -1,0 +1,11 @@
+---
+type: statement
+kind: definition
+---
+
+The `FairBernoulli` measure is a probability measure which samples `bool` with maximal entropy.
+In other words, a sequence of repeated samples seems to be indeterministic and equally likely to return `true` as it is `false`.
+
+```rs
+{../code/src/sampling/fair_bernoulli.rs:4..}
+```

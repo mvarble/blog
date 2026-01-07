@@ -1,10 +1,18 @@
 <script lang="ts">
     import { tick, type Snippet } from 'svelte';
     let {
+        isLoading,
+        isSuccess,
         loading,
-        childLoading,
-        children,
-    }: { loading: boolean; childLoading?: Snippet; children: Snippet } = $props();
+        success,
+        failure,
+    }: {
+        isLoading: boolean;
+        isSuccess: boolean;
+        loading?: Snippet;
+        success: Snippet;
+        failure: Snippet;
+    } = $props();
     let ticked = $state(false);
     $effect(() => {
         tick().then(() => {
@@ -17,12 +25,16 @@
     <blockquote class="red">
         This component is interactive and requires javascript to be enabled.
     </blockquote>
-{:else if loading && childLoading}
-    {@render childLoading()}
-{:else if loading}
+{:else if isLoading && loading}
+    {@render loading()}
+{:else if isLoading}
     <blockquote class="blue">Loading...</blockquote>
+{:else if isSuccess}
+    {@render success()}
 {:else}
-    {@render children()}
+    <blockquote class="red">
+        {@render failure()}
+    </blockquote>
 {/if}
 
 <style>

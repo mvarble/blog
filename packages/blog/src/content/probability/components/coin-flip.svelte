@@ -71,8 +71,8 @@
         });
 
         $effect(() => {
-            if (rotating && lib.bernoulli_sample) {
-                newSample = lib.bernoulli_sample(0.5);
+            if (rotating && lib.fair_bernoulli_sample) {
+                newSample = lib.fair_bernoulli_sample();
                 flips = baseFlips + (currentSample == newSample ? 0 : 1);
                 t = 0.0;
             }
@@ -108,25 +108,32 @@
     });
 </script>
 
-<NeedJavascript loading={lib.loading}>
-    {#if lib.bernoulli_sample}
-        <div class="component">
-            <div>
-                <button
-                    class="button"
-                    onclick={() => (rotating = true)}
-                    disabled={typeof coin == 'undefined' || rotating}>Randomly sample</button
-                >
-                <h4>{rotating ? 'spinning...' : sample ? 'heads' : 'tails'}</h4>
-            </div>
-            <div class="canvas" bind:clientWidth={width}>
-                <canvas bind:this={canvas}></canvas>
-            </div>
+{#snippet success()}
+    <div class="component">
+        <div>
+            <button
+                class="button"
+                onclick={() => (rotating = true)}
+                disabled={typeof coin == 'undefined' || rotating}>Randomly sample</button
+            >
+            <h4>{rotating ? 'spinning...' : sample ? 'heads' : 'tails'}</h4>
         </div>
-    {:else}
-        <p>The library unit <code>bernoulli_example</code> failed to load.</p>
-    {/if}
-</NeedJavascript>
+        <div class="canvas" bind:clientWidth={width}>
+            <canvas bind:this={canvas}></canvas>
+        </div>
+    </div>
+{/snippet}
+
+{#snippet failure()}
+    <p>The library unit <code>fair_bernoulli_example</code> failed to load.</p>
+{/snippet}
+
+<NeedJavascript
+    isLoading={lib.loading}
+    isSuccess={typeof lib.fair_bernoulli_sample != 'undefined'}
+    {success}
+    {failure}
+/>
 
 <style>
     .component {

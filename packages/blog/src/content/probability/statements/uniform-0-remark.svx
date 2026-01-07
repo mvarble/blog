@@ -43,7 +43,7 @@ Below is a table of all $52$-bit sequences and the corresponding float which wou
       $1 + 2^{-51} + 2^{-52}$
 
     </span>
-    <span>⋮</span>
+    <span style:text-align="center">⋮</span>
     <span>⋮</span>
     <span><code>0b1111111111111111111111111111111111111111111111111110</code></span>
     <span>
@@ -61,5 +61,5 @@ Below is a table of all $52$-bit sequences and the corresponding float which wou
 </div>
 
 In these events, we do not disambiguate between whether `Uniform` is actually over $[1, 2]$ or $[1, 2)$, since $2$ is not sampled only due to the nature of its encoding in `f64`; should an endpoint $b$ belong to the interior of the dyadic interval of size $2^{\lfloor\log_2|b|\rfloor-52}$ associated with its `f64` equivalence class, it _would_ be sampleable.
-In other words, `Uniform` _will_ technically sample points within one of $[a, b]$, $[a, b)$, $(a, b]$, or $(a, b)$ for endpoints $a$ and $b$, but _which_ type of interval is sampled is an artifact of the binary encoding of `f64`.
+In other words, `Uniform` _will_ technically sample points within one of $[a, b]$, $[a, b)$, $(a, b]$, or $(a, b)$ for endpoints $a$ and $b$, but _which_ type of interval is sampled is an artifact of the binary encoding and rounding conventions of `f64`.
 As we will later see, the mathematical definition of `Uniform` will not be able to disambiguate the difference between $[a, b]$, $[a, b)$, $(a, b]$, or $(a, b)$, so we will not either.

@@ -9,7 +9,9 @@ title: Sampling
   import * as prbDef from '../statements/prb-definition-0.svx';
   import * as prbDefRemark from '../statements/prb-definition-0-remark.svx';
   import * as dirac from '../statements/dirac-0.svx';
+  import * as fairBernoulli from '../statements/fair-bernoulli.svx';
   import * as bernoulli from '../statements/bernoulli-0.svx';
+  import * as bernoulliRemark from '../statements/bernoulli-0-remark.svx';
   import * as uniform from '../statements/uniform-0.svx';
   import * as uniformRemark from '../statements/uniform-0-remark.svx';
   import * as exponential from '../statements/exponential-0.svx';
@@ -22,7 +24,7 @@ title: Sampling
   import iee754 from '../assets/ieee-754.svg?raw';
 </script>
 
-The most natural way to model uncertainty in a computer program is for it produce values in a non-deterministic way, a process we refer to as _sampling_.
+The most natural way to model uncertainty in a computer program is for it produce values in a indeterministic way, a process we refer to as _sampling_.
 From the perspective of a typed language, we would like to offer functionality for users to simulate seemingly random outcomes for all sorts of types--e.g. `bool`, `[Card; 5]`, or `Vec<f64>`.
 This subsection will dive into how we will achieve this.
 
@@ -62,14 +64,14 @@ Returning to the task at hand, we define a probability measure (for now) as the 
 With this (currently) simple interface, we can construct probability measures to our liking by coming up with different sampling mechanisms.
 Since the randomness comes from the underlying bytes produced by the pseudorandom number generator `R`, if we assume the implementation of `R` samples the $2^8$ options of a byte evenly, then we can intuitively produce desired behaviors in the probability measure implementation `ProbabilityMeasure<R>`.
 
-## Simplest examples
+## Dirac
 
 The simplest probability measure is one which exhibits no randomness.
 In other words, the sampling mechanism is determinisitic and constant.
 
 <Statement {...dirac} />
 
-Note how the Dirac measure is a pretty useless probability measure as far as building programs goes.
+Note how the `Dirac` measure is a pretty useless probability measure as far as building programs goes.
 
 ```rs
 let mut rng = rand::rng();
@@ -82,12 +84,16 @@ let x = dirac.sample(&mut rng);
 assert_eq!(x, 1.0); // ... wait, why am I sampling if it is always 1.0?
 ```
 
+## Fair Bernoulli
+
 Is a probability measure with only one sample too simple?
 Let's create one with **two** samples!
 
-<Statement {...bernoulli} />
+<Statement {...fairBernoulli} />
 
-Let's use this to simulate a coin flip!
+We see that the implementation leverages the entropy from `Rng::next_u32` and reads only the least significant bit to produce `true` or `false`.
+This pattern of leveraging methods from `Rng` to produce entropy should be used in every implementation of `ProbabilityMeasure<R>`.
+Let's use this implementation to simulate a coin flip!
 
 <CoinFlip />
 
@@ -95,101 +101,11 @@ Let's use this to simulate a coin flip!
 {../code/src/sampling/examples.rs:5..8}
 ```
 
-We can also make a small program which samples many outcomes of the Bernoulli measure; the following example illustrates that the underlying parameter is empirically detectable via observing the proportion of outcomes which turn out to be heads.
-The bar-chart below shows this empirical proportion alongside the parameter $p$ of the Bernoulli measure.
-
-<CoinFlipEmpirical />
-
-```
-{../code/src/sampling/examples.rs:11..22}
-```
-
-## On statistics
-
-Notice how the empirical proportion `p_hat` returned by `bernoulli_sample_statistic`, i.e.
-```rs
-let p_hat = bernoulli_sample_statistic(p, sample_count);
-```
-is indeterministic (from the `Rng`) and is often times close to the parameter `p`; this shows us that our implementation of `Bernoulli` is behaving as we intuitively understand it.
-We also see that the frequency with which the output `hat_p` is close to `p` increases with the `sample_count`.
-Additionally, `hat_p` will necessarily look like `n / sample_count` for some integer `n`, so for small `sample_count` it may be _impossible_ for `hat_p == p` (e.g. `sample_count == 1 && p != 0 && p != 1`).
-
-The question of **how often** `p_hat` is within some neighborhood of `p` is something we at this moment cannot really answer, as it would depend on the underlying implementation of `Rng`.
-This example fits into a more general set of problems we can pose in code as trying to minimimze `simulation::cost_of_guess` below.
-
-```rs
-/// This is a measure with which we are very familiar.
-pub struct SomeMeasure {
-    pub parameter: P
-}
-impl ProbabilityMeasure<R> for SomeMeasure {
-    type Sample = X;
-    fn sample(&self, rng: &mut R) -> X {
-        // some implementation we know...
-    }
-}
-
-/// This is a function which maps outcomes of `SomeMeasure`.
-pub fn observation(x: X) -> F {
-    // some implementation we know...
-}
-
-/// This gives a cost between two instances of the parameter type.
-pub fn cost(p: P, p_hat: P) -> f64 {
-    // some implementation we know...
-}
-
-/// Randomly generate samples from an instance of `SomeMeasure`, map them via
-/// `observation`, and collect all the observations.
-pub fn get_observations(rng: &mut R, parameter: P, sample_count: usize) -> Vec<F> {
-    let some_measure = SomeMeasure { parameter };
-    let mut out = Vec::with_capacity(sample_count);
-    for _ in 0..sample_count {
-        out.push(observation(some_measure.sample(rng)));
-    }
-    out
-}
-
-/// TODO:
-/// We need to come up with an implementation of this which does a good job
-/// of keeping the cost below low.
-pub fn estimator(observations: Vec<F>) -> P {
-    todo!()
-}
-
-pub mod simulation {
-    const SOME_P: P = // some value we *do not* know
-
-    /// Sample observations from `SomeMeasure` with an unknown parameter, use
-    /// our estimator to guess the parameter, and evaluate the cost of our guess.
-    ///
-    /// Note that, though `cost` may be pure, we do not know the output of this
-    /// function, on account of the indeterminism of `get_observations`.
-    pub fn cost_of_guess(sample_count: usize) -> f64 {
-        let mut rng: R = // some arbitrary random number generator...
-        let observations = get_observations(&mut rng, SOME_P, sample_count);
-        let p_hat = estimator(observations);
-        cost(SOME_P, p_hat)
-    }
-}
-```
-
-Solving this general problem is **precisely** the task of statistics: to use mapped samples of an unknown probability measure to determine its underlying parameters.
-Not until we bridge a philosophical gap between the indeterminism implied by the impurities of `ProbabilityMeasure<R>` and the pure constructs of mathematics could we come up with a rigorous framework which can help us answer such questions.
-
-You or someone you know likely has taken a course in statistics and despised it.
-Introductory statistics typically involves memorizing implementations of `estimator` and subsequent _tests_ which help us determine the effectiveness of `p_hat` at estimating `p`.
-Memorizing these estimators and their tests can feel rather unsubstantiated when foundational questions remain unanswered, such as what it means to "observe" samples and how these tests are derived from facts about `SomeMeasure`.
-
-I purposefully posed the general statistical problem in terms of the trait `ProbabilityMeasure<R>` as opposed to using mathematical notation to avoid the need for answering what it means to "observe".
-However, we will eventually have a rigorous formulation of statistics, as soon as we do so for `ProbabilityMeasure<R>`.
-This will require us to build more intuition with the programs we can build with this trait.
+If we wanted to simulate an _unfair_ coin that is still indeterministic, we could instead construct a `Bernoulli` measure, which depends on a parameter $p \in [0, 1]$ deciding the proportion of outcomes which return `true` on repeated applications.
+If we assume every one of the $2^{64}$ instances of `u64` output by `Rng::next_u64` is equally likely (due to a maximal entropy), then we could use the ordering of `u64` to map roughly $p 2^{64}$ instances to `true` and $(1 - p)2^{64}$ instances to `false`.
+Of course, this implementation would require $p$ is encoded with a floating point number like `f64`, so to implement this algorithm, we need a good understanding of how floats are encoded.
 
 ## IEEE-754
-
-With the simple probability measures `Dirac` and `Bernoulli` out of the way, we now seek to explore those over the real numbers $\bbR$.
-The real numbers $\bbR$ are most often encoded by the floating point types like `f64`.
-Since `Rng` will only return (pseudo)random bytes, we need to understand how `f64` is encoded to create a measure on it.
 
 The `f64` type encodes the real numbers $\bbR$ with $64$ bits according to the [IEEE-754 standard](https://en.wikipedia.org/wiki/Double-precision_floating-point_format).
 Given a bit sequence $(b_0, \ldots, b_{63}) \in \{0, 1\}^{64}$, the associated floating point $f(b_{63} \cdots b_{0})$ is calculated like so.
@@ -252,7 +168,109 @@ $$
 $$
 and the encodings $f(b_{63}1\cdots 1 b_{51} \cdots b_{0})$ are deemed _not-a-number_ `NaN` for bit sequences $b_{51}\cdots b_{0} \neq 0\cdots 0$.
 
-## More examples
+## Bernoulli
+
+Lets return back to our goal of creating a `Bernoulli` measure which depends on a parameter $p \in [0, 1]$.
+For each $x \in \bbR$, denote the value $\lfloor x \rfloor \in \bbZ$ to be the largest integer which is no greater than $x$.
+As we said, a natural way to leverage the entropy of `Rng::next_u64` is to map $0, \ldots, \lfloor p 2^{64} \rfloor$ to `true` and $\lfloor p 2^{64} \rfloor + 1, \ldots, 2^{64} - 1$ to `false`.
+Thankfully, `f64` holds numbers as large as $2^{64}$, so we can calculate $\lfloor p2^{64} \rfloor$ in our implementation.
+
+<Statement {...bernoulli} />
+
+<Statement {...bernoulliRemark} />
+
+With this, we make a small program which samples many outcomes of the `Bernoulli` measure; the following example illustrates that the underlying parameter is empirically detectable via observing the proportion of outcomes which turn out to be heads.
+The bar-chart below shows this empirical proportion alongside the parameter $p$ of the `Bernoulli` measure.
+
+<CoinFlipEmpirical />
+
+```
+{../code/src/sampling/examples.rs:11..22}
+```
+
+## Statistics
+
+Notice how the empirical proportion `p_hat` returned by `bernoulli_sample_statistic`, i.e.
+```rs
+let p_hat = bernoulli_sample_statistic(p, sample_count);
+```
+is indeterministic (from the `Rng`) and is often times close to the parameter `p`; this shows us that our implementation of `Bernoulli` is behaving as we intuitively understand it.
+We also see that the frequency with which the output `hat_p` is close to `p` increases with the `sample_count`.
+Additionally, `hat_p` will necessarily look like `n / sample_count` for some integer `n`, so for small `sample_count` it may be _impossible_ for `hat_p == p` (e.g. `sample_count == 1 && p != 0 && p != 1`).
+
+The question of **how often** `p_hat` is within some neighborhood of `p` is something we cannot really answer, as it would depend on the underlying implementation of `Rng`.
+However, if we were to somehow have **theoretical** maximal entropy of `Rng`, whatever this may mean, we could see there existing a theory for answering this question.
+This example fits into a more general set of problems we can pose in code as trying to minimimze `simulation::cost_of_guess` below.
+
+```rs
+/// This is a measure with which we are very familiar.
+pub struct SomeMeasure {
+    pub parameter: P
+}
+impl ProbabilityMeasure<R> for SomeMeasure {
+    type Sample = X;
+    fn sample(&self, rng: &mut R) -> X {
+        // some implementation we know...
+    }
+}
+
+/// This is a function which maps outcomes of `SomeMeasure`.
+pub fn observation(x: X) -> F {
+    // some implementation we know...
+}
+
+/// This gives a cost between two instances of the parameter type.
+pub fn cost(p: P, p_hat: P) -> f64 {
+    // some implementation we know...
+}
+
+/// Randomly generate samples from an instance of `SomeMeasure`, map them via
+/// `observation`, and collect all the observations.
+pub fn get_observations(rng: &mut R, parameter: P, sample_count: usize) -> Vec<F> {
+    let some_measure = SomeMeasure { parameter };
+    let mut out = Vec::with_capacity(sample_count);
+    for _ in 0..sample_count {
+        out.push(observation(some_measure.sample(rng)));
+    }
+    out
+}
+
+/// TODO:
+/// We need to come up with an implementation of this which does a good job
+/// of keeping the cost below low.
+pub fn estimator(observations: Vec<F>) -> P {
+    todo!()
+}
+
+pub mod simulation {
+    const SOME_P: P = // some value we *do not* know
+
+    /// Sample observations from `SomeMeasure` with an unknown parameter, use
+    /// our estimator to guess the parameter, and evaluate the cost of our guess.
+    ///
+    /// Note that, though `cost` may be pure, we do not know the output of this
+    /// function, on account of the indeterminism of `get_observations`.
+    pub fn cost_of_guess(sample_count: usize) -> f64 {
+        let mut rng: R = // some arbitrary random number generator...
+        let observations = get_observations(&mut rng, SOME_P, sample_count);
+        let p_hat = estimator(observations);
+        cost(SOME_P, p_hat)
+    }
+}
+```
+
+Solving this general problem is **precisely** the task of statistics: to use mapped samples of an unknown probability measure to determine its underlying parameters.
+Not until we bridge a philosophical gap between the indeterminism implied by the impurities of `ProbabilityMeasure<R>` and the pure constructs of mathematics (i.e. have a theoretical notion for entropy) could we come up with a rigorous framework which can help us answer such questions.
+
+You or someone you know likely has taken a course in statistics and despised it.
+Introductory statistics typically involves memorizing implementations of `estimator` and subsequent _tests_ which help us determine the effectiveness of `p_hat` at estimating `p`.
+Memorizing these estimators and their tests can feel rather unsubstantiated when foundational questions remain unanswered, such as what it means to "observe" samples and how these tests are derived from facts about `SomeMeasure`.
+
+I purposefully posed the general statistical problem in terms of the trait `ProbabilityMeasure<R>` as opposed to using mathematical notation to avoid the need for answering what it means to "observe".
+However, we will eventually have a rigorous formulation of statistics, as soon as we do so for `ProbabilityMeasure<R>`.
+This will require us to build more intuition with the programs we can build with this trait.
+
+## Uniform
 
 The next measure we introduce is the `Uniform` measure, which seeks to maximize entropy across an interval $[a, b]$.
 Recall that this means to us that the outputs of its sampling implementation will be numbers `x` with `a <= x && x <= b`, and these indeterministic samples will seem to have equal likelihood (hence the name _uniform_) and no sequential pattern with repeated calls to the sampler.
@@ -269,6 +287,8 @@ We can test that our `Uniform` distribution indeed samples points in a fashion t
 {../code/src/sampling/examples.rs:25..31}
 ```
 
+## Exponential
+
 <Statement {...exponential} />
 
 The implementation of `Exponential` uses `Uniform` to obtain a sample between $[0, 1)$ and map it via the function $u \mapsto -\frac{1}{\lambda}\log(1-u) \in [0, \infty)$.
@@ -277,5 +297,7 @@ Due to the concavity of the logarithm, the `Exponential` measure tends to accumu
 ```
 {../code/src/sampling/examples.rs:34..40}
 ```
+
+## Gaussian
 
 <Statement {...gaussian} />

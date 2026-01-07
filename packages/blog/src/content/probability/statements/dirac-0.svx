@@ -3,7 +3,7 @@ type: statement
 kind: definition
 ---
 
-We define the Dirac measure like so.
+We define the `Dirac` measure like so.
 
 ```rs
 {../code/src/sampling/dirac.rs:4..}

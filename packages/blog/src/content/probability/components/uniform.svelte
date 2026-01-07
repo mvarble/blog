@@ -71,54 +71,63 @@
     });
 </script>
 
+{#snippet success()}
+    <button
+        class="button"
+        style:margin="0.5em 0"
+        onclick={() => (samples = lib.uniform_samples!(a, b, 50))}>Randomly sample</button
+    >
+    <svg bind:this={svg} viewBox="0 0 100 25" role="main">
+        <path d="M 5 10 L 95 10 {xIntsPath}" stroke="currentColor" fill="none" />
+        <text x={aX} y="3" font-size="4" text-anchor="middle" fill="currentColor">a</text>
+        <text x={bX} y="3" font-size="4" text-anchor="middle" fill="currentColor">b</text>
+        {#each uxInts as [u, x] (u)}
+            <text {x} y="20" font-size="4" text-anchor="middle" fill="currentColor">{u}</text>
+        {/each}
+        {#each samples as u (u)}
+            <circle
+                cx={toViewBox(u)}
+                cy="10"
+                r="1"
+                fill="hsla(var(--fg-accent-hue), 100%, 50%, 0.1)"
+                stroke="hsl(var(--fg-accent-hue), 100%, 50%)"
+                stroke-width="0.1"
+            />
+        {/each}
+        <path
+            d="M {aX + 1} 5 L {aX} 5 L {aX} 15 L {aX + 1} 15"
+            class="handle"
+            class:dragging={draggingA}
+            fill="none"
+            role="button"
+            tabindex="0"
+            onmousedown={() => (draggingA = true)}
+            onmouseup={() => (draggingA = false)}
+        />
+        <path
+            d="M {bX - 1} 5 L {bX} 5 L {bX} 15 L {bX - 1} 15"
+            class="handle"
+            class:dragging={draggingB}
+            fill="none"
+            role="button"
+            tabindex="0"
+            onmousedown={() => (draggingB = true)}
+            onmouseup={() => (draggingB = false)}
+        />
+    </svg>
+{/snippet}
+
+{#snippet failure()}
+    <p>The library unit <code>uniform_samples</code> failed to load.</p>
+{/snippet}
+
 <svelte:document {onmousemove} {onmouseup} />
-<NeedJavascript loading={lib.loading}>
-    {#if lib.uniform_samples}
-        <button
-            class="button"
-            style:margin="0.5em 0"
-            onclick={() => (samples = lib.uniform_samples!(a, b, 50))}>Randomly sample</button
-        >
-        <svg bind:this={svg} viewBox="0 0 100 25" role="main">
-            <path d="M 5 10 L 95 10 {xIntsPath}" stroke="currentColor" fill="none" />
-            <text x={aX} y="3" font-size="4" text-anchor="middle" fill="currentColor">a</text>
-            <text x={bX} y="3" font-size="4" text-anchor="middle" fill="currentColor">b</text>
-            {#each uxInts as [u, x] (u)}
-                <text {x} y="20" font-size="4" text-anchor="middle" fill="currentColor">{u}</text>
-            {/each}
-            {#each samples as u (u)}
-                <circle
-                    cx={toViewBox(u)}
-                    cy="10"
-                    r="1"
-                    fill="hsla(var(--fg-accent-hue), 100%, 50%, 0.1)"
-                    stroke="hsl(var(--fg-accent-hue), 100%, 50%)"
-                    stroke-width="0.1"
-                />
-            {/each}
-            <path
-                d="M {aX + 1} 5 L {aX} 5 L {aX} 15 L {aX + 1} 15"
-                class="handle"
-                class:dragging={draggingA}
-                fill="none"
-                role="button"
-                tabindex="0"
-                onmousedown={() => (draggingA = true)}
-                onmouseup={() => (draggingA = false)}
-            />
-            <path
-                d="M {bX - 1} 5 L {bX} 5 L {bX} 15 L {bX - 1} 15"
-                class="handle"
-                class:dragging={draggingB}
-                fill="none"
-                role="button"
-                tabindex="0"
-                onmousedown={() => (draggingB = true)}
-                onmouseup={() => (draggingB = false)}
-            />
-        </svg>
-    {/if}
-</NeedJavascript>
+<NeedJavascript
+    isLoading={lib.loading}
+    isSuccess={typeof lib.uniform_samples != 'undefined'}
+    {success}
+    {failure}
+/>
 
 <style>
     svg {
