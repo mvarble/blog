@@ -110,6 +110,7 @@ export function cmsSource(): Plugin {
 
         // otherwise, find the root document and initialize it
         const root = getRoot(db, filename);
+        console.log('ROOT: ', root);
         if (root) {
             const contents = await fs.promises.readFile(root.filename, 'utf8');
             const frontmatter = matter(contents).data;
@@ -167,6 +168,7 @@ export function cmsSource(): Plugin {
             const isSvx = filename.endsWith('.svx');
             const isBib = filename.endsWith('.bib');
             if (inContent && (isSvx || isBib)) {
+                console.log('HOT UPDATE: ', filename);
                 const file = await fs.promises.readFile(filename, 'utf8');
                 const frontmatter = isSvx ? matter(file).data : { type: 'bibtex' };
                 await hmr(filename, frontmatter, file); // this will update the database

@@ -18,7 +18,6 @@ export interface Statement extends TouchStatementInput {
 
 export function touchStatement(db: Database, input: TouchStatementInput): Statement {
     let mddocId: number;
-    let id: number;
     try {
         const mddoc = db
             .prepare(
@@ -26,11 +25,32 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
             )
             .get(input.filename, input.root, JSON.stringify(input.katexMacros));
         mddocId = (mddoc as { id: number }).id;
-
+    } catch (e) {
+        if (isUniqueConstraintError(e)) {
+            const mddoc = db
+                .prepare(
+                    'UPDATE mddocs SET katex_macros = ?, root = ?  WHERE filename = ? RETURNING id;',
+                )
+                .get(JSON.stringify(input.katexMacros), input.root, input.filename);
+            mddocId = (mddoc as { id: number }).id;
+        } else {
+            throw e;
+        }
+    }
+    try {
         db.prepare(
             'INSERT INTO page_mddocs (parent_page_id, imported_mddoc_id) VALUES (?, ?);',
         ).run(input.parentPageId, mddocId);
-
+    } catch (e) {
+        if (isUniqueConstraintError(e)) {
+            db.prepare('UPDATE page_mddocs SET parent_page_id = ? WHERE imported_mddoc_id = ?').run(
+                input.parentPageId,
+                mddocId,
+            );
+        }
+    }
+    let id: number;
+    try {
         const out = db
             .prepare(
                 `INSERT INTO statements (mddoc_id, slug, label, kind)
@@ -40,18 +60,6 @@ export function touchStatement(db: Database, input: TouchStatementInput): Statem
         id = (out as { id: number }).id;
     } catch (e) {
         if (isUniqueConstraintError(e)) {
-            const mddoc = db
-                .prepare(
-                    'UPDATE mddocs SET katex_macros = ?, root = ?  WHERE filename = ? RETURNING id;',
-                )
-                .get(JSON.stringify(input.katexMacros), input.root, input.filename);
-            mddocId = (mddoc as { id: number }).id;
-
-            db.prepare('UPDATE page_mddocs SET parent_page_id = ? WHERE imported_mddoc_id = ?').run(
-                input.parentPageId,
-                mddocId,
-            );
-
             const out = db
                 .prepare(
                     `UPDATE statements
