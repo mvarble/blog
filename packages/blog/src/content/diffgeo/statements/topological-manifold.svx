@@ -1,0 +1,13 @@
+---
+type: statement
+kind: definition
+---
+
+A _topological manifold of dimension $\dim$_ or a _topological $\dim$-manifold_ is a topological space $\manifold$ with the following properties.
+
+- $\manifold$ is Hausdorff (points may be separated by open sets).
+- $\manifold$ is second-countable (countable basis for topology).
+- $\manifold$ is locally Euclidean of dimension $\dim$ (each point of $\manifold$ has a neighborhood homeomorphic to an open subset of $\bbR^\dim$).
+
+A _coordinate chart_ on $\manifold$ is a pair $(\open, \chart)$, where $\open \subseteq \manifold$ is open and $\chart: \open \rightarrow \hat\open$ is a homeomorphism with $\hat\open = \chart\open \subseteq \bbR^\dim$.
+When $\point \in \manifold$ is such that $\chart(\point) = 0$, we say the chart $\chart$ is _centered at $\point$_.

@@ -1,0 +1,41 @@
+---
+type: post
+title: Notes on differential geometry
+created: 2026-02-03
+tags:
+  - mathematics
+  - geometry
+katex_macros:
+  \manifold: M
+  \dim: n
+  \open: U
+  \chart: \varphi
+  \point: p
+  \map: f
+---
+
+<script>
+  import Statement from '$lib/components/statement.svelte';
+  import * as topoManifold from './statements/topological-manifold.svx';
+  import * as smoothStructure from './statements/smooth-structure.svx';
+</script>
+
+During my studies at university, I never took a course in differential geometry.
+This is one of my biggest regrets as a student, since it seems like a very expressive and elegant theory, and it was easier back then to make time for such subjects.
+I have since picked up copies of Lee's introductory texts [](cite:lee2012) and [](cite:lee2018), and I have been reading them routinely.
+There is a lot of interplay between the primitive objects which define manifolds, and it is easy for me to lose sight of the big picture--especially if I find myself putting the book down for a few days (or \*gulp\* weeks).
+In order to minimize this warmup cost, I have made a quick reference of these primitive objects and their basic properties.
+I purposefully do not include deep technical details--that's what reading Lee is for.
+
+# Manifolds
+
+Before we get at all into the smooth or geometric structures, we have the notion of a _topological manifold_, which just gives us the _locally Euclidean_ notion and pins a fixed dimension for the space.
+
+<Statement {...topoManifold} />
+
+As the adjective suggests, topological manifolds are purely a topological concept, and their structure is sufficient for studying topological properties such as connectivity, compactness, and homeomorphic equivalence.
+To discuss notions of calculus and geometry, we need additional structure: this is supported by the fact that homeomorphisms do *not* preserve Euclidean differentiability.
+When choosing a definition of smoothness of a map $\map: \manifold \rightarrow \bbR$ on a manifold $\manifold$, we would like it to be preserved by coordinate representations $\map \circ \chart^{-1}: \hat\open \rightarrow \bbR$.
+In order for this to be the _defining_ property of smoothness of a map $\map: \manifold \rightarrow \bbR$, we need a structure on the coordinate charts.
+
+<Statement {...smoothStructure} />

@@ -12,6 +12,9 @@
 </div>
 
 <style>
+    :root {
+        --max-width: 1200px;
+    }
     h1 {
         text-decoration: underline;
         font: 500 calc(1.25 * var(--font-size-h1)) / 1.2 var(--font-family-heading);
