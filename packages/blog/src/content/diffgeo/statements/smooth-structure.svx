@@ -2,3 +2,12 @@
 type: statement
 kind: definition
 ---
+
+If $(\open, \chart)$, $(\otherOpen, \otherChart)$ are two charts of a manifold $\manifold$ with nonempty intersection $\open \cap \otherOpen \neq \emptyset$, the composite map $\otherChart \circ \chart^{-1}: \chart(\open \cap \otherOpen) \rightarrow \otherChart(\open \cap \otherOpen)$ is called the _transition map from $\chart$ to $\otherChart$_.
+By composition, it is a homeomorphism between open subsets $\chart(\open\cap\otherOpen), \otherChart(\open\cap\otherOpen)$ of the Euclidean space $\bbR^n$.
+The charts $(\open, \chart)$, $(\otherOpen, \otherChart)$ are said to be _smoothly compatible_ if either $\open \cap \otherOpen = \emptyset$ or the transition map $\otherChart \circ \chart^{-1}$ is a diffeomorphism.
+An _atlas for $\manifold$_ is a collection of charts whose domains cover $\manifold$.
+An atlas $\atlas$ is called a _smooth atlas_ if any two charts in $\atlas$ are smoothly compatible with each other.
+A smooth atlas is _maximal_ or _complete_ if it is not contained in any larger smooth atlas.
+A _smooth structure on $\manifold$_ is a maximal smooth atlas.
+A _smooth manifold_ is a pair $(\manifold, \atlas)$, where $\manifold$ is a topological manifold and $\atlas$ is a smooth structure on $\manifold$.

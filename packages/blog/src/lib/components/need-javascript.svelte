@@ -1,17 +1,17 @@
 <script lang="ts">
     import { tick, type Snippet } from 'svelte';
     let {
-        isLoading,
-        isSuccess,
+        isLoading = false,
+        isSuccess = true,
         loading,
         success,
         failure,
     }: {
-        isLoading: boolean;
-        isSuccess: boolean;
+        isLoading?: boolean;
+        isSuccess?: boolean;
         loading?: Snippet;
         success: Snippet;
-        failure: Snippet;
+        failure?: Snippet;
     } = $props();
     let ticked = $state(false);
     $effect(() => {
@@ -31,7 +31,7 @@
     <blockquote class="blue">Loading...</blockquote>
 {:else if isSuccess}
     {@render success()}
-{:else}
+{:else if failure}
     <blockquote class="red">
         {@render failure()}
     </blockquote>
