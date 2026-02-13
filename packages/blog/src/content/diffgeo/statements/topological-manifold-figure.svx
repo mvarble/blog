@@ -7,9 +7,13 @@ kind: figure
   import ManifoldCharts from '../components/manifold-charts.svelte';
 </script>
 
-Below is an interactive rendering of a $2$-manifold $\manifold$ as a subset of  $\bbR^3$.
-As you move your mouse around $\manifold$ in the left-hand figure, the hovered point $\point \in \manifold$ is associated with a chart $(\open, \chart)$.
-The right-hand figure shows the coordinate domain identification $\chart(\open) \subseteq\bbR^2$ and the coordinate $\chart(\point) \in \bbR^2$.
+Below is an interactive rendering of a set $\manifold \subseteq \bbR^3$ which is a $2$-manifold.
+As you move your mouse around $\manifold$ in the first figure, the hovered point $\point \in \manifold$ is associated with a chart $(\open, \chart)$ which is also rendered.
+The second figure shows the coordinate domain identification $\chart(\open) \subseteq\bbR^2$ and the coordinate $\chart(\point) \in \bbR^2$.
 As you move your mouse around over $\chart(\open) \subseteq \bbR^2$, you can see its homeomorphic identification with $\open \subseteq \manifold$.
 
 <ManifoldCharts />
+
+<small>
+  (Note that if you hold down the right mouse button over the first figure, the chart won't change; this helps you have a view of the chart while you are interacting with the second figure).
+  </small>

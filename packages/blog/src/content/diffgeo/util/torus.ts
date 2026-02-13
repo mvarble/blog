@@ -46,9 +46,17 @@ export interface CoordinateComposition {
     matrixInv: Matrix3;
 }
 
+function randomComposition(matrix: Matrix3, scaleBounds: [number, number]) {
+    const scalex = scaleBounds[0] + (scaleBounds[1] - scaleBounds[0]) * Math.random();
+    const scaley = scaleBounds[0] + (scaleBounds[1] - scaleBounds[0]) * Math.random();
+    const rotation = 2.0 * Math.PI * Math.random();
+    return matrix.scale(scalex, scaley).rotate(rotation);
+}
+
 export interface ChartCoordinates {
     domain: CoordinateDomain;
-    composition: CoordinateComposition;
+    preComposition: CoordinateComposition;
+    postComposition: CoordinateComposition;
 }
 
 export interface Chart {
@@ -83,13 +91,11 @@ export class Charts extends Group {
                 const radius = DELTA * (Math.SQRT1_2 + 0.25 * Math.random());
                 const u = DELTA * i;
                 const v = DELTA * j;
-                const scaleu = 1.25 * Math.random() + 0.5;
-                const scalev = 1.25 * Math.random() + 0.5;
-                const rotation = 2.0 * Math.PI * Math.random();
-                const matrix = new Matrix3()
-                    .identity()
-                    .scale(scaleu / radius, scalev / radius)
-                    .rotate(rotation);
+                const preMatrix = randomComposition(new Matrix3().identity(), [
+                    0.5 / radius,
+                    2.0 / radius,
+                ]);
+                const postMatrix = randomComposition(new Matrix3().identity(), [1.0, 1.5]);
                 return {
                     ambientCenter: new Vector3(TORUS_X(u, v), TORUS_Y(u, v), TORUS_Z(u, v)),
                     coordinates: {
@@ -97,9 +103,13 @@ export class Charts extends Group {
                             center: new Vector2(u, v),
                             radius,
                         },
-                        composition: {
-                            matrix,
-                            matrixInv: new Matrix3().copy(matrix).invert(),
+                        preComposition: {
+                            matrix: preMatrix,
+                            matrixInv: new Matrix3().copy(preMatrix).invert(),
+                        },
+                        postComposition: {
+                            matrix: postMatrix,
+                            matrixInv: new Matrix3().copy(postMatrix).invert(),
                         },
                     },
                 };
@@ -133,9 +143,13 @@ export class Charts extends Group {
                         center: new Vector2().copy(chart.coordinates.domain.center),
                         radius: chart.coordinates.domain.radius,
                     },
-                    composition: {
-                        matrix: new Matrix3().copy(chart.coordinates.composition.matrix),
-                        matrixInv: new Matrix3().copy(chart.coordinates.composition.matrixInv),
+                    preComposition: {
+                        matrix: new Matrix3().copy(chart.coordinates.preComposition.matrix),
+                        matrixInv: new Matrix3().copy(chart.coordinates.preComposition.matrixInv),
+                    },
+                    postComposition: {
+                        matrix: new Matrix3().copy(chart.coordinates.postComposition.matrix),
+                        matrixInv: new Matrix3().copy(chart.coordinates.postComposition.matrixInv),
                     },
                 },
             };
@@ -166,11 +180,12 @@ export class Charts extends Group {
         const uv = solveTorusUV(point);
         return this.current.map((current) => {
             const coordinates = this.charts[current].coordinates;
-            const st = new Vector2().copy(uv).sub(coordinates.domain.center);
-            st.x = wrap(st.x);
-            st.y = wrap(st.y);
-            st.applyMatrix3(coordinates.composition.matrix);
-            return st;
+            const inV = new Vector2().copy(uv).sub(coordinates.domain.center);
+            inV.x = wrap(inV.x);
+            inV.y = wrap(inV.y);
+            return inV
+                .applyMatrix3(coordinates.postComposition.matrixInv)
+                .applyMatrix3(coordinates.preComposition.matrix);
         });
     }
 
@@ -195,7 +210,9 @@ export class Charts extends Group {
 
         const positions3d = Array.from({ length: 3 * this.current.length * VERTICES });
         const positions2d = Array.from({ length: 3 * this.current.length * VERTICES });
+        const uvs = Array.from({ length: 2 * this.current.length * VERTICES });
         const indices = Array.from({ length: 3 * this.current.length * FACES });
+
         for (let k = 0; k < this.current.length; k++) {
             const startIndex = k * VERTICES;
             const startFaceIndex = k * FACES;
@@ -203,7 +220,8 @@ export class Charts extends Group {
             const chart = this.charts[current];
             const uv = chart.coordinates.domain.center;
             const radius = chart.coordinates.domain.radius;
-            const matrix = chart.coordinates.composition.matrix;
+            const preMatrix = chart.coordinates.preComposition.matrix;
+            const postMatrixInv = chart.coordinates.postComposition.matrixInv;
 
             positions3d[3 * startIndex + 0] = SCALED_TORUS_X(uv.x, uv.y);
             positions3d[3 * startIndex + 1] = SCALED_TORUS_Y(uv.x, uv.y);
@@ -213,6 +231,9 @@ export class Charts extends Group {
             positions2d[3 * startIndex + 1] = 0.0;
             positions2d[3 * startIndex + 2] = 0.0;
 
+            uvs[2 * startIndex + 0] = 0.5;
+            uvs[2 * startIndex + 1] = 0.5;
+
             for (let ring = 0; ring < RINGS; ring++) {
                 const r = (radius * (ring + 1)) / RINGS;
                 for (let edge = 0; edge < EDGES; edge++) {
@@ -221,7 +242,12 @@ export class Charts extends Group {
                     const dv = r * Math.sin(theta);
                     const u = uv.x + du;
                     const v = uv.y + dv;
-                    const st = new Vector2(du, dv).applyMatrix3(matrix);
+                    const st = new Vector2(du, dv)
+                        .applyMatrix3(postMatrixInv)
+                        .applyMatrix3(preMatrix);
+
+                    const uvx = 0.5 + st.x / 4;
+                    const uvy = 0.5 + st.y / 4;
 
                     const vertexIndex = 1 + startIndex + EDGES * ring + edge;
 
@@ -232,6 +258,9 @@ export class Charts extends Group {
                     positions2d[3 * vertexIndex + 0] = st.x;
                     positions2d[3 * vertexIndex + 1] = st.y;
                     positions2d[3 * vertexIndex + 2] = 0.0;
+
+                    uvs[2 * vertexIndex + 0] = uvx;
+                    uvs[2 * vertexIndex + 1] = uvy;
 
                     if (ring == 0) {
                         const edgeIndex = startFaceIndex + edge;
@@ -269,6 +298,7 @@ export class Charts extends Group {
             'position',
             new Float32BufferAttribute(positions3d as number[], 3),
         );
+        this.geometry3d.setAttribute('uv', new Float32BufferAttribute(uvs as number[], 2));
         this.geometry3d.setIndex(indices as number[]);
         this.geometry3d.computeVertexNormals();
         this.geometry3d.computeBoundingSphere();
@@ -276,6 +306,7 @@ export class Charts extends Group {
             'position',
             new Float32BufferAttribute(positions2d as number[], 3),
         );
+        this.geometry2d.setAttribute('uv', new Float32BufferAttribute(uvs as number[], 2));
         this.geometry2d.setIndex(indices as number[]);
         this.geometry2d.computeVertexNormals();
         this.geometry2d.computeBoundingSphere();

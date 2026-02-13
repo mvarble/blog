@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onDestroy, untrack } from 'svelte';
+    import { onDestroy } from 'svelte';
     import {
         Scene,
         PerspectiveCamera,
@@ -14,13 +14,17 @@
         MeshBasicMaterial,
         SphereGeometry,
         OrthographicCamera,
-        CircleGeometry,
         Object3D,
+        SRGBColorSpace,
+        TextureLoader,
+        PlaneGeometry,
+        Float32BufferAttribute,
     } from 'three';
     import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
     import NeedJavascript from '$lib/components/need-javascript.svelte';
     import { Charts, torus, TORUS, type Chart } from '../util/torus';
+    import gridTexture from '../static/grid.png';
 
     // parameters (could be props)
     const aspect = 1.0;
@@ -34,6 +38,7 @@
     const ambientLight2d = new AmbientLight(0xffffff, 1);
     const camera2d = new OrthographicCamera(-3.0, 3.0, 3.0, -3.0);
     const raycaster = new Raycaster();
+    const textureLoader = new TextureLoader();
 
     // initialization
     scene3d.add(ambientLight3d);
@@ -60,6 +65,12 @@
     const point3d = new Mesh(point3dGeometry, point3dMaterial);
     scene3d.add(point3d);
 
+    // Coordinate grid
+    const gridGeometry = new PlaneGeometry(4, 4);
+    gridGeometry.setAttribute('uv', new Float32BufferAttribute([0, 0, 1, 0, 0, 1, 1, 1], 2));
+    const gridMaterial = new MeshBasicMaterial();
+    scene2d.add(new Mesh(gridGeometry, gridMaterial));
+
     // Coordinate domain
     const domainGeometry = charts.geometry2d;
     const domainMaterial = new MeshBasicMaterial({ color: 0xe295f0 });
@@ -73,15 +84,33 @@
     scene2d.add(point2d);
 
     // state
+    let chart: Chart | undefined = $state(undefined);
+
     let width3d: number | undefined = $state(undefined);
     let canvas3d: HTMLCanvasElement | undefined = $state(undefined);
-    let canvas2d: HTMLCanvasElement | undefined = $state(undefined);
     let hitPoint3d: Vector3 | undefined = $state(TORUS(0.0, 0.5 * Math.PI));
-    let hitPoint2d: Vector3 | undefined = $state(undefined);
-    let chart: Chart | undefined = $state(undefined);
+
+    let canvas2d: HTMLCanvasElement | undefined = $state(undefined);
     let width2d: number | undefined = $state(undefined);
+    let hitPoint2d: Vector3 | undefined = $state(undefined);
+
+    let canvasMap: HTMLCanvasElement | undefined = $state(undefined);
+    let widthMap: number | undefined = $state(undefined);
+    let heightMap: number | undefined = $state(undefined);
 
     // reactivity
+    $effect(() => {
+        textureLoader.loadAsync(gridTexture).then((map) => {
+            map.colorSpace = SRGBColorSpace;
+            chartsMaterial.map = map;
+            chartsMaterial.needsUpdate = true;
+            domainMaterial.map = map;
+            domainMaterial.needsUpdate = true;
+            gridMaterial.map = map;
+            gridMaterial.needsUpdate = true;
+        });
+    });
+
     $effect(() => {
         if (!canvas3d) return;
 
@@ -89,7 +118,9 @@
         renderer.setClearAlpha(0.0);
 
         const orbitControls = new OrbitControls(camera3d, canvas3d);
-        camera3d.position.set(0.0, 0.0, 10.0);
+        orbitControls.enablePan = false;
+        orbitControls.enableZoom = false;
+        camera3d.position.set(0.0, 0.0, 7.5);
         camera3d.lookAt(0.0, 0.0, 0.0);
         orbitControls.target.set(0.0, 0.0, 0.0);
         orbitControls.update();
@@ -106,24 +137,6 @@
         return () => {
             renderer.setAnimationLoop(null);
         };
-    });
-
-    $effect(() => {
-        if (!hitPoint3d) return;
-        point3d.position.copy(hitPoint3d);
-        charts.updateChartsFromNearest(hitPoint3d);
-        chart = charts.getCurrent()[0];
-        const st = charts.chartsCoords(hitPoint3d)[0]!;
-        point2d.position.set(st.x, st.y, 0.0);
-    });
-
-    $effect(() => {
-        if (!hitPoint2d || !chart) return;
-        point2d.position.copy(hitPoint2d);
-        const uv = new Vector2(hitPoint2d.x, hitPoint2d.y)
-            .applyMatrix3(chart.coordinates.composition.matrixInv)
-            .add(chart.coordinates.domain.center);
-        point3d.position.copy(TORUS(uv.x, uv.y));
     });
 
     $effect(() => {
@@ -149,6 +162,68 @@
         };
     });
 
+    $effect(() => {
+        if (!canvasMap || typeof widthMap == 'undefined' || typeof heightMap == 'undefined') return;
+        const ctx = canvasMap.getContext('2d');
+        canvasMap.width = widthMap;
+        canvasMap.height = heightMap;
+        if (!ctx) return;
+        ctx.clearRect(0, 0, widthMap, heightMap);
+        ctx.lineWidth = 1.5;
+        const aspect = widthMap / heightMap;
+        const rBase = 200.0;
+        const d = 15.0;
+        const e = 0.5;
+        if (widthMap > heightMap) {
+            const cx = 0.525 * widthMap;
+            const cy = 0.5 * heightMap;
+            const r = rBase / aspect;
+            const t0 = -Math.PI / 2.0 - 0.5;
+            const t1 = -Math.PI / 2.0 + 0.5;
+            const c1 = Math.cos(t1);
+            const s1 = Math.sin(t1);
+            ctx.arc(cx, cy, r, t0, t1);
+            ctx.moveTo(cx + r * c1, cy + r * s1);
+            ctx.lineTo(cx + r * c1 + d * s1 + e * d * c1, cy + r * s1 - d * c1 + e * d * s1);
+            ctx.moveTo(cx + r * c1, cy + r * s1);
+            ctx.lineTo(cx + r * c1 + d * s1 - e * d * c1, cy + r * s1 - d * c1 - e * d * s1);
+            ctx.stroke();
+        } else {
+            const cx = 0.525 * widthMap;
+            const cy = 0.525 * heightMap;
+            const r = rBase * aspect;
+            const t0 = -0.5;
+            const t1 = 0.5;
+            const c1 = Math.cos(t1);
+            const s1 = Math.sin(t1);
+            ctx.arc(cx, cy, r, t0, t1);
+            ctx.moveTo(cx + r * c1, cy + r * s1);
+            ctx.lineTo(cx + r * c1 + d * s1 + e * d * c1, cy + r * s1 - d * c1 + e * d * s1);
+            ctx.moveTo(cx + r * c1, cy + r * s1);
+            ctx.lineTo(cx + r * c1 + d * s1 - e * d * c1, cy + r * s1 - d * c1 - e * d * s1);
+            ctx.stroke();
+        }
+    });
+
+    $effect(() => {
+        if (!hitPoint3d) return;
+        point3d.position.copy(hitPoint3d);
+        charts.updateChartsFromNearest(hitPoint3d);
+        chart = charts.getCurrent()[0];
+        const st = charts.chartsCoords(hitPoint3d)[0]!;
+        point2d.position.set(st.x, st.y, 0.0);
+    });
+
+    $effect(() => {
+        if (!hitPoint2d || !chart) return;
+        point2d.position.copy(hitPoint2d);
+        const uv = new Vector2(hitPoint2d.x, hitPoint2d.y)
+            .applyMatrix3(chart.coordinates.preComposition.matrixInv)
+            .applyMatrix3(chart.coordinates.postComposition.matrix)
+            .add(chart.coordinates.domain.center);
+        point3d.position.copy(TORUS(uv.x, uv.y));
+    });
+
     // resource cleanup
     onDestroy(() => {
         manifoldGeometry.dispose();
@@ -170,7 +245,6 @@
         camera: PerspectiveCamera | OrthographicCamera,
         object: Object3D,
     ): Vector3 | undefined {
-        if (!canvas) return;
         const rect = canvas.getBoundingClientRect();
         const mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
         const mouseY = -((e.clientY - rect.top) / rect.height) * 2 + 1;
@@ -182,11 +256,11 @@
         return undefined;
     }
     function onmousemove3d(e: MouseEvent) {
-        if (!canvas3d) return;
+        if (!canvas3d || e.buttons != 0) return;
         hitPoint3d = onmousemove(e, canvas3d, camera3d, manifold);
     }
     function onmousemove2d(e: MouseEvent) {
-        if (!canvas2d) return;
+        if (!canvas2d || e.buttons != 0) return;
         hitPoint2d = onmousemove(e, canvas2d, camera2d, domain);
     }
 </script>
@@ -199,6 +273,9 @@
         <div class="canvas" bind:clientWidth={width2d}>
             <canvas bind:this={canvas2d} onmousemove={onmousemove2d}></canvas>
         </div>
+        <div class="map" bind:clientWidth={widthMap} bind:clientHeight={heightMap}>
+            <canvas bind:this={canvasMap}></canvas>
+        </div>
     </div>
 {/snippet}
 
@@ -210,17 +287,21 @@
         align-items: center;
         flex-wrap: wrap;
         justify-content: center;
-    }
-    .component > * {
-        width: 50%;
-        flex-grow: 1;
-        max-width: 500px;
-    }
-    .component > :first-child {
-        text-align: center;
+        position: relative;
     }
     .canvas {
+        width: 50%;
+        min-width: 250px;
+        max-width: 500px;
+        flex-grow: 1;
         overflow: hidden;
-        min-width: 150px;
+    }
+    .map {
+        pointer-events: none;
+        position: absolute;
+        top: left;
+        left: 0;
+        width: 100%;
+        height: 100%;
     }
 </style>
