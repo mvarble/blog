@@ -23,6 +23,8 @@
     import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
     import NeedJavascript from '$lib/components/need-javascript.svelte';
+    import { theme } from '$lib/state';
+    import Katex from '$lib/components/katex.svelte';
     import { Charts, torus, TORUS, type Chart } from '../util/torus';
     import gridTexture from '../static/grid.png';
 
@@ -68,7 +70,7 @@
     // Coordinate grid
     const gridGeometry = new PlaneGeometry(4, 4);
     gridGeometry.setAttribute('uv', new Float32BufferAttribute([0, 0, 1, 0, 0, 1, 1, 1], 2));
-    const gridMaterial = new MeshBasicMaterial();
+    const gridMaterial = new MeshBasicMaterial({ color: 0xfefefe });
     scene2d.add(new Mesh(gridGeometry, gridMaterial));
 
     // Coordinate domain
@@ -98,6 +100,12 @@
     let widthMap: number | undefined = $state(undefined);
     let heightMap: number | undefined = $state(undefined);
 
+    let textxMap: number = $state(0);
+    let textyMap: number = $state(0);
+
+    let textxManifold: number = $state(0);
+    let textxPlane: number = $state(0);
+
     // reactivity
     $effect(() => {
         textureLoader.loadAsync(gridTexture).then((map) => {
@@ -109,6 +117,15 @@
             gridMaterial.map = map;
             gridMaterial.needsUpdate = true;
         });
+    });
+
+    $effect(() => {
+        if (theme.current == 'dark') {
+            gridMaterial.color.set(0xc8c8c8);
+        } else {
+            gridMaterial.color.set(0xfefefe);
+        }
+        gridMaterial.needsUpdate = true;
     });
 
     $effect(() => {
@@ -164,38 +181,46 @@
 
     $effect(() => {
         if (!canvasMap || typeof widthMap == 'undefined' || typeof heightMap == 'undefined') return;
-        const ctx = canvasMap.getContext('2d');
-        canvasMap.width = widthMap;
-        canvasMap.height = heightMap;
-        if (!ctx) return;
-        ctx.clearRect(0, 0, widthMap, heightMap);
-        ctx.lineWidth = 1.5;
         const aspect = widthMap / heightMap;
         const rBase = 200.0;
         const d = 15.0;
         const e = 0.5;
+        let cx, cy, r, t0, t1, t, c1, s1, textdx, textdy;
         if (widthMap > heightMap) {
-            const cx = 0.525 * widthMap;
-            const cy = 0.5 * heightMap;
-            const r = rBase / aspect;
-            const t0 = -Math.PI / 2.0 - 0.5;
-            const t1 = -Math.PI / 2.0 + 0.5;
-            const c1 = Math.cos(t1);
-            const s1 = Math.sin(t1);
-            ctx.arc(cx, cy, r, t0, t1);
-            ctx.moveTo(cx + r * c1, cy + r * s1);
-            ctx.lineTo(cx + r * c1 + d * s1 + e * d * c1, cy + r * s1 - d * c1 + e * d * s1);
-            ctx.moveTo(cx + r * c1, cy + r * s1);
-            ctx.lineTo(cx + r * c1 + d * s1 - e * d * c1, cy + r * s1 - d * c1 - e * d * s1);
-            ctx.stroke();
+            cx = 0.525 * widthMap;
+            cy = 0.5 * heightMap;
+            r = rBase / aspect;
+            t0 = -Math.PI / 2.0 - 0.5;
+            t1 = -Math.PI / 2.0 + 0.5;
+            t = 0.5 * (t0 + t1);
+            c1 = Math.cos(t1);
+            s1 = Math.sin(t1);
+            textdx = -20;
+            textdy = -55;
         } else {
-            const cx = 0.525 * widthMap;
-            const cy = 0.525 * heightMap;
-            const r = rBase * aspect;
-            const t0 = -0.5;
-            const t1 = 0.5;
-            const c1 = Math.cos(t1);
-            const s1 = Math.sin(t1);
+            cx = 0.525 * widthMap;
+            cy = 0.525 * heightMap;
+            r = rBase * aspect;
+            t0 = -0.5;
+            t1 = 0.5;
+            t = 0.5 * (t0 + t1);
+            c1 = Math.cos(t1);
+            s1 = Math.sin(t1);
+            textdx = 10;
+            textdy = -40;
+        }
+        textxManifold = (60 / 480) * Math.max(widthMap - 528, 0);
+        textxPlane = widthMap - textxManifold - 60;
+        textxMap = cx + r * Math.cos(t) + textdx;
+        textyMap = cy + r * Math.sin(t) + textdy;
+        if (canvasMap) {
+            const ctx = canvasMap.getContext('2d');
+            canvasMap.width = widthMap;
+            canvasMap.height = heightMap;
+            if (!ctx) return;
+            ctx.clearRect(0, 0, widthMap, heightMap);
+            ctx.strokeStyle = 'currentColor';
+            ctx.lineWidth = 1.5;
             ctx.arc(cx, cy, r, t0, t1);
             ctx.moveTo(cx + r * c1, cy + r * s1);
             ctx.lineTo(cx + r * c1 + d * s1 + e * d * c1, cy + r * s1 - d * c1 + e * d * s1);
@@ -276,6 +301,15 @@
         <div class="map" bind:clientWidth={widthMap} bind:clientHeight={heightMap}>
             <canvas bind:this={canvasMap}></canvas>
         </div>
+        <div class="text" style:left="{textxManifold}px" style:top="20px">
+            <Katex latex="M" />
+        </div>
+        <div class="text" style:left="{textxPlane}px" style:top="20px">
+            <Katex latex="\bbR^2" />
+        </div>
+        <div class="text" style:left="{textxMap}px" style:top="{textyMap}px">
+            <Katex latex="\varphi" />
+        </div>
     </div>
 {/snippet}
 
@@ -288,6 +322,7 @@
         flex-wrap: wrap;
         justify-content: center;
         position: relative;
+        color: #46ae52;
     }
     .canvas {
         width: 50%;
@@ -303,5 +338,12 @@
         left: 0;
         width: 100%;
         height: 100%;
+    }
+    .text {
+        pointer-events: none;
+        position: absolute;
+    }
+    .text :global(.katex) {
+        font-size: 36pt !important;
     }
 </style>

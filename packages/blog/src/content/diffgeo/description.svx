@@ -1,0 +1,3 @@
+Occaisionally forget all the moving parts of differential geometry?
+Me too!
+This post serves as a nice reference to quickly put everything back into working memory.

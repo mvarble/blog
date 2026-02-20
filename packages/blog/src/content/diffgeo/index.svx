@@ -15,6 +15,7 @@ katex_macros:
   \point: p
   \map: f
   \atlas: \calA
+image: ./chart.png
 ---
 
 <script>
