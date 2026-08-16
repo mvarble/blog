@@ -81,40 +81,42 @@ export class Charts extends Group {
     geometry3d: BufferGeometry;
     geometry2d: BufferGeometry;
 
-    constructor(current?: number | number[]) {
+    constructor(current?: number | number[], charts?: Chart[]) {
         super();
 
         const N = 10;
         const DELTA = (2.0 * Math.PI) / N;
-        this.charts = Array.from({ length: N }).flatMap((_, j) =>
-            Array.from({ length: N }).map((_, i) => {
-                const radius = DELTA * (Math.SQRT1_2 + 0.25 * Math.random());
-                const u = DELTA * i;
-                const v = DELTA * j;
-                const preMatrix = randomComposition(new Matrix3().identity(), [
-                    0.5 / radius,
-                    2.0 / radius,
-                ]);
-                const postMatrix = randomComposition(new Matrix3().identity(), [1.0, 1.5]);
-                return {
-                    ambientCenter: new Vector3(TORUS_X(u, v), TORUS_Y(u, v), TORUS_Z(u, v)),
-                    coordinates: {
-                        domain: {
-                            center: new Vector2(u, v),
-                            radius,
+        this.charts =
+            charts ||
+            Array.from({ length: N }).flatMap((_, j) =>
+                Array.from({ length: N }).map((_, i) => {
+                    const radius = DELTA * (Math.SQRT1_2 + 0.25 * Math.random());
+                    const u = DELTA * i;
+                    const v = DELTA * j;
+                    const preMatrix = randomComposition(new Matrix3().identity(), [
+                        0.5 / radius,
+                        2.0 / radius,
+                    ]);
+                    const postMatrix = randomComposition(new Matrix3().identity(), [1.0, 1.5]);
+                    return {
+                        ambientCenter: new Vector3(TORUS_X(u, v), TORUS_Y(u, v), TORUS_Z(u, v)),
+                        coordinates: {
+                            domain: {
+                                center: new Vector2(u, v),
+                                radius,
+                            },
+                            preComposition: {
+                                matrix: preMatrix,
+                                matrixInv: new Matrix3().copy(preMatrix).invert(),
+                            },
+                            postComposition: {
+                                matrix: postMatrix,
+                                matrixInv: new Matrix3().copy(postMatrix).invert(),
+                            },
                         },
-                        preComposition: {
-                            matrix: preMatrix,
-                            matrixInv: new Matrix3().copy(preMatrix).invert(),
-                        },
-                        postComposition: {
-                            matrix: postMatrix,
-                            matrixInv: new Matrix3().copy(postMatrix).invert(),
-                        },
-                    },
-                };
-            }),
-        );
+                    };
+                }),
+            );
 
         if (Array.isArray(current) && current.every(Number.isFinite)) {
             this.current = current;

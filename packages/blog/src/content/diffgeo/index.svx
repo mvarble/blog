@@ -16,6 +16,7 @@ katex_macros:
   \map: f
   \atlas: \calA
 image: ./chart.png
+description: ./description.svx
 ---
 
 <script>
@@ -23,6 +24,7 @@ image: ./chart.png
   import * as topoManifold from './statements/topological-manifold.svx';
   import * as topoManifoldFigure from './statements/topological-manifold-figure.svx';
   import * as smoothStructure from './statements/smooth-structure.svx';
+  import * as transitionFigure from './statements/transition-figure.svx';
 </script>
 
 During my studies at university, I never took a course in differential geometry.
@@ -41,9 +43,10 @@ Before we get at all into the smooth or geometric structures, we have the notion
 <Statement {...topoManifoldFigure} />
 
 As the adjective suggests, topological manifolds are purely a topological concept, and their structure is sufficient for studying topological properties such as connectivity, compactness, and homeomorphic equivalence.
-To discuss notions of calculus and geometry, we need additional structure: this is supported by the fact that homeomorphisms do *not* preserve Euclidean differentiability.
-Thus, we must impose additional structure to discuss smoothness of maps $\map: \manifold \rightarrow \bbR$ on manifolds $\manifold$.
-Surely, whatever the definition may be, it should induce smoothness (in the usual sense) in the coordinate representations  $\map \circ \chart^{-1}: \hat\open \rightarrow \bbR$.
+To discuss notions of calculus and geometry, we need additional structure: homeomorphisms do *not* preserve Euclidean differentiability, so there *must* be additional structure our manifolds hold.
+Surely, whatever that structure is, it should imply our usual notion of smoothness in the coordinate representations  $\map \circ \chart^{-1}: \hat\open \rightarrow \bbR$.
 In order for this to be the _defining_ property of smoothness of a map $\map: \manifold \rightarrow \bbR$, we need a structure on the coordinate charts that makes it well-defined.
 
 <Statement {...smoothStructure} />
+
+<Statement {...transitionFigure} />

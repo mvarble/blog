@@ -16,4 +16,4 @@ As you move your mouse around over $\chart(\open) \subseteq \bbR^2$, you can see
 
 <small>
   (Note that if you hold down the right mouse button over the first figure, the chart won't change; this helps you have a view of the chart while you are interacting with the second figure).
-  </small>
+</small>

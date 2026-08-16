@@ -22,6 +22,6 @@ slug: keller-ressel-mayerhofer
 
 <Proof>
 
-  With [%full](statement:riccati-affine-formulation), this is the same as [Theorem 2.14](cite:keller2015).
+With [%full](statement:riccati-affine-formulation), this is the same as [Theorem 2.14](cite:keller2015).
 
 </Proof>

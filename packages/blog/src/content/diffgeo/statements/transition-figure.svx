@@ -1,0 +1,12 @@
+---
+type: statement
+kind: figure
+---
+
+<script>
+  import ChartTransition from '../components/chart-transition.svelte';
+</script>
+
+Below is an interactive rendering of the transition map from $\chart$ to $\otherChart$ associated with charts $(\open, \chart)$, $(\otherOpen, \otherChart)$ on the same manifold $\manifold$ we introduced in [%full](statement:topological-manifold-figure) above.
+
+<ChartTransition />
