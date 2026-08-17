@@ -1,5 +1,5 @@
-import { isUniqueConstraintError, type Database } from '..';
-import { PostInfo, type KatexMacros } from '.';
+import { type Database } from '..';
+import { PostInfo, type KatexMacros, replaceTags, upsertMddoc, upsertPage } from '.';
 
 interface TouchSequenceChildInputBase {
     title: string;
@@ -52,105 +52,49 @@ export function touchSequence(
     db: Database,
     { descriptionFilename, tags, ...sequence }: TouchSequenceInput,
 ): Sequence {
-    let mddocId: number;
-    let pageId: number;
-    let id: number;
-    let descriptionId: number | undefined = undefined;
     const pathname = `sequences/${sequence.slug}`;
+
+    const mddocId = upsertMddoc(db, {
+        filename: sequence.filename,
+        katexMacros: sequence.katexMacros,
+    });
+    const descriptionId = descriptionFilename
+        ? upsertMddoc(db, { filename: descriptionFilename, root: mddocId })
+        : undefined;
+    const pageId = upsertPage(db, mddocId, pathname);
+    replaceTags(db, pageId, tags);
+
+    const out = db
+        .prepare(
+            `INSERT INTO sequences (
+                page_id, description_id, image_filename, title, created, edited, slug, enumerate)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT (slug) DO UPDATE SET
+                page_id = excluded.page_id,
+                description_id = excluded.description_id,
+                image_filename = excluded.image_filename,
+                title = excluded.title,
+                created = excluded.created,
+                edited = excluded.edited,
+                enumerate = excluded.enumerate
+            RETURNING id;`,
+        )
+        .get(
+            pageId,
+            descriptionId ?? null,
+            sequence.imageFilename ?? null,
+            sequence.title,
+            sequence.created.toISOString(),
+            sequence.edited.toISOString(),
+            sequence.slug,
+            sequence.enumerate ? 1 : 0,
+        );
+    const id = (out as { id: number }).id;
+
     const children: SequenceChild[] = [];
-    try {
-        const mddoc = db
-            .prepare('INSERT INTO mddocs (filename, katex_macros) VALUES (?, ?) RETURNING id;')
-            .get(sequence.filename, JSON.stringify(sequence.katexMacros));
-        mddocId = (mddoc as { id: number }).id;
-
-        if (descriptionFilename) {
-            const descriptionMddoc = db
-                .prepare(
-                    "INSERT INTO mddocs (filename, root, katex_macros) VALUES (?, ?, '{}') RETURNING id;",
-                )
-                .get(descriptionFilename, mddocId);
-            descriptionId = (descriptionMddoc as { id: number }).id;
-        }
-
-        const page = db
-            .prepare('INSERT INTO pages (mddoc_id, pathname) VALUES (?, ?) RETURNING id;')
-            .get(mddocId, pathname);
-        pageId = (page as { id: number }).id;
-
-        if (tags) {
-            const qmarks = tags.map(() => '(?, ?)').join(', ');
-            const values = tags.flatMap((tag) => [pageId, tag]);
-            db.prepare(`INSERT OR IGNORE INTO tags (page_id, tag) VALUES ${qmarks}`).run(...values);
-        }
-
-        const out = db
-            .prepare(
-                `INSERT INTO sequences (
-                    page_id, description_id, image_filename, title, created, edited, slug, enumerate)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                RETURNING id;`,
-            )
-            .get(
-                pageId,
-                descriptionId || null,
-                sequence.imageFilename || null,
-                sequence.title,
-                sequence.created.toISOString(),
-                sequence.edited.toISOString(),
-                sequence.slug,
-                sequence.enumerate ? 1 : 0,
-            );
-        id = (out as { id: number }).id;
-    } catch (e) {
-        if (isUniqueConstraintError(e)) {
-            const mddoc = db
-                .prepare('UPDATE mddocs SET katex_macros = ? WHERE filename = ? RETURNING id;')
-                .get(JSON.stringify(sequence.katexMacros), sequence.filename);
-            mddocId = (mddoc as { id: number }).id;
-
-            if (descriptionFilename) {
-                const descriptionMddoc = db
-                    .prepare('UPDATE mddocs SET root = ? WHERE filename = ? RETURNING id;')
-                    .get(mddocId, descriptionFilename);
-                descriptionId = (descriptionMddoc as { id: number }).id;
-            }
-
-            const page = db
-                .prepare('UPDATE pages SET pathname = ? WHERE mddoc_id = ? RETURNING id;')
-                .get(pathname, mddocId);
-            pageId = (page as { id: number }).id;
-
-            db.prepare('DELETE FROM tags WHERE page_id = ?;').run(pageId);
-            if (tags) {
-                const qmarks = tags.map(() => '(?, ?)').join(', ');
-                const values = tags.flatMap((tag) => [pageId, tag]);
-                db.prepare(`INSERT INTO tags (page_id, tag) VALUES ${qmarks}`).run(...values);
-            }
-
-            const out = db
-                .prepare(
-                    `UPDATE sequences
-                    SET title = ?, description_id = ?, image_filename = ?, created = ?, edited = ?, slug = ?, enumerate = ?
-                    WHERE page_id = ?
-                    RETURNING id;`,
-                )
-                .get(
-                    sequence.title,
-                    descriptionId || null,
-                    sequence.imageFilename || null,
-                    sequence.created.toISOString(),
-                    sequence.edited.toISOString(),
-                    sequence.slug,
-                    sequence.enumerate ? 1 : 0,
-                    pageId,
-                );
-            id = (out as { id: number }).id;
-        } else {
-            throw e;
-        }
-    }
     if (sequence.children) {
+        // Appendix children switch from numbers to letters, restarting at 'A'
+        // wherever the first one appears.
         let appendixStart: number | undefined = undefined;
         let i = 0;
         for (const child of sequence.children) {
@@ -175,6 +119,7 @@ export function touchSequence(
             ++i;
         }
     }
+
     return {
         ...sequence,
         id,
@@ -198,87 +143,54 @@ export function touchSequenceChild(
     label: string,
     input: TouchSequenceChildInput,
 ): SequenceChild {
-    let pageId: number;
-    let mddocId: number;
     const pathname = `${parentPathname}/${input.slug}`;
-    const children: SequenceChild[] = [];
-    try {
-        const mddoc = db
-            .prepare(
-                'INSERT INTO mddocs (filename, root, katex_macros) VALUES (?, ?, ?) RETURNING id;',
-            )
-            .get(input.filename, sequenceMddocId, JSON.stringify(input.katexMacros));
-        mddocId = (mddoc as { id: number }).id;
 
-        const page = db
-            .prepare('INSERT INTO pages (mddoc_id, pathname) VALUES (?, ?) RETURNING id;')
-            .get(mddocId, pathname);
-        pageId = (page as { id: number }).id;
+    // Every page of a sequence points at the sequence root as its scope, which
+    // is what makes a slug mean the same thing across the whole sequence.
+    const mddocId = upsertMddoc(db, {
+        filename: input.filename,
+        root: sequenceMddocId,
+        katexMacros: input.katexMacros,
+    });
+    const pageId = upsertPage(db, mddocId, pathname);
 
-        db.prepare(
-            `INSERT INTO sequence_pages (
-                sequence_id, page_id, parent_page_id, title, slug, item, appendix, label)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
-        ).run(
+    db.prepare(
+        `INSERT INTO sequence_pages (
+            sequence_id, page_id, parent_page_id, title, slug, item, appendix, label)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT (page_id) DO UPDATE SET
+            sequence_id = excluded.sequence_id,
+            parent_page_id = excluded.parent_page_id,
+            title = excluded.title,
+            slug = excluded.slug,
+            item = excluded.item,
+            appendix = excluded.appendix,
+            label = excluded.label;`,
+    ).run(
+        sequenceId,
+        pageId,
+        parentPageId,
+        input.title,
+        input.slug,
+        item,
+        input.appendix ? 1 : 0,
+        enumerate ? label : null,
+    );
+
+    const children: SequenceChild[] = (input.children ?? []).map((child, i) =>
+        touchSequenceChild(
+            db,
             sequenceId,
+            sequenceMddocId,
+            enumerate,
             pageId,
-            parentPageId,
-            input.title,
-            input.slug,
-            item,
-            input.appendix ? 1 : 0,
-            enumerate ? label : null,
-        );
-    } catch (e) {
-        if (isUniqueConstraintError(e)) {
-            const mddoc = db
-                .prepare(
-                    'UPDATE mddocs SET katex_macros = ?, root = ? WHERE filename = ? RETURNING id;',
-                )
-                .get(JSON.stringify(input.katexMacros), sequenceMddocId, input.filename);
-            mddocId = (mddoc as { id: number }).id;
+            pathname,
+            i,
+            `${label}.${i}`,
+            child,
+        ),
+    );
 
-            const page = db
-                .prepare('UPDATE pages SET pathname = ? WHERE mddoc_id = ? RETURNING id;')
-                .get(pathname, mddocId);
-            pageId = (page as { id: number }).id;
-
-            db.prepare(
-                `UPDATE sequence_pages
-                SET sequence_id = ?, parent_page_id = ?, title = ?, slug = ?,
-                    item = ?, appendix = ?, label = ?
-                WHERE page_id = ?;`,
-            ).run(
-                sequenceId,
-                parentPageId,
-                input.title,
-                input.slug,
-                item,
-                input.appendix ? 1 : 0,
-                enumerate ? label : null,
-                pageId,
-            );
-        } else {
-            throw e;
-        }
-    }
-    if (input.children) {
-        input.children.forEach((child, i) => {
-            children.push(
-                touchSequenceChild(
-                    db,
-                    sequenceId,
-                    sequenceMddocId,
-                    enumerate,
-                    pageId,
-                    pathname,
-                    i,
-                    `${label}.${i}`,
-                    child,
-                ),
-            );
-        });
-    }
     return {
         ...input,
         mddocId,
@@ -533,7 +445,7 @@ export function getSequenceChildReferences(
 
     return out.map((obj) => ({
         ...obj,
-        full: obj.label ? `${obj.label}. ${obj.title} ` : obj.title,
+        full: obj.label ? `${obj.label}. ${obj.title}` : obj.title,
     }));
 }
 

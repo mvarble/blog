@@ -1,15 +1,11 @@
-import { getPagePathname, getStatementFromSlug, KatexMacros } from '../../db';
+import { getPagePathname, getStatementFromFilename, KatexMacros } from '../../db';
 import { hasObjectField, hasStringField, slugFromFilename } from '../../util';
 import { edgeParser } from '../parsers';
-import { type FileHooks } from '..';
+import { type FileHooks } from '.';
 
 const hooks: FileHooks = {
-    async crossReference(db, filename, frontmatter, contents) {
-        let slug = slugFromFilename(filename);
-        if (hasStringField(frontmatter, 'slug') && frontmatter.slug) {
-            slug = frontmatter.slug;
-        }
-        const statement = getStatementFromSlug(db, slug);
+    crossReference(db, filename, _frontmatter, contents) {
+        const statement = getStatementFromFilename(db, filename);
         if (!statement) {
             return;
         }

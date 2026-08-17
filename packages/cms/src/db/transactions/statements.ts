@@ -1,5 +1,5 @@
-import { isUniqueConstraintError, type Database } from '..';
-import { type KatexMacros } from '.';
+import { type Database } from '..';
+import { type KatexMacros, parseReference, resolveReferenceScope } from '.';
 
 export interface TouchStatementInput {
     parentPageId: number;
@@ -17,61 +17,33 @@ export interface Statement extends TouchStatementInput {
 }
 
 export function touchStatement(db: Database, input: TouchStatementInput): Statement {
-    let mddocId: number;
-    try {
-        const mddoc = db
-            .prepare(
-                'INSERT INTO mddocs (filename, root, katex_macros) VALUES (?, ?, ?) RETURNING id;',
-            )
-            .get(input.filename, input.root, JSON.stringify(input.katexMacros));
-        mddocId = (mddoc as { id: number }).id;
-    } catch (e) {
-        if (isUniqueConstraintError(e)) {
-            const mddoc = db
-                .prepare(
-                    'UPDATE mddocs SET katex_macros = ?, root = ?  WHERE filename = ? RETURNING id;',
-                )
-                .get(JSON.stringify(input.katexMacros), input.root, input.filename);
-            mddocId = (mddoc as { id: number }).id;
-        } else {
-            throw e;
-        }
-    }
-    try {
-        db.prepare(
-            'INSERT INTO page_mddocs (parent_page_id, imported_mddoc_id) VALUES (?, ?);',
-        ).run(input.parentPageId, mddocId);
-    } catch (e) {
-        if (isUniqueConstraintError(e)) {
-            db.prepare('UPDATE page_mddocs SET parent_page_id = ? WHERE imported_mddoc_id = ?').run(
-                input.parentPageId,
-                mddocId,
-            );
-        }
-    }
-    let id: number;
-    try {
-        const out = db
-            .prepare(
-                `INSERT INTO statements (mddoc_id, slug, label, kind)
-                VALUES (?, ?, ?, ?) RETURNING id;`,
-            )
-            .get(mddocId, input.slug, input.label, input.kind);
-        id = (out as { id: number }).id;
-    } catch (e) {
-        if (isUniqueConstraintError(e)) {
-            const out = db
-                .prepare(
-                    `UPDATE statements
-                    SET slug = ?, label = ?, kind = ? WHERE mddoc_id = ?
-                    RETURNING id;`,
-                )
-                .get(input.slug, input.label, input.kind, mddocId);
-            id = (out as { id: number }).id;
-        } else {
-            throw e;
-        }
-    }
+    const mddoc = db
+        .prepare(
+            `INSERT INTO mddocs (filename, root, katex_macros) VALUES (?, ?, ?)
+            ON CONFLICT (filename) DO UPDATE
+                SET root = excluded.root, katex_macros = excluded.katex_macros
+            RETURNING id;`,
+        )
+        .get(input.filename, input.root, JSON.stringify(input.katexMacros));
+    const mddocId = (mddoc as { id: number }).id;
+
+    db.prepare(
+        'INSERT OR IGNORE INTO page_mddocs (parent_page_id, imported_mddoc_id) VALUES (?, ?);',
+    ).run(input.parentPageId, mddocId);
+    // `input.root` is the scope: the post, or the sequence root, that this
+    // statement's slug is unique within.
+    const out = db
+        .prepare(
+            `INSERT INTO statements (mddoc_id, scope_id, slug, label, kind)
+            VALUES (?, ?, ?, ?, ?)
+            ON CONFLICT (scope_id, slug) DO UPDATE
+                SET mddoc_id = excluded.mddoc_id,
+                    label = excluded.label,
+                    kind = excluded.kind
+            RETURNING id;`,
+        )
+        .get(mddocId, input.root, input.slug, input.label, input.kind);
+    const id = (out as { id: number }).id;
     return {
         id,
         mddocId,
@@ -117,10 +89,6 @@ function getStatementFromKey(db: Database, key: string, value: string): Statemen
     }
 }
 
-export function getStatementFromSlug(db: Database, slug: string): Statement | undefined {
-    return getStatementFromKey(db, 's.slug', slug);
-}
-
 export function getStatementFromFilename(db: Database, filename: string): Statement | undefined {
     return getStatementFromKey(db, 'm.filename', filename);
 }
@@ -141,25 +109,38 @@ export function getStatementParentFilename(db: Database, filename: string): stri
     }
 }
 
-export function touchStatementReference(db: Database, mddocId: number, slug: string): boolean {
-    try {
-        const out = db
-            .prepare(
-                `INSERT INTO statement_refs(source_mddoc_id, target_statement_id)
-                SELECT ?, id FROM statements WHERE slug = ?; `,
-            )
-            .run(mddocId, slug);
-        return out.changes > 0;
-    } catch (e) {
-        if (!isUniqueConstraintError(e)) {
-            throw e;
-        }
-        return true;
-    }
+// Records that `sourceMddocId` refers to a statement, resolving `ref` within the
+// referencing document's own scope unless it explicitly names another. Returns
+// false when nothing matches, which the caller reports.
+export function touchStatementReference(
+    db: Database,
+    sourceMddocId: number,
+    sourceScopeId: number,
+    ref: string,
+): boolean {
+    const parsed = parseReference(ref);
+    const scopeId = resolveReferenceScope(db, sourceScopeId, parsed);
+    if (typeof scopeId != 'number') return false;
+    const out = db
+        .prepare(
+            `INSERT OR IGNORE INTO statement_refs (source_mddoc_id, target_statement_id, ref)
+            SELECT ?, id, ? FROM statements WHERE scope_id = ? AND slug = ?;`,
+        )
+        .run(sourceMddocId, ref, scopeId, parsed.slug);
+    // A repeat reference in the same document is ignored but still resolved.
+    if (out.changes > 0) return true;
+    return (
+        db
+            .prepare('SELECT 1 AS ok FROM statement_refs WHERE source_mddoc_id = ? AND ref = ?;')
+            .get(sourceMddocId, ref) != undefined
+    );
 }
 
 export interface StatementReference {
     id: number;
+    // The reference exactly as written in the document; this is the key the
+    // markdown plugin looks a resolved target up by.
+    ref: string;
     slug: string;
     pathname: string;
     kind: string;
@@ -170,6 +151,7 @@ export interface StatementReference {
 export function getStatementReferences(db: Database, sourceMddocId: number): StatementReference[] {
     interface Select {
         id: number;
+        ref: string;
         pathname: string;
         slug: string;
         label: string;
@@ -177,30 +159,33 @@ export function getStatementReferences(db: Database, sourceMddocId: number): Sta
     }
     const output = db
         .prepare(
-            `SELECT s.id, p.pathname, s.slug, s.label, s.kind
+            `SELECT s.id, sr.ref, p.pathname, s.slug, s.label, s.kind
             FROM statements s
             INNER JOIN page_mddocs pm ON s.mddoc_id = pm.imported_mddoc_id
             INNER JOIN pages p ON pm.parent_page_id = p.id
             INNER JOIN statement_refs sr ON s.id = sr.target_statement_id
-            WHERE sr.source_mddoc_id = ? `,
+            WHERE sr.source_mddoc_id = ?;`,
         )
         .all(sourceMddocId) as Select[];
-    return output.map(({ id, pathname: parentPathname, slug, label, kind: k }) => {
-        const kind = k
-            .split(' ')
-            .map((str) => `${str.slice(0, 1).toUpperCase()}${str.slice(1)} `)
-            .join(' ');
-        const full = `${kind} ${label} `;
-        const pathname = `/${parentPathname}#${slug}`;
+    return output.map(({ id, ref, pathname: parentPathname, slug, label, kind: k }) => {
+        const kind = capitalizeWords(k);
         return {
             id,
+            ref,
             slug,
-            pathname,
+            pathname: `/${parentPathname}#${slug}`,
             kind,
             label,
-            full,
+            full: `${kind} ${label}`,
         };
     });
+}
+
+function capitalizeWords(text: string): string {
+    return text
+        .split(' ')
+        .map((word) => `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`)
+        .join(' ');
 }
 
 export function getImportedStatements(

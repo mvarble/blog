@@ -19,6 +19,8 @@ import {
     touchEquationReference,
     touchStatementReference,
     touchCitationReference,
+    describeScope,
+    parseReference,
 } from '../db';
 import { buildLabel, eqRegex, resolvePathname } from '../util';
 import { parseStatementFrontmatter } from './doctypes/statements';
@@ -36,13 +38,13 @@ export interface DocumentInPage {
     filename: string;
 }
 
-export async function nodeParser(
+export function nodeParser(
     db: Database,
     doc: DocumentInPage,
     contents: string,
     item: number,
     itemPrefix: string | undefined = undefined,
-): Promise<number> {
+): number {
     // create our node-visiting state
     const nodes: Node[] = [];
     const imports: Record<string, string> = {};
@@ -98,7 +100,7 @@ export async function nodeParser(
                             remapFile(doc.filename, componentPath) ==
                             'src/lib/components/statement.svelte')
                     ) {
-                        itemsAdded += await recurseNodeChild(
+                        itemsAdded += recurseNodeChild(
                             propPath,
                             db,
                             doc,
@@ -128,7 +130,7 @@ export async function nodeParser(
             if (node.type == 'element') {
                 const componentPath = imports[node.tagName];
                 if (componentPath && componentPath.endsWith('.svx')) {
-                    itemsAdded += await recurseNodeChild(
+                    itemsAdded += recurseNodeChild(
                         componentPath,
                         db,
                         doc,
@@ -143,6 +145,22 @@ export async function nodeParser(
 }
 
 export function edgeParser(db: Database, doc: DocumentInPage, contents: string) {
+    // Statement and equation slugs are unique within a scope rather than across
+    // the whole site, so a bare reference is resolved against the scope of the
+    // document doing the referencing.
+    const scopeId = doc.root ?? doc.mddocId;
+    const unresolved = (kind: string, ref: string) => {
+        const { scopeSlug, slug } = parseReference(ref);
+        const hint =
+            typeof scopeSlug == 'string'
+                ? `No post or sequence has the slug '${scopeSlug}'.`
+                : `Write '<post-or-sequence-slug>/${slug}' to reach a ${kind} outside it.`;
+        console.error(
+            `${doc.filename}: '${ref}' does not name a ${kind} in ` +
+                `${describeScope(db, scopeId)}. ${hint}`,
+        );
+    };
+
     const root = remark.parse(contents);
     const nodes: RemarkContent[] = root.children.toReversed();
     while (nodes.length > 0) {
@@ -152,31 +170,33 @@ export function edgeParser(db: Database, doc: DocumentInPage, contents: string) 
         }
         if (node.type == 'math') {
             for (const [, slug] of node.value.matchAll(eqRegex)) {
-                touchEquationReference(db, doc.mddocId, slug);
+                touchEquationReference(db, doc.mddocId, scopeId, slug);
             }
         }
         if (node.type == 'link') {
             if (node.url.startsWith('cite:')) {
                 const key = node.url.slice('cite:'.length);
-                const exists = touchCitationReference(db, doc.mddocId, key);
-                if (!exists) {
-                    console.error(`'${key}' does not resolve to a citation in the site.`);
+                if (!touchCitationReference(db, doc.mddocId, key)) {
+                    console.error(
+                        `'${key}' does not resolve to a citation in the site ` +
+                            `(referenced by '${doc.filename}').`,
+                    );
                 }
+                continue;
             }
             if (node.url.startsWith('eq:')) {
-                const slug = node.url.slice('eq:'.length);
-                const exists = touchEquationReference(db, doc.mddocId, slug);
-                if (!exists) {
-                    console.error(`'${slug}' does not resolve to an equation in the site.`);
+                const ref = node.url.slice('eq:'.length);
+                if (!touchEquationReference(db, doc.mddocId, scopeId, ref)) {
+                    unresolved('equation', ref);
                 }
                 continue;
             }
             if (node.url.startsWith('statement:')) {
-                const slug = node.url.slice('statement:'.length);
-                const exists = touchStatementReference(db, doc.mddocId, slug);
-                if (!exists) {
-                    console.error(`'${slug}' does not resolve to a statement in the site.`);
+                const ref = node.url.slice('statement:'.length);
+                if (!touchStatementReference(db, doc.mddocId, scopeId, ref)) {
+                    unresolved('statement', ref);
                 }
+                continue;
             }
             const rel = resolvePathname(doc.pathname, node.url);
             if (rel) {
@@ -195,7 +215,7 @@ export function edgeParser(db: Database, doc: DocumentInPage, contents: string) 
 function checkMathTags(
     db: Database,
     node: RemarkContent,
-    document: { mddocId: number; relevantPageId: number },
+    document: DocumentInPage,
     item: number,
     itemPrefix?: string,
 ): number {
@@ -205,6 +225,7 @@ function checkMathTags(
         touchEquation(db, {
             sourceMddocId: document.mddocId,
             parentPageId: document.relevantPageId,
+            scopeId: document.root ?? document.mddocId,
             slug,
             label: buildLabel(item + itemsAdded++, itemPrefix),
         });
@@ -245,16 +266,16 @@ function remapFile(baseFilename: string, relativeFilename: string) {
     return path.relative('.', path.resolve(path.dirname(baseFilename), relativeFilename));
 }
 
-async function recurseNodeChild(
+function recurseNodeChild(
     relFilename: string,
     db: Database,
     doc: DocumentInPage,
     item: number,
     itemPrefix?: string,
-): Promise<number> {
+): number {
     let itemsAdded = 0;
     const filename = remapFile(doc.filename, relFilename);
-    const contents = await fs.promises.readFile(filename, 'utf8');
+    const contents = fs.readFileSync(filename, 'utf8');
     const frontmatter = matter(contents).data;
     const statementFrontmatter = parseStatementFrontmatter(filename, frontmatter);
     if (statementFrontmatter) {
@@ -266,7 +287,7 @@ async function recurseNodeChild(
             label: buildLabel(item + itemsAdded++, itemPrefix),
             filename,
         });
-        itemsAdded += await nodeParser(
+        itemsAdded += nodeParser(
             db,
             {
                 mddocId: statement.mddocId,

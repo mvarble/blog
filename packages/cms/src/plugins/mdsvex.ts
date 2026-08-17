@@ -34,11 +34,14 @@ export const remarkCms: Plugin<[undefined?], Root, Root> = () => {
         const citations = Object.fromEntries(
             getCitationReferences(db, mddoc.id).map((citation) => [citation.key, citation]),
         );
+        // Keyed by the reference as written, not by slug: a slug is only unique
+        // within its scope, so two `scope/slug` references in one document can
+        // share one.
         const eqReferences = Object.fromEntries(
-            getEquationReferences(db, mddoc.id).map((obj) => [obj.slug, obj]),
+            getEquationReferences(db, mddoc.id).map((obj) => [obj.ref, obj]),
         );
         const statementReferences = Object.fromEntries(
-            getStatementReferences(db, mddoc.id).map((obj) => [obj.slug, obj]),
+            getStatementReferences(db, mddoc.id).map((obj) => [obj.ref, obj]),
         );
         const pageReferences = Object.fromEntries(
             getPageReferences(db, mddoc.id).map((obj) => [obj.pathname, obj]),
@@ -102,8 +105,8 @@ export const remarkCms: Plugin<[undefined?], Root, Root> = () => {
 
                 // if it starts with `eq:`, we try to resolve as an equation
                 if (node.url.startsWith('eq:')) {
-                    const slug = node.url.slice('eq:'.length);
-                    const eq = eqReferences[slug];
+                    const ref = node.url.slice('eq:'.length);
+                    const eq = eqReferences[ref];
                     if (!eq) continue;
                     node.url = eq.pathname;
                     node.children = [{ type: 'text', value: `(${eq.label})` }];
@@ -319,7 +322,7 @@ export const rehypeKatexBox: Plugin<[]> = () => {
         while (nodes.length > 0) {
             const node = nodes.pop()!;
             visitor(node);
-            if ('children' in node.child && Array.isArray(node.child)) {
+            if ('children' in node.child && Array.isArray(node.child.children)) {
                 const n = node.child.children.length - 1;
                 nodes.push(
                     ...node.child.children.toReversed().map(

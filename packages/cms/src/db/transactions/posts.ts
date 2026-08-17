@@ -1,5 +1,5 @@
-import { isUniqueConstraintError, type Database } from '..';
-import { type KatexMacros } from '.';
+import { type Database } from '..';
+import { type KatexMacros, replaceTags, upsertMddoc, upsertPage } from '.';
 
 interface PostBase {
     title: string;
@@ -76,87 +76,39 @@ export function touchPost(
     db: Database,
     { descriptionFilename, tags, ...post }: TouchPostInput,
 ): Post {
-    let mddocId: number;
-    let pageId: number;
-    let descriptionId: number | undefined = undefined;
     const pathname = `posts/${post.slug}`;
-    try {
-        const mddoc = db
-            .prepare('INSERT INTO mddocs (filename, katex_macros) VALUES (?, ?) RETURNING id;')
-            .get(post.filename, JSON.stringify(post.katexMacros));
-        mddocId = (mddoc as { id: number }).id;
 
-        if (descriptionFilename) {
-            const descriptionMddoc = db
-                .prepare(
-                    "INSERT INTO mddocs (filename, root, katex_macros) VALUES (?, ?, '{}') RETURNING id;",
-                )
-                .get(descriptionFilename, mddocId);
-            descriptionId = (descriptionMddoc as { id: number }).id;
-        }
+    const mddocId = upsertMddoc(db, {
+        filename: post.filename,
+        katexMacros: post.katexMacros,
+    });
+    const descriptionId = descriptionFilename
+        ? upsertMddoc(db, { filename: descriptionFilename, root: mddocId })
+        : undefined;
+    const pageId = upsertPage(db, mddocId, pathname);
+    replaceTags(db, pageId, tags);
 
-        const page = db
-            .prepare('INSERT INTO pages (mddoc_id, pathname) VALUES (?, ?) RETURNING id;')
-            .get(mddocId, pathname);
-        pageId = (page as { id: number }).id;
+    db.prepare(
+        `INSERT INTO posts (
+            page_id, description_id, image_filename, title, slug, created, edited)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT (slug) DO UPDATE SET
+            page_id = excluded.page_id,
+            description_id = excluded.description_id,
+            image_filename = excluded.image_filename,
+            title = excluded.title,
+            created = excluded.created,
+            edited = excluded.edited;`,
+    ).run(
+        pageId,
+        descriptionId ?? null,
+        post.imageFilename ?? null,
+        post.title,
+        post.slug,
+        post.created.toISOString(),
+        post.edited.toISOString(),
+    );
 
-        if (tags) {
-            const qmarks = tags.map(() => '(?, ?)').join(', ');
-            const values = tags.flatMap((tag) => [pageId, tag]);
-            db.prepare(`INSERT OR IGNORE INTO tags (page_id, tag) VALUES ${qmarks}`).run(...values);
-        }
-
-        db.prepare(
-            'INSERT INTO posts (page_id, description_id, image_filename, title, slug, created, edited) VALUES (?, ?, ?, ?, ?, ?, ?);',
-        ).run(
-            pageId,
-            descriptionId || null,
-            post.imageFilename || null,
-            post.title,
-            post.slug,
-            post.created.toISOString(),
-            post.edited.toISOString(),
-        );
-    } catch (e) {
-        if (isUniqueConstraintError(e)) {
-            const mddoc = db
-                .prepare('UPDATE mddocs SET katex_macros = ? WHERE filename = ? RETURNING id;')
-                .get(JSON.stringify(post.katexMacros), post.filename);
-            mddocId = (mddoc as { id: number }).id;
-
-            if (descriptionFilename) {
-                const descriptionMddoc = db
-                    .prepare('UPDATE mddocs SET root = ? WHERE filename = ? RETURNING id;')
-                    .get(mddocId, descriptionFilename);
-                descriptionId = (descriptionMddoc as { id: number }).id;
-            }
-
-            const page = db
-                .prepare('UPDATE pages SET pathname = ? WHERE mddoc_id = ? RETURNING id;')
-                .get(pathname, mddocId);
-            pageId = (page as { id: number }).id;
-
-            db.prepare('DELETE FROM tags WHERE page_id = ?;').run(pageId);
-            if (tags) {
-                const qmarks = tags.map(() => '(?, ?)').join(', ');
-                const values = tags.flatMap((tag) => [pageId, tag]);
-                db.prepare(`INSERT INTO tags (page_id, tag) VALUES ${qmarks}`).run(...values);
-            }
-
-            db.prepare(
-                'UPDATE posts SET title = ?, description_id = ?, created = ?, edited = ?, slug = ? WHERE page_id = ?;',
-            ).run(
-                post.title,
-                descriptionId || null,
-                post.created.toISOString(),
-                post.edited.toISOString(),
-                post.slug,
-                pageId,
-            );
-        } else {
-            throw e;
-        }
-    }
     return { mddocId, pageId, descriptionId, pathname, tags: tags || [], ...post };
 }
 

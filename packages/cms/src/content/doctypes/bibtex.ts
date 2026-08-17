@@ -1,10 +1,10 @@
 import bibtex from 'bibtex';
 
-import { type FileHooks } from '..';
+import { type FileHooks } from '.';
 import { touchCitation } from '../../db';
 
 const hooks: FileHooks = {
-    async initialize(db, _filename, _frontmatter, contents) {
+    initialize(db, _filename, _frontmatter, contents) {
         const bibFile = bibtex.parseBibFile(contents);
         Object.entries(bibFile.entries$).forEach(([key, entry]) => {
             touchCitation(db, {

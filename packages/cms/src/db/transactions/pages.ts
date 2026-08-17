@@ -1,9 +1,4 @@
-import {
-    type Database,
-    isUniqueConstraintError,
-    type PostReference,
-    type SequenceChildReference,
-} from '..';
+import { type Database, type PostReference, type SequenceChildReference } from '..';
 
 import { getPostReferences, getSequenceChildReferences, type KatexMacros } from '.';
 
@@ -72,21 +67,23 @@ export function touchPageReference(
     sourceMddocId: number,
     targetPagePathname: string,
 ): boolean {
-    try {
-        const out = db
+    const out = db
+        .prepare(
+            `INSERT OR IGNORE INTO page_refs (source_mddoc_id, target_page_id)
+            SELECT ?, id FROM pages WHERE pages.pathname = ?;`,
+        )
+        .run(sourceMddocId, targetPagePathname);
+    if (out.changes > 0) return true;
+    // Already recorded on an earlier mention in the same document.
+    return (
+        db
             .prepare(
-                `INSERT INTO page_refs (source_mddoc_id, target_page_id)
-                SELECT ?, id
-                FROM pages WHERE pages.pathname = ?`,
+                `SELECT 1 AS ok FROM page_refs pr
+                INNER JOIN pages p ON pr.target_page_id = p.id
+                WHERE pr.source_mddoc_id = ? AND p.pathname = ?;`,
             )
-            .run(sourceMddocId, targetPagePathname);
-        return out.changes > 0;
-    } catch (e) {
-        if (!isUniqueConstraintError(e)) {
-            throw e;
-        }
-        return true;
-    }
+            .get(sourceMddocId, targetPagePathname) != undefined
+    );
 }
 
 export type PageReference = PostReference | SequenceChildReference;

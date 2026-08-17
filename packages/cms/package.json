@@ -23,7 +23,8 @@
   ],
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -w -c"
+    "dev": "rollup -w -c",
+    "test": "node --test \"test/**/*.test.mjs\""
   },
   "dependencies": {
     "better-sqlite3": "^12.2.0",

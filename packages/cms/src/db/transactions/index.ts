@@ -63,6 +63,8 @@ function foldSequencePageMacros(
 }
 
 export * from './citations';
+export * from './scopes';
+export * from './upserts';
 export * from './equations';
 export * from './mddocs';
 export * from './pages';

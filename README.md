@@ -13,6 +13,8 @@ So that is basically it.
 
 - [cms](./packages/cms) is a package which makes the Vite plugin which sets up hot-updating of a SQLite3 database from the markdown documents.
   It also provides the mdsvex plugin to provide custom markup when cross-referencing inside a document.
+  Its source is layered as `content/` (reading and parsing documents), `db/` (the SQLite projection everything is queried from), `plugins/` (the Vite and mdsvex integrations), and `entries/` (the three published entry points).
+  Citations are keyed globally; statements and equations are scoped to their post or sequence.
 - [blog](./packages/blog) is a regular SvelteKit app which builds pages from the content-management system and the markdown documents in [the content directory](./packages/blog/src/content).
 
 ## Notes on markup
@@ -82,7 +84,9 @@ kind: remark
 slug: my-cool-remark
 ```
 
-The `slug` field must be unique, as it is the identifier we use to reference the statement; if not provided, it is assumed to be the filename without the extension or the directory name if the filename is `index.svx`.
+The `slug` field is the identifier we use to reference the statement; if not provided, it is assumed to be the filename without the extension or the directory name if the filename is `index.svx`.
+It must be unique within its _scope_ — the post it belongs to, or the whole sequence if it lives in a sequence page — rather than across the entire site.
+Two unrelated posts are therefore free to both call something `main-theorem`.
 For a statement to be tracked on the website, it must exist within a post or sequence page.
 To do this, import the mdsvex document as a svelte component within the page.
 
@@ -114,15 +118,27 @@ Just as with sequences, a statement will inherit the macros from the context in 
 > **Note.** The content-management layer does not enforce a statement be owned solely by a unique parent.
 > The responsibility is on the developer to only import it in one post or sequence page.
 
-### Referencing a page
+### Referencing a page, statement, or equation
 
-Any time a page is referenced on the site, the link text may be formatted with data from the content layer.
-Here are some examples.
+Any time something is referenced on the site, the link text may be formatted with data from the content layer.
+Pages are addressed by their pathname; statements and equations are addressed by slug through the `statement:` and `eq:` schemes.
 
 ```md
 [%title](/posts/some-post)
-[%ident](/statements/my-cool-remark)
+[%full](statement:my-cool-remark)
+[%label](eq:my-cool-equation)
 ```
+
+A bare slug is resolved **within the scope of the document doing the referencing** — its post, or its sequence.
+It is never looked up anywhere else, so a reference means the same thing no matter what exists elsewhere on the site.
+To reach a statement or equation in another post or sequence, prefix the slug with that post or sequence's own slug.
+
+```md
+[%full](statement:some-other-post/main-theorem)
+[%label](eq:my-cool-sequence/some-equation)
+```
+
+If a slug does not resolve, the build prints the referencing file, the scope it searched, and the prefixed form to use instead.
 
 The link text is a format string with the following possible arguments.
 
@@ -158,8 +174,8 @@ Any `.bib` file in the content directory will be parsed into the database (least
 To reference a citation, use markdown links like so.
 
 ```md
-[](/citations#key)
-[Theorem 21](/citations#key)
+[](cite:key)
+[Theorem 21](cite:key)
 ```
 
 This will work like LaTeX when using `\cite{key}` or `\cite[Theorem 21]{key}`, where the link text will render as some tag like `Lastname25` and `Theorem 21, Lastname25`, respectively.

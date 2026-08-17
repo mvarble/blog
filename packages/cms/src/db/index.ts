@@ -17,16 +17,23 @@ export function initializeDb(db: Database) {
 }
 
 export function prepareDb(db: Database) {
-    clearDb(db);
+    // `up` first: `down` empties tables rather than dropping them, so they have
+    // to exist before it can run against a fresh cache directory.
     initializeDb(db);
+    clearDb(db);
 }
 
 export function connect(): Database {
-    return new sqlite3(`${cacheDir}/cache.db`);
-}
-
-export function isUniqueConstraintError(e: unknown): boolean {
-    return typeof e == 'object' && e != null && 'code' in e && e.code == 'SQLITE_CONSTRAINT_UNIQUE';
+    const db: Database = new sqlite3(`${cacheDir}/cache.db`);
+    // Without this the build spends nearly all of its time in `fsync`: every
+    // statement runs in its own implicit transaction, and the default rollback
+    // journal makes each one create, sync and delete a journal file. On ext4
+    // that is ~19ms per write, which is two orders of magnitude more than the
+    // write itself. `journal_mode` is persisted in the database file;
+    // `synchronous` is per-connection, so both are set on every connect.
+    db.pragma('journal_mode = WAL');
+    db.pragma('synchronous = NORMAL');
+    return db;
 }
 
 export * from './transactions';

@@ -1,4 +1,4 @@
-import { type Database, isUniqueConstraintError } from '..';
+import { type Database } from '..';
 
 export interface CitationAuthor {
     lastname: string;
@@ -48,49 +48,28 @@ export function touchCitation(db: Database, citation: TouchCitation): Citation {
         'url',
         'series',
     ];
-    let id: number;
-    try {
-        const out = db
-            .prepare(
-                `INSERT INTO citations (${fields.join(', ')})
-                VALUES (${fields.map(() => '?').join(', ')}) RETURNING id;`,
-            )
-            .get(...fields.map((field) => citation[field]));
-        id = (out as { id: number }).id;
+    const out = db
+        .prepare(
+            `INSERT INTO citations (${fields.join(', ')})
+            VALUES (${fields.map(() => '?').join(', ')})
+            ON CONFLICT (key) DO UPDATE SET
+                ${fields
+                    .slice(1)
+                    .map((field) => `${field} = excluded.${field}`)
+                    .join(', ')}
+            RETURNING id;`,
+        )
+        .get(...fields.map((field) => citation[field]));
+    const id = (out as { id: number }).id;
+
+    db.prepare('DELETE FROM citation_authors WHERE citation_id = ?;').run(id);
+    if (citation.authors.length) {
         db.prepare(
             `INSERT INTO citation_authors (citation_id, item, lastname, fullname)
             VALUES ${citation.authors.map(() => '(?, ?, ?, ?)').join(', ')};`,
         ).run(
             ...citation.authors.flatMap((author, i) => [id, i, author.lastname, author.fullname]),
         );
-    } catch (e) {
-        if (isUniqueConstraintError(e)) {
-            const out = db
-                .prepare(
-                    `UPDATE citations SET
-                    ${fields
-                        .slice(1)
-                        .map((field) => `${field} = ?`)
-                        .join(', ')}
-                    WHERE key = ? RETURNING id;`,
-                )
-                .get(...fields.slice(1).map((field) => citation[field]), citation.key);
-            id = (out as { id: number }).id;
-            db.prepare('DELETE FROM citation_authors WHERE citation_id = ?').run(id);
-            db.prepare(
-                `INSERT INTO citation_authors (citation_id, item, lastname, fullname)
-                VALUES ${citation.authors.map(() => '(?, ?, ?, ?)').join(', ')};`,
-            ).run(
-                ...citation.authors.flatMap((author, i) => [
-                    id,
-                    i,
-                    author.lastname,
-                    author.fullname,
-                ]),
-            );
-        } else {
-            throw e;
-        }
     }
     return {
         id,
@@ -126,21 +105,23 @@ export function getCitations(db: Database): Citation[] {
 }
 
 export function touchCitationReference(db: Database, mddocId: number, key: string): boolean {
-    try {
-        const out = db
+    const out = db
+        .prepare(
+            `INSERT OR IGNORE INTO citation_refs (source_mddoc_id, target_citation_id)
+            SELECT ?, id FROM citations WHERE key = ?;`,
+        )
+        .run(mddocId, key);
+    if (out.changes > 0) return true;
+    // Already recorded on an earlier mention in the same document.
+    return (
+        db
             .prepare(
-                `INSERT INTO citation_refs (source_mddoc_id, target_citation_id)
-                SELECT ?, id FROM citations
-                WHERE key = ?;`,
+                `SELECT 1 AS ok FROM citation_refs cr
+                INNER JOIN citations c ON cr.target_citation_id = c.id
+                WHERE cr.source_mddoc_id = ? AND c.key = ?;`,
             )
-            .run(mddocId, key);
-        return out.changes > 0;
-    } catch (e) {
-        if (!isUniqueConstraintError(e)) {
-            throw e;
-        }
-        return true;
-    }
+            .get(mddocId, key) != undefined
+    );
 }
 
 export interface CitationReference {
