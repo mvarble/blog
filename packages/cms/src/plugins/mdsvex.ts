@@ -1,5 +1,5 @@
 import path from 'path';
-import { type RootContent, type Root } from 'mdast';
+import { type RootContent, type Node } from 'mdast';
 import type { RootContent as RehypeContent } from 'hast';
 import { type Plugin } from 'unified';
 import { type VFile } from 'vfile';
@@ -18,9 +18,9 @@ import {
     getRelevantPathname,
 } from '../db';
 
-export const remarkCms: Plugin<[undefined?], Root, Root> = () => {
+export const remarkCms: Plugin<[undefined?]> = () => {
     const db = connect();
-    return (root: Root, vfile: VFile) => {
+    return (root: Node, vfile: VFile) => {
         // obtain the page from CMS; if it is not present, we do nothing
         if (!hasStringField(vfile, 'filename')) {
             throw 'VFile has no filename.';
@@ -46,7 +46,8 @@ export const remarkCms: Plugin<[undefined?], Root, Root> = () => {
         const pageReferences = Object.fromEntries(
             getPageReferences(db, mddoc.id).map((obj) => [obj.pathname, obj]),
         );
-        const children: RootContent[] = root.children.toReversed();
+        const children: RootContent[] =
+            'children' in root && Array.isArray(root.children) ? root.children.toReversed() : [];
         while (children.length > 0) {
             const node = children.pop()!;
             if ('children' in node && Array.isArray(node.children) && node.children.length > 0) {

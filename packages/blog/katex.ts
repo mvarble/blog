@@ -3,6 +3,9 @@
 //  - Macros for a specific document: put the YAML contents in the frontmatter
 // Macros "fold" from project-wide down the tree of documents and their children.
 
+import type { KatexOptions } from 'katex';
+import type { Settings } from 'unified';
+
 const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 const greeks = [
     ['α', 'alpha'],
@@ -29,9 +32,9 @@ const greeks = [
     ['ω', 'omega'],
 ];
 
-const titleCase = (str) => str.at(0).toUpperCase() + str.slice(1);
+const titleCase = (str: string) => (str.length ? str.at(0)!.toUpperCase() + str.slice(1) : '');
 
-export default {
+const config: KatexOptions & Settings = {
     macros: {
         ...Object.fromEntries([
             ...alphabet.split('').flatMap((char) => [
@@ -56,3 +59,5 @@ export default {
         '\\eqdef': '\\eqqcolon',
     },
 };
+
+export default config;

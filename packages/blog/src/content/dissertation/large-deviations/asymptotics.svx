@@ -13,7 +13,7 @@ title: Asymptotic family
 
 
 <!-- declare asymptotic family -->
-Fix family $(\Xe)_{\epsilon>0}$ of affine processes $\Xe$ with associated conditional distributions $(\Prb^\epsilon_\stateVar)_{\stateVar\in\stateSpace}$ such that the differential $\trunc$-characteristics $(\affDrift^{\trunc,\epsilon}, \affDiff^\epsilon, \affJump^\epsilon)$ relate through the following parameterization.
+Fix a family $(\Xe)_{\epsilon>0}$ of affine processes $\Xe$ with associated conditional distributions $(\Prb^\epsilon_\stateVar)_{\stateVar\in\stateSpace}$ such that the differential $\trunc$-characteristics $(\affDrift^{\trunc,\epsilon}, \affDiff^\epsilon, \affJump^\epsilon)$ relate through the following parameterization.
 $$
   @tag(characteristic-asymptotics)
   \affDrift^{\trunc,\epsilon}(\stateVar) = \frac1\epsilon \affDrift^{\trunc,1}(\epsilon\stateVar), \quad
