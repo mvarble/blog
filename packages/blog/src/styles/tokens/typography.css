@@ -1,6 +1,6 @@
 :root {
     --font-family-ui: 'Fira Sans', -apple-system, sans-serif;
-    --font-family-body: 'KaTeX Main', serif;
+    --font-family-body: 'KaTeX_Main', serif;
     --font-family-heading: Merriweather, serif;
     --font-family-mono: 'Fira Mono', monospace;
 
@@ -29,7 +29,7 @@
 
     /* set at 1.75x so if you zoom +/-10% from common settings it won't switch your font */
     @media (min-resolution: 1.75x) {
-        --font-family-body: 'KaTeX Main', serif;
+        --font-family-body: 'KaTeX_Main', serif;
         --font-size-body: 1.2rem;
         --font-size-body-small: 0.8rem;
     }

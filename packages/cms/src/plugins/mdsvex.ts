@@ -1,12 +1,12 @@
 import path from 'path';
 import { type RootContent, type Node } from 'mdast';
-import type { RootContent as RehypeContent } from 'hast';
+import type { Root, RootContent as RehypeContent } from 'hast';
 import { type Plugin } from 'unified';
 import { type VFile } from 'vfile';
 import type { KatexOptions } from 'katex';
-import rehypeKatexSvelte from 'rehype-katex-svelte';
 
 import { hasStringField, resolvePathname, eqRegex } from '../util';
+import { renderMath } from './katex';
 import {
     connect,
     getPageReferences,
@@ -156,7 +156,7 @@ export const remarkCms: Plugin<[undefined?]> = () => {
     };
 };
 
-export const rehypeCms: Plugin<[KatexOptions?]> = (options) => {
+export const rehypeCms: Plugin<[KatexOptions?], Root> = (options) => {
     const db = connect();
     return (tree, vfile) => {
         // fold the katex macros of all the (potential) parents
@@ -171,13 +171,13 @@ export const rehypeCms: Plugin<[KatexOptions?]> = (options) => {
         const mddoc = getMddoc(db, filename);
         if (!mddoc) return;
         const katexMacros = foldKatexMacros(db, mddoc.id, mddoc.katexMacros);
-        // @ts-expect-error: rehypeKatexSvelte actually has this API
-        rehypeKatexSvelte({
+        renderMath(tree, filename, {
+            ...options,
             macros: {
                 ...(options?.macros || {}),
                 ...katexMacros,
             },
-        })(tree);
+        });
     };
 };
 
@@ -210,15 +210,15 @@ export const rehypeKatexBox: Plugin<[]> = () => {
             child.children[0].type == 'text' &&
             child.children[0].value.startsWith('{@html')
         ) {
-            const startIndex = child.children[0].value.indexOf('<span class=\\"tag\\"');
+            const startIndex = child.children[0].value.indexOf('<span class=\\"katex-tag\\"');
             if (startIndex > 0) {
-                // We now know we have a `<span class="tag"` somewhere in the string; we need to
+                // We now know we have a `<span class="katex-tag"` somewhere in the string; we need to
                 // find the closing `</span>`.
                 //
                 // We do this by incrementing an index as we search for `</span>`, but keep track
                 // of new opening `<span` blocks so that we don't short-circuit on a child.
                 //
-                // *Also* the first child of the tag block is a span with a 'strut' class which
+                // *Also* the first child of the tag block is a span with a 'katex-strut' class which
                 // messes up the sizing once we move it up the DOM. That said, we drop the first
                 // child by keeping track of *another* index.
                 const rest = child.children[0].value.slice(startIndex);

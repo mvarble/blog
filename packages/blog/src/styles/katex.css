@@ -28,17 +28,17 @@
 
 .katex {
     line-height: 1;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .katex-display {
     margin: 0.5em 0 !important;
 
-    & .base:first-child {
+    & .katex-base:first-child {
         margin-left: var(--fading-size) !important;
     }
 
-    & .base:last-child {
+    & .katex-base:last-child {
         margin-right: var(--fading-size) !important;
     }
 }
