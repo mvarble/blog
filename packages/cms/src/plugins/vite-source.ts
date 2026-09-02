@@ -4,7 +4,7 @@ import fs from 'fs';
 import glob from 'fast-glob';
 import matter from 'gray-matter';
 
-import { prepareDb, connect, cacheDir } from '../db';
+import { initializeDb, prepareDb, connect, cacheDir } from '../db';
 import { crossReferenceDocument, initializeDocument } from '../content/doctypes';
 import { getAllDocumentFacts, diffDocumentFacts } from '../content/facts';
 
@@ -17,9 +17,17 @@ export function cmsSource(): Plugin {
     // make the CMS cache directory
     fs.mkdirSync(path.resolve(cacheDir), { recursive: true });
 
-    // prepare an empty database for all of the data of the site
+    // Make sure the schema is there, but do *not* empty the database here.
+    //
+    // Constructing the plugin is not the same thing as starting a build: a
+    // SvelteKit production build evaluates `vite.config.ts` several times in the
+    // one process, including once while the postbuild step is reading the
+    // database to collect prerender entries. Clearing on construction wiped the
+    // content out from under that read, so every `entries()` came back empty and
+    // no dynamic route was ever prerendered. `rebuild` clears inside its own
+    // transaction anyway, which is the only place it is safe to.
     const db = connect();
-    prepareDb(db);
+    initializeDb(db);
 
     let server: ViteDevServer | undefined = undefined;
     let facts = new Map<string, string>();
