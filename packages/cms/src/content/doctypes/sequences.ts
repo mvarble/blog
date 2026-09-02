@@ -11,6 +11,7 @@ import {
 import { Frontmatter } from '../frontmatter';
 import { hasBooleanField } from '../../util';
 import { nodeParser } from '../parsers';
+import { Numbering } from '../../model/build';
 import { type FileHooks } from '.';
 
 const hooks: FileHooks = {
@@ -44,17 +45,12 @@ const hooks: FileHooks = {
     },
 };
 
-// Walks the sequence in reading order, carrying one running counter. The
-// counter restarts whenever the label prefix changes, which is why a page and
-// its parent -- who share a prefix -- continue a single numbering run.
-function numberSequence(
-    db: Database,
-    sequence: Sequence,
-    contents: string,
-    enumerate: boolean,
-) {
-    let itemPrefix = enumerate ? '0' : undefined;
-    let item = nodeParser(
+// Walks the sequence in reading order, numbering its statements and equations
+// as it goes. `Numbering` owns when the count restarts; this only has to visit
+// the pages in the order a reader meets them.
+function numberSequence(db: Database, sequence: Sequence, contents: string, enumerate: boolean) {
+    const numbering = new Numbering(enumerate ? '0' : undefined);
+    nodeParser(
         db,
         {
             mddocId: sequence.mddocId,
@@ -64,18 +60,14 @@ function numberSequence(
             filename: sequence.filename,
         },
         contents,
-        0,
-        itemPrefix,
+        numbering,
     );
 
     const descendants = (sequence.children ?? []).toReversed();
     while (descendants.length > 0) {
         const descendant = descendants.pop()!;
-        if (typeof descendant.label == 'string' && descendant.label != itemPrefix) {
-            item = 0;
-            itemPrefix = descendant.label;
-        }
-        item += nodeParser(
+        numbering.enter(descendant.label);
+        nodeParser(
             db,
             {
                 mddocId: descendant.mddocId,
@@ -85,8 +77,7 @@ function numberSequence(
                 filename: descendant.filename,
             },
             fs.readFileSync(descendant.filename, 'utf8'),
-            item,
-            itemPrefix,
+            numbering,
         );
         if (descendant.children) {
             descendants.push(...descendant.children.toReversed());

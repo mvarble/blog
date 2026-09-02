@@ -1,6 +1,7 @@
 import { touchPost, type TouchPostInput } from '../../db';
 import { Frontmatter } from '../frontmatter';
 import { nodeParser } from '../parsers';
+import { Numbering } from '../../model/build';
 import { type FileHooks } from '.';
 
 const hooks: FileHooks = {
@@ -19,8 +20,7 @@ const hooks: FileHooks = {
                 filename,
             },
             contents,
-            0,
-            undefined,
+            new Numbering(),
         );
     },
 };

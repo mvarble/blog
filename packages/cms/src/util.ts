@@ -72,7 +72,3 @@ export function resolvePathname(base: string | undefined, rel: string): string |
         return path.join(base, rel);
     }
 }
-
-export function buildLabel(item: number, itemPrefix?: string): string {
-    return typeof itemPrefix == 'string' ? `${itemPrefix}.${item}` : `${item}`;
-}

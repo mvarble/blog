@@ -13,7 +13,7 @@ So that is basically it.
 
 - [cms](./packages/cms) is a package which makes the Vite plugin which sets up hot-updating of a SQLite3 database from the markdown documents.
   It also provides the mdsvex plugin to provide custom markup when cross-referencing inside a document.
-  Its source is layered as `content/` (reading and parsing documents), `db/` (the SQLite projection everything is queried from), `plugins/` (the Vite and mdsvex integrations), and `entries/` (the three published entry points).
+  Its source is layered as `content/` (reading and parsing documents), `model/` (the rules that decide labels, as plain functions over plain data), `db/` (the SQLite projection everything is queried from), `plugins/` (the Vite and mdsvex integrations), and `entries/` (the three published entry points).
   Citations are keyed globally; statements and equations are scoped to their post or sequence.
 - [blog](./packages/blog) is a regular SvelteKit app which builds pages from the content-management system and the markdown documents in [the content directory](./packages/blog/src/content).
 

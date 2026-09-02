@@ -22,7 +22,8 @@ import {
     describeScope,
     parseReference,
 } from '../db';
-import { buildLabel, eqRegex, resolvePathname } from '../util';
+import { eqRegex, resolvePathname } from '../util';
+import { type Numbering } from '../model/build';
 import { parseStatementFrontmatter } from './doctypes/statements';
 
 const remark = unified().use(remarkParse).use(remarkFrontmatter).use(remarkMath);
@@ -38,17 +39,18 @@ export interface DocumentInPage {
     filename: string;
 }
 
+// Walks a document in reading order, recording the statements and equations it
+// contains. `numbering` hands out their labels and is shared with every nested
+// document, so one counter runs through the whole page.
 export function nodeParser(
     db: Database,
     doc: DocumentInPage,
     contents: string,
-    item: number,
-    itemPrefix: string | undefined = undefined,
-): number {
+    numbering: Numbering,
+) {
     // create our node-visiting state
     const nodes: Node[] = [];
     const imports: Record<string, string> = {};
-    let itemsAdded = 0;
 
     // initialize our visitor buffer
     const root = remark.parse(contents);
@@ -85,7 +87,7 @@ export function nodeParser(
             }
 
             // check math blocks for `@tag(...)`
-            itemsAdded += checkMathTags(db, node, doc, item + itemsAdded, itemPrefix);
+            checkMathTags(db, node, doc, numbering);
 
             // check for components that aren't detected as HTML; expand the search if they are an import
             if (node.type == 'text') {
@@ -100,13 +102,7 @@ export function nodeParser(
                             remapFile(doc.filename, componentPath) ==
                             'src/lib/components/statement.svelte')
                     ) {
-                        itemsAdded += recurseNodeChild(
-                            propPath,
-                            db,
-                            doc,
-                            item + itemsAdded,
-                            itemPrefix,
-                        );
+                        recurseNodeChild(propPath, db, doc, numbering);
                     }
                 }
             }
@@ -130,18 +126,11 @@ export function nodeParser(
             if (node.type == 'element') {
                 const componentPath = imports[node.tagName];
                 if (componentPath && componentPath.endsWith('.svx')) {
-                    itemsAdded += recurseNodeChild(
-                        componentPath,
-                        db,
-                        doc,
-                        item + itemsAdded,
-                        itemPrefix,
-                    );
+                    recurseNodeChild(componentPath, db, doc, numbering);
                 }
             }
         }
     }
-    return itemsAdded;
 }
 
 export function edgeParser(db: Database, doc: DocumentInPage, contents: string) {
@@ -216,21 +205,18 @@ function checkMathTags(
     db: Database,
     node: RemarkContent,
     document: DocumentInPage,
-    item: number,
-    itemPrefix?: string,
-): number {
-    if (node.type != 'math') return 0;
-    let itemsAdded = 0;
+    numbering: Numbering,
+) {
+    if (node.type != 'math') return;
     for (const [, slug] of node.value.matchAll(eqRegex)) {
         touchEquation(db, {
             sourceMddocId: document.mddocId,
             parentPageId: document.relevantPageId,
             scopeId: document.root ?? document.mddocId,
             slug,
-            label: buildLabel(item + itemsAdded++, itemPrefix),
+            label: numbering.next(),
         });
     }
-    return itemsAdded;
 }
 
 function checkImports(node: RehypeContent, imports: Record<string, string>) {
@@ -266,42 +252,41 @@ function remapFile(baseFilename: string, relativeFilename: string) {
     return path.relative('.', path.resolve(path.dirname(baseFilename), relativeFilename));
 }
 
+// A statement imported into `doc`. It takes the next number, and anything it
+// contains keeps counting from there -- a statement nested inside another does
+// not restart, it belongs to the same run as the page around it.
 function recurseNodeChild(
     relFilename: string,
     db: Database,
     doc: DocumentInPage,
-    item: number,
-    itemPrefix?: string,
-): number {
-    let itemsAdded = 0;
+    numbering: Numbering,
+) {
     const filename = remapFile(doc.filename, relFilename);
     const contents = fs.readFileSync(filename, 'utf8');
     const frontmatter = matter(contents).data;
     const statementFrontmatter = parseStatementFrontmatter(filename, frontmatter);
-    if (statementFrontmatter) {
-        const statement = touchStatement(db, {
-            ...statementFrontmatter,
-            parentPageId: doc.relevantPageId,
+    if (!statementFrontmatter) return;
+
+    const statement = touchStatement(db, {
+        ...statementFrontmatter,
+        parentPageId: doc.relevantPageId,
+        root: doc.root || doc.mddocId,
+        kind: frontmatter.kind,
+        label: numbering.next(),
+        filename,
+    });
+    nodeParser(
+        db,
+        {
+            mddocId: statement.mddocId,
+            relevantPageId: statement.parentPageId,
             root: doc.root || doc.mddocId,
-            kind: frontmatter.kind,
-            label: buildLabel(item + itemsAdded++, itemPrefix),
-            filename,
-        });
-        itemsAdded += nodeParser(
-            db,
-            {
-                mddocId: statement.mddocId,
-                relevantPageId: statement.parentPageId,
-                root: doc.root || doc.mddocId,
-                pathname: doc.pathname,
-                filename: statement.filename,
-            },
-            contents,
-            item + itemsAdded,
-            itemPrefix,
-        );
-    }
-    return itemsAdded;
+            pathname: doc.pathname,
+            filename: statement.filename,
+        },
+        contents,
+        numbering,
+    );
 }
 
 interface RemarkNode {

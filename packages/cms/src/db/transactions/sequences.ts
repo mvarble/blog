@@ -1,5 +1,6 @@
 import { type Database } from '..';
 import { PostInfo, type KatexMacros, replaceTags, upsertMddoc, upsertPage } from '.';
+import { type PageLabels, labelPages } from '../../model/build';
 
 interface TouchSequenceChildInputBase {
     title: string;
@@ -91,34 +92,10 @@ export function touchSequence(
         );
     const id = (out as { id: number }).id;
 
-    const children: SequenceChild[] = [];
-    if (sequence.children) {
-        // Appendix children switch from numbers to letters, restarting at 'A'
-        // wherever the first one appears.
-        let appendixStart: number | undefined = undefined;
-        let i = 0;
-        for (const child of sequence.children) {
-            if (child.appendix && typeof appendixStart == 'undefined') {
-                appendixStart = i;
-            }
-            children.push(
-                touchSequenceChild(
-                    db,
-                    id,
-                    mddocId,
-                    sequence.enumerate,
-                    pageId,
-                    pathname,
-                    i,
-                    typeof appendixStart == 'undefined'
-                        ? String(i)
-                        : String.fromCharCode(65 + i - appendixStart),
-                    child,
-                ),
-            );
-            ++i;
-        }
-    }
+    const labels = labelPages(sequence.children ?? []);
+    const children: SequenceChild[] = (sequence.children ?? []).map((child, i) =>
+        touchSequenceChild(db, id, mddocId, sequence.enumerate, pageId, pathname, i, labels, child),
+    );
 
     return {
         ...sequence,
@@ -140,9 +117,12 @@ export function touchSequenceChild(
     parentPageId: number,
     parentPathname: string,
     item: number,
-    label: string,
+    labels: PageLabels,
     input: TouchSequenceChildInput,
 ): SequenceChild {
+    // Labels are worked out for the whole tree up front; an unenumerated
+    // sequence computes them all the same and simply does not show them.
+    const label = labels.get(input)!;
     const pathname = `${parentPathname}/${input.slug}`;
 
     // Every page of a sequence points at the sequence root as its scope, which
@@ -186,7 +166,7 @@ export function touchSequenceChild(
             pageId,
             pathname,
             i,
-            `${label}.${i}`,
+            labels,
             child,
         ),
     );
