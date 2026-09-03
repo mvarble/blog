@@ -32,6 +32,16 @@
     .page {
         padding: var(--page-padding-top) var(--page-padding-side) var(--page-padding-bottom);
         min-width: 0 !important;
+        text-align: justify;
+    }
+
+    .page :global(h1),
+    .page :global(h2),
+    .page :global(h3),
+    .page :global(h4),
+    .page :global(h5),
+    .page :global(h6) {
+        text-align: left;
     }
 
     .page :global(:where(h2, h3) code) {

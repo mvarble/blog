@@ -1,6 +1,11 @@
+@import '@fontsource/merriweather';
+@import '@fontsource/fira-code';
+@import '@fontsource/fira-mono';
+@import '@fontsource/fira-sans';
+
 :root {
     --font-family-ui: 'Fira Sans', -apple-system, sans-serif;
-    --font-family-body: 'KaTeX_Main', serif;
+    --font-family-body: 'Merriweather', serif;
     --font-family-heading: Merriweather, serif;
     --font-family-mono: 'Fira Mono', monospace;
 

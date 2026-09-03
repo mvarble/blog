@@ -26,9 +26,13 @@
     margin-left: 2em !important;
 }
 
+.katex-html {
+    display: inline-block;
+}
+
 .katex {
     line-height: 1;
-    font-size: 1rem;
+    font-size: 1.05rem;
 }
 
 .katex-display {
