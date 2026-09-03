@@ -2,6 +2,7 @@ import { error, type Load } from '@sveltejs/kit';
 import type { EntryGenerator } from './$types';
 
 import { db } from 'cms';
+import { outlineOf } from '$lib/outline';
 
 export const entries: EntryGenerator = () => {
     const conn = db.connect();
@@ -16,5 +17,16 @@ export const load: Load = async ({ url }) => {
     if (!post) {
         error(404, { message: `Post not found ${pathname}` });
     }
-    return post;
+    // A post is one page, so its table of contents is its own title with its
+    // headings beneath -- the same shape a sequence uses, one level shallower.
+    return {
+        ...post,
+        contents: [
+            {
+                title: post.title,
+                pathname: post.pathname,
+                children: outlineOf(post.filename, post.pathname),
+            },
+        ],
+    };
 };

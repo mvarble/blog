@@ -1,7 +1,7 @@
 <script lang="ts">
     import { page } from '$app/state';
 
-    import type { DocumentSummary } from '$lib/types';
+    import { type DocumentSummary, summaryHref } from '$lib/types';
     import Self from './table-of-contents-tree.svelte';
 
     let { summary, root = false }: { summary: DocumentSummary; root?: boolean } = $props();
@@ -10,13 +10,16 @@
 <li>
     <a
         class:root
-        aria-current={`/${summary.pathname}/` == page.url.pathname ? 'page' : undefined}
-        href="/{summary.pathname}"
+        class:section={!!summary.anchor}
+        aria-current={!summary.anchor && `/${summary.pathname}/` == page.url.pathname
+            ? 'page'
+            : undefined}
+        href={summaryHref(summary)}
     >
         {summary.title}
     </a>
     <ul>
-        {#each summary.children as child (child.pathname)}
+        {#each summary.children as child (summaryHref(child))}
             <Self summary={child} />
         {/each}
     </ul>
@@ -46,6 +49,11 @@
 
         &.root {
             font-weight: 500;
+        }
+
+        /* A heading inside the page being read, rather than another page. */
+        &.section {
+            color: var(--fg-3);
         }
     }
 

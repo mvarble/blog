@@ -6,7 +6,7 @@
 
     import { trap } from '$lib/actions';
     import { reduced_motion } from '$lib/stores';
-    import type { DocumentSummary } from '$lib/types';
+    import { type DocumentSummary, summaryHref } from '$lib/types';
     import ModalOverlay from './modal-overlay.svelte';
 
     interface Props {
@@ -107,11 +107,14 @@
                         </ul>
                         <hr />
                         <ul>
-                            {#each contents as link (link.pathname)}
+                            <!-- Keyed by href rather than pathname: a page's headings are all entries on
+                             that one page, so they share a pathname and only the anchor tells them apart. -->
+                            {#each contents as link (summaryHref(link))}
                                 <li>
                                     <a
-                                        href="/{link.pathname}"
-                                        aria-current={`/${link.pathname}/` == page.url.pathname
+                                        href={summaryHref(link)}
+                                        aria-current={!link.anchor &&
+                                        `/${link.pathname}/` == page.url.pathname
                                             ? 'page'
                                             : undefined}
                                     >
@@ -119,9 +122,9 @@
                                     </a>
                                     {#if link.children.length}
                                         <ul>
-                                            {#each link.children as child (child.pathname)}
+                                            {#each link.children as child (summaryHref(child))}
                                                 <li>
-                                                    <a href="/{child.pathname}">{child.title}</a>
+                                                    <a href={summaryHref(child)}>{child.title}</a>
                                                 </li>
                                             {/each}
                                         </ul>

@@ -4,6 +4,7 @@ import type { EntryGenerator } from './$types';
 import { db, type Sequence, type SequenceChild } from 'cms';
 import type { SequencePage } from '$lib/types';
 import type { DocumentSummary } from '$lib/types';
+import { outlineOf } from '$lib/outline';
 
 export const entries: EntryGenerator = () => {
     const conn = db.connect();
@@ -27,32 +28,39 @@ export const load: Load = async (req) => {
     // prepare the page data
     return {
         filename,
-        contents: toTableOfContents(sequence),
+        contents: toTableOfContents(sequence, filename),
         ...findSiblings(sequence, filename),
     };
 };
 
-function toTableOfContents(sequence: Sequence): DocumentSummary[] {
-    const summary: DocumentSummary[] = [];
-    summary.push({
-        title: sequence.title,
-        pathname: sequence.pathname,
-        children: [],
-    });
+// The whole page tree, with the headings of `current` -- and only `current` --
+// expanded beneath it.
+//
+// Expanding every page's headings would grow without bound as the sequence
+// does; the reader only needs to navigate within the page they are on.
+function toTableOfContents(sequence: Sequence, current: string): DocumentSummary[] {
+    const outline = (page: { filename: string; pathname: string }): DocumentSummary[] =>
+        page.filename == current ? outlineOf(page.filename, page.pathname) : [];
 
     function toDocumentSummary(child: SequenceChild): DocumentSummary {
         return {
             title: child.title,
             pathname: child.pathname,
-            children: child.children ? child.children.map(toDocumentSummary) : [],
+            children: [
+                ...outline(child),
+                ...(child.children ? child.children.map(toDocumentSummary) : []),
+            ],
         };
     }
 
-    if (sequence.children) {
-        summary.push(...sequence.children.map(toDocumentSummary));
-    }
-
-    return summary;
+    return [
+        {
+            title: sequence.title,
+            pathname: sequence.pathname,
+            children: outline(sequence),
+        },
+        ...(sequence.children ?? []).map(toDocumentSummary),
+    ];
 }
 
 function toSequencePage({ title, pathname, label }: Sequence | SequenceChild): SequencePage {
