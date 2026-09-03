@@ -156,9 +156,10 @@ export const remarkCms: Plugin<[undefined?]> = () => {
     };
 };
 
-export const rehypeCms: Plugin<[KatexOptions?], Root> = (options) => {
+export const rehypeCms: Plugin<[KatexOptions?]> = (options) => {
     const db = connect();
-    return (tree, vfile) => {
+    return (node, vfile) => {
+        const tree = node as Root;
         // fold the katex macros of all the (potential) parents
         //
         // - statement -> post
