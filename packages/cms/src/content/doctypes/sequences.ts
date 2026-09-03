@@ -10,7 +10,7 @@ import {
 } from '../../db';
 import { Frontmatter } from '../frontmatter';
 import { hasBooleanField } from '../../util';
-import { nodeParser } from '../parsers';
+import { headingParser, nodeParser } from '../parsers';
 import { Numbering } from '../../model/build';
 import { type FileHooks } from '.';
 
@@ -50,6 +50,7 @@ const hooks: FileHooks = {
 // the pages in the order a reader meets them.
 function numberSequence(db: Database, sequence: Sequence, contents: string, enumerate: boolean) {
     const numbering = new Numbering(enumerate ? '0' : undefined);
+    headingParser(db, sequence.mddocId, contents);
     nodeParser(
         db,
         {
@@ -66,7 +67,9 @@ function numberSequence(db: Database, sequence: Sequence, contents: string, enum
     const descendants = (sequence.children ?? []).toReversed();
     while (descendants.length > 0) {
         const descendant = descendants.pop()!;
+        const descendantContents = fs.readFileSync(descendant.filename, 'utf8');
         numbering.enter(descendant.label);
+        headingParser(db, descendant.mddocId, descendantContents);
         nodeParser(
             db,
             {
@@ -76,7 +79,7 @@ function numberSequence(db: Database, sequence: Sequence, contents: string, enum
                 pathname: descendant.pathname,
                 filename: descendant.filename,
             },
-            fs.readFileSync(descendant.filename, 'utf8'),
+            descendantContents,
             numbering,
         );
         if (descendant.children) {
@@ -127,6 +130,16 @@ function buildChildren(
         if (!nested) {
             out.push({ title, slug, filename, katexMacros, appendix });
             continue;
+        }
+        // A sequence is chapters and sections, and nothing below that. The table
+        // of contents spends its third level on the headings within a page, so a
+        // deeper page tree would have nowhere left to go.
+        if (!topLevel) {
+            console.error(
+                `${rootFilename}: \`${relative}\` nests a third level of pages; ` +
+                    'a sequence has chapters and sections only.',
+            );
+            return;
         }
         const grandchildren = buildChildren(rootFilename, nested, appendix, false);
         if (!grandchildren) return;

@@ -3,6 +3,7 @@ import {
     foldKatexMacros,
     getCitationReferences,
     getEquationReferences,
+    getHeadings,
     getMddoc,
     getPageReferences,
     getRelevantPathname,
@@ -52,6 +53,9 @@ export function getDocumentFacts(db: Database, filename: string): string {
                 'sequence' in ref ? ref.sequence : null,
             ])
             .sort(),
+        // `rehypeCms` turns these into the `id`s on the rendered headings, and
+        // the table of contents links to them.
+        headings: getHeadings(db, mddoc.id).map(({ depth, title, slug }) => [depth, title, slug]),
         // `cmsInjection` appends this to the compiled module.
         self: statement
             ? { kind: statement.kind, label: statement.label, slug: statement.slug }

@@ -1,6 +1,6 @@
 import { touchPost, type TouchPostInput } from '../../db';
 import { Frontmatter } from '../frontmatter';
-import { nodeParser } from '../parsers';
+import { headingParser, nodeParser } from '../parsers';
 import { Numbering } from '../../model/build';
 import { type FileHooks } from '.';
 
@@ -10,6 +10,7 @@ const hooks: FileHooks = {
         if (!input) return;
         const post = touchPost(db, input);
 
+        headingParser(db, post.mddocId, contents);
         nodeParser(
             db,
             {

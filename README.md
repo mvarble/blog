@@ -13,7 +13,7 @@ So that is basically it.
 
 - [cms](./packages/cms) is a package which makes the Vite plugin which sets up hot-updating of a SQLite3 database from the markdown documents.
   It also provides the mdsvex plugin to provide custom markup when cross-referencing inside a document.
-  Its source is layered as `content/` (reading and parsing documents), `model/` (the rules that decide labels, as plain functions over plain data), `db/` (the SQLite projection everything is queried from), `plugins/` (the Vite and mdsvex integrations), and `entries/` (the three published entry points).
+  Its source is layered as `content/` (reading and parsing documents), `model/` (the rules that decide labels and section anchors, as plain functions over plain data), `db/` (the SQLite projection everything is queried from), `plugins/` (the Vite and mdsvex integrations), and `entries/` (the three published entry points).
   Citations are keyed globally; statements and equations are scoped to their post or sequence.
 - [blog](./packages/blog) is a regular SvelteKit app which builds pages from the content-management system and the markdown documents in [the content directory](./packages/blog/src/content).
 
@@ -53,6 +53,8 @@ children:
 
 The `slug` field must be unique and it serves as an identifier for the sequence; if not provided, it is assumed to be the filename without the extension or the directory name if the filename is `index.svx`.
 The `children` field is an array serving as a tree-like structure: each of its children represents a page in the sequence, it must include a field `filename` specifying the content for the page, and it may itself include a `children` field which recurses the structure.
+A sequence has chapters and sections and nothing below that, so `children` nests exactly two levels deep; a third is a build error.
+The table of contents spends its remaining level on the headings within whichever page is being read.
 
 Any sequence page represented in `children` must have the following frontmatter.
 
@@ -153,6 +155,23 @@ The link text is a format string with the following possible arguments.
 |             | If statement, `%kind %item`                                             | `Proposition 1`, `Remark 3.2` |
 
 In addition to parsing these format strings, the content layer will build a dependency graph of the various pages in the site for ease-of-browsing.
+
+### Headings
+
+Any `#` or `##` heading in the document behind a post or a sequence page becomes an anchor and an entry in the table of contents.
+
+```md
+# Probability measures
+
+## Dirac measure
+```
+
+The rendered heading is given an `id` derived from its text — `probability-measures`, `dirac-measure` — which is also the fragment the table of contents links to, so changing a heading's wording changes a URL somebody may have linked to.
+Two headings sharing a title in one document are distinguished by a numeric suffix, in the order they appear.
+Each `##` is nested beneath the `#` above it.
+
+The table of contents shows the headings of the page currently being read, and only that page.
+Headings inside an imported statement are not collected: a statement is a theorem or a remark, not a section of the page holding it.
 
 ### Specifying statement dependencies
 

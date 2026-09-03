@@ -9,10 +9,18 @@ slug: chap-a
   import * as a2 from './statements/a2.svx';
 </script>
 
+# First section
+
 <Statement {...a1} />
+
+## A subsection
 
 $$
 x = y @tag(a-eq)
 $$
 
+## Another subsection
+
 <Statement {...a2} />
+
+# Second section

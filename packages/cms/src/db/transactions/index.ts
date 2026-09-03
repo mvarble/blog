@@ -66,6 +66,7 @@ export * from './citations';
 export * from './scopes';
 export * from './upserts';
 export * from './equations';
+export * from './headings';
 export * from './mddocs';
 export * from './pages';
 export * from './posts';

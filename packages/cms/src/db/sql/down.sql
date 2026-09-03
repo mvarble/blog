@@ -5,6 +5,7 @@ DELETE FROM citation_refs;
 DELETE FROM equation_refs;
 DELETE FROM statement_refs;
 DELETE FROM page_refs;
+DELETE FROM headings;
 DELETE FROM citation_authors;
 DELETE FROM citations;
 DELETE FROM equations;

@@ -14,6 +14,7 @@ import type { RootContent as RehypeContent } from 'hast';
 import {
     type Database,
     touchEquation,
+    touchHeading,
     touchStatement,
     touchPageReference,
     touchEquationReference,
@@ -24,6 +25,7 @@ import {
 } from '../db';
 import { eqRegex, resolvePathname } from '../util';
 import { type Numbering } from '../model/build';
+import { type Heading, headingSlugs } from '../model/outline';
 import { parseStatementFrontmatter } from './doctypes/statements';
 
 const remark = unified().use(remarkParse).use(remarkFrontmatter).use(remarkMath);
@@ -131,6 +133,36 @@ export function nodeParser(
             }
         }
     }
+}
+
+// Records a page's own `#` and `##` headings, which is what the table of
+// contents expands under it.
+//
+// Only the page's own document: a statement it imports is a theorem or a remark,
+// whose content belongs to the page's numbering rather than to its outline.
+export function headingParser(db: Database, mddocId: number, contents: string) {
+    const headings: Omit<Heading, 'slug'>[] = [];
+    for (const node of remark.parse(contents).children) {
+        if (node.type != 'heading' || node.depth > 2) continue;
+        headings.push({ depth: node.depth, title: textOf(node) });
+    }
+    const slugs = headingSlugs(headings.map(({ title }) => title));
+    headings.forEach((heading, item) =>
+        touchHeading(db, mddocId, item, { ...heading, slug: slugs[item] }),
+    );
+}
+
+// A heading's text as a reader sees it, near enough: inline markup contributes
+// its own text, and anything without any -- an image, say -- contributes
+// nothing. Math is left as its source, which is what the sidebar can show.
+function textOf(node: RemarkContent): string {
+    if (node.type == 'text' || node.type == 'inlineCode' || node.type == 'inlineMath') {
+        return node.value;
+    }
+    if ('children' in node && Array.isArray(node.children)) {
+        return node.children.map(textOf).join('');
+    }
+    return '';
 }
 
 export function edgeParser(db: Database, doc: DocumentInPage, contents: string) {

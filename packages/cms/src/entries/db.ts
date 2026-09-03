@@ -8,6 +8,8 @@ export type {
     TouchEquation,
     Equation,
     EquationReference,
+    Heading,
+    OutlineEntry,
     Mddoc,
     Page,
     PageReference,

@@ -11,6 +11,8 @@ created: 2026-01-02
   import * as plain from './statements/plain.svx';
 </script>
 
+# Setup
+
 Intro with an equation.
 
 $$
@@ -20,5 +22,9 @@ $$
 <Statement {...outer} />
 
 <Statement {...plain} />
+
+# Setup
+
+A repeated title, to check the anchors stay distinct.
 
 Reference check: [%full](statement:plain) and [%full](eq:post-eq).

@@ -1,6 +1,6 @@
 import path from 'path';
 import { type RootContent, type Node } from 'mdast';
-import type { Root, RootContent as RehypeContent } from 'hast';
+import type { Element, Root, RootContent as RehypeContent } from 'hast';
 import { type Plugin } from 'unified';
 import { type VFile } from 'vfile';
 import type { KatexOptions } from 'katex';
@@ -14,6 +14,7 @@ import {
     getCitationReferences,
     getStatementReferences,
     getEquationReferences,
+    getHeadings,
     getMddoc,
     getRelevantPathname,
 } from '../db';
@@ -171,6 +172,8 @@ export const rehypeCms: Plugin<[KatexOptions?]> = (options) => {
         const filename = path.relative('.', vfile.filename);
         const mddoc = getMddoc(db, filename);
         if (!mddoc) return;
+        anchorHeadings(tree, getHeadings(db, mddoc.id));
+
         const katexMacros = foldKatexMacros(db, mddoc.id, mddoc.katexMacros);
         renderMath(tree, filename, {
             ...options,
@@ -181,6 +184,30 @@ export const rehypeCms: Plugin<[KatexOptions?]> = (options) => {
         });
     };
 };
+
+// Gives each rendered `h1`/`h2` the `id` the table of contents links to.
+//
+// The slugs are taken from the database by position rather than re-derived from
+// the rendered heading, because the two texts need not agree: a heading
+// containing math or a code span reaches here as KaTeX markup or a `<code>`
+// element, and slugifying that would quietly produce an anchor nothing links
+// to. Both lists come from the same document in the same order.
+function anchorHeadings(tree: Root, headings: { slug: string }[]) {
+    if (headings.length == 0) return;
+    let item = 0;
+    const visit = (node: Root | Element) => {
+        for (const child of node.children) {
+            if (child.type != 'element') continue;
+            if (child.tagName == 'h1' || child.tagName == 'h2') {
+                const heading = headings[item++];
+                if (heading) child.properties = { ...child.properties, id: heading.slug };
+                continue;
+            }
+            visit(child);
+        }
+    };
+    visit(tree);
+}
 
 export const rehypeKatexBox: Plugin<[]> = () => {
     interface VisitState {

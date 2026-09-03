@@ -98,6 +98,19 @@ label TEXT NOT NULL,
 UNIQUE (scope_id, slug)
 ) ;
 
+-- The `#` and `##` headings of a page's own document, in the order they appear.
+-- These are what the table of contents expands under the page being read, and
+-- `slug` is the `id` the rendered heading carries, so a change to one changes a
+-- URL somebody may have linked to.
+CREATE TABLE IF NOT EXISTS headings (
+mddoc_id INTEGER NOT NULL REFERENCES mddocs (id),
+item INTEGER NOT NULL,
+depth INTEGER NOT NULL,
+title TEXT NOT NULL,
+slug TEXT NOT NULL,
+UNIQUE (mddoc_id, item)
+) ;
+
 -- A bibtex reference.
 CREATE TABLE IF NOT EXISTS citations (
 id INTEGER PRIMARY KEY AUTOINCREMENT,

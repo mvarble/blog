@@ -66,6 +66,14 @@ function readSnapshot(dbFile) {
             )
             .all(),
         pages: db.prepare('SELECT pathname FROM pages ORDER BY pathname;').all(),
+        headings: db
+            .prepare(
+                `SELECT m.filename, h.item, h.depth, h.title, h.slug
+                 FROM headings h
+                 INNER JOIN mddocs m ON h.mddoc_id = m.id
+                 ORDER BY m.filename, h.item;`,
+            )
+            .all(),
         // How each written reference actually resolved.
         statementRefs: db
             .prepare(
