@@ -1,7 +1,0 @@
----
-type: statement
-kind: corollary
-slug: plain
----
-
-Plain statement after the nested one.

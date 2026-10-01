@@ -1,15 +1,15 @@
 import { error, type Load } from '@sveltejs/kit';
 import type { EntryGenerator } from './$types';
 
-import { db, type Sequence, type SequenceChild } from 'cms';
+import type { Sequence, SequenceChild } from '@mvarble/mesearch-cms/presets/blog';
+import { cms } from '$cms';
 import type { SequencePage } from '$lib/types';
 import type { DocumentSummary } from '$lib/types';
 import { outlineOf } from '$lib/outline';
 
 export const entries: EntryGenerator = () => {
-    const conn = db.connect();
-    return db
-        .getSequenceInfos(conn)
+    return cms.sequences
+        .list()
         .map((sequence) => ({ path: sequence.pathname.split('/').slice(1).join('/') }));
 };
 
@@ -19,8 +19,7 @@ export const load: Load = async (req) => {
 
     // get the filename from the pathname
     const pathname = url.pathname.slice(1, -1);
-    const conn = db.connect();
-    const filename = db.getPageFilename(conn, pathname);
+    const filename = cms.pages.get(pathname)?.filename;
     if (!filename) {
         error(404, { message: `Not found ${pathname}` });
     }

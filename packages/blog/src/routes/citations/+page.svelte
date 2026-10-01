@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Citation, CitationAuthor } from 'cms';
+    import type { Citation, CitationAuthor } from '@mvarble/mesearch-cms/presets/blog';
     import { renderToString } from 'katex';
 
     let { data } = $props();

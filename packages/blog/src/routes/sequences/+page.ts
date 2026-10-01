@@ -1,5 +1,5 @@
 import type { Load } from '@sveltejs/kit';
-import type { PostInfo } from 'cms';
+import type { PostInfo } from '@mvarble/mesearch-cms/presets/blog';
 import type { PostInfoWithDescription } from '$lib/types';
 
 import { getComponent, getImg } from '$lib/load';

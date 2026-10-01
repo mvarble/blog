@@ -1,10 +1,10 @@
 <script lang="ts">
-    import type { Statement } from 'cms';
+    import type { StatementInjection } from '@mvarble/mesearch-cms/presets/blog';
     import type { Component } from 'svelte';
 
     interface Props {
         default: Component;
-        cms: Statement;
+        cms: StatementInjection;
         noLabel?: boolean;
         noBlock?: boolean;
     }

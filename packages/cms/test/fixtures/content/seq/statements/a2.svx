@@ -1,7 +1,0 @@
----
-type: statement
-kind: proposition
-slug: a2
----
-
-Body of a2.

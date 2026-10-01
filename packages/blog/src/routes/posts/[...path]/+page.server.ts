@@ -1,19 +1,16 @@
 import { error, type Load } from '@sveltejs/kit';
 import type { EntryGenerator } from './$types';
 
-import { db } from 'cms';
+import { cms } from '$cms';
 import { outlineOf } from '$lib/outline';
 
 export const entries: EntryGenerator = () => {
-    const conn = db.connect();
-    return db
-        .getPostInfos(conn)
-        .map((post) => ({ path: post.pathname.split('/').slice(1).join('/') }));
+    return cms.posts.list().map((post) => ({ path: post.pathname.split('/').slice(1).join('/') }));
 };
 
 export const load: Load = async ({ url }) => {
     const pathname = url.pathname.slice(1, -1);
-    const post = db.getPost(db.connect(), pathname);
+    const post = cms.posts.get(pathname);
     if (!post) {
         error(404, { message: `Post not found ${pathname}` });
     }

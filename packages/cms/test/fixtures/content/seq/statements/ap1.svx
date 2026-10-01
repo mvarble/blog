@@ -1,7 +1,0 @@
----
-type: statement
-kind: corollary
-slug: ap1
----
-
-Body of ap1.

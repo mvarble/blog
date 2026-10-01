@@ -1,5 +1,5 @@
 import type { Component } from 'svelte';
-import type { PostInfo } from 'cms';
+import type { PostInfo } from '@mvarble/mesearch-cms/presets/blog';
 
 export interface DocumentSummary {
     title: string;

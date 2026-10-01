@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "dev-blog": "pnpm run --prefix ./packages/blog dev",
-    "dev-cms": "pnpm run --prefix ./packages/cms dev",
     "build-blog": "pnpm run --prefix ./packages/blog build"
   },
   "engines": {
@@ -11,7 +10,6 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "better-sqlite3",
       "esbuild"
     ]
   },

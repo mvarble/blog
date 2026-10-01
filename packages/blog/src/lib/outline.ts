@@ -1,4 +1,5 @@
-import { db, type OutlineEntry } from 'cms';
+import type { OutlineEntry } from '@mvarble/mesearch-cms/presets/blog';
+import { cms } from '$cms';
 
 import type { DocumentSummary } from '$lib/types';
 
@@ -14,5 +15,5 @@ export function outlineOf(filename: string, pathname: string): DocumentSummary[]
         anchor: entry.slug,
         children: entry.children.map(toSummary),
     });
-    return db.getPageOutline(db.connect(), filename).map(toSummary);
+    return cms.outline(filename).map(toSummary);
 }

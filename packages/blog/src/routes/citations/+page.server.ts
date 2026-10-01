@@ -1,8 +1,7 @@
 import type { Load } from '@sveltejs/kit';
 
-import { db } from 'cms';
+import { cms } from '$cms';
 
 export const load: Load = () => {
-    const conn = db.connect();
-    return { citations: db.getCitations(conn) };
+    return { citations: cms.citations.list() };
 };

@@ -11,16 +11,16 @@ However, this means the build-system must be self aware of the files going into 
 
 So that is basically it.
 
-- [cms](./packages/cms) is a package which makes the Vite plugin which sets up hot-updating of a SQLite3 database from the markdown documents.
-  It also provides the mdsvex plugin to provide custom markup when cross-referencing inside a document.
-  Its source is layered as `content/` (reading and parsing documents), `model/` (the rules that decide labels and section anchors, as plain functions over plain data), `db/` (the SQLite projection everything is queried from), `plugins/` (the Vite and mdsvex integrations), and `entries/` (the three published entry points).
+- The content layer is [`@mvarble/mesearch-cms`](https://github.com/mvarble/mesearch/tree/main/packages/cms), shared with [mesearch](https://github.com/mvarble/mesearch).
+  Its blog preset reads every post, sequence, statement and `.bib` file in the content directory into an in-memory store, which a Vite plugin keeps current as documents change and serves to routes as the server-only `$cms` module (see `vite.config.ts` and `src/cms.d.ts`).
+  The same store hands the markdown pipeline what it needs to rewrite cross-references and fold KaTeX macros.
   Citations are keyed globally; statements and equations are scoped to their post or sequence.
+- The markdown pipeline is [`@mvarble/mesearch-markdown`](https://github.com/mvarble/mesearch/tree/main/packages/markdown): mdsvex with KaTeX, scrollable display math with lifted equation numbers, and Shiki highlighting with fenced file imports.
 - [blog](./packages/blog) is a regular SvelteKit app which builds pages from the content-management system and the markdown documents in [the content directory](./packages/blog/src/content).
 
 ## Notes on markup
 
 The custom markup I introduce is not fancy enough for me to write some sort of spec, so here are some notes on how we produce and consume data for the content layer within a markdown document.
-Note that SQL schemas for the content layer are declared [here](./packages/cms/src/db/sql/up.sql).
 
 ### Creating posts
 
@@ -189,7 +189,7 @@ dependencies:
 ### Creating a citation
 
 In addition to "statements" on the site, the content layer also keeps track of BibTeX citations.
-Any `.bib` file in the content directory will be parsed into the database (least some subset of the fields).
+Any `.bib` file in the content directory will be parsed into the content layer (at least some subset of the fields).
 To reference a citation, use markdown links like so.
 
 ```md
