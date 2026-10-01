@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Article, ArticleHeader, Toc } from '@mvarble/mesearch-ui';
+    import { Article, ArticleHeader, References, Toc } from '@mvarble/mesearch-ui';
 
     import Tags from '$lib/components/tags.svelte';
 
@@ -26,11 +26,20 @@
     </ArticleHeader>
 {/snippet}
 
+{#snippet references()}
+    <References entries={data.references} />
+{/snippet}
+
 {#snippet contents(folded: boolean)}
     <Toc entries={data.toc} label={folded ? 'Contents' : 'On this page'} />
 {/snippet}
 
-<Article kind="post" {header} right={data.toc.length ? contents : undefined}>
+<Article
+    kind="post"
+    {header}
+    after={data.references.length ? references : undefined}
+    right={data.toc.length ? contents : undefined}
+>
     <data.component />
 </Article>
 

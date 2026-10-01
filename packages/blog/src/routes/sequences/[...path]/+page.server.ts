@@ -4,7 +4,7 @@ import type { EntryGenerator } from './$types';
 import type { Sequence, SequenceChild } from '@mvarble/mesearch-cms/presets/blog';
 import { inlineHtml } from '@mvarble/mesearch-ui/server';
 import { cms } from '$cms';
-import { tocOf, trackOf, url } from '$lib/server/pages';
+import { referencesOf, tocOf, trackOf, url } from '$lib/server/pages';
 
 export const entries: EntryGenerator = () => {
     return cms.sequences
@@ -59,6 +59,7 @@ export const load: Load = async ({ url: { pathname: path }, parent }) => {
         tags: sequence.tags,
         track: trackOf(sequence.children),
         toc: tocOf(filename, self.katexMacros),
+        references: referencesOf(pathname, self.katexMacros),
         previous: stop(order[at - 1]),
         next: stop(order[at + 1]),
         position: { index: at, count: order.length },

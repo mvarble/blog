@@ -3,7 +3,7 @@ import type { EntryGenerator } from './$types';
 
 import { inlineHtml } from '@mvarble/mesearch-ui/server';
 import { cms } from '$cms';
-import { tocOf } from '$lib/server/pages';
+import { referencesOf, tocOf } from '$lib/server/pages';
 
 export const entries: EntryGenerator = () => {
     return cms.posts.list().map((post) => ({ path: post.pathname.split('/').slice(1).join('/') }));
@@ -23,5 +23,6 @@ export const load: Load = async ({ url }) => {
         edited: post.edited,
         tags: post.tags,
         toc: tocOf(post.filename, post.katexMacros),
+        references: referencesOf(post.pathname, post.katexMacros),
     };
 };

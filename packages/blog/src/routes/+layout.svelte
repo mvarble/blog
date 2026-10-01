@@ -23,7 +23,6 @@
     links={[
         { url: '/posts/', label: 'Posts', icon: 'pen' },
         { url: '/sequences/', label: 'Sequences', icon: 'book' },
-        { url: '/citations/', label: 'Citations', icon: 'quote' },
     ]}
     search="/search.json"
     navigate={goto}

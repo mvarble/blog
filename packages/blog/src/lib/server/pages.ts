@@ -1,7 +1,11 @@
-import type { OutlineEntry, SequenceChild } from '@mvarble/mesearch-cms/presets/blog';
+import {
+    citationLabel,
+    type OutlineEntry,
+    type SequenceChild,
+} from '@mvarble/mesearch-cms/presets/blog/runtime';
 import type { KatexMacros } from '@mvarble/mesearch-markdown/katex';
-import type { TocEntry, TrackItem } from '@mvarble/mesearch-ui';
-import { inlineHtml } from '@mvarble/mesearch-ui/server';
+import type { Reference, TocEntry, TrackItem } from '@mvarble/mesearch-ui';
+import { inlineHtml, referenceHtml } from '@mvarble/mesearch-ui/server';
 import { cms } from '$cms';
 
 // What the routes hand the components: titles as HTML and every link a URL.
@@ -29,4 +33,13 @@ export const trackOf = (children: SequenceChild[]): TrackItem[] =>
         titleHtml: inlineHtml(child.title, child.katexMacros),
         label: child.label,
         children: child.children.length ? trackOf(child.children) : undefined,
+    }));
+
+// What a page cites, for the list at its end. A `cite:key` link on the page
+// jumps to `#cite:key`.
+export const referencesOf = (pathname: string, macros: KatexMacros = {}): Reference[] =>
+    cms.bibliography(pathname).map((citation) => ({
+        id: `cite:${citation.key}`,
+        label: citationLabel(citation),
+        html: referenceHtml(citation, macros),
     }));

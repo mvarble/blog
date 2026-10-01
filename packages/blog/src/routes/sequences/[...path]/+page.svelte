@@ -1,5 +1,12 @@
 <script lang="ts">
-    import { Article, ArticleHeader, Pager, SequenceTrack, Toc } from '@mvarble/mesearch-ui';
+    import {
+        Article,
+        ArticleHeader,
+        Pager,
+        References,
+        SequenceTrack,
+        Toc,
+    } from '@mvarble/mesearch-ui';
 
     import Tags from '$lib/components/tags.svelte';
 
@@ -47,6 +54,10 @@
     />
 {/snippet}
 
+{#snippet references()}
+    <References entries={data.references} />
+{/snippet}
+
 {#snippet contents(folded: boolean)}
     <Toc entries={data.toc} label={folded ? 'Contents' : 'On this page'} />
 {/snippet}
@@ -56,6 +67,7 @@
 {/snippet}
 
 <Article
+    after={data.references.length ? references : undefined}
     kind="sequence"
     {header}
     {footer}

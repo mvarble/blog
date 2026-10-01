@@ -201,4 +201,8 @@ To reference a citation, use markdown links like so.
 [Theorem 21](cite:key)
 ```
 
-This will work like LaTeX when using `\cite{key}` or `\cite[Theorem 21]{key}`, where the link text will render as some tag like `Lastname25` and `Theorem 21, Lastname25`, respectively.
+This will work like LaTeX when using `\cite{key}` or `\cite[Theorem 21]{key}`, where the link text will render as `[Last25]` and `[Last25, Theorem 21]`, respectively.
+Hovering a citation shows the full reference.
+Each post and each sequence page ends with a short list of the references it cites, including those cited inside the statements it shows, and a citation jumps to its entry there.
+There is no site-wide bibliography page.
+A citation in a post's description, which is shown on the listings, points at the list on the post's own page.
