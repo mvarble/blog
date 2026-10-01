@@ -1,13 +1,13 @@
 <script lang="ts">
+    import { formatDate, isoDate } from '@mvarble/mesearch-ui';
+    import Tags from '$lib/components/tags.svelte';
     import { theme } from '$lib/state';
     import type { PostInfoWithDescription } from '$lib/types';
 
     function hash(str: string) {
         let hash = 0;
-        if (str.length === 0) return hash;
         for (let i = 0; i < str.length; i++) {
-            const chr = str.charCodeAt(i);
-            hash = (hash << 5) - hash + chr;
+            hash = (hash << 5) - hash + str.charCodeAt(i);
             hash |= 0;
         }
         return hash;
@@ -20,27 +20,28 @@
         pathname,
         image,
         tags,
-        description: DescriptionComponent,
+        description: Description,
     }: PostInfoWithDescription = $props();
 
-    let hue = Math.abs(hash(title)) % 360;
+    // A post without a picture gets the rat, tinted with a colour of its own.
+    let hue = $derived(Math.abs(hash(title)) % 360);
+    let dark = $derived(theme.current == 'dark');
     let gradient = $derived(
-        theme.current == 'light'
-            ? `linear-gradient(to bottom, hsl(${hue}, 40%, 98%), hsl(${hue}, 40%, 85%))`
-            : `linear-gradient(to bottom, hsl(${hue}, 20%, 80%), hsl(${hue}, 20%, 60%))`,
+        dark
+            ? `linear-gradient(to bottom, hsl(${hue}, 20%, 80%), hsl(${hue}, 20%, 60%))`
+            : `linear-gradient(to bottom, hsl(${hue}, 40%, 98%), hsl(${hue}, 40%, 85%))`,
     );
     let filter = $derived(
         image
-            ? theme.current == 'light'
-                ? undefined
-                : 'brightness(88%)'
-            : theme.current == 'light'
-              ? `sepia(100%) hue-rotate(${hue + 120}deg)`
-              : `brightness(80%) sepia(100%) hue-rotate(${hue + 120}deg)`,
+            ? dark
+                ? 'brightness(88%)'
+                : undefined
+            : `${dark ? 'brightness(80%) ' : ''}sepia(100%) hue-rotate(${hue + 120}deg)`,
     );
+    let revised = $derived(isoDate(created) != isoDate(edited));
 </script>
 
-<a href="/{pathname}">
+<a class="card" href="/{pathname}/">
     <div class="thumb" style:background={gradient}>
         <div
             class="img"
@@ -48,93 +49,94 @@
             style:filter
         ></div>
     </div>
-    <div class="desc">
+    <div class="body">
         <h3>{title}</h3>
-        <span>Created: {created.toDateString()}</span>
-        {#if created.getTime() != edited.getTime()}
-            <br />
-            <span>Last edited: {edited.toDateString()}</span>
-        {/if}
-        <div>
-            {#each tags as tag (tag)}
-                <span class="tag">{tag}</span>
-            {/each}
-        </div>
-        {#if DescriptionComponent}
-            <DescriptionComponent />
+        <p class="meta">
+            <span>Written <time datetime={isoDate(created)}>{formatDate(created)}</time></span>
+            {#if revised}
+                <span>Revised <time datetime={isoDate(edited)}>{formatDate(edited)}</time></span>
+            {/if}
+        </p>
+        <Tags {tags} />
+        {#if Description}
+            <div class="description"><Description /></div>
         {/if}
     </div>
 </a>
 
 <style>
-    a {
+    .card {
         display: flex;
         flex-wrap: wrap;
-        text-decoration: none;
+        overflow: hidden;
+        border: 1px solid var(--rule);
+        border-radius: var(--radius-large);
+        background: var(--paper-raised);
         color: inherit;
-        align-items: flex-start;
-        margin: 1em;
-        box-sizing: border-box;
+        text-decoration: none;
+        transition:
+            box-shadow 150ms,
+            transform 150ms;
+    }
+
+    .card:hover {
+        box-shadow: var(--shadow);
+        transform: translateY(-1px);
     }
 
     .thumb {
-        flex-grow: 1;
-        flex-shrink: 1;
-        aspect-ratio: 3 / 2;
-        width: 36%;
-        min-width: var(--post-photo-min-width, none);
-        margin: 0 auto;
-        overflow: hidden;
         position: relative;
-        border: 1px solid var(--border);
-    }
-
-    .desc {
-        width: 64%;
-        padding: 1em;
-        flex-grow: 1;
-        flex-shrink: 1;
-    }
-
-    h3 {
-        color: var(--fg-accent);
+        flex: 1 1 17rem;
+        aspect-ratio: 3 / 2;
+        overflow: hidden;
     }
 
     .img {
         position: absolute;
         inset: 0;
-        background-size: cover; /* fit entire image */
+        background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        transition: transform 0.2s;
+        transition: transform 200ms;
     }
 
-    .tag {
-        --hue: var(--fg-exclaim-hue);
-        --color: hsl(var(--hue), 94.6%, 29.2%);
-        border: 1px solid var(--color);
-        color: var(--color);
-        font-size: 8pt;
-        background: hsl(var(--hue), 90%, 95.5%);
-        display: inline-block;
-        margin: 0.25em;
-        padding: 0.25em;
-        border-radius: 5px;
+    .card:hover .img {
+        transform: scale(1.06);
     }
 
-    :global(html.dark) .tag {
-        --color: hsl(var(--hue), 94.6%, 90%);
-        background: hsl(var(--hue), 30%, 30%);
+    .body {
+        flex: 999 1 20rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        padding: 1.3rem 1.5rem 1.5rem;
     }
 
-    a:hover {
-        text-decoration: none;
-        & h3 {
-            text-decoration: underline;
-        }
+    h3 {
+        margin: 0;
+        font: 600 1.45rem / 1.25 var(--font-heading);
+        color: var(--ink);
+    }
 
-        .img {
-            transform: scale(1.1);
-        }
+    .card:hover h3 {
+        color: var(--accent);
+    }
+
+    .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 1.1rem;
+        margin: 0;
+        font: 400 var(--font-size-ui) / 1.4 var(--font-ui);
+        color: var(--muted);
+    }
+
+    .description {
+        font: 400 1rem / 1.6 var(--font-body);
+        color: var(--ink-soft);
+    }
+
+    .description :global(p) {
+        margin: 0;
     }
 </style>

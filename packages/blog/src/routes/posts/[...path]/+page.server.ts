@@ -1,8 +1,9 @@
 import { error, type Load } from '@sveltejs/kit';
 import type { EntryGenerator } from './$types';
 
+import { inlineHtml } from '@mvarble/mesearch-ui/server';
 import { cms } from '$cms';
-import { outlineOf } from '$lib/outline';
+import { tocOf } from '$lib/server/pages';
 
 export const entries: EntryGenerator = () => {
     return cms.posts.list().map((post) => ({ path: post.pathname.split('/').slice(1).join('/') }));
@@ -14,16 +15,13 @@ export const load: Load = async ({ url }) => {
     if (!post) {
         error(404, { message: `Post not found ${pathname}` });
     }
-    // A post is one page, so its table of contents is its own title with its
-    // headings beneath -- the same shape a sequence uses, one level shallower.
     return {
-        ...post,
-        contents: [
-            {
-                title: post.title,
-                pathname: post.pathname,
-                children: outlineOf(post.filename, post.pathname),
-            },
-        ],
+        filename: post.filename,
+        title: post.title,
+        titleHtml: inlineHtml(post.title, post.katexMacros),
+        created: post.created,
+        edited: post.edited,
+        tags: post.tags,
+        toc: tocOf(post.filename, post.katexMacros),
     };
 };

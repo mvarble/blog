@@ -1,37 +1,43 @@
 <script lang="ts">
+    import '@mvarble/mesearch-ui/fonts';
+    import 'katex/dist/katex.min.css';
+    import '@mvarble/mesearch-markdown/styles/katex.css';
+    import '@mvarble/mesearch-ui/styles/index.css';
     import '../styles/index.css';
 
-    import { page } from '$app/state';
-
-    import Shell from '$lib/components/ui/shell.svelte';
-    import Nav from '$lib/components/ui/nav.svelte';
-    import { type DocumentSummary, isDocumentSummary } from '$lib/types';
+    import { goto } from '$app/navigation';
+    import { configure, Shell } from '@mvarble/mesearch-ui';
 
     let { children } = $props();
 
-    let contents = $derived(checkContents(page.data.contents));
-    function checkContents(contents: unknown): DocumentSummary[] {
-        if (!Array.isArray(contents)) {
-            return [];
-        }
-        if (!contents.every(isDocumentSummary)) {
-            console.error('Contents are not correct schema.', contents);
-            return [];
-        }
-        return contents;
-    }
+    configure({ kinds: { post: 'Post', sequence: 'Sequence', page: 'Sequence page' } });
 </script>
 
-{#snippet top_nav()}
-    <Nav
-        links={[
-            { title: 'Posts', pathname: 'posts' },
-            { title: 'Sequences', pathname: 'sequences' },
-        ]}
-        {contents}
-    />
+{#snippet logo()}
+    <span class="rat" role="img" aria-label="A rat"></span>
 {/snippet}
 
-<Shell {top_nav}>
-    {@render children?.()}
+<Shell
+    title="rodent.club"
+    home="/"
+    links={[
+        { url: '/posts/', label: 'Posts', icon: 'pen' },
+        { url: '/sequences/', label: 'Sequences', icon: 'book' },
+        { url: '/citations/', label: 'Citations', icon: 'quote' },
+    ]}
+    search="/search.json"
+    navigate={goto}
+    {logo}
+>
+    {@render children()}
 </Shell>
+
+<style>
+    .rat {
+        width: 1.9rem;
+        height: 1.9rem;
+        background: currentColor;
+        mask: url('/icons/rat.svg') center / contain no-repeat;
+        -webkit-mask: url('/icons/rat.svg') center / contain no-repeat;
+    }
+</style>

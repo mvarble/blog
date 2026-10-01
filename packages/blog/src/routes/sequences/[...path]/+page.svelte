@@ -1,45 +1,74 @@
 <script lang="ts">
-    import type { PageProps } from './$types';
+    import { Article, ArticleHeader, Pager, SequenceTrack, Toc } from '@mvarble/mesearch-ui';
 
-    import Controls from '$lib/components/ui/controls.svelte';
-    import type { SequencePage } from '$lib/types';
+    import Tags from '$lib/components/tags.svelte';
 
-    let { data }: PageProps = $props();
+    let { data } = $props();
 
-    function toControl(page?: SequencePage): { title: string; path: string } | null {
-        return page ? { title: page.title, path: `/${page.pathname}` } : null;
-    }
-
-    let prev = $derived(toControl(data.prev));
-    let next = $derived(toControl(data.next));
+    let crumbs = $derived([
+        { label: 'rodent.club', url: '/' },
+        { label: 'Sequences', url: '/sequences/' },
+        ...(data.root
+            ? []
+            : [
+                  {
+                      label: data.sequenceTitle,
+                      url: data.sequenceUrl,
+                      note: `${data.position.index} of ${data.position.count - 1}`,
+                  },
+              ]),
+    ]);
 </script>
 
 <svelte:head>
-    <title>{data.self.title} | rodent.club</title>
+    <title>{data.title} | rodent.club</title>
 </svelte:head>
-<h1>{data.self.label ? `${data.self.label}. ${data.self.title}` : data.self.title}</h1>
 
-<div>
+{#snippet header()}
+    <ArticleHeader
+        {crumbs}
+        titleHtml={data.titleHtml}
+        created={data.root ? data.created : undefined}
+        updated={data.root ? data.edited : undefined}
+    >
+        {#if data.root && data.tags.length}
+            <div class="tags"><Tags tags={data.tags} /></div>
+        {/if}
+    </ArticleHeader>
+{/snippet}
+
+{#snippet track()}
+    <SequenceTrack
+        title={data.sequenceTitleHtml}
+        url={data.sequenceUrl}
+        items={data.track}
+        current={data.filename}
+        eyebrow="Sequence"
+    />
+{/snippet}
+
+{#snippet contents(folded: boolean)}
+    <Toc entries={data.toc} label={folded ? 'Contents' : 'On this page'} />
+{/snippet}
+
+{#snippet footer()}
+    <Pager label="Through {data.sequenceTitle}" previous={data.previous} next={data.next} />
+{/snippet}
+
+<Article
+    kind="sequence"
+    {header}
+    {footer}
+    left={track}
+    leftLabel="Sequence: {data.sequenceTitle}"
+    leftNote={data.root ? undefined : `${data.position.index} of ${data.position.count - 1}`}
+    right={data.toc.length ? contents : undefined}
+>
     <data.component />
-</div>
-
-<Controls {prev} {next} />
+</Article>
 
 <style>
-    h1 {
-        text-decoration: underline;
-        font: 500 calc(1.25 * var(--font-size-h1)) / 1.2 var(--font-family-heading);
-        margin-top: 0;
-    }
-
-    @media screen and (min-width: 838px) {
-        h1 {
-            --font-size-h1: 2.3rem;
-        }
-    }
-
-    div {
-        padding-bottom: 2em;
-        border-bottom: 1px solid var(--border);
+    .tags {
+        margin-top: 0.9rem;
     }
 </style>

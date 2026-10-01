@@ -44,13 +44,13 @@
     .red {
         background: hsl(0, 50%, 93%);
     }
-    :global(html.dark) .red {
+    :global(:root[data-theme='dark']) .red {
         background: hsl(0, 40%, 20%);
     }
     .blue {
         background: hsl(210, 50%, 93%);
     }
-    :global(html.dark) .blue {
+    :global(:root[data-theme='dark']) .blue {
         background: hsl(210, 40%, 20%);
     }
 </style>

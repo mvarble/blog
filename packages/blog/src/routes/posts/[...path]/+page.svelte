@@ -1,4 +1,8 @@
-<script>
+<script lang="ts">
+    import { Article, ArticleHeader, Toc } from '@mvarble/mesearch-ui';
+
+    import Tags from '$lib/components/tags.svelte';
+
     let { data } = $props();
 </script>
 
@@ -6,19 +10,32 @@
     <title>{data.title} | rodent.club</title>
 </svelte:head>
 
-<h1>{data.title}</h1>
-<data.component />
+{#snippet header()}
+    <ArticleHeader
+        crumbs={[
+            { label: 'rodent.club', url: '/' },
+            { label: 'Posts', url: '/posts/' },
+        ]}
+        titleHtml={data.titleHtml}
+        created={data.created}
+        updated={data.edited}
+    >
+        {#if data.tags.length}
+            <div class="tags"><Tags tags={data.tags} /></div>
+        {/if}
+    </ArticleHeader>
+{/snippet}
+
+{#snippet contents(folded: boolean)}
+    <Toc entries={data.toc} label={folded ? 'Contents' : 'On this page'} />
+{/snippet}
+
+<Article kind="post" {header} right={data.toc.length ? contents : undefined}>
+    <data.component />
+</Article>
 
 <style>
-    h1 {
-        text-decoration: underline;
-        font: 500 calc(1.25 * var(--font-size-h1)) / 1.2 var(--font-family-heading);
-        margin-top: 0;
-    }
-
-    @media screen and (min-width: 838px) {
-        h1 {
-            --font-size-h1: 2.3rem;
-        }
+    .tags {
+        margin-top: 0.9rem;
     }
 </style>

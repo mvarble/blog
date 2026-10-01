@@ -39,16 +39,18 @@
         color: var(--fg-accent);
         font-weight: 500;
     }
-    :global(ol) {
+    /* Enumerations in a document are lettered. Only in a document: the
+     * site's own lists --- a sequence's track, the contents --- are not. */
+    :global(.prose ol) {
         list-style-type: none;
         counter-reset: item;
     }
 
-    :global(ol > li) {
+    :global(.prose ol > li) {
         counter-increment: item;
     }
 
-    :global(ol > li:before) {
+    :global(.prose ol > li:before) {
         content: '(' counter(item, lower-alpha) ')';
         display: inline-block;
         width: 30px;

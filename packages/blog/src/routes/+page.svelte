@@ -1,77 +1,54 @@
-<script>
+<script lang="ts">
     import Short from '../content/about/short.svx';
     import Long from '../content/about/long.svx';
-    import Post from '$lib/components/post.svelte';
+    import Posts from '$lib/components/posts.svelte';
+
     let { data } = $props();
 </script>
 
 <svelte:head>
     <title>Home | rodent.club</title>
 </svelte:head>
-<div class="root">
-    <div class="banner-box">
-        <div class="banner">
-            <div class="content">
-                <img src="/me.jpeg" alt="AI cartoon of Matthew Varble" />
-                <div>
-                    <span>Howdy! 🤠</span>
-                    <Short />
-                </div>
+
+<main id="main">
+    <div class="banner">
+        <div class="hello">
+            <img src="/me.jpeg" alt="AI cartoon of Matthew Varble" />
+            <div class="greeting">
+                <p class="howdy">Howdy! 🤠</p>
+                <Short />
             </div>
         </div>
     </div>
-    <div class="page content">
-        <Long />
-        <h2>Posts</h2>
-        {#each data.posts as post (post.pathname)}
-            <Post {...post} />
-        {/each}
-        <a class="more" href="/posts">See all posts</a>
-        <h2>Sequences</h2>
-        {#each data.sequences as sequence (sequence.pathname)}
-            <Post {...sequence} />
-        {/each}
-        <a class="more" href="/sequences">See all sequences</a>
+
+    <div class="home">
+        <div class="prose about">
+            <Long />
+        </div>
+
+        <section aria-labelledby="posts-heading">
+            <div class="section-head">
+                <h2 id="posts-heading">Posts</h2>
+                <a href="/posts/">See all posts →</a>
+            </div>
+            <Posts posts={data.posts} />
+        </section>
+
+        <section aria-labelledby="sequences-heading">
+            <div class="section-head">
+                <h2 id="sequences-heading">Sequences</h2>
+                <a href="/sequences/">See all sequences →</a>
+            </div>
+            <Posts posts={data.sequences} />
+        </section>
     </div>
-</div>
+</main>
 
 <style>
-    .more {
-        font-size: 1.25rem;
-        font-weight: 500;
-        margin: 1.2rem 0;
-        display: block;
-        text-decoration: none;
-        text-align: center;
-    }
-
-    .more:hover {
-        text-decoration: underline;
-    }
-
-    .root {
-        --max-width: 1200px;
-    }
-
-    .page {
-        padding: var(--page-padding-top) var(--page-padding-side) var(--page-padding-bottom);
-        min-width: 0 !important;
-        margin: 0 auto;
-        max-width: var(--max-width);
-        --post-photo-min-width: 200px;
-    }
-
-    .banner-box {
-        --background: var(--bg-1);
-        background: var(--background);
-    }
-
     .banner {
-        /* border-bottom: 1px solid var(--border); */
-
         --grid: 20px;
         --angle: 15deg;
-        --line: hsl(var(--fg-hue), 0%, 85%);
+        --line: var(--rule);
 
         background:
             repeating-linear-gradient(
@@ -80,53 +57,95 @@
                 transparent 1px var(--grid)
             ),
             repeating-linear-gradient(var(--angle), var(--line) 0 1px, transparent 1px var(--grid));
-
-        box-shadow: inset 0 -80px 100px var(--background);
-
-        & > .content {
-            padding: 0 var(--page-padding-side);
-            max-width: var(--max-width);
-            margin: 0 auto;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            flex-wrap: wrap;
-            & > img {
-                margin: 1em;
-                max-width: 300px;
-                margin: 1em auto;
-                width: 100%;
-                border: 1px solid var(--border);
-                border-radius: 100%;
-                flex-shrink: 0;
-            }
-            & > div {
-                margin: 1em;
-                flex-shrink: 1;
-                flex-grow: 1;
-                & > * {
-                    font-family: var(--font-family-ui);
-                }
-                & > :global(p) {
-                    font-size: 16pt;
-                    font-weight: 500;
-                    line-height: 1.5;
-                }
-            }
-        }
+        box-shadow: inset 0 -80px 100px var(--paper);
     }
 
-    :global(html.dark) .banner {
-        --line: hsl(var(--fg-hue), 0%, 30%);
+    .hello {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem 3rem;
+        width: min(64rem, 100% - 2 * var(--gutter));
+        margin: 0 auto;
+        padding: clamp(1.5rem, 5vw, 3.5rem) 0;
+    }
+
+    img {
+        flex: none;
+        width: min(100%, 300px);
+        margin: 0 auto;
+        border: 1px solid var(--rule-strong);
+        border-radius: 100%;
+        box-shadow: var(--shadow);
+    }
+
+    .greeting {
+        flex: 1 1 18rem;
+        font-family: var(--font-ui);
+    }
+
+    .howdy {
+        margin: 0 0 0.75rem;
+        font: 600 var(--font-size-title) / 1.1 var(--font-heading);
+        letter-spacing: -0.02em;
+    }
+
+    .greeting :global(p:not(.howdy)) {
+        margin: 0;
+        font: 500 1.3rem / 1.5 var(--font-ui);
+        color: var(--ink-soft);
+        text-wrap: pretty;
+    }
+
+    .home {
+        width: min(64rem, 100% - 2 * var(--gutter));
+        margin: 0 auto;
+        padding: clamp(1.5rem, 4vw, 3rem) 0 4rem;
+    }
+
+    .about {
+        max-width: var(--measure);
+        margin: 0 auto clamp(3rem, 7vw, 5rem);
+    }
+
+    section {
+        margin-bottom: clamp(3rem, 7vw, 4.5rem);
+    }
+
+    .section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.5rem 1.5rem;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--rule);
+    }
+
+    h2 {
+        margin: 0;
+        font: 600 1.6rem / 1.2 var(--font-heading);
+    }
+
+    .section-head a {
+        font: 500 var(--font-size-ui) / 1.4 var(--font-ui);
+        color: var(--accent);
+        text-decoration: none;
+    }
+
+    .section-head a:hover {
+        text-decoration: underline;
     }
 
     @media (min-width: 700px) {
-        .banner .content {
+        .hello {
             flex-wrap: nowrap;
-            & > img {
-                margin: 1em;
-                width: 40%;
-            }
+        }
+
+        img {
+            width: 38%;
+            margin: 0;
         }
     }
 </style>

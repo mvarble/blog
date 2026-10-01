@@ -2,10 +2,9 @@ import { error, type Load } from '@sveltejs/kit';
 import type { EntryGenerator } from './$types';
 
 import type { Sequence, SequenceChild } from '@mvarble/mesearch-cms/presets/blog';
+import { inlineHtml } from '@mvarble/mesearch-ui/server';
 import { cms } from '$cms';
-import type { SequencePage } from '$lib/types';
-import type { DocumentSummary } from '$lib/types';
-import { outlineOf } from '$lib/outline';
+import { tocOf, trackOf, url } from '$lib/server/pages';
 
 export const entries: EntryGenerator = () => {
     return cms.sequences
@@ -13,92 +12,55 @@ export const entries: EntryGenerator = () => {
         .map((sequence) => ({ path: sequence.pathname.split('/').slice(1).join('/') }));
 };
 
-export const load: Load = async (req) => {
-    const { url, parent } = req;
-    const { sequence } = await parent();
+export const load: Load = async ({ url: { pathname: path }, parent }) => {
+    const { sequence } = (await parent()) as { sequence: Sequence };
 
-    // get the filename from the pathname
-    const pathname = url.pathname.slice(1, -1);
+    const pathname = path.slice(1, -1);
     const filename = cms.pages.get(pathname)?.filename;
     if (!filename) {
         error(404, { message: `Not found ${pathname}` });
     }
 
-    // prepare the page data
+    // The sequence's pages in reading order: its own page, then every chapter
+    // and section, depth first.
+    const order: Array<Sequence | SequenceChild> = [sequence];
+    const walk = (children: SequenceChild[]) =>
+        children.forEach((child) => {
+            order.push(child);
+            walk(child.children);
+        });
+    walk(sequence.children);
+    const at = order.findIndex((page) => page.filename == filename);
+    if (at < 0) {
+        error(500, {
+            message: `The filename '${filename}' is expected to be in sequence ${sequence.title}`,
+        });
+    }
+    const self = order[at]!;
+    const stop = (page: Sequence | SequenceChild | undefined) =>
+        page && {
+            url: url(page.pathname),
+            titleHtml: inlineHtml(
+                page.label ? `${page.label}. ${page.title}` : page.title,
+                page.katexMacros,
+            ),
+        };
+
     return {
         filename,
-        contents: toTableOfContents(sequence, filename),
-        ...findSiblings(sequence, filename),
+        root: at == 0,
+        title: self.label ? `${self.label}. ${self.title}` : self.title,
+        titleHtml: stop(self)!.titleHtml,
+        sequenceTitle: sequence.title,
+        sequenceTitleHtml: inlineHtml(sequence.title, sequence.katexMacros),
+        sequenceUrl: url(sequence.pathname),
+        created: sequence.created,
+        edited: sequence.edited,
+        tags: sequence.tags,
+        track: trackOf(sequence.children),
+        toc: tocOf(filename, self.katexMacros),
+        previous: stop(order[at - 1]),
+        next: stop(order[at + 1]),
+        position: { index: at, count: order.length },
     };
 };
-
-// The whole page tree, with the headings of `current` -- and only `current` --
-// expanded beneath it.
-//
-// Expanding every page's headings would grow without bound as the sequence
-// does; the reader only needs to navigate within the page they are on.
-function toTableOfContents(sequence: Sequence, current: string): DocumentSummary[] {
-    const outline = (page: { filename: string; pathname: string }): DocumentSummary[] =>
-        page.filename == current ? outlineOf(page.filename, page.pathname) : [];
-
-    function toDocumentSummary(child: SequenceChild): DocumentSummary {
-        return {
-            title: child.title,
-            pathname: child.pathname,
-            children: [
-                ...outline(child),
-                ...(child.children ? child.children.map(toDocumentSummary) : []),
-            ],
-        };
-    }
-
-    return [
-        {
-            title: sequence.title,
-            pathname: sequence.pathname,
-            children: outline(sequence),
-        },
-        ...(sequence.children ?? []).map(toDocumentSummary),
-    ];
-}
-
-function toSequencePage({ title, pathname, label }: Sequence | SequenceChild): SequencePage {
-    return { title, pathname, label };
-}
-
-function findSiblings(
-    sequence: Sequence,
-    filename: string,
-): { prev?: SequencePage; self: SequencePage; next?: SequencePage } {
-    let prev: SequencePage | undefined = undefined;
-    let current: SequencePage = toSequencePage(sequence);
-    let self: SequencePage | undefined =
-        sequence.filename == filename ? toSequencePage(sequence) : undefined;
-
-    const descendants: SequenceChild[] = sequence.children ? sequence.children.toReversed() : [];
-    while (descendants.length != 0) {
-        const descendant = descendants.pop()!;
-        if (self) {
-            return {
-                prev,
-                self,
-                next: toSequencePage(descendant),
-            };
-        }
-        prev = current;
-        current = toSequencePage(descendant);
-        if (descendant.filename == filename) {
-            self = current;
-        }
-        if (descendant.children) {
-            descendants.push(...descendant.children.toReversed());
-        }
-    }
-    if (self) {
-        return { prev, self };
-    }
-
-    error(500, {
-        message: `The filename '${filename}' is expected to be in sequence ${sequence.title}`,
-    });
-}

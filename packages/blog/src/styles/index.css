@@ -1,11 +1,64 @@
-/* Adapted from svelte-kit docs:
- * https://github.com/sveltejs/svelte.dev/blob/main/packages/site-kit/src/lib/styles/index.css
- */
+/* The blog is styled by @mvarble/mesearch-ui; this is what it adds. */
 
-@import './katex.css';
-@import './tokens.css';
-@import './base.css';
-@import './text.css';
-@import './code.css';
-@import './utils/buttons.css';
-@import './utils/dividers.css';
+/* The names the blog's content was written against, kept as aliases of the
+ * library's variables so that interactive components keep their colours in
+ * either theme. `--fg-accent-hue` is the accent's hue, for components that
+ * mix their own shades of it. */
+:root {
+    --fg-1: var(--ink);
+    --fg-2: var(--ink-soft);
+    --fg-3: var(--muted);
+    --fg-4: var(--faint);
+    --fg-accent: var(--accent);
+    --fg-accent-hue: 20.3;
+    --fg-exclaim: var(--concept);
+    --bg-1: var(--paper);
+    --bg-2: var(--paper-raised);
+    --bg-3: var(--paper-raised);
+    --bg-4: var(--paper-sunken);
+    --border: var(--rule);
+    --border-radius: var(--radius);
+    --button-bg-0: var(--accent);
+    --font-family-ui: var(--font-ui);
+    --font-family-body: var(--font-body);
+    --font-family-heading: var(--font-heading);
+    --font-family-mono: var(--font-mono);
+}
+
+:root[data-theme='dark'] {
+    --fg-accent-hue: 23.6;
+}
+
+.button {
+    padding: 0.45em 0.9em;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--accent);
+    color: var(--accent-ink);
+    font: 500 var(--font-size-ui) / 1.2 var(--font-ui);
+    cursor: pointer;
+}
+
+.button:hover {
+    filter: brightness(1.08);
+}
+
+.button[disabled] {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* A page of the blog's own, outside a document: the listings and citations. */
+.listing {
+    width: min(64rem, 100% - 2 * var(--gutter));
+    margin: 0 auto;
+    padding: clamp(2.25rem, 6vw, 4.5rem) 0 4rem;
+}
+
+.listing-title {
+    margin: 0 0 1.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--rule);
+    font: 600 var(--font-size-title) / 1.1 var(--font-heading);
+    letter-spacing: -0.02em;
+}

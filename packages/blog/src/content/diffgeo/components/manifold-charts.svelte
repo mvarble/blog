@@ -429,7 +429,7 @@
         text-align: center;
         background: hsl(210, 50%, 93%);
     }
-    :global(html.dark) blockquote {
+    :global(:root[data-theme='dark']) blockquote {
         background: hsl(210, 40%, 20%);
     }
 </style>

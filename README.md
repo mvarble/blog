@@ -16,6 +16,10 @@ So that is basically it.
   The same store hands the markdown pipeline what it needs to rewrite cross-references and fold KaTeX macros.
   Citations are keyed globally; statements and equations are scoped to their post or sequence.
 - The markdown pipeline is [`@mvarble/mesearch-markdown`](https://github.com/mvarble/mesearch/tree/main/packages/markdown): mdsvex with KaTeX, scrollable display math with lifted equation numbers, and Shiki highlighting with fenced file imports.
+- The look is [`@mvarble/mesearch-ui`](https://github.com/mvarble/mesearch/tree/main/packages/ui), mesearch's components and styles.
+  They provide the rail down the left edge (a dock on phones) with search and the light/dark toggle, and the article layout.
+  On wide screens a sequence's track sits on the left of an article and the page's contents on the right.
+  The routes hand them data; `src/styles/index.css` keeps the variables older interactive components were written against (`--fg-accent`, `--fg-accent-hue`, `--button-bg-0`, …) as aliases of the library's.
 - [blog](./packages/blog) is a regular SvelteKit app which builds pages from the content-management system and the markdown documents in [the content directory](./packages/blog/src/content).
 
 ## Notes on markup
@@ -54,7 +58,7 @@ children:
 The `slug` field must be unique and it serves as an identifier for the sequence; if not provided, it is assumed to be the filename without the extension or the directory name if the filename is `index.svx`.
 The `children` field is an array serving as a tree-like structure: each of its children represents a page in the sequence, it must include a field `filename` specifying the content for the page, and it may itself include a `children` field which recurses the structure.
 A sequence has chapters and sections and nothing below that, so `children` nests exactly two levels deep; a third is a build error.
-The table of contents spends its remaining level on the headings within whichever page is being read.
+A sequence page shows the whole tree as a track beside the article.
 
 Any sequence page represented in `children` must have the following frontmatter.
 
@@ -170,7 +174,7 @@ The rendered heading is given an `id` derived from its text — `probability-mea
 Two headings sharing a title in one document are distinguished by a numeric suffix, in the order they appear.
 Each `##` is nested beneath the `#` above it.
 
-The table of contents shows the headings of the page currently being read, and only that page.
+The table of contents beside an article shows the headings of that page, and follows the reader as they scroll.
 Headings inside an imported statement are not collected: a statement is a theorem or a remark, not a section of the page holding it.
 
 ### Specifying statement dependencies
