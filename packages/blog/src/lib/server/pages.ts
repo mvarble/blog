@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+
 import {
     citationLabel,
     type OutlineEntry,
@@ -43,3 +45,17 @@ export const referencesOf = (pathname: string, macros: KatexMacros = {}): Refere
         label: citationLabel(citation),
         html: referenceHtml(citation, macros),
     }));
+
+// A description, which is a short `.svx` file, as plain text.
+export function describe(filename: string | undefined): string {
+    if (!filename) return '';
+    return fs
+        .readFileSync(filename, 'utf8')
+        .replace(/^---[\s\S]*?\n---\n/, '')
+        .replace(/<script[\s\S]*?<\/script>/g, '')
+        .replace(/<[^>]+>/g, '')
+        .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+        .replace(/[*_`]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}

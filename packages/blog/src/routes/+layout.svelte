@@ -10,7 +10,9 @@
 
     let { children } = $props();
 
-    configure({ kinds: { post: 'Post', sequence: 'Sequence', page: 'Sequence page' } });
+    configure({
+        kinds: { post: 'Post', sequence: 'Sequence', page: 'Sequence page', chapter: 'Chapter' },
+    });
 </script>
 
 {#snippet logo()}
@@ -21,8 +23,9 @@
     title="rodent.club"
     home="/"
     links={[
-        { url: '/posts/', label: 'Posts', icon: 'pen' },
-        { url: '/sequences/', label: 'Sequences', icon: 'book' },
+        { url: '/#posts', label: 'Posts', icon: 'pen' },
+        { url: '/#sequences', label: 'Sequences', icon: 'book' },
+        { url: '/#map', label: 'Map', icon: 'graph' },
     ]}
     search="/search.json"
     navigate={goto}

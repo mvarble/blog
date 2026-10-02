@@ -14,7 +14,7 @@
 
     let crumbs = $derived([
         { label: 'rodent.club', url: '/' },
-        { label: 'Sequences', url: '/sequences/' },
+        { label: 'Sequences', url: '/#sequences' },
         ...(data.root
             ? []
             : [

@@ -1,7 +1,7 @@
-import { type Load } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 
-import { cms } from '$cms';
+// Every sequence is listed on the home page, so the old listing sends readers
+// there.
+export const prerender = true;
 
-export const load: Load = async () => {
-    return { sequences: cms.sequences.list() };
-};
+export const load = () => redirect(308, '/#sequences');

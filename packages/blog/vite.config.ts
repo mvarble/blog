@@ -29,6 +29,9 @@ export default defineConfig({
                 mathBox: { liftTags: true },
             }),
             extensions: ['.svelte', '.svx', '.md'],
+            // Nothing links to the old listings any more, but they still
+            // redirect to the home page for anyone arriving at them.
+            prerender: { entries: ['*', '/posts/', '/sequences/'] },
             // The documents sit beside the app rather than inside it.
             alias: { $content: 'content' },
             typescript: {

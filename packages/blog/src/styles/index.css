@@ -62,3 +62,9 @@
     font: 600 var(--font-size-title) / 1.1 var(--font-heading);
     letter-spacing: -0.02em;
 }
+
+/* A chapter of a sequence, on the map and in its chips. */
+.kind-chapter {
+    --kind: var(--concept);
+    --kind-soft: var(--concept-soft);
+}

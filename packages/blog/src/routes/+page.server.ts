@@ -1,8 +1,9 @@
-import type { Load } from '@sveltejs/kit';
 import { cms } from '$cms';
+import { graphOf } from '$lib/server/graph';
+import type { PageServerLoad } from './$types';
 
-export const load: Load = () => {
-    const posts = cms.posts.list({ limit: 3 });
-    const sequences = cms.sequences.list({ limit: 3 });
-    return { posts, sequences };
-};
+export const load: PageServerLoad = () => ({
+    posts: cms.posts.list(),
+    sequences: cms.sequences.list(),
+    graph: graphOf(),
+});

@@ -1,9 +1,8 @@
-import fs from 'node:fs';
 import { json } from '@sveltejs/kit';
 import type { SequenceChild } from '@mvarble/mesearch-cms/presets/blog';
 import type { SearchEntry } from '@mvarble/mesearch-ui';
 import { cms } from '$cms';
-import { url } from '$lib/server/pages';
+import { describe, url } from '$lib/server/pages';
 
 export const prerender = true;
 
@@ -42,17 +41,3 @@ export const GET = () => {
     }
     return json(entries);
 };
-
-// A description, which is a short `.svx` file, as plain text.
-function describe(filename: string | undefined): string {
-    if (!filename) return '';
-    return fs
-        .readFileSync(filename, 'utf8')
-        .replace(/^---[\s\S]*?\n---\n/, '')
-        .replace(/<script[\s\S]*?<\/script>/g, '')
-        .replace(/<[^>]+>/g, '')
-        .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-        .replace(/[*_`]/g, '')
-        .replace(/\s+/g, ' ')
-        .trim();
-}

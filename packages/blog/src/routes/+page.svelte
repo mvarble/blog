@@ -1,9 +1,27 @@
 <script lang="ts">
     import Short from '$content/about/short.svx';
     import Long from '$content/about/long.svx';
+    import { Graph } from '@mvarble/mesearch-ui';
     import Posts from '$lib/components/posts.svelte';
 
     let { data } = $props();
+    let entries = $derived(
+        Object.fromEntries(data.graph.entries.map((entry) => [entry.key, entry])),
+    );
+
+    const legend = {
+        kinds: [
+            { kind: 'post', label: 'Post', shape: 'card' as const },
+            { kind: 'sequence', label: 'Sequence', shape: 'pill' as const },
+            { kind: 'chapter', label: 'Chapter', shape: 'card' as const },
+        ],
+        solid: 'contains',
+        dashed: 'refers to',
+        from: 'Part of',
+        to: 'Contains',
+        related: 'Related',
+        empty: 'Posts and sequences will appear here as they are written.',
+    };
 </script>
 
 <svelte:head>
@@ -26,20 +44,37 @@
             <Long />
         </div>
 
-        <section aria-labelledby="posts-heading">
+        <section id="posts" aria-labelledby="posts-heading">
             <div class="section-head">
                 <h2 id="posts-heading">Posts</h2>
-                <a href="/posts/">See all posts →</a>
+                <p>Bite-sized musings, each standing on its own.</p>
             </div>
             <Posts posts={data.posts} />
         </section>
 
-        <section aria-labelledby="sequences-heading">
+        <section id="sequences" aria-labelledby="sequences-heading">
             <div class="section-head">
                 <h2 id="sequences-heading">Sequences</h2>
-                <a href="/sequences/">See all sequences →</a>
+                <p>Longer writing in chapters and sections, read in order like a book.</p>
             </div>
             <Posts posts={data.sequences} />
+        </section>
+
+        <section id="map" aria-labelledby="map-heading">
+            <div class="section-head">
+                <h2 id="map-heading">The map</h2>
+                <p>
+                    Every post, sequence and chapter. Arrows run from a sequence to its chapters;
+                    dashed lines join writing that refers to one another.
+                </p>
+            </div>
+            <Graph
+                nodes={data.graph.nodes}
+                links={data.graph.links}
+                {entries}
+                descriptions={data.descriptions}
+                {legend}
+            />
         </section>
     </div>
 </main>
@@ -110,13 +145,13 @@
 
     section {
         margin-bottom: clamp(3rem, 7vw, 4.5rem);
+        scroll-margin-top: 1.5rem;
     }
 
     .section-head {
         display: flex;
         flex-wrap: wrap;
         align-items: baseline;
-        justify-content: space-between;
         gap: 0.5rem 1.5rem;
         margin-bottom: 1.25rem;
         padding-bottom: 0.75rem;
@@ -128,14 +163,11 @@
         font: 600 1.6rem / 1.2 var(--font-heading);
     }
 
-    .section-head a {
-        font: 500 var(--font-size-ui) / 1.4 var(--font-ui);
-        color: var(--accent);
-        text-decoration: none;
-    }
-
-    .section-head a:hover {
-        text-decoration: underline;
+    .section-head p {
+        flex: 1 1 20rem;
+        margin: 0;
+        font: 400 0.9rem / 1.5 var(--font-ui);
+        color: var(--muted);
     }
 
     @media (min-width: 700px) {

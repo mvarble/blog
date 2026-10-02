@@ -1,11 +1,10 @@
-import type { Load } from '@sveltejs/kit';
-import type { PostInfo } from '@mvarble/mesearch-cms/presets/blog';
+import type { Component } from 'svelte';
 import type { PostInfoWithDescription } from '$lib/types';
 
 import { getComponent, getImg } from '$lib/load';
+import type { PageLoad } from './$types';
 
-export const load: Load = async ({ data }) => {
-    const d = data as { posts: PostInfo[]; sequences: PostInfo[] };
+export const load: PageLoad = async ({ data: d }) => {
     const posts: PostInfoWithDescription[] = [];
     const sequences: PostInfoWithDescription[] = [];
     for (const post of d.posts) {
@@ -26,8 +25,15 @@ export const load: Load = async ({ data }) => {
             image: sequence.imageFilename ? await getImg(sequence.imageFilename) : undefined,
         });
     }
+    // The map's preview of a post or a sequence is its description.
+    const descriptions: Record<string, Component> = {};
+    for (const entry of [...posts, ...sequences]) {
+        if (entry.description) descriptions[entry.pathname] = entry.description;
+    }
     return {
+        ...d,
         posts,
         sequences,
+        descriptions,
     };
 };

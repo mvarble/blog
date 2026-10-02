@@ -22,6 +22,8 @@ So that is basically it.
   The routes hand them data; `src/styles/index.css` keeps the variables older interactive components were written against (`--fg-accent`, `--fg-accent-hue`, `--button-bg-0`, …) as aliases of the library's.
 - [blog](./packages/blog) is a regular SvelteKit app which builds pages from the content-management system and the markdown documents in [the content directory](./packages/blog/content).
   The documents sit beside the app rather than inside `src/`, as in a [mesearch](https://github.com/mvarble/mesearch) site, and the app imports them through the `$content` alias.
+- The home page lists every post and sequence, and ends with a map of the site: each post, sequence and chapter, with arrows from a sequence to its chapters and dashed lines between writing that refers to one another.
+  `/posts/` and `/sequences/` redirect to their sections of the home page.
 
 ## Notes on markup
 
@@ -206,4 +208,4 @@ This will work like LaTeX when using `\cite{key}` or `\cite[Theorem 21]{key}`, w
 Hovering a citation shows the full reference.
 Each post and each sequence page ends with a short list of the references it cites, including those cited inside the statements it shows, and a citation jumps to its entry there.
 There is no site-wide bibliography page.
-A citation in a post's description, which is shown on the listings, points at the list on the post's own page.
+A citation in a post's description, which is shown on the home page, points at the list on the post's own page.

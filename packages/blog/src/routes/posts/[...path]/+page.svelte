@@ -14,7 +14,7 @@
     <ArticleHeader
         crumbs={[
             { label: 'rodent.club', url: '/' },
-            { label: 'Posts', url: '/posts/' },
+            { label: 'Posts', url: '/#posts' },
         ]}
         titleHtml={data.titleHtml}
         created={data.created}
