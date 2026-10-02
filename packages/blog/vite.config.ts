@@ -7,7 +7,7 @@ import { blogPreset } from '@mvarble/mesearch-cms/presets/blog';
 import { markdownPreprocessors } from '@mvarble/mesearch-markdown';
 
 // The content layer: every post, sequence, statement and citation under
-// `src/content`, kept current while the dev server runs. Routes query it
+// `content`, kept current while the dev server runs. Routes query it
 // through `$cms`; the markdown pipeline asks it for references and macros.
 const cms = createCms({ preset: blogPreset(), virtualId: '$cms', label: 'cms' });
 
@@ -29,7 +29,25 @@ export default defineConfig({
                 mathBox: { liftTags: true },
             }),
             extensions: ['.svelte', '.svx', '.md'],
+            // The documents sit beside the app rather than inside it.
+            alias: { $content: 'content' },
+            typescript: {
+                // So that svelte-check and editors treat the content's own
+                // scripts and components as part of the project.
+                config: (config) => ({
+                    ...config,
+                    include: [
+                        ...config.include,
+                        '../content/**/*.ts',
+                        '../content/**/*.js',
+                        '../content/**/*.svelte',
+                    ],
+                }),
+            },
         }),
     ],
     assetsInclude: ['**/*.glb'],
+    // SvelteKit lets the dev server read only what is under `src/`; the
+    // documents are beside it.
+    server: { fs: { allow: ['content'] } },
 });

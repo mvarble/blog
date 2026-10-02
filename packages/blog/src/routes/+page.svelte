@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Short from '../content/about/short.svx';
-    import Long from '../content/about/long.svx';
+    import Short from '$content/about/short.svx';
+    import Long from '$content/about/long.svx';
     import Posts from '$lib/components/posts.svelte';
 
     let { data } = $props();

@@ -22,10 +22,10 @@ import {
     Vector3,
 } from 'three';
 
-import { buildChart, manifoldPointAt } from '../src/content/diffgeo/util/glb-manifold.ts';
+import { buildChart, manifoldPointAt } from '../content/diffgeo/util/glb-manifold.ts';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const GLB = path.join(here, '..', 'src', 'content', 'diffgeo', 'static', 'manifold.glb');
+const GLB = path.join(here, '..', 'content', 'diffgeo', 'static', 'manifold.glb');
 
 const buf = fs.readFileSync(GLB);
 const jsonLength = buf.readUInt32LE(12);

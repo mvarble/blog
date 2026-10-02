@@ -2,10 +2,12 @@ import { error, type Load } from '@sveltejs/kit';
 import type { Component } from 'svelte';
 
 export const svxLoaders = Object.fromEntries(
-    Object.entries(import.meta.glob('../content/**/*.svx')).map(([relfilename, loader]) => {
-        const filename = relfilename.replace('..', 'src');
-        return [filename, loader];
-    }),
+    // Root-relative, so the keys are the content layer's filenames once the
+    // leading slash goes: `/content/x.svx` is `content/x.svx`.
+    Object.entries(import.meta.glob('/content/**/*.svx')).map(([path, loader]) => [
+        path.slice(1),
+        loader,
+    ]),
 ) as Record<string, () => Promise<{ default: Component }>>;
 
 export async function getComponent(filename: string): Promise<Component | undefined> {
@@ -16,11 +18,8 @@ export async function getComponent(filename: string): Promise<Component | undefi
 }
 
 export const imgLoaders = Object.fromEntries(
-    Object.entries(import.meta.glob('../content/**/*.{png,jpg,jpeg,PNG,JPG,JPEG}')).map(
-        ([relfilename, loader]) => {
-            const filename = relfilename.replace('..', 'src');
-            return [filename, loader];
-        },
+    Object.entries(import.meta.glob('/content/**/*.{png,jpg,jpeg,PNG,JPG,JPEG}')).map(
+        ([path, loader]) => [path.slice(1), loader],
     ),
 ) as Record<string, () => Promise<{ default: string }>>;
 

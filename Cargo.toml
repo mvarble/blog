@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["packages/blog/src/content/probability/code"]
+members = ["packages/blog/content/probability/code"]
 
 [workspace.package]
 authors = ["Matthew Varble <matthew@rodent.club>"]

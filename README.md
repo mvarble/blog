@@ -20,7 +20,8 @@ So that is basically it.
   They provide the rail down the left edge (a dock on phones) with search and the light/dark toggle, and the article layout.
   On wide screens a sequence's track sits on the left of an article and the page's contents on the right.
   The routes hand them data; `src/styles/index.css` keeps the variables older interactive components were written against (`--fg-accent`, `--fg-accent-hue`, `--button-bg-0`, …) as aliases of the library's.
-- [blog](./packages/blog) is a regular SvelteKit app which builds pages from the content-management system and the markdown documents in [the content directory](./packages/blog/src/content).
+- [blog](./packages/blog) is a regular SvelteKit app which builds pages from the content-management system and the markdown documents in [the content directory](./packages/blog/content).
+  The documents sit beside the app rather than inside `src/`, as in a [mesearch](https://github.com/mvarble/mesearch) site, and the app imports them through the `$content` alias.
 
 ## Notes on markup
 
