@@ -12,7 +12,7 @@ However, this means the build-system must be self aware of the files going into 
 So that is basically it.
 
 - The content layer is [`@mvarble/mesearch-cms`](https://github.com/mvarble/mesearch/tree/main/packages/cms), shared with [mesearch](https://github.com/mvarble/mesearch).
-  Its blog preset reads every post, sequence, statement and `.bib` file in the content directory into an in-memory store, which a Vite plugin keeps current as documents change and serves to routes as the server-only `$cms` module (see `vite.config.ts` and `src/cms.d.ts`).
+  The blog's own preset, in `src/lib/cms/`, reads every post, sequence, statement and `.bib` file in the content directory into an in-memory store, which a Vite plugin keeps current as documents change and serves to routes as the server-only `$cms` module (see `vite.config.ts` and `src/cms.d.ts`).
   The same store hands the markdown pipeline what it needs to rewrite cross-references and fold KaTeX macros.
   Citations are keyed globally; statements and equations are scoped to their post or sequence.
 - The markdown pipeline is [`@mvarble/mesearch-markdown`](https://github.com/mvarble/mesearch/tree/main/packages/markdown): mdsvex with KaTeX, scrollable display math with lifted equation numbers, and Shiki highlighting with fenced file imports.

@@ -1,10 +1,6 @@
 import fs from 'node:fs';
 
-import {
-    citationLabel,
-    type OutlineEntry,
-    type SequenceChild,
-} from '@mvarble/mesearch-cms/presets/blog/runtime';
+import { citationLabel, type OutlineEntry, type SequenceChild } from '$lib/cms/runtime';
 import type { KatexMacros } from '@mvarble/mesearch-markdown/katex';
 import type { Reference, TocEntry, TrackItem } from '@mvarble/mesearch-ui';
 import { inlineHtml, referenceHtml } from '@mvarble/mesearch-ui/server';

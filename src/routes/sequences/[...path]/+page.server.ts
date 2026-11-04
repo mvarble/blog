@@ -1,7 +1,7 @@
 import { error, type Load } from '@sveltejs/kit';
 import type { EntryGenerator } from './$types';
 
-import type { Sequence, SequenceChild } from '@mvarble/mesearch-cms/presets/blog';
+import type { Sequence, SequenceChild } from '$lib/cms/runtime';
 import { inlineHtml } from '@mvarble/mesearch-ui/server';
 import { cms } from '$cms';
 import { referencesOf, tocOf, trackOf, url } from '$lib/server/pages';

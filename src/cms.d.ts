@@ -2,5 +2,5 @@
 // `vite.config.ts`. Server-only: import it from `+page.server` and
 // `+layout.server` modules.
 declare module '$cms' {
-    export const cms: import('@mvarble/mesearch-cms/presets/blog').BlogCms;
+    export const cms: import('$lib/cms/runtime').BlogCms;
 }

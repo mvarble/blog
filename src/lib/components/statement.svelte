@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { StatementInjection } from '@mvarble/mesearch-cms/presets/blog';
+    import type { StatementInjection } from '$lib/cms/runtime';
     import type { Component } from 'svelte';
 
     interface Props {

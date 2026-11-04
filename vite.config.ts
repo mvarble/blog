@@ -3,8 +3,9 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
 import { createCms } from '@mvarble/mesearch-cms';
-import { blogPreset } from '@mvarble/mesearch-cms/presets/blog';
 import { markdownPreprocessors } from '@mvarble/mesearch-markdown';
+
+import { blogPreset } from './src/lib/cms/preset';
 
 // The content layer: every post, sequence, statement and citation under
 // `content`, kept current while the dev server runs. Routes query it

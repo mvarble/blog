@@ -1,5 +1,5 @@
 import type { Component } from 'svelte';
-import type { PostInfo } from '@mvarble/mesearch-cms/presets/blog';
+import type { PostInfo } from '$lib/cms/runtime';
 import type { GraphLink, GraphNode, IndexEntry } from '@mvarble/mesearch-ui';
 
 export interface PostInfoWithDescription extends PostInfo {

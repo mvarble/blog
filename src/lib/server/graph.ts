@@ -1,4 +1,4 @@
-import type { Sequence, SequenceChild } from '@mvarble/mesearch-cms/presets/blog/runtime';
+import type { Sequence, SequenceChild } from '$lib/cms/runtime';
 import type { DocumentRef, GraphLink, IndexEntry } from '@mvarble/mesearch-ui';
 import { inlineHtml, layoutGraph } from '@mvarble/mesearch-ui/server';
 import { cms } from '$cms';

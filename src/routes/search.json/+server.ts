@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import type { SequenceChild } from '@mvarble/mesearch-cms/presets/blog';
+import type { SequenceChild } from '$lib/cms/runtime';
 import type { SearchEntry } from '@mvarble/mesearch-ui';
 import { cms } from '$cms';
 import { describe, url } from '$lib/server/pages';
