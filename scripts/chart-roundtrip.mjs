@@ -6,7 +6,7 @@
 // Worth re-running after any re-export of `manifold.glb`. The correspondence
 // relies on every `chart.NN` mesh being a submesh of `manifold` carrying its own
 // UVs; decimating one without the other would break that, and this is what says
-// so. Run from `packages/blog`:
+// so. Run from the root of the repository:
 //
 //     node scripts/chart-roundtrip.mjs
 import fs from 'node:fs';
