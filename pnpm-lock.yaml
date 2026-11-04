@@ -12,8 +12,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.8.1)
       '@mvarble/mesearch-cms':
-        specifier: ^0.1.0
-        version: 0.1.0(svelte@5.56.9(@typescript-eslint/types@8.67.0))(vite@8.2.1(@types/node@22.17.1))
+        specifier: ^0.3.0
+        version: 0.3.0(svelte@5.56.9(@typescript-eslint/types@8.67.0))(vite@8.2.1(@types/node@22.17.1))
       '@mvarble/mesearch-markdown':
         specifier: ^0.1.0
         version: 0.1.0(svelte@5.56.9(@typescript-eslint/types@8.67.0))
@@ -167,8 +167,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.29':
     resolution: {integrity: sha512-uw6guiW/gcAGPDhLmd77/6lW8QLeiV5RUTsAX46Db6oLhGaVj4lhnPwb184s1bkc8kdVg/+h988dro8GRDpmYQ==}
 
-  '@mvarble/mesearch-cms@0.1.0':
-    resolution: {integrity: sha512-p8/AKJmJFguwk1eRt2j+b6E5QWatAZL1fVTxeFDek832uYhz3P0OePATxYlc6znPKMKpzAVzb56E9RxvXni9mQ==}
+  '@mvarble/mesearch-cms@0.3.0':
+    resolution: {integrity: sha512-Ur+q/q3dnFfOO4sZ+IWgPdrmK7tlWy/CYrCiC2iKISeD1jXU80inhU5JGH96KOoPg+US8KCB5lNZ5pUJ7/BA5w==}
     engines: {node: '>=22.18'}
     peerDependencies:
       vite: ^6.0.0 || ^7.0.0 || ^8.0.0
@@ -1513,7 +1513,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@mvarble/mesearch-cms@0.1.0(svelte@5.56.9(@typescript-eslint/types@8.67.0))(vite@8.2.1(@types/node@22.17.1))':
+  '@mvarble/mesearch-cms@0.3.0(svelte@5.56.9(@typescript-eslint/types@8.67.0))(vite@8.2.1(@types/node@22.17.1))':
     dependencies:
       '@mvarble/mesearch-markdown': 0.1.0(svelte@5.56.9(@typescript-eslint/types@8.67.0))
       bibtex: 0.9.0

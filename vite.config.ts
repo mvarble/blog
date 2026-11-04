@@ -5,7 +5,7 @@ import { defineConfig } from 'vite';
 import { createCms } from '@mvarble/mesearch-cms';
 import { markdownPreprocessors } from '@mvarble/mesearch-markdown';
 
-import { blogPreset } from './src/lib/cms/preset';
+import { blogPreset } from './src/lib/cms/preset.ts';
 
 // The content layer: every post, sequence, statement and citation under
 // `content`, kept current while the dev server runs. Routes query it
