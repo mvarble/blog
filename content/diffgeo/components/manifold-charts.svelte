@@ -29,7 +29,7 @@
         loadAtlas,
         nearestOnChart,
     } from '../util/glb-manifold';
-    import manifoldUrl from '../static/manifold.glb';
+    import manifoldUrl from '../renders/manifold-charts/manifold-charts.glb';
     import gridTexture from '../static/grid.png';
 
     // parameters (could be props)

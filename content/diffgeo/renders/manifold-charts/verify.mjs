@@ -3,12 +3,12 @@
 // `manifoldPointAt`, and measure how far the reconstructed point landed from
 // where the ray actually hit.
 //
-// Worth re-running after any re-export of `manifold.glb`. The correspondence
+// Worth re-running after any re-export of `manifold-charts.glb`. The correspondence
 // relies on every `chart.NN` mesh being a submesh of `manifold` carrying its own
 // UVs; decimating one without the other would break that, and this is what says
 // so. Run from the root of the repository:
 //
-//     node scripts/chart-roundtrip.mjs
+//     node content/diffgeo/renders/manifold-charts/verify.mjs
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,10 +22,10 @@ import {
     Vector3,
 } from 'three';
 
-import { buildChart, manifoldPointAt } from '../content/diffgeo/util/glb-manifold.ts';
+import { buildChart, manifoldPointAt } from '../../util/glb-manifold.ts';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const GLB = path.join(here, '..', 'content', 'diffgeo', 'static', 'manifold.glb');
+const GLB = path.join(here, 'manifold-charts.glb');
 
 const buf = fs.readFileSync(GLB);
 const jsonLength = buf.readUInt32LE(12);

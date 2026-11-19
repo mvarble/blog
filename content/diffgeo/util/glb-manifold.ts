@@ -16,7 +16,7 @@ import {
 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
-// The manifold and its atlas, as authored in `static/manifold.glb`.
+// The manifold and its atlas, as authored in `renders/manifold-charts/manifold-charts.glb`.
 //
 // The file holds a `manifold` mesh and ten `chart.NN` meshes covering it,
 // overlapping generously. Only the charts carry UVs, and those UVs are exactly
